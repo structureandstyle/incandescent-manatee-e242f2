@@ -1,0 +1,125 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_URL, BUSINESS, GA4_ID } from "../data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Extra JSON-LD for this page, on top of the site-wide LocalBusiness. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  /** Absolute or root-relative share image. */
+  image?: string;
+}
+
+const { title, description, schema, image = "/og-default.jpg" } = Astro.props;
+
+// Self-referencing canonical on every template. The old site had one canonical
+// on one page and Google overrode it anyway, because the Business Profile was
+// pointing somewhere else.
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImage = new URL(image, SITE_URL).href;
+const fullTitle = title.includes(BUSINESS.name) ? title : `${title} | ${BUSINESS.name}`;
+
+const localBusiness = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "@id": `${SITE_URL}/#business`,
+  name: BUSINESS.name,
+  legalName: BUSINESS.legalName,
+  url: SITE_URL,
+  telephone: BUSINESS.phoneDisplay,
+  email: BUSINESS.email,
+  image: ogImage,
+  priceRange: "££",
+  areaServed: BUSINESS.areaServed.map((a) => ({ "@type": "Place", name: a })),
+  openingHoursSpecification: BUSINESS.openingHours.map((h) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: h.days,
+    opens: h.opens,
+    closes: h.closes,
+  })),
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: BUSINESS.ratingValue,
+    reviewCount: BUSINESS.reviewCount,
+  },
+};
+
+const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={BUSINESS.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {/*
+      Font preload stays commented until inter-variable.woff2 is actually in
+      /public/fonts. Preloading a missing file 404s on every page load and buys
+      nothing. Until then the system stack renders, which blocks nothing at all
+      and is a large improvement on the old site's eight blocking font files.
+      <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin />
+    */}
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+
+    {
+      GA4_ID && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`} />
+          <script is:inline define:vars={{ GA4_ID }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag("js", new Date());
+            gtag("config", GA4_ID);
+
+            // Enhanced measurement catches the WhatsApp link, because wa.me is a
+            // different host and counts as an outbound click. It does not catch
+            // tel: or mailto:, which have no hostname. Those are two of the three
+            // enquiry channels the agreement counts, so they fire from here.
+            document.addEventListener("click", (e) => {
+              const a = e.target.closest && e.target.closest("a[href]");
+              if (!a) return;
+              const href = a.getAttribute("href") || "";
+              if (href.startsWith("tel:")) {
+                gtag("event", "enquiry_call", { method: "phone", link_url: href });
+              } else if (href.startsWith("mailto:")) {
+                gtag("event", "enquiry_email", { method: "email", link_url: href });
+              } else if (href.includes("wa.me")) {
+                gtag("event", "enquiry_whatsapp", { method: "whatsapp", link_url: href });
+              }
+            });
+          </script>
+        </>
+      )
+    }
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-bone"
+      >Skip to content</a
+    >
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

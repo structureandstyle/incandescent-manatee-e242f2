@@ -1,0 +1,100 @@
+---
+import Base from "../layouts/Base.astro";
+import EnquiryForm from "../components/EnquiryForm.astro";
+import { SERVICES, SITE_URL, BUSINESS, servicePath, type Service } from "../data/site";
+
+export function getStaticPaths() {
+  return SERVICES.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+interface Props { service: Service }
+const { service } = Astro.props;
+
+const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: service.title,
+  serviceType: service.primary,
+  description: service.description,
+  provider: { "@id": `${SITE_URL}/#business` },
+  areaServed: BUSINESS.areaServed.map((a) => ({ "@type": "Place", name: a })),
+  url: new URL(servicePath(service), SITE_URL).href,
+};
+---
+
+<Base title={service.heading} description={service.description} schema={schema}>
+  <article>
+    <header class="border-b border-line bg-sand/40">
+      <div class="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+        <nav aria-label="Breadcrumb" class="mb-5 text-sm text-ink-soft">
+          <a href="/" class="hover:text-timber">Home</a>
+          <span aria-hidden="true" class="px-2">/</span>
+          <span>{service.title}</span>
+        </nav>
+        <h1 class="max-w-4xl text-[length:var(--text-section)] font-semibold">{service.heading}</h1>
+        <p class="mt-5 max-w-2xl text-lg text-ink-soft">{service.summary}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#enquire" class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-bone hover:bg-timber-deep">
+            Get a price
+          </a>
+          <a href={BUSINESS.phoneHref} class="rounded-full border border-ink px-6 py-3 text-sm font-medium hover:border-timber hover:text-timber">
+            Call {BUSINESS.phoneDisplay}
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!--
+      CONTENT TO WRITE, per the playbook: question-shaped H2s, a concise answer
+      before the detail, real numbers (price ranges, lead times, install
+      duration), named area coverage, and three or more photographs of actual
+      completed work. Photo sets are sorted in the shared Drive Photo library.
+      Price ranges are an open ask with the client.
+    -->
+    <div class="mx-auto max-w-6xl px-5 py-16">
+      <div class="prose-none max-w-2xl space-y-4 text-ink-soft">
+        <p class="text-ink">
+          This page is being written. The structure, schema and enquiry route are live so it can be
+          indexed and measured from day one.
+        </p>
+        <p>Primary keyword for this page: <strong class="text-ink">{service.primary}</strong>.</p>
+      </div>
+    </div>
+
+    <section id="enquire" class="border-t border-line bg-sand/40">
+      <div class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-2">
+        <div>
+          <h2 class="text-[length:var(--text-section)] font-semibold">Get a price for your {service.title.toLowerCase()}</h2>
+          <p class="mt-4 max-w-md text-ink-soft">
+            Tell us the room and send a photo or two. We come back with a realistic range before
+            anyone visits.
+          </p>
+          <p class="mt-6 text-sm text-ink-soft">
+            Covering {BUSINESS.areaServed.slice(0, 6).join(", ")} and across north London.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-line bg-bone p-6 sm:p-8">
+          <EnquiryForm compact />
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-5 py-16">
+      <h2 class="text-xl font-semibold">Also worth a look</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-3">
+        {
+          others.map((s) => (
+            <li class="rounded-2xl border border-line p-5 transition-colors hover:border-timber">
+              <a href={servicePath(s)} class="block">
+                <span class="font-medium">{s.title}</span>
+                <span class="mt-2 block text-sm text-ink-soft">{s.summary}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </article>
+</Base>

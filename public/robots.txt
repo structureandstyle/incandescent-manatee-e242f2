@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# AI answer engines are deliberately not blocked. Whether the site can ever be
+# cited in an AI answer is decided here, and it is a thirty second decision.
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://structureandstyle.co.uk/sitemap-index.xml

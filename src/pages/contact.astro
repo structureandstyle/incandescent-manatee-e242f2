@@ -1,0 +1,47 @@
+---
+import Base from "../layouts/Base.astro";
+import EnquiryForm from "../components/EnquiryForm.astro";
+import { BUSINESS } from "../data/site";
+---
+
+<Base
+  title="Get a quote"
+  description="Tell us about your fitted wardrobe, walk-in wardrobe or joinery project and we will come back with a realistic price range. Serving north London."
+>
+  <section class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-2 lg:py-24">
+    <div>
+      <h1 class="text-[length:var(--text-section)] font-semibold">Get a quote</h1>
+      <p class="mt-5 max-w-md text-lg text-ink-soft">
+        Tell us the room and send a photo or two. We come back with a realistic range before anyone
+        visits, so nobody wastes an afternoon.
+      </p>
+
+      <dl class="mt-10 space-y-4 text-sm">
+        <div>
+          <dt class="font-medium">Phone</dt>
+          <dd><a href={BUSINESS.phoneHref} class="text-ink-soft hover:text-timber">{BUSINESS.phoneDisplay}</a></dd>
+        </div>
+        <div>
+          <dt class="font-medium">WhatsApp</dt>
+          <dd><a href={BUSINESS.whatsapp} rel="noopener" class="text-ink-soft hover:text-timber">Message us</a></dd>
+        </div>
+        <div>
+          <dt class="font-medium">Email</dt>
+          <dd><a href={`mailto:${BUSINESS.email}`} class="text-ink-soft hover:text-timber">{BUSINESS.email}</a></dd>
+        </div>
+        <div>
+          <dt class="font-medium">Hours</dt>
+          <dd class="text-ink-soft">Monday to Friday 8am to 6pm, Saturday 9am to 2pm</dd>
+        </div>
+        <div>
+          <dt class="font-medium">Where we work</dt>
+          <dd class="text-ink-soft">{BUSINESS.areaServed.join(", ")} and across north London.</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="rounded-2xl border border-line bg-sand/40 p-6 sm:p-8">
+      <EnquiryForm />
+    </div>
+  </section>
+</Base>

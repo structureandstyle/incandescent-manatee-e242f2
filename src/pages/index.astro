@@ -1,0 +1,73 @@
+---
+import Base from "../layouts/Base.astro";
+import EnquiryForm from "../components/EnquiryForm.astro";
+import { SERVICES, BUSINESS, servicePath } from "../data/site";
+
+const title = "Fitted wardrobes and bespoke joinery in north London";
+const description =
+  "Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across north London. Made to measure, fitted by the team that builds them.";
+---
+
+<Base title={title} description={description}>
+  <section class="border-b border-line">
+    <div class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
+      <p class="text-sm font-medium tracking-wide text-timber uppercase">{BUSINESS.tagline}</p>
+      <h1 class="mt-4 max-w-4xl text-[length:var(--text-hero)] leading-[1.05] font-semibold">
+        Fitted wardrobes built for the room, not the catalogue.
+      </h1>
+      <p class="mt-6 max-w-xl text-lg text-ink-soft">
+        London rooms are rarely square. Everything we make is measured on site and scribed to your
+        walls, skirting and ceiling, so there are no filler strips and no gaps.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <a href="#enquire" class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-bone hover:bg-timber-deep">
+          Get a price
+        </a>
+        <a href={BUSINESS.phoneHref} class="rounded-full border border-ink px-6 py-3 text-sm font-medium hover:border-timber hover:text-timber">
+          Call {BUSINESS.phoneDisplay}
+        </a>
+      </div>
+      <p class="mt-8 text-sm text-ink-soft">
+        {BUSINESS.ratingValue} from {BUSINESS.reviewCount} Google reviews
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-16">
+    <h2 class="text-[length:var(--text-section)] font-semibold">What we build</h2>
+    <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        SERVICES.map((s) => (
+          <li class="rounded-2xl border border-line p-6 transition-colors hover:border-timber">
+            <a href={servicePath(s)} class="block">
+              <h3 class="font-medium">{s.title}</h3>
+              <p class="mt-2 text-sm text-ink-soft">{s.summary}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="border-y border-line bg-sand/40">
+    <div class="mx-auto max-w-6xl px-5 py-16">
+      <h2 class="text-[length:var(--text-section)] font-semibold">Where we work</h2>
+      <p class="mt-4 max-w-2xl text-ink-soft">
+        {BUSINESS.areaServed.join(", ")} and across north London.
+      </p>
+    </div>
+  </section>
+
+  <section id="enquire" class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-2">
+    <div>
+      <h2 class="text-[length:var(--text-section)] font-semibold">Get a price</h2>
+      <p class="mt-4 max-w-md text-ink-soft">
+        Tell us the room and send a photo or two. We come back with a realistic range before anyone
+        visits.
+      </p>
+    </div>
+    <div class="rounded-2xl border border-line bg-bone p-6 sm:p-8">
+      <EnquiryForm />
+    </div>
+  </section>
+</Base>

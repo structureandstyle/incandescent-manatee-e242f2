@@ -1,0 +1,118 @@
+---
+import { SERVICES } from "../data/site";
+
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+
+/**
+ * Netlify Forms. The site is already on Netlify so this costs nothing and adds
+ * no infrastructure, and it produces a timestamped, attributable record.
+ *
+ * That record is the point. The agreement counts website enquiries as
+ * F2F-generated, and without it attribution rests on recall. Photo upload and
+ * "how did you hear about us" are both named in the signed scope.
+ *
+ * Never reuse the old QuoteRequest.tsx. Its submit handler set a success flag
+ * and discarded everything, while telling the visitor they would hear back
+ * within 24 hours.
+ */
+---
+
+<form
+  name="enquiry"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="company-website"
+  enctype="multipart/form-data"
+  action="/thanks/"
+  class={compact ? "space-y-4" : "space-y-5"}
+>
+  <input type="hidden" name="form-name" value="enquiry" />
+  <p class="hidden">
+    <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <label for="name" class="block text-sm font-medium">Your name</label>
+      <input
+        id="name" name="name" type="text" required autocomplete="name"
+        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
+      />
+    </div>
+    <div>
+      <label for="phone" class="block text-sm font-medium">Phone</label>
+      <input
+        id="phone" name="phone" type="tel" required autocomplete="tel"
+        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
+      />
+    </div>
+  </div>
+
+  <div>
+    <label for="email" class="block text-sm font-medium">Email</label>
+    <input
+      id="email" name="email" type="email" required autocomplete="email"
+      class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
+    />
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <label for="service" class="block text-sm font-medium">What do you need?</label>
+      <select
+        id="service" name="service"
+        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
+      >
+        {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => (
+          <option value={s.title}>{s.title}</option>
+        ))}
+        <option value="Something else">Something else</option>
+      </select>
+    </div>
+    <div>
+      <label for="area" class="block text-sm font-medium">Which area of London?</label>
+      <input
+        id="area" name="area" type="text"
+        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
+      />
+    </div>
+  </div>
+
+  <div>
+    <label for="detail" class="block text-sm font-medium">Tell us about the job</label>
+    <textarea
+      id="detail" name="detail" rows={compact ? 3 : 5}
+      class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
+    ></textarea>
+  </div>
+
+  <div>
+    <label for="photos" class="block text-sm font-medium">Photos of the space (optional)</label>
+    <p class="mt-1 text-xs text-ink-soft">A couple of pictures of the room saves a visit and gets you a closer price.</p>
+    <input
+      id="photos" name="photos" type="file" accept="image/*" multiple
+      class="mt-2 w-full text-sm file:mr-3 file:rounded-full file:border-0 file:bg-sand file:px-4 file:py-2 file:text-sm"
+    />
+  </div>
+
+  <div>
+    <label for="source" class="block text-sm font-medium">How did you hear about us?</label>
+    <input
+      id="source" name="source" type="text"
+      class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
+    />
+  </div>
+
+  <button
+    type="submit"
+    class="w-full rounded-full bg-ink px-6 py-3 text-sm font-medium text-bone transition-colors hover:bg-timber-deep sm:w-auto"
+  >
+    Send enquiry
+  </button>
+
+  <p class="text-xs text-ink-soft">
+    We use your details to reply to this enquiry and nothing else. See our
+    <a href="/privacy/" class="underline">privacy notice</a>.
+  </p>
+</form>
