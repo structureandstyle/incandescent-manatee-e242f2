@@ -1,0 +1,13 @@
+# Build settings only. Nothing here changes what the site looks like or how it
+# behaves: it tells Netlify how to build the existing Vite app from this repo,
+# which is what a Netlify Drop upload was doing by hand until now.
+#
+# The www to apex redirect from runbook 2.0 step 2 is deliberately NOT here yet.
+# It is a behaviour change and this commit is meant to be like for like.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
