@@ -1,0 +1,3 @@
+Deploy pipeline check, Flow to Form, 22 August 2026.
+If this file is reachable, the site is building from GitHub rather than a manual upload.
+Safe to delete.
