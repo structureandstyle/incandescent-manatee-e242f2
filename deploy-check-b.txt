@@ -1,0 +1,4 @@
+Deploy pipeline check B, Flow to Form, 22 August 2026.
+This file was pushed to the Netlify-created repo.
+If it is reachable, the domain deploys from incandescent-manatee-e242f2.
+Safe to delete.
