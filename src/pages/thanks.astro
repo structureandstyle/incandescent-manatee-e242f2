@@ -22,4 +22,33 @@ import { BUSINESS } from "../data/site";
       </a>
     </div>
   </section>
+
+  {/*
+    The third enquiry channel. tel: and wa.me fire from Base.astro; the form
+    fires here, because this page is only reached after Netlify accepts a POST.
+    The flag is set in EnquiryForm.astro and cleared on read, so a refresh or a
+    direct visit does not count a second enquiry.
+  */}
+  <script is:inline>
+    (() => {
+      let stamp = null;
+      try {
+        stamp = sessionStorage.getItem("ss_enquiry_submitted");
+        sessionStorage.removeItem("ss_enquiry_submitted");
+      } catch (err) {
+        return;
+      }
+      if (!stamp) return;
+      // Stale flag from an earlier session in the same tab.
+      if (Date.now() - Number(stamp) > 10 * 60 * 1000) return;
+
+      // Base.astro's gtag() is trapped inside the wrapper Astro generates for
+      // define:vars, so window.gtag does not exist on any page of this site.
+      // dataLayer is the shared global that gtag.js actually reads, so push to
+      // it exactly the way gtag() does.
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      gtag("event", "enquiry_form", { method: "form", link_url: "/thanks/" });
+    })();
+  </script>
 </Base>

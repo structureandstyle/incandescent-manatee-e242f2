@@ -116,3 +116,23 @@ const { compact = false } = Astro.props;
     <a href="/privacy/" class="underline">privacy notice</a>.
   </p>
 </form>
+
+{/*
+  Netlify posts the form, then redirects to /thanks/. The GA4 event fires there
+  rather than here, so it only counts submissions that actually succeeded.
+  This flag is what tells /thanks/ it was reached by a submission rather than a
+  refresh, a bookmark or a direct hit. Website enquiries are counted as
+  F2F-generated under the agreement, so an inflated number is a commercial
+  problem, not just a reporting one.
+*/}
+<script is:inline>
+  document.addEventListener("submit", (e) => {
+    const form = e.target;
+    if (!form || form.getAttribute("name") !== "enquiry") return;
+    try {
+      sessionStorage.setItem("ss_enquiry_submitted", String(Date.now()));
+    } catch (err) {
+      /* private mode: the enquiry still sends, it just goes uncounted */
+    }
+  });
+</script>
