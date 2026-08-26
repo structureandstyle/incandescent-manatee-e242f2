@@ -2,6 +2,25 @@
   command = "npm run build"
   publish = "dist"
 
+# Production refuses to ship anything unfinished. `build:production` runs the
+# build and then scripts/verify-build.mjs, which exits non-zero if an INDEXABLE
+# page still carries an open question, or if any page anywhere breaches the tone
+# protocol's factual limits or the house writing standard. A failed verify fails
+# the deploy.
+[context.production]
+  command = "npm run build:production"
+
+# Branch deploys and previews deliberately run the plain build, so the site can
+# be built and reviewed while the client's answers are outstanding. That is the
+# whole point of the branch: draft pages are visible to us and noindexed to
+# everyone else. Netlify also sets X-Robots-Tag: noindex on non-production
+# deploys, which is a second belt on top of the per-page meta tag.
+[context.branch-deploy]
+  command = "npm run build"
+
+[context.deploy-preview]
+  command = "npm run build"
+
 # One canonical host. www redirects to the apex, permanently, in one direction.
 [[redirects]]
   from = "https://www.structureandstyle.co.uk/*"

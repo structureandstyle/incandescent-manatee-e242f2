@@ -2,13 +2,19 @@
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import { SERVICES, BUSINESS, servicePath } from "../data/site";
+import { indexable } from "../data/page-gates";
 
 const title = "Fitted wardrobes and bespoke joinery in north London";
+// "fitted by the team that builds them" stood here until 26 August 2026. The
+// tone protocol's section 10 is an absolute factual limit and Q6 confirms it:
+// he works alone, bringing in trades as a job needs them. A crew noun is a
+// claim about the business that is not true. Removed rather than softened, and
+// how he works stays off the site entirely until Q6 comes back confirmed.
 const description =
-  "Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across north London. Made to measure, fitted by the team that builds them.";
+  "Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across north London. Measured on site and scribed to your walls.";
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} noindex={!indexable("/")}>
   <section class="border-b border-line">
     <div class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
       <p class="text-sm font-medium tracking-wide text-timber uppercase">{BUSINESS.tagline}</p>

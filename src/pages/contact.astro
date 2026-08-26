@@ -2,11 +2,13 @@
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import { BUSINESS } from "../data/site";
+import { indexable } from "../data/page-gates";
 ---
 
 <Base
   title="Get a quote"
   description="Tell us about your fitted wardrobe, walk-in wardrobe or joinery project and we will come back with a realistic price range. Serving north London."
+  noindex={!indexable("/contact/")}
 >
   <section class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-2 lg:py-24">
     <div>

@@ -11,9 +11,21 @@ interface Props {
   schema?: Record<string, unknown> | Record<string, unknown>[];
   /** Absolute or root-relative share image. */
   image?: string;
+  /**
+   * Keep this page out of the index. Set by a page while the content
+   * questionnaire has not answered everything that page depends on, so draft
+   * copy can be built and reviewed on a branch deploy without any of it
+   * reaching search. See `src/data/page-gates.ts`.
+   *
+   * Not defaulted from the gate here on purpose: the layout does not know the
+   * page's path reliably enough to look it up, so each page passes it. A page
+   * that forgets is indexable, which is right for a finished page and is caught
+   * for an unfinished one by `npm run verify`.
+   */
+  noindex?: boolean;
 }
 
-const { title, description, schema, image = "/og-default.jpg" } = Astro.props;
+const { title, description, schema, image = "/og-default.jpg", noindex = false } = Astro.props;
 
 // Self-referencing canonical on every template. The old site had one canonical
 // on one page and Google overrode it anyway, because the Business Profile was
@@ -59,6 +71,13 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {
+      /* Draft copy is never indexable. `noindex` is driven by the page's gate in
+         src/data/page-gates.ts, and lifts on its own once the questions that page
+         depends on are answered. nofollow as well, so the crawler does not walk
+         from a draft page into the rest of the site and treat it as a live route. */
+      noindex && <meta name="robots" content="noindex,nofollow" />
+    }
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={BUSINESS.name} />

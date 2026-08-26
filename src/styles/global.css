@@ -28,6 +28,17 @@
 
   --text-hero: clamp(2.25rem, 1.2rem + 4.4vw, 4.25rem);
   --text-section: clamp(1.65rem, 1.1rem + 2.1vw, 2.6rem);
+
+  /**
+   * Arriving ahead of the full token port (build order step 2), because the Ask
+   * annotation needs them now. Values are the design system's own, from
+   * tokens/colors.css: door green, and the wash it uses behind an open question.
+   * The rest of the palette lands with the port and supersedes the warm neutrals
+   * above.
+   */
+  --color-green: #2c4a3a;
+  --color-wash-green: rgba(44, 74, 58, 0.28);
+  --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 html {

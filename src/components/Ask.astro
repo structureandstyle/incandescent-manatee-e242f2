@@ -1,0 +1,55 @@
+---
+/**
+ * An open question, shown inline wherever draft copy is waiting on the client.
+ *
+ * Ported from the Claude Design system (`ui_kits/website/site-shell.jsx`), which
+ * used the same treatment: a green wash, mono brackets, and a visually hidden
+ * prefix so the annotation is never carried by colour alone.
+ *
+ * Two things make this more than a highlight:
+ *
+ * 1. `q` is the number of the question in the content questionnaire sent to the
+ *    client on 24 August 2026. It is rendered as `data-q`, so every placeholder
+ *    on the built site traces back to the question that fills it, and
+ *    `scripts/verify-build.mjs` can find them by markup rather than by guessing
+ *    at a text pattern.
+ * 2. Nothing carrying one of these may be indexed. A page with an unanswered
+ *    question stays `noindex`, and `npm run verify` fails the build if an
+ *    indexable page contains one. See `src/data/answers.ts`.
+ *
+ * Usage:
+ *   <Ask q="7">six to eight weeks</Ask>
+ *
+ * The slot holds our best current guess, or a short description of what is
+ * missing. It is never a claim, because it never ships.
+ */
+interface Props {
+  /** Question number from the content questionnaire, e.g. 7 or "44". */
+  q: string | number;
+}
+
+const { q } = Astro.props;
+---
+
+<span class="ask" data-q={String(q)}>
+  <span class="sr-only">Open question {q}: </span><span aria-hidden="true" class="ask-mark"
+    >[&hairsp;</span
+  ><slot /><span aria-hidden="true" class="ask-mark">&hairsp;]</span>
+</span>
+
+<style>
+  .ask {
+    background: var(--color-wash-green);
+    padding: 0.04em 0.28em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .ask-mark {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    font-style: normal;
+    letter-spacing: 0;
+    color: var(--color-green);
+  }
+</style>

@@ -1,7 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
+import Ask from "../components/Ask.astro";
 import { SERVICES, SITE_URL, BUSINESS, servicePath, type Service } from "../data/site";
+import { gateFor, indexable } from "../data/page-gates";
+import { ANSWERS, unanswered } from "../data/answers";
 
 export function getStaticPaths() {
   return SERVICES.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -11,6 +14,12 @@ interface Props { service: Service }
 const { service } = Astro.props;
 
 const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
+
+// The page publishes itself once every question it depends on is answered.
+// Until then it builds, deploys to the branch preview and stays out of search.
+const path = servicePath(service);
+const open = unanswered(gateFor(path));
+const isIndexable = indexable(path);
 
 const schema = {
   "@context": "https://schema.org",
@@ -24,7 +33,12 @@ const schema = {
 };
 ---
 
-<Base title={service.heading} description={service.description} schema={schema}>
+<Base
+  title={service.heading}
+  description={service.description}
+  schema={schema}
+  noindex={!isIndexable}
+>
   <article>
     <header class="border-b border-line bg-sand/40">
       <div class="mx-auto max-w-6xl px-5 py-16 sm:py-20">
@@ -51,15 +65,37 @@ const schema = {
       before the detail, real numbers (price ranges, lead times, install
       duration), named area coverage, and three or more photographs of actual
       completed work. Photo sets are sorted in the shared Drive Photo library.
-      Price ranges are an open ask with the client.
+
+      Build order step 5 replaces this block with that structure. What is here
+      now is the gate working: the questions this page depends on, rendered as
+      open questions so they are visible on the branch deploy and countable by
+      `npm run verify`.
     -->
     <div class="mx-auto max-w-6xl px-5 py-16">
       <div class="prose-none max-w-2xl space-y-4 text-ink-soft">
-        <p class="text-ink">
-          This page is being written. The structure, schema and enquiry route are live so it can be
-          indexed and measured from day one.
-        </p>
-        <p>Primary keyword for this page: <strong class="text-ink">{service.primary}</strong>.</p>
+        {
+          isIndexable ? (
+            <p class="text-ink">Page copy pending, all client answers received.</p>
+          ) : (
+            <>
+              <p class="text-ink">
+                This page is being written. It is deliberately kept out of search until the copy is
+                real, so nothing unfinished is indexed against{" "}
+                <strong class="text-ink">{service.primary}</strong>.
+              </p>
+              <p>It is waiting on {open.length} answer(s) from the client:</p>
+              <ul class="list-disc space-y-2 pl-5">
+                {open.map((q) => (
+                  <li>
+                    <Ask q={q.replace(/^q/, "").replace("stage04", "stage 04")}>
+                      {ANSWERS[q].about}
+                    </Ask>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )
+        }
       </div>
     </div>
 
