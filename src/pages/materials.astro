@@ -1,0 +1,97 @@
+---
+/**
+ * The materials page.
+ *
+ * The design system's version listed European oak, American black walnut and
+ * painted tulipwood, with quarter-sawn grain references and a swatch each. What
+ * is on file is MDF, veneered MDF and plywood. The three names here are
+ * provisional pending Q22, which also asks whether that is the full range.
+ *
+ * No swatches. The design mapped its chips onto --oak, --walnut and --green,
+ * and reusing those to stand for materials that are not those timbers would put
+ * the removed claim back through the side door: a chip filled with oak brown
+ * and captioned MDF still says oak. Real swatches get chosen when Q24 says what
+ * the finishes actually are.
+ *
+ * Q43 is the argument this page has to win, and it is deliberately his to make
+ * rather than ours: engineered board over solid timber is a considered choice
+ * for fitted furniture, more dimensionally stable and better under a painted
+ * finish, not a downgrade. Being straight about it reads as expertise. Writing
+ * it for him would be inventing his reasoning.
+ */
+import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import MaterialChip from "../components/ds/MaterialChip.astro";
+import EnquireBand from "../components/ds/EnquireBand.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Value from "../components/Value.astro";
+
+import { MATERIALS, BAND, CONTACT } from "../data/site-content";
+import { indexable } from "../data/page-gates";
+
+const isIndexable = indexable("/materials/");
+---
+
+<Base
+  title="Materials and finishes"
+  description="What bespoke fitted furniture is made from, what each material is like to work with, and why engineered board is the right choice for fitted work."
+  noindex={!isIndexable}
+>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Materials</Kicker>
+    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
+      What it is made from
+    </Display>
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      Fitted furniture asks something different of a material than a freestanding piece does. It has
+      to hold a line against a wall that moves, and hold a finish for years.
+    </p>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta={`${MATERIALS.length} in the standard range`} scribe>The range</SectionHead>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:var(--gap-lg)">
+      {MATERIALS.map((m) => (
+        <MaterialChip name={m.name}>
+          <Fragment slot="description">
+            <p style="font-size:var(--type-body-sm);color:var(--ink-soft);max-width:36ch;margin-top:var(--space-3)">
+              <Value q={m.descriptionQ} />
+            </p>
+          </Fragment>
+        </MaterialChip>
+      ))}
+    </div>
+
+    <p style="max-width:var(--measure);margin-top:var(--space-15);color:var(--text-quiet)">
+      Whether that is the full range, and who cuts the material to size, is <Value q="q22" />.
+    </p>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Finishes" level={4}>How it is finished</SectionHead>
+    <p style="max-width:var(--measure)"><Value q="q24" /></p>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="The one worth asking about" level={4}>Why not solid timber</SectionHead>
+    <p style="max-width:var(--measure)"><Value q="q43" /></p>
+    <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
+      The material he reaches for first, and why: <Value q="q40" />
+    </p>
+  </Wrap>
+
+  <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
+</Base>

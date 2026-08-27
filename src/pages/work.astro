@@ -1,0 +1,125 @@
+---
+/**
+ * The work page.
+ *
+ * The design shipped three case studies with full specification tables:
+ * "Alcove library, Queen's Park" with 14 shelves on brass pins and a 3.4m span,
+ * "Wardrobe wall, West Hampstead", "Window seat and shelving, Kensal Rise".
+ * None of it was sourced. Q44 exists precisely because nobody knows which jobs
+ * are real, so COMMISSIONS is empty and stays empty.
+ *
+ * What this page can honestly show today is the photography, which is real:
+ * finished work, triaged, quality 4 and 5. What it cannot show is why any of it
+ * was difficult, which is the part that sells. The questionnaire says it better
+ * than a comment can: a page of finished photographs with no story behind them
+ * is a gallery, not a case for hiring you.
+ *
+ * So the plates are here and the stories are marked as open. When Q44 to Q49
+ * come back, each commission becomes a case with its own specification table
+ * and this page stops being a gallery.
+ */
+import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Plate from "../components/ds/Plate.astro";
+import EnquireBand from "../components/ds/EnquireBand.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Value from "../components/Value.astro";
+
+import { COMMISSIONS, BAND, CONTACT } from "../data/site-content";
+import { BUSINESS, SERVICES, servicePath } from "../data/site";
+import { indexable } from "../data/page-gates";
+import selection from "../../public/images/_selection.json";
+
+const isIndexable = indexable("/work/");
+
+/* One plate per service that has photography, so the page shows range rather
+   than three angles of the same room. */
+const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
+const gallery = SERVICES.map((s) => {
+  const shots = sel[s.slug] ?? [];
+  return shots.length ? { service: s, shot: shots[0] } : null;
+}).filter(Boolean) as { service: (typeof SERVICES)[number]; shot: { file: string; w: number; h: number } }[];
+---
+
+<Base
+  title="Recent work"
+  description="Finished fitted wardrobes, walk-in wardrobes, alcove units, media walls and kitchens across north London."
+  noindex={!isIndexable}
+>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Work</Kicker>
+    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
+      Rooms that were not square
+    </Display>
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      Every one of these started as a wall that had never met a straight line. The interesting part
+      of each job is what had to be given up, and what did not.
+    </p>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta={`${gallery.length} services shown`} scribe>Finished work</SectionHead>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:var(--gap-lg)">
+      {gallery.map(({ service, shot }, i) => (
+        <Plate
+          photo={shot.file}
+          alt={`${service.title}, completed installation by ${BUSINESS.legalName}`}
+          width={shot.w}
+          height={shot.h}
+          subject={service.title}
+          detail="Completed"
+          eager={i === 0}
+        />
+      ))}
+    </div>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta={COMMISSIONS.length ? undefined : "Waiting on the client"} level={4}>
+      The jobs behind them
+    </SectionHead>
+
+    {COMMISSIONS.length === 0 && (
+      <div style="max-width:var(--measure)">
+        <p style="color:var(--text-quiet)">
+          Four to six commissions get written up here, each with the room, the problem, the
+          materials and what was difficult about it. Which jobs, and the story of each, is{" "}
+          <Value q="q44" />
+        </p>
+        <ul style="list-style:none;margin:var(--space-14) 0 0;padding:0;display:grid;gap:var(--space-9)">
+          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">Room and problem</MonoLabel><Value q="q45" /></li>
+          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">Materials and size</MonoLabel><Value q="q46" /></li>
+          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">What was difficult</MonoLabel><Value q="q47" /></li>
+          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">How long it took</MonoLabel><Value q="q48" /></li>
+          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">Named or quoted</MonoLabel><Value q="q49" /></li>
+        </ul>
+      </div>
+    )}
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead level={5}>By service</SectionHead>
+    <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:var(--gap-md)">
+      {SERVICES.map((s) => (
+        <li style="border-top:var(--rule-hair);padding-top:var(--space-8)">
+          <a href={servicePath(s)}>{s.title}</a>
+        </li>
+      ))}
+    </ul>
+  </Wrap>
+
+  <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
+</Base>

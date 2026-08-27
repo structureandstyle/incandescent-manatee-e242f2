@@ -1,0 +1,92 @@
+---
+/**
+ * A journal article.
+ *
+ * The guard is the point of this file. A post only gets a route when
+ * `blocked: false`, so a draft cannot reach the site by being committed: it has
+ * to be cleared explicitly. That mirrors what the question gate does for the
+ * service pages, and it exists because the first article failed its Truth gate
+ * on ten invented claims and was one careless merge away from publishable.
+ */
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import Display from "../../components/ds/Display.astro";
+import Kicker from "../../components/ds/Kicker.astro";
+import MonoLabel from "../../components/ds/MonoLabel.astro";
+import EnquireBand from "../../components/ds/EnquireBand.astro";
+import Value from "../../components/Value.astro";
+import { BAND, CONTACT } from "../../data/site-content";
+import { SITE_URL, BUSINESS } from "../../data/site";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("journal");
+  return posts
+    .filter((p) => p.data.blocked === false)
+    .map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.published.toISOString(),
+  author: { "@type": "Organization", name: BUSINESS.legalName },
+  publisher: { "@id": `${SITE_URL}/#business` },
+  mainEntityOfPage: new URL(`/journal/${post.id}/`, SITE_URL).href,
+};
+---
+
+<Base title={post.data.title} description={post.data.description} schema={schema}>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>{post.data.primary}</Kicker>
+    <Display level={2} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
+      {post.data.title}
+    </Display>
+    <MonoLabel as="p" tone="soft">
+      {post.data.published.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+    </MonoLabel>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <div class="journal-prose" style="max-width:var(--measure)">
+      <Content />
+    </div>
+  </Wrap>
+
+  <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
+</Base>
+
+<style>
+  .journal-prose :global(h2) {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-display-5);
+    margin: var(--space-17) 0 var(--space-10);
+  }
+  .journal-prose :global(h3) {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-serif-lg);
+    margin: var(--space-15) 0 var(--space-8);
+  }
+  .journal-prose :global(p) { margin-bottom: var(--space-10); }
+  .journal-prose :global(ul),
+  .journal-prose :global(ol) { margin: 0 0 var(--space-10) var(--space-12); }
+  .journal-prose :global(li) { margin-bottom: var(--space-5); }
+  .journal-prose :global(img) { margin: var(--space-14) 0; border: var(--rule-structure); }
+  .journal-prose :global(a) { color: var(--green); border-bottom: 1px solid rgba(44, 74, 58, 0.4); }
+</style>

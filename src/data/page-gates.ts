@@ -25,6 +25,9 @@ import { ready, type QuestionKey } from "./answers";
  * from, how it is fitted, and what happens afterwards. If a section is added to
  * that template, its questions belong here in the same commit.
  */
+/** The three the enquiry band shows on every page. */
+const BAND_QUESTIONS = ["q03", "q07", "q10"] as const;
+
 const SERVICE_PAGE = [
   "q03", "q07", "q10", "q11", "q12", "q18",
   "q22", "q24", "q30", "q31", "q33", "q35", "q36", "q43",
@@ -42,14 +45,24 @@ export const PAGE_GATES = {
   "/bespoke-kitchens/": SERVICE_PAGE,
   "/home-office-understairs-storage/": SERVICE_PAGE,
 
-  // The brand pages from the design system.
+  /**
+   * The brand pages. Each list is that page read section by section, plus the
+   * three the enquiry band carries on every page (Q3 area, Q7 lead time,
+   * Q10 price). Same discipline as the service template: if a section is added,
+   * its questions belong here in the same commit.
+   */
   "/process/": [
-    "q13", "q14", "q15", "q16", "q17", "q18", "q19", "q20",
-    "stage04", "q26", "q27", "q30", "q31", "q32", "q33", "q34", "q35", "q36",
+    ...BAND_QUESTIONS,
+    "q13", "q14", "q15", "q16",                     // 01 Visit
+    "q17", "q18", "q19", "q20", "q21",              // 02 Survey and drawings
+    "stage04", "q26", "q27", "q28", "q29",          // 03 still untitled
+    "q30", "q31", "q32", "q33", "q34",              // 04 Fitting
   ],
-  "/materials/": ["q22", "q24", "q39", "q40", "q41", "q42", "q43"],
-  "/work/": ["q44", "q45", "q46", "q47", "q48", "q49"],
-  "/maker/": ["q03", "q06", "q50", "q51", "q52", "q53", "q56"],
+  "/materials/": [...BAND_QUESTIONS, "q22", "q24", "q39", "q40", "q43"],
+  "/work/": [...BAND_QUESTIONS, "q44", "q45", "q46", "q47", "q48", "q49"],
+  /* Q56 gates the portrait rather than appearing as copy, so it is not here:
+     the page is publishable without a photograph of him. */
+  "/maker/": [...BAND_QUESTIONS, "q06", "q50", "q51", "q52", "q53"],
 
   // No client dependency.
   "/journal/": [],

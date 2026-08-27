@@ -1,0 +1,95 @@
+---
+/**
+ * The journal index.
+ *
+ * Empty today, and the empty state says why rather than pretending the section
+ * is coming soon. The first piece is drafted and gated, and the gate is the
+ * same questionnaire the rest of the site waits on.
+ *
+ * Why this exists before it has anything in it: journal posts link INTO the
+ * service pages, so building them first would publish links to 404s, and the
+ * route needs to be in place so a finished article is a file rather than a
+ * sprint. Guides are also the mechanism that makes the commercial pages
+ * rankable at all. The target sheet is blunt about it: kitchens needs roughly
+ * 81 referring domains and this site has four, service pages do not earn links,
+ * genuinely useful guides do.
+ */
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import Display from "../../components/ds/Display.astro";
+import Kicker from "../../components/ds/Kicker.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import MonoLabel from "../../components/ds/MonoLabel.astro";
+import Link from "../../components/ds/Link.astro";
+import EnquireBand from "../../components/ds/EnquireBand.astro";
+import Value from "../../components/Value.astro";
+import { BAND, CONTACT } from "../../data/site-content";
+
+const all = await getCollection("journal");
+const live = all
+  .filter((p) => p.data.blocked === false)
+  .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+const held = all.filter((p) => p.data.blocked !== false);
+---
+
+<Base
+  title="Journal"
+  description="Notes on fitted furniture: how rooms decide the design, what things cost, and what is worth paying for."
+  noindex={live.length === 0}
+>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Journal</Kicker>
+    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
+      Notes from the work
+    </Display>
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      Ideas, costs and the things worth knowing before commissioning fitted furniture. Written from
+      real rooms rather than from a catalogue.
+    </p>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta={live.length ? `${live.length} published` : "Nothing published yet"} scribe>
+      Articles
+    </SectionHead>
+
+    {live.length > 0 ? (
+      <ul style="list-style:none;margin:0;padding:0">
+        {live.map((p, i) => (
+          <li style={`padding:var(--space-13) 0;border-top:${i ? "var(--rule-hair)" : "var(--rule-structure)"}`}>
+            <Link href={`/journal/${p.id}/`} variant="nav" chamfer>{p.data.title}</Link>
+            <p style="margin-top:var(--space-8);max-width:var(--measure);color:var(--text-quiet)">
+              {p.data.description}
+            </p>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div style="max-width:var(--measure);border-top:var(--rule-structure);padding-top:var(--space-12)">
+        <p style="color:var(--text-quiet)">
+          Nothing is published here yet, and that is deliberate rather than pending. The first
+          article is written and has not cleared its accuracy gate: it made claims about client
+          briefs that no photograph could evidence. It publishes once those come from the client
+          rather than from us.
+        </p>
+        {held.length > 0 && (
+          <MonoLabel as="p" tone="soft" style="margin-top:var(--space-10)">
+            {held.length} draft{held.length === 1 ? "" : "s"} held
+          </MonoLabel>
+        )}
+      </div>
+    )}
+  </Wrap>
+
+  <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
+</Base>

@@ -1,0 +1,98 @@
+---
+/**
+ * The process page. The design system's own README calls this "the page that
+ * argues method is the product", and the questionnaire agrees: it is entirely
+ * made of the client's answers.
+ *
+ * Stage 03 is the reason this page cannot ship yet, and it is worth being clear
+ * about what is happening there rather than papering over it. The design filled
+ * it with "Benchwork in the workshop: cutting, jointing, finishing. One
+ * commission on the bench at a time." Q3 establishes he has no workshop and
+ * that materials are cut to size elsewhere, so that sentence is false. What
+ * replaces it is not a vaguer sentence, it is a stage with no title, because
+ * nobody yet knows what happens between the cutting and the fitting. That is
+ * the unnumbered stage-04 question.
+ *
+ * The bench plane glyph is deliberately not used on that stage for the same
+ * reason. See the note in ProcessStep.astro.
+ */
+import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import ProcessStep from "../components/ds/ProcessStep.astro";
+import EnquireBand from "../components/ds/EnquireBand.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Value from "../components/Value.astro";
+import Ask from "../components/Ask.astro";
+
+import { PROCESS, BAND, CONTACT } from "../data/site-content";
+import { indexable } from "../data/page-gates";
+import { questionLabel, ANSWERS, answered } from "../data/answers";
+
+const isIndexable = indexable("/process/");
+
+/* Icons per stage. Stage 03 has none: choosing one asserts what happens there. */
+const ICONS = ["tape", "pencil", undefined, "square"] as const;
+---
+
+<Base
+  title="How a commission runs, stage by stage"
+  description="From the first visit to the fitting: what happens at each stage of a bespoke joinery commission, what you receive, and how long each part takes."
+  noindex={!isIndexable}
+>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Process</Kicker>
+    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
+      Method is the product
+    </Display>
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      Four stages, and the same four every time. What follows is what actually happens, in order,
+      with the numbers attached rather than left vague.
+    </p>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Four stages" scribe>The commission</SectionHead>
+
+    {PROCESS.map((stage, i) => (
+      <ProcessStep
+        number={stage.number}
+        icon={ICONS[i]}
+        title={stage.title ?? "Stage still to be titled"}
+      >
+        {stage.confirmed ? (
+          <span>{stage.confirmed}{" "}</span>
+        ) : (
+          /* Stage 03. Named as unknown rather than described vaguely. */
+          <span>
+            <Ask q={questionLabel("stage04")}>
+              What happens between the materials being cut and the piece reaching site. The stage
+              cannot be titled or written until this is answered.
+            </Ask>{" "}
+          </span>
+        )}
+        {stage.questions
+          .filter((q) => !answered(q))
+          .map((q) => (
+            <span style="display:block;margin-top:var(--space-6)">
+              <MonoLabel tone="soft" style="margin-right:var(--space-5)">{ANSWERS[q].about}</MonoLabel>
+              <Value q={q} />
+            </span>
+          ))}
+      </ProcessStep>
+    ))}
+  </Wrap>
+
+  <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
+</Base>

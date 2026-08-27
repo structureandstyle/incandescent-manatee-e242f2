@@ -82,6 +82,10 @@ function visibleText(html) {
     .replace(/\s+/g, " ");
 }
 
+/** Numbered questions read as Q7; the unnumbered making-stage one reads as
+    "stage 04", so prefixing it with Q produced "Qstage 04". */
+const label = (q) => (/^\d+$/.test(q) ? `Q${q}` : q.replace(/^./, (c) => c.toUpperCase()));
+
 const files = await htmlFiles(DIST).catch(() => {
   console.error(`No ${DIST}/ directory. Run \`npm run build\` first.`);
   process.exit(2);
@@ -133,7 +137,7 @@ console.log(`Scanned ${files.length} page(s) in ${DIST}/.`);
 if (drafts.length) {
   console.log(`\n${drafts.length} page(s) held back as drafts, correctly noindexed:`);
   for (const d of drafts) {
-    const bits = [...d.asks.map((q) => `Q${q}`), ...d.raw];
+    const bits = [...d.asks.map(label), ...d.raw];
     console.log(`  ${d.page}  waiting on ${bits.join(", ")}`);
   }
 }
@@ -148,7 +152,7 @@ if (openQuestions.size) {
   const sorted = [...openQuestions].sort((a, b) =>
     a.localeCompare(b, "en", { numeric: true })
   );
-  console.log(`\nOutstanding questions across the site: ${sorted.map((q) => `Q${q}`).join(", ")}`);
+  console.log(`\nOutstanding questions across the site: ${sorted.map(label).join(", ")}`);
 }
 
 if (errors.length) {
