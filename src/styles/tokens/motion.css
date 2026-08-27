@@ -1,0 +1,46 @@
+/* NOTE, added on import: the "workshop" and "bench" wording in the comments
+   below is the design system's motion metaphor, describing how an element
+   moves. It is not a claim about the client's premises. The client has no
+   workshop and no bench (questionnaire Q3), so this vocabulary must never
+   surface in copy, alt text or a component's rendered output. */
+:root{
+  /* v1: the original single reveal. Kept verbatim, still the default for a plain block. */
+  --ease:ease;
+  --duration-hover:.18s;
+  --duration-reveal:.7s;
+  --transition-hover:border-color var(--duration-hover) var(--ease), color var(--duration-hover) var(--ease), background-color var(--duration-hover) var(--ease);
+  --transition-reveal:opacity var(--duration-reveal) var(--ease), transform var(--duration-reveal) var(--ease);
+  --reveal-offset:14px;
+  --blur-sticky:6px;
+  --focus-width:2px;
+  --focus-offset:3px;
+
+  /* v2: the motion vocabulary. Each action is named for a hand-tool action. */
+  --t-fast:180ms;
+  --t-move:520ms;
+  --t-reveal:780ms;
+  --t-fade:150ms;
+  --ease-out:cubic-bezier(.2,.7,.2,1);
+  --ease-seat:cubic-bezier(.22,1.02,.36,1);
+
+  /* Stagger: siblings 60 to 120ms, stamped mono rows at the tight end. */
+  --stagger-stamp:72ms;
+  --stagger-sibling:96ms;
+
+  /* Travel. Square lands from 8 to 12px, stamp drops 1px, seat settles from 12px. */
+  --square-offset:10px;
+  --seat-offset:12px;
+  --stamp-offset:1px;
+  --seat-rotation:-6deg;
+
+  /* Brand: the only permitted blur, and the only permitted brightness shift. */
+  --brand-blur:2px;
+  --brand-darken:.94;
+
+  /* Chamfer: a hover hairline eased from 1px to 2px, by transform, never border-width. */
+  --chamfer-weight:2;
+  --transition-chamfer:transform var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+
+  /* The one permitted loop: the wardrobe drawing redrawing itself. Nothing else loops. */
+  --t-loop:7s;
+}

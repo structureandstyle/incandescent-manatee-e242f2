@@ -1,0 +1,83 @@
+/* The motion vocabulary as plain CSS, for surfaces that are not React:
+   set data-motion on the element, add the .in class when it enters view.
+   Seven actions, each named for a hand-tool action. Transform, opacity and
+   clip-path only. See the note in motion.css: this naming is a metaphor for how
+   a thing moves, never a claim about the client's premises. */
+
+[data-motion]{transition:opacity var(--t-move) var(--ease-out),transform var(--t-move) var(--ease-out),clip-path var(--t-reveal) var(--ease-out),filter var(--t-reveal) var(--ease-out)}
+
+/* Scribe: a hairline draws in along its length, like a marking gauge run along a board. */
+[data-motion="scribe"]{transform:scaleX(0);transform-origin:left center;transition:transform var(--t-reveal) var(--ease-out)}
+[data-motion="scribe"][data-axis="y"]{transform:scaleY(0);transform-origin:center top}
+[data-motion="scribe"].in{transform:none}
+
+/* Seat: two parts come together and settle, like a tenon seating in a mortice. */
+[data-motion="seat"]{opacity:0;transform:translateY(var(--seat-offset));transition:opacity var(--t-move) var(--ease-seat),transform var(--t-move) var(--ease-seat)}
+[data-motion="seat"][data-from="left"]{transform:translateX(calc(var(--seat-offset) * -1))}
+[data-motion="seat"][data-from="right"]{transform:translateX(var(--seat-offset))}
+[data-motion="seat"].in{opacity:1;transform:none}
+
+/* Plane: a surface revealed by one straight pass, like a plane taking a shaving.
+   The clip lands on the CHILD, never on the observed element itself: a browser applies an
+   element's own clip-path when it computes the intersection rect, so a plate clipped shut hides
+   itself from the observer that would open it. Mark up as
+   <span data-motion="plane"><span class="plate"></span></span>. */
+[data-motion="plane"] > *{clip-path:inset(0 100% 0 0);transition:clip-path var(--t-reveal) var(--ease-out)}
+[data-motion="plane"][data-from="top"] > *{clip-path:inset(0 0 100% 0)}
+[data-motion="plane"].in > *{clip-path:inset(0 0 0 0)}
+
+/* Square: the last few pixels snap onto the grid, the way a carcass is checked with a square. */
+[data-motion="square"]{opacity:0;transform:translateY(var(--square-offset));transition:opacity var(--t-move) var(--ease-seat),transform var(--t-move) var(--ease-seat)}
+[data-motion="square"][data-from="left"]{transform:translateX(calc(var(--square-offset) * -1))}
+[data-motion="square"][data-from="right"]{transform:translateX(var(--square-offset))}
+[data-motion="square"].in{opacity:1;transform:none}
+
+/* Stamp: mono rows land row by row, like stamped reference numbers. */
+[data-motion="stamp"]{opacity:0;transform:translateY(calc(var(--stamp-offset) * -1));transition:opacity var(--t-fast) var(--ease-out),transform var(--t-fast) var(--ease-out)}
+[data-motion="stamp"].in{opacity:1;transform:none}
+[data-motion="stamp-group"].in > *{animation:ss-stamp var(--t-fast) var(--ease-out) both}
+[data-motion="stamp-group"].in > :nth-child(1){animation-delay:0ms}
+[data-motion="stamp-group"].in > :nth-child(2){animation-delay:72ms}
+[data-motion="stamp-group"].in > :nth-child(3){animation-delay:144ms}
+[data-motion="stamp-group"].in > :nth-child(4){animation-delay:216ms}
+[data-motion="stamp-group"].in > :nth-child(5){animation-delay:288ms}
+[data-motion="stamp-group"].in > :nth-child(6){animation-delay:360ms}
+[data-motion="stamp-group"].in > :nth-child(7){animation-delay:432ms}
+[data-motion="stamp-group"].in > :nth-child(8){animation-delay:504ms}
+[data-motion="stamp-group"] > *{opacity:0}
+[data-motion="stamp-group"].in > *{opacity:1}
+@keyframes ss-stamp{from{opacity:0;transform:translateY(calc(var(--stamp-offset) * -1))}to{opacity:1;transform:none}}
+
+/* Brand: the mark burns in. The only blur in the system. */
+[data-motion="brand"]{opacity:0;filter:blur(var(--brand-blur)) brightness(var(--brand-darken));transition:opacity var(--t-reveal) var(--ease-out),filter var(--t-reveal) var(--ease-out)}
+[data-motion="brand"].in{opacity:1;filter:blur(0) brightness(1)}
+
+/* Chamfer: a hover eases an edge. The underline is a scaled hairline, never an animated border-width. */
+[data-chamfer]{position:relative;border-bottom-color:transparent!important}
+[data-chamfer]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleY(1);transform-origin:bottom;transition:transform var(--t-fast) var(--ease-out),opacity var(--t-fast) var(--ease-out)}
+[data-chamfer="quiet"]::after{opacity:.4}
+[data-chamfer]:hover::after,[data-chamfer]:focus-visible::after{opacity:1;transform:scaleY(var(--chamfer-weight))}
+
+/* Stagger helper: nothing here loops, everything plays once. */
+[data-motion-delay="1"]{transition-delay:96ms}
+[data-motion-delay="2"]{transition-delay:192ms}
+[data-motion-delay="3"]{transition-delay:288ms}
+[data-motion-delay="4"]{transition-delay:384ms}
+
+/* Reduced motion: every action collapses to a 150ms opacity fade. Nothing waits, nothing moves. */
+@media (prefers-reduced-motion:reduce){
+  [data-motion]{transition:opacity var(--t-fade) linear!important;transform:none!important;clip-path:none!important;filter:none!important;transition-delay:0ms!important}
+  [data-motion]:not(.in){opacity:0}
+  [data-motion="scribe"]:not(.in){opacity:0;transform:none!important}
+  [data-motion].in{opacity:1}
+  [data-motion="stamp-group"].in > *{animation:none;opacity:1}
+  [data-motion="plane"] > *{clip-path:none!important}
+  [data-chamfer]::after{transition:opacity var(--t-fade) linear}
+  [data-chamfer]:hover::after,[data-chamfer]:focus-visible::after{transform:scaleY(1)}
+}
+
+/* Print: motion does not exist on paper. Every state is its resting state. */
+@media print{
+  [data-motion],[data-motion] *{opacity:1!important;transform:none!important;clip-path:none!important;filter:none!important;transition:none!important;animation:none!important}
+  [data-motion="plane"] > *{clip-path:none!important}
+}

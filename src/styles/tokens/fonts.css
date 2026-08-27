@@ -1,0 +1,22 @@
+/* Self-hosted only.
+ *
+ * Two deliberate changes from the Claude Design source (tokens/fonts.css):
+ *
+ * 1. The Google Fonts @import is REMOVED. The design system loads the full
+ *    families from fonts.googleapis.com with the local woff2 as a backup. This
+ *    site inverts that. The legacy site's blocking font stylesheet was a large
+ *    part of its mobile LCP problem, and performance is the reason the rebuild
+ *    exists, so a render-blocking third-party stylesheet does not come with it.
+ * 2. Paths point at /fonts/, which is Astro's public directory, not the design
+ *    system's ../assets/fonts/.
+ *
+ * Nothing else is changed. The faces and weights are the design system's.
+ */
+
+@font-face{font-family:'Archivo';font-weight:400;font-style:normal;font-display:swap;src:url("/fonts/archivo-400.woff2") format("woff2")}
+@font-face{font-family:'Archivo';font-weight:500;font-style:normal;font-display:swap;src:url("/fonts/archivo-500.woff2") format("woff2")}
+@font-face{font-family:'Archivo';font-weight:600;font-style:normal;font-display:swap;src:url("/fonts/archivo-600.woff2") format("woff2")}
+@font-face{font-family:'Libre Caslon Display';font-weight:400;font-style:normal;font-display:swap;src:url("/fonts/libre-caslon-display-400.woff2") format("woff2")}
+@font-face{font-family:'Libre Caslon Text';font-weight:400;font-style:italic;font-display:swap;src:url("/fonts/libre-caslon-text-400-italic.woff2") format("woff2")}
+@font-face{font-family:'Spline Sans Mono';font-weight:400;font-style:normal;font-display:swap;src:url("/fonts/spline-sans-mono-400.woff2") format("woff2")}
+@font-face{font-family:'Spline Sans Mono';font-weight:500;font-style:normal;font-display:swap;src:url("/fonts/spline-sans-mono-500.woff2") format("woff2")}

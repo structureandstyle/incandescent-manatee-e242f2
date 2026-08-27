@@ -1,0 +1,49 @@
+:root{
+  /* Base palette, timber, paint, paper, ink */
+  --paper:#F2EEE3;
+  --char:#221D18;
+  --green:#2C4A3A;
+  --oak:#B28451;
+  --walnut:#6E4B2A;
+  --error:#8A2E1F;
+
+  /* Ink on paper */
+  --ink:var(--char);
+  --ink-soft:rgba(34,29,24,.62);
+  --ink-faint:rgba(34,29,24,.40);
+  --hair:rgba(34,29,24,.24);
+  --hair-strong:rgba(34,29,24,.85);
+  --wash-char:rgba(34,29,24,.05);
+  --wash-green:rgba(44,74,58,.28);
+
+  /* Paper on ink (reversed surfaces: char, door green) */
+  --ink-rev:var(--paper);
+  --ink-rev-soft:rgba(242,238,227,.88);
+  --ink-rev-quiet:rgba(242,238,227,.72);
+  --ink-rev-faint:rgba(242,238,227,.62);
+  --hair-rev:rgba(242,238,227,.22);
+  --hair-rev-strong:rgba(242,238,227,.28);
+
+  /* Semantic aliases */
+  --surface-page:var(--paper);
+  --surface-ink:var(--char);
+  --surface-accent:var(--green);
+  --surface-sticky:rgba(242,238,227,.92);
+  --text-body:var(--char);
+  --text-heading:var(--char);
+  --text-quiet:var(--ink-soft);
+  --text-spec:var(--ink-soft);
+  --text-on-accent:var(--paper);
+  --link:var(--char);
+  --link-accent:var(--green);
+  --border-hair:var(--hair);
+  --border-structure:var(--hair-strong);
+  --focus-ring:var(--green);
+
+  /* Material references (photography and swatch chips only).
+     NOT a claim about what the client works in: Q22 records the real
+     materials as MDF, veneered MDF and plywood, pending confirmation. */
+  --material-oak:var(--oak);
+  --material-walnut:var(--walnut);
+  --material-painted:var(--green);
+}

@@ -1,0 +1,66 @@
+:root{
+  /* Families, the serif speaks, the sans explains, the mono measures */
+  --font-serif-display:'Libre Caslon Display', Georgia, serif;
+  --font-serif-italic:'Libre Caslon Text', Georgia, serif;
+  --font-sans:'Archivo', Helvetica, Arial, sans-serif;
+  --font-mono:'Spline Sans Mono', 'Courier New', monospace;
+
+  --font-display:var(--font-serif-display);
+  --font-body:var(--font-sans);
+  --font-ui:var(--font-sans);
+  --font-spec:var(--font-mono);
+
+  --weight-regular:400;
+  --weight-medium:500;
+  --weight-semibold:600;
+
+  /* Display / serif scale (screen, fluid) */
+  --type-display-1:clamp(40px,6.4vw,84px);
+  --type-display-2:clamp(30px,4.4vw,56px);
+  --type-display-3:clamp(30px,4vw,52px);
+  --type-display-4:clamp(28px,3.6vw,46px);
+  --type-display-5:clamp(24px,2.8vw,34px);
+  --type-serif-quote:clamp(24px,3.4vw,40px);
+  --type-serif-lg:23px;
+  --type-serif-md:22px;
+  --type-serif-sm:19px;
+
+  --lh-display-1:1.06;
+  --lh-display-2:1.1;
+  --lh-display-3:1.12;
+  --lh-display-5:1.15;
+  --lh-quote:1.3;
+  --ls-display-1:-0.01em;
+  --ls-display-4:-0.005em;
+
+  /* Sans / text scale */
+  --type-lede:17.5px;
+  --type-body:16px;
+  --type-body-sm:14.5px;
+  --type-print-body:13px;
+  --type-note:11.5px;
+  --lh-body:1.65;
+  --lh-print-body:1.6;
+  --lh-note:1.55;
+
+  /* Mono / specification scale */
+  --type-mono:11px;
+  --type-mono-md:12.5px;
+  --type-mono-print:9.5px;
+  --ls-mono:.14em;
+  --ls-mono-md:.06em;
+  --ls-mono-tight:.04em;
+  --ls-mono-table:.12em;
+
+  /* UI labels (uppercase Archivo, nav and buttons) */
+  --type-label:12px;
+  --ls-label:.16em;
+  --ls-label-loose:.16em;
+
+  /* Measure */
+  --measure:62ch;
+  --measure-tight:52ch;
+  --measure-short:46ch;
+  --measure-display:24ch;
+  --measure-display-tight:16ch;
+}

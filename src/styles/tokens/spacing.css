@@ -1,0 +1,34 @@
+:root{
+  /* Step scale, the small end is print-derived, the large end is fluid web */
+  --space-1:2px;   --space-2:4px;   --space-3:6px;   --space-4:8px;
+  --space-5:10px;  --space-6:12px;  --space-7:14px;  --space-8:16px;
+  --space-9:18px;  --space-10:20px; --space-11:22px; --space-12:26px;
+  --space-13:30px; --space-14:34px; --space-15:40px; --space-16:44px;
+  --space-17:56px; --space-18:72px;
+
+  /* Page frame */
+  --page-max:1180px;
+  --gutter:clamp(20px,5vw,72px);
+
+  /* Fluid rhythm, taken from the website source */
+  --section-y:clamp(64px,9vw,128px);
+  --hero-y:clamp(56px,9vw,120px);
+  --band-y:clamp(56px,8vw,104px);
+  --footer-y:clamp(48px,7vw,84px);
+  --case-y:clamp(34px,5vw,56px);
+  --gap-xl:clamp(28px,5vw,72px);
+  --gap-lg:clamp(24px,4.5vw,64px);
+  --gap-md:clamp(18px,3vw,36px);
+  --gap-sm:clamp(14px,2.5vw,34px);
+  --head-gap:clamp(30px,5vw,56px);
+  --plate-y:clamp(40px,6vw,72px);
+
+  /* Floating supporting action, inset from the page corner */
+  --float-x:clamp(16px,3vw,32px);
+  --float-y:clamp(16px,3vw,32px);
+
+  /* Print sheet (A4 landscape, brand document) */
+  --sheet-w:1122px;
+  --sheet-h:794px;
+  --sheet-pad:44px 52px 34px;
+}

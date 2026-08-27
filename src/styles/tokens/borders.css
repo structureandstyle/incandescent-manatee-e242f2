@@ -1,0 +1,18 @@
+:root{
+  /* One weight only. The hairline is the brand's only decoration. */
+  --hairline:1px;
+  --rule-hair:1px solid var(--hair);
+  --rule-structure:1px solid var(--hair-strong);
+  --rule-hair-rev:1px solid var(--hair-rev);
+  --rule-structure-rev:1px solid var(--hair-rev-strong);
+  --rule-dashed:1.6px dashed rgba(34,29,24,.55);
+
+  /* Square corners everywhere. Nothing in this brand is rounded. */
+  --radius:0;
+  --radius-pill:0;
+
+  /* No shadow system. Elevation is expressed with hairlines, not shadows.
+     The single exception is the print-preview desk shadow. */
+  --shadow-none:none;
+  --shadow-sheet:0 6px 30px rgba(0,0,0,.4);
+}
