@@ -1,0 +1,66 @@
+---
+/**
+ * The identity, inlined.
+ * Ported from the design system's components/identity/Logo.jsx.
+ *
+ * Two changes, both worth having:
+ *
+ * 1. The source rendered an <img src="assets/logos/...">. Here the SVG is
+ *    inlined at build time via Vite's ?raw import, so the lockup costs no extra
+ *    request and cannot flash in after the header has painted.
+ * 2. The source carried a separate -reversed file per lockup for dark surfaces.
+ *    Both artworks now use fill="currentColor", so the footer and the enquiry
+ *    band get the paper version by setting a colour, and there are half as many
+ *    files to keep in step.
+ *
+ * `title` is the accessible name. Pass title="" for a lockup that is decorative
+ * because the name is already in the text beside it, which is the footer's case.
+ */
+import wordmark from "../../assets/logos/wordmark.svg?raw";
+import mark from "../../assets/logos/mark.svg?raw";
+
+interface Props {
+  lockup?: "wordmark" | "mark";
+  height?: number;
+  title?: string;
+  class?: string;
+  style?: string;
+}
+
+const {
+  lockup = "wordmark",
+  height,
+  title = "Structure & Style",
+  class: className,
+  style = "",
+} = Astro.props;
+
+/* From the artwork's own viewBox: 1584.21 / 156.96. The mark is square. */
+const RATIO: Record<string, number> = { wordmark: 10.093, mark: 1 };
+
+const h = height ?? (lockup === "wordmark" ? 20 : 16);
+const w = Math.round(h * (RATIO[lockup] ?? 1));
+const svg = lockup === "mark" ? mark : wordmark;
+const decorative = title === "";
+---
+
+<span
+  class:list={["ds-logo", className]}
+  role={decorative ? undefined : "img"}
+  aria-label={decorative ? undefined : title}
+  aria-hidden={decorative ? "true" : undefined}
+  style={`height:${h}px;width:${w}px;${style}`}
+  set:html={svg}
+/>
+
+<style>
+  .ds-logo {
+    display: inline-block;
+    color: inherit;
+  }
+  .ds-logo :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

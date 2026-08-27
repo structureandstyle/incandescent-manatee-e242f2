@@ -1,65 +1,22 @@
 ---
-import { BUSINESS, SERVICES, servicePath } from "../data/site";
+/**
+ * Site header. A thin wrapper over the design system's NavBar, so the nav is
+ * defined once in src/data/site-content.ts and every page inherits it.
+ *
+ * The scaffold's own header stood here until 26 August 2026: a Tailwind bar
+ * with the service list, a horizontally scrolling mobile strip and a "Get a
+ * quote" pill. It is replaced rather than kept alongside, because two headers
+ * is how a site ends up with two navigations that disagree.
+ */
+import NavBar from "./ds/NavBar.astro";
+import { NAV, ENQUIRE_HREF } from "../data/site-content";
 
-const path = Astro.url.pathname;
-const isCurrent = (href: string) => path === href;
-// Every service page within two clicks of home, no orphans, descriptive anchors.
-const nav = SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost");
+const here = Astro.url.pathname;
 ---
 
-<header class="border-b border-line bg-bone/95 backdrop-blur supports-[backdrop-filter]:bg-bone/80 sticky top-0 z-40">
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-4">
-    <a href="/" class="shrink-0 text-lg font-semibold tracking-tight">
-      Structure <span class="text-timber">&amp;</span> Style
-    </a>
-
-    <nav aria-label="Services" class="hidden lg:block">
-      <ul class="flex items-center gap-6 text-sm">
-        {
-          nav.map((s) => (
-            <li>
-              <a
-                href={servicePath(s)}
-                aria-current={isCurrent(servicePath(s)) ? "page" : undefined}
-                class="text-ink-soft transition-colors hover:text-timber aria-[current=page]:text-timber aria-[current=page]:font-medium"
-              >
-                {s.title}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <div class="flex items-center gap-3">
-      <a
-        href={BUSINESS.phoneHref}
-        class="hidden text-sm font-medium text-ink transition-colors hover:text-timber sm:block"
-        >{BUSINESS.phoneDisplay}</a
-      >
-      <a
-        href="/contact/"
-        class="rounded-full bg-ink px-4 py-2 text-sm font-medium text-bone transition-colors hover:bg-timber-deep"
-        >Get a quote</a
-      >
-    </div>
-  </div>
-
-  <nav aria-label="Services" class="border-t border-line lg:hidden">
-    <ul class="mx-auto flex max-w-6xl gap-4 overflow-x-auto px-5 py-2 text-sm whitespace-nowrap">
-      {
-        nav.map((s) => (
-          <li>
-            <a
-              href={servicePath(s)}
-              aria-current={isCurrent(servicePath(s)) ? "page" : undefined}
-              class="text-ink-soft aria-[current=page]:text-timber"
-            >
-              {s.title}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </nav>
-</header>
+<NavBar
+  items={NAV}
+  cta={{ label: "Enquire", href: ENQUIRE_HREF }}
+  activeHref={here}
+  homeHref="/"
+/>

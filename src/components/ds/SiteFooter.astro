@@ -1,0 +1,52 @@
+---
+/**
+ * The footer: wordmark, the ampersand at size, and a row of mono lines.
+ * Ported from the design system's components/sections/SiteFooter.jsx.
+ *
+ * On the ink surface, so both lockups take the paper colour from `color`
+ * inheritance rather than from a separate reversed artwork file.
+ *
+ * The source wrapped the mark in a <Brand> motion component, the one blur in
+ * the system, which burns the mark in once on reveal. Here that is
+ * data-motion="brand", already implemented by the ported motion CSS.
+ */
+import Logo from "./Logo.astro";
+
+interface Props {
+  lines?: readonly string[];
+  showMark?: boolean;
+  brand?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  lines = [],
+  showMark = true,
+  brand = false,
+  class: className,
+  style = "",
+} = Astro.props;
+---
+
+<footer
+  class={className}
+  style={`background:var(--surface-ink);color:var(--ink-rev);${style}`}
+>
+  <div style="max-width:var(--page-max);margin:0 auto;padding:var(--footer-y) var(--gutter) var(--space-15);display:flex;flex-direction:column;gap:var(--space-16)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-14);flex-wrap:wrap">
+      <Logo lockup="wordmark" height={26} title="Structure & Style" />
+      {showMark && (
+        <span data-motion={brand ? "brand" : undefined} style="opacity:.92">
+          <Logo lockup="mark" height={56} title="" />
+        </span>
+      )}
+    </div>
+
+    <div style="display:flex;justify-content:space-between;gap:var(--space-9);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
+      {lines.map((l) => (
+        <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint)">{l}</span>
+      ))}
+    </div>
+  </div>
+</footer>

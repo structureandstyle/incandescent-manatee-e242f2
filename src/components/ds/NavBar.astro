@@ -1,0 +1,130 @@
+---
+/**
+ * The sticky header.
+ * Ported from the design system's components/sections/NavBar.jsx.
+ *
+ * The source held three pieces of React state: a scroll threshold, a wordmark
+ * assembly animation, and a settled flag to delay the call to action's
+ * underline until the assembly finished. Only the first survives, as ten lines
+ * of inline script.
+ *
+ * What the script does, and what happens without it: past 120px the wordmark
+ * hands over to the ampersand and the bottom rule goes to full strength,
+ * reversing at the top. One threshold, not a scroll map, which is the design
+ * system's own note. With JavaScript off the header renders in its open state
+ * and simply never condenses. Nothing is lost but an effect.
+ *
+ * The wordmark assembly animation is deliberately not ported. It ran once per
+ * session behind a sessionStorage flag, it is the largest piece of motion in
+ * the design, and it plays at the exact moment the browser is trying to paint
+ * the largest text on the page. It can come back after launch, measured
+ * against LCP rather than assumed to be free.
+ */
+import Logo from "./Logo.astro";
+import Link from "./Link.astro";
+
+interface Props {
+  items?: readonly { label: string; href: string }[];
+  cta?: { label: string; href: string };
+  logoHeight?: number;
+  homeHref?: string;
+  activeHref?: string;
+  sticky?: boolean;
+  condense?: boolean;
+  condenseAt?: number;
+}
+
+const {
+  items = [],
+  cta,
+  logoHeight = 20,
+  homeHref = "/",
+  activeHref,
+  sticky = true,
+  condense = true,
+  condenseAt = 120,
+} = Astro.props;
+
+const markH = Math.round(logoHeight * 0.92);
+const wordW = Math.round(logoHeight * 10.093);
+---
+
+<header
+  data-site-header
+  data-condense={condense ? String(condenseAt) : undefined}
+  style={`position:${sticky ? "sticky" : "static"};top:0;z-index:20;background:var(--surface-sticky);backdrop-filter:blur(var(--blur-sticky));-webkit-backdrop-filter:blur(var(--blur-sticky))`}
+>
+  <div
+    data-nav-row
+    style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-12);padding:var(--space-9) var(--gutter);max-width:var(--page-max);margin:0 auto"
+  >
+    <a
+      href={homeHref}
+      aria-label="Structure & Style, home"
+      style={`display:block;border:0;position:relative;height:${logoHeight}px;width:${wordW}px`}
+    >
+      <span data-lockup="word" style="position:absolute;left:0;top:0">
+        <Logo lockup="wordmark" height={logoHeight} title="" />
+      </span>
+      <span
+        data-lockup="mark"
+        aria-hidden="true"
+        style={`position:absolute;left:0;top:${Math.round((logoHeight - markH) / 2)}px;pointer-events:none`}
+      >
+        <Logo lockup="mark" height={markH} title="" />
+      </span>
+    </a>
+
+    <nav aria-label="Primary" style="display:flex;gap:var(--gap-sm);align-items:baseline">
+      {items.map((it) => (
+        <Link href={it.href} variant="nav" chamfer current={activeHref === it.href}>{it.label}</Link>
+      ))}
+      {cta && <Link href={cta.href} variant="cta" chamfer>{cta.label}</Link>}
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* The bottom rule lives here rather than in the element's style attribute.
+     It was inline until 26 August 2026, and an inline border-bottom shorthand
+     beats any stylesheet rule trying to override border-bottom-color, so the
+     header condensed its lockup but its rule never went to full strength.
+     Caught by reading the computed border colour rather than by looking. */
+  [data-site-header] {
+    border-bottom: var(--rule-hair);
+    transition: border-color var(--t-fast) var(--ease-out);
+  }
+
+  /* Seat, reversed: the name hands over to its joint, and takes it back at the
+     top. The swap is opacity and transform only, so it never reflows the row. */
+  [data-lockup] {
+    transition: opacity var(--t-fast) var(--ease-out), transform var(--t-move) var(--ease-seat);
+  }
+  [data-lockup="mark"] { opacity: 0; }
+  [data-site-header].is-tight [data-lockup="word"] { opacity: 0; }
+  [data-site-header].is-tight [data-lockup="mark"] { opacity: 1; }
+  [data-site-header]:not(.is-tight) [data-lockup="mark"] {
+    transform: translateY(3px) rotate(-4deg);
+  }
+  [data-site-header].is-tight { border-bottom-color: var(--hair-strong); }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-lockup] { transition: opacity var(--t-fade) linear; }
+    [data-site-header]:not(.is-tight) [data-lockup="mark"] { transform: none; }
+  }
+</style>
+
+<script>
+  // One threshold, not a scroll map. Passive listener, and the class is the
+  // only thing that changes, so the browser has no layout work to do.
+  const header = document.querySelector<HTMLElement>("[data-site-header][data-condense]");
+  if (header) {
+    const at = Number(header.dataset.condense) || 120;
+    const update = () => {
+      const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      header.classList.toggle("is-tight", y > at);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+  }
+</script>

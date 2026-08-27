@@ -1,0 +1,81 @@
+---
+/**
+ * The door green band that closes every page.
+ * Ported from the design system's components/sections/EnquireBand.jsx.
+ *
+ * One change to the API. The source took `facts` as an array of strings and
+ * rendered them itself. Here the facts are a named slot, because on this site
+ * all three of them are answers to the content questionnaire and have to render
+ * through <Value>: finished copy once the client replies, a marked open
+ * question until then. A string array could not carry that.
+ *
+ * The design stated the three outright, as "Commissions £3,000-£15,000",
+ * "Bench books 6-8 weeks ahead" and "North West London". The first was
+ * unconfirmed, the second described a bench that does not exist, and the third
+ * was never checked. See src/data/site-content.ts.
+ */
+import Display from "./Display.astro";
+import MonoLabel from "./MonoLabel.astro";
+import Link from "./Link.astro";
+
+interface Props {
+  kicker?: string;
+  heading: string;
+  email?: string;
+  cta?: { label: string; href: string };
+  stamp?: boolean;
+  chamfer?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  kicker = "Enquiries",
+  heading,
+  email,
+  cta,
+  stamp = false,
+  chamfer = false,
+  class: className,
+  style = "",
+} = Astro.props;
+
+const hasFacts = Astro.slots.has("facts");
+---
+
+<section
+  class={className}
+  style={`background:var(--surface-accent);color:var(--text-on-accent);${style}`}
+>
+  <div style="max-width:var(--page-max);margin:0 auto;padding:var(--band-y) var(--gutter)">
+    {kicker && <MonoLabel as="p" tone="paper-soft">{kicker}</MonoLabel>}
+
+    <Display level={2} as="h2" tone="paper" style="margin-top:var(--space-8)">{heading}</Display>
+
+    {Astro.slots.has("default") && (
+      <p style="max-width:56ch;margin-top:var(--space-10);color:var(--ink-rev-soft)">
+        <slot />
+      </p>
+    )}
+
+    {(email || cta) && (
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:baseline;margin-top:var(--space-14)">
+        {email && (
+          <Link variant="mail" tone="paper" chamfer={chamfer} href={`mailto:${email}`}>{email}</Link>
+        )}
+        {cta && (
+          <Link variant="nav" tone="paper" chamfer={chamfer} href={cta.href}>{cta.label}</Link>
+        )}
+      </div>
+    )}
+
+    {hasFacts && (
+      <div
+        style="display:flex;gap:var(--space-14);flex-wrap:wrap;margin-top:var(--space-16);padding-top:var(--space-9);border-top:var(--rule-structure-rev)"
+        data-motion={stamp ? "stamp-group" : undefined}
+      >
+        <slot name="facts" />
+      </div>
+    )}
+  </div>
+</section>

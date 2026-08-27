@@ -1,0 +1,157 @@
+---
+/**
+ * Every link that is not body prose.
+ * Ported from the design system's components/actions/Link.jsx.
+ *
+ * The source tracked hover and focus in React state and recomputed inline
+ * styles. Here the states are scoped CSS, which is what they always were:
+ * :hover and :focus-visible do the same job without shipping a component to the
+ * browser, and focus-visible is better behaviour than the source's onFocus,
+ * which lit the underline on a mouse click too.
+ *
+ * The chamfer rule is the design system's own and is preserved exactly: a
+ * resting hairline thickens by transform, an absent one draws in from the left.
+ * Never an animated border-width, which would reflow the line on every frame.
+ *
+ * Four variants:
+ *   inline  green, a resting hairline at 40%, for a link inside prose
+ *   nav     uppercase label, no resting line, draws in from the left
+ *   cta     uppercase label in door green, underline always present
+ *   mail    the serif italic, large, for the address on the enquiry band
+ */
+interface Props {
+  href: string;
+  variant?: "inline" | "nav" | "cta" | "mail";
+  tone?: "default" | "paper";
+  chamfer?: boolean;
+  current?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  href,
+  variant = "inline",
+  tone = "default",
+  chamfer = false,
+  current = false,
+  class: className,
+  style = "",
+  ...rest
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    "ds-link",
+    `v-${variant}`,
+    tone === "paper" && "on-paper",
+    chamfer && "chamfer",
+    current && "is-current",
+    className,
+  ]}
+  aria-current={current ? "page" : undefined}
+  style={style}
+  {...rest}
+><slot /></a>
+
+<style>
+  .ds-link {
+    position: relative;
+    text-decoration: none;
+    color: var(--char);
+    border-bottom: 1px solid transparent;
+    transition: var(--transition-hover);
+  }
+
+  .v-inline {
+    font-family: inherit;
+    font-size: inherit;
+    color: var(--green);
+    border-bottom-color: rgba(44, 74, 58, 0.4);
+  }
+
+  .v-nav,
+  .v-cta {
+    font-family: var(--font-sans);
+    font-weight: var(--weight-medium);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    padding: var(--space-2) 0;
+  }
+
+  .v-cta {
+    color: var(--green);
+    border-bottom-color: var(--green);
+  }
+
+  .v-mail {
+    font-family: var(--font-serif-italic);
+    font-style: italic;
+    font-size: clamp(20px, 2.6vw, 30px);
+    padding-bottom: var(--space-1);
+    border-bottom-color: rgba(242, 238, 227, 0.6);
+  }
+
+  .on-paper { color: var(--ink-rev); }
+
+  .v-inline:hover, .v-inline:focus-visible { border-bottom-color: var(--green); }
+  .v-nav:hover, .v-nav:focus-visible { border-bottom-color: var(--char); }
+  .on-paper:hover, .on-paper:focus-visible { border-bottom-color: var(--paper); }
+
+  /* The current page keeps its rule up without a hover. */
+  .is-current { border-bottom-color: var(--char); }
+  .on-paper.is-current { border-bottom-color: var(--paper); }
+
+  /* Chamfer: the rule becomes a transformed pseudo-element so it can thicken
+     or draw in without the border reflowing. */
+  .chamfer { border-bottom-color: transparent !important; }
+
+  .chamfer::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform-origin: bottom;
+    transform: scaleY(1);
+    transition: transform var(--t-fast) var(--ease-out), opacity var(--t-fast) var(--ease-out);
+  }
+
+  .chamfer.v-inline::after { opacity: 0.4; }
+  .chamfer.v-mail::after { opacity: 0.6; }
+  .chamfer.v-cta::after { opacity: 1; }
+
+  /* Nav draws in from the left rather than thickening, because it has no
+     resting rule to thicken. */
+  .chamfer.v-nav::after {
+    opacity: 1;
+    transform-origin: left bottom;
+    transform: scaleX(0);
+    transition: transform var(--t-reveal) var(--ease-out);
+  }
+  .chamfer.v-nav.is-current::after { transform: scaleX(1); }
+
+  .chamfer:hover::after,
+  .chamfer:focus-visible::after {
+    opacity: 1;
+    transform: scaleY(var(--chamfer-weight));
+  }
+
+  .chamfer.v-nav:hover::after,
+  .chamfer.v-nav:focus-visible::after {
+    transform: scaleX(1) scaleY(var(--chamfer-weight));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chamfer::after { transition: opacity var(--t-fade) linear; transform: none !important; }
+    .chamfer.v-nav::after { opacity: 0; }
+    .chamfer.v-nav:hover::after,
+    .chamfer.v-nav:focus-visible::after,
+    .chamfer.v-nav.is-current::after { opacity: 1; }
+  }
+</style>
