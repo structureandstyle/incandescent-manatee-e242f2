@@ -81,3 +81,34 @@
   [data-motion],[data-motion] *{opacity:1!important;transform:none!important;clip-path:none!important;filter:none!important;transition:none!important;animation:none!important}
   [data-motion="plane"] > *{clip-path:none!important}
 }
+
+/* ---------------------------------------------------------------------------
+   No JavaScript, no hiding.
+   Added on import, 26 August 2026. Not in the design system's source, because
+   there it could not happen: the React components only ever rendered the hidden
+   state alongside the observer that revealed it.
+
+   Here the CSS ships on its own, so without these rules an element carrying
+   data-motion sits at opacity 0 or scaleX(0) forever if the reveal script does
+   not run. That would make the copy itself depend on JavaScript, which is the
+   exact failure the static-first rebuild exists to correct: the old site served
+   an empty page and let the browser write the words in.
+
+   Base.astro stamps .js on <html> before first paint, so these are the resting
+   styles unless script is running. Motion is an enhancement; the words are not.
+   --------------------------------------------------------------------------- */
+html:not(.js) [data-motion],
+html:not(.js) [data-motion] > *,
+html:not(.js) [data-chamfer]::after {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  filter: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+html:not(.js) [data-glyph] > * {
+  stroke-dashoffset: 0 !important;
+  opacity: 1 !important;
+}

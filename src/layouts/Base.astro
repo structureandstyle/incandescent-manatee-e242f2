@@ -67,6 +67,15 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/*
+      Stamp .js before first paint, so the motion CSS can hide what it is about
+      to reveal. Without it, html:not(.js) in motion-actions.css keeps every
+      animated element at its resting state, which is what a visitor with no
+      JavaScript gets: the whole page, no motion. This must stay inline and
+      stay here, above the stylesheet, or elements flash visible then hide.
+    */}
+    <script is:inline>document.documentElement.classList.add("js");</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -140,5 +149,40 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // The reveal. One observer for the whole page, replacing the per-component
+      // useEnter hook the design system ran in React. Adds .in once, then stops
+      // watching: nothing here re-hides on the way out, because a section that
+      // fades as you scroll back up reads as a bug rather than as motion.
+      //
+      // Elements already in view at load are revealed by the observer's first
+      // synchronous callback, so above-the-fold content does not wait.
+      const revealable = document.querySelectorAll("[data-motion], [data-glyph]");
+      if (revealable.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add("in");
+              io.unobserve(entry.target);
+            }
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -5% 0px" }
+        );
+        revealable.forEach((el) => io.observe(el));
+
+        // Failsafe. If the observer never fires, every animated element stays
+        // at opacity 0 or scaleX(0) and the copy is invisible. That is a worse
+        // outcome than losing the motion, so after three seconds everything is
+        // revealed regardless. Costs one timer and removes a whole class of
+        // silent failure: an IntersectionObserver that does not fire is not
+        // hypothetical, it is what happens in a browser pane that is not
+        // compositing, which is where this was tested.
+        setTimeout(() => {
+          revealable.forEach((el) => el.classList.add("in"));
+        }, 3000);
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,88 @@
+---
+/**
+ * A specification table: label on the left, value on the right, hairline
+ * between. The mono voice throughout, with tabular numerals so figures line up
+ * down the column.
+ * Ported from the design system's components/specification/SpecTable.jsx.
+ *
+ * The source computed a per-row stagger in React from an IntersectionObserver.
+ * Here the tbody carries data-motion="stamp-group", which the ported motion CSS
+ * already staggers at 72ms per row. Same effect, no component in the browser.
+ *
+ * Values accept markup, so a row can hold a <Value> and render as an open
+ * question until the client answers.
+ */
+import MonoLabel from "./MonoLabel.astro";
+
+interface Props {
+  rows?: readonly { label: string; value: string }[];
+  caption?: string;
+  density?: "web" | "print";
+  tone?: "default" | "paper";
+  labelWidth?: string;
+  stamp?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  rows = [],
+  caption,
+  density = "web",
+  tone = "default",
+  labelWidth,
+  stamp = false,
+  class: className,
+  style = "",
+} = Astro.props;
+
+const rev = tone === "paper";
+const web = density === "web";
+
+const tableCss = [
+  "width:100%",
+  "border-collapse:collapse",
+  `border-top:${rev ? "var(--rule-structure-rev)" : "var(--rule-structure)"}`,
+  "font-family:var(--font-mono)",
+  "font-weight:var(--weight-regular)",
+  `font-size:${web ? "var(--type-mono-md)" : "var(--type-note)"}`,
+  "letter-spacing:var(--ls-mono-tight)",
+  `color:${rev ? "var(--ink-rev)" : "var(--char)"}`,
+  "font-variant-numeric:tabular-nums",
+  style,
+].filter(Boolean).join(";");
+
+const cellPad = web ? "var(--space-4) 0" : "var(--space-3) 0";
+const hair = rev ? "var(--rule-hair-rev)" : "var(--rule-hair)";
+
+const labelCss = [
+  `width:${labelWidth || (web ? "38%" : "40%")}`,
+  `padding:${cellPad}`,
+  `padding-right:var(--space-8)`,
+  `border-bottom:${hair}`,
+  "vertical-align:top",
+  "text-transform:uppercase",
+  "letter-spacing:var(--ls-mono-table)",
+  `font-size:${web ? "var(--type-mono)" : "var(--type-mono-print)"}`,
+  `color:${rev ? "var(--ink-rev-quiet)" : "var(--ink-soft)"}`,
+].join(";");
+
+const valueCss = `padding:${cellPad};border-bottom:${hair};vertical-align:top`;
+---
+
+<table class={className} style={tableCss}>
+  {caption && (
+    <caption style="text-align:left;padding:var(--space-5) 0 var(--space-4)">
+      <MonoLabel tone={rev ? "paper-soft" : "soft"}>{caption}</MonoLabel>
+    </caption>
+  )}
+  <tbody data-motion={stamp ? "stamp-group" : undefined}>
+    {rows.map((r) => (
+      <tr>
+        <td style={labelCss} set:html={r.label} />
+        <td style={valueCss} set:html={r.value} />
+      </tr>
+    ))}
+    <slot />
+  </tbody>
+</table>
