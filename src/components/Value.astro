@@ -1,0 +1,55 @@
+---
+/**
+ * One fact from the content questionnaire, rendered wherever it belongs.
+ *
+ * This is what makes "one edit and push" true. A page never holds a fact of its
+ * own: it names the question, and this decides what to show.
+ *
+ *   answered   -> the confirmed value, as plain text, no annotation
+ *   not yet    -> the provisional value (or a description of what is missing)
+ *                 wrapped in <Ask>, which keeps the page out of the index and
+ *                 makes it countable by `npm run verify`
+ *
+ * So filling a value in src/data/answers.ts silently converts every open
+ * question on the site into finished copy, and lifts each page's noindex the
+ * moment its own gate is satisfied. No page is edited.
+ *
+ * Usage:
+ *   <Value q="q07" />                       lead time, wherever it appears
+ *   <Value q="q10" prefix="From " />        "From £3,000" once Q10 lands
+ *   <Value q="q22" join=", " />             an array answer, joined
+ *
+ * A confirmed answer renders with no wrapper at all, so the finished page has
+ * no trace of the scaffolding that got it there.
+ */
+import Ask from "./Ask.astro";
+import {
+  ANSWERS,
+  answered,
+  placeholderFor,
+  questionLabel,
+  type QuestionKey,
+} from "../data/answers";
+
+interface Props {
+  q: QuestionKey;
+  /** Text placed before the value, only when the value is confirmed. */
+  prefix?: string;
+  /** Text placed after the value, only when the value is confirmed. */
+  suffix?: string;
+  /** Separator for an answer that is a list. */
+  join?: string;
+}
+
+const { q, prefix = "", suffix = "", join = " · " } = Astro.props;
+
+const isAnswered = answered(q);
+const raw = ANSWERS[q].value;
+const text = Array.isArray(raw) ? raw.join(join) : (raw ?? "");
+---
+
+{isAnswered ? (
+  <>{prefix}{text}{suffix}</>
+) : (
+  <Ask q={questionLabel(q)}>{placeholderFor(q)}</Ask>
+)}

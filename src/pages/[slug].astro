@@ -2,9 +2,11 @@
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import Ask from "../components/Ask.astro";
+import Value from "../components/Value.astro";
 import { SERVICES, SITE_URL, BUSINESS, servicePath, type Service } from "../data/site";
+import { BAND } from "../data/site-content";
 import { gateFor, indexable } from "../data/page-gates";
-import { ANSWERS, unanswered } from "../data/answers";
+import { ANSWERS, unanswered, questionLabel } from "../data/answers";
 
 export function getStaticPaths() {
   return SERVICES.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -87,9 +89,10 @@ const schema = {
               <ul class="list-disc space-y-2 pl-5">
                 {open.map((q) => (
                   <li>
-                    <Ask q={q.replace(/^q/, "").replace("stage04", "stage 04")}>
-                      {ANSWERS[q].about}
-                    </Ask>
+                    {/* questionLabel, not a local replace: two different
+                        spellings of the same question number made the same
+                        question look like two outstanding ones in the report. */}
+                    <Ask q={questionLabel(q)}>{ANSWERS[q].about}</Ask>
                   </li>
                 ))}
               </ul>
@@ -110,6 +113,20 @@ const schema = {
           <p class="mt-6 text-sm text-ink-soft">
             Covering {BUSINESS.areaServed.slice(0, 6).join(", ")} and across north London.
           </p>
+
+          {/*
+            The three facts the design put on the enquiry band. Each renders as
+            finished copy the moment its answer lands in answers.ts, and as a
+            marked open question until then. The design stated all three
+            outright: "Commissions £3,000-£15,000", "Bench books 6-8 weeks
+            ahead", "North West London". The first was unconfirmed, the second
+            described a bench he does not have, and the third was never checked.
+          */}
+          <ul class="mt-6 space-y-2 text-sm text-ink-soft">
+            {BAND.facts.map((q) => (
+              <li><Value q={q} /></li>
+            ))}
+          </ul>
         </div>
         <div class="rounded-2xl border border-line bg-bone p-6 sm:p-8">
           <EnquiryForm compact />

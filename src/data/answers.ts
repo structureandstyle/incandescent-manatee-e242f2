@@ -142,6 +142,28 @@ export function ready(keys: readonly QuestionKey[]): boolean {
   return unanswered(keys).length === 0;
 }
 
+/**
+ * How a question is referred to in the annotation a visitor never sees but a
+ * reviewer does: "q07" reads as 7, and the unnumbered making-stage question
+ * reads as "stage 04", which is how the questionnaire itself labels it.
+ */
+export function questionLabel(key: QuestionKey): string {
+  return key === "stage04" ? "stage 04" : key.replace(/^q0?/, "");
+}
+
+/**
+ * What to show for a question that has no confirmed answer yet: the provisional
+ * value if we hold one, otherwise a short description of what is missing.
+ * Never a claim, because it never ships: anything rendered through this is
+ * wrapped in an Ask and keeps its page out of the index.
+ */
+export function placeholderFor(key: QuestionKey): string {
+  const a = ANSWERS[key] as Answer;
+  const p = a.provisional;
+  if (p) return Array.isArray(p) ? p.join(" · ") : p;
+  return a.about;
+}
+
 /** Every outstanding question, for the build-time report. */
 export function outstanding(): QuestionKey[] {
   return (Object.keys(ANSWERS) as QuestionKey[]).filter((k) => !answered(k));

@@ -16,13 +16,13 @@ export const PAGE_GATES = {
   "/": ["q03", "q07", "q10"],
 
   // The seven contracted service pages. Wave one first.
-  "/fitted-wardrobes/": ["q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
-  "/walk-in-wardrobes/": ["q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
-  "/alcove-units/": ["q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
-  "/fitted-wardrobe-cost/": ["q10", "q11", "q12", "q19", "q21", "q35"],
-  "/media-walls/": ["q07", "q10", "q22", "q24", "q26", "q30", "q35"],
-  "/bespoke-kitchens/": ["q07", "q10", "q22", "q24", "q26", "q30", "q35"],
-  "/home-office-understairs-storage/": ["q07", "q10", "q22", "q24", "q26", "q30", "q35"],
+  "/fitted-wardrobes/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
+  "/walk-in-wardrobes/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
+  "/alcove-units/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
+  "/fitted-wardrobe-cost/": ["q03", "q07", "q10", "q11", "q12", "q19", "q21", "q35"],
+  "/media-walls/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q35"],
+  "/bespoke-kitchens/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q35"],
+  "/home-office-understairs-storage/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q35"],
 
   // The brand pages from the design system.
   "/process/": [
