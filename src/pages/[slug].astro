@@ -1,12 +1,36 @@
 ---
+/**
+ * The seven contracted service pages, all from this one template.
+ *
+ * Structure comes from the SEO runbook and the local playbook, not from taste:
+ * a clear H1 carrying the primary keyword, question-shaped H2s, a concise
+ * answer before the detail, real numbers, named area coverage, three or more
+ * photographs of completed work, and one obvious enquiry action.
+ *
+ * Every number on the page is a <Value>. None of them is written here. When an
+ * answer lands in src/data/answers.ts the sentence completes itself, and when
+ * the last one this page needs lands, page-gates.ts lifts its noindex and the
+ * page enters the sitemap. That is the whole "one edit and push" mechanism, and
+ * it is why this file contains no prices, no lead times and no guarantee terms.
+ */
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
-import Ask from "../components/Ask.astro";
 import Value from "../components/Value.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Plate from "../components/ds/Plate.astro";
+import SpecTable from "../components/ds/SpecTable.astro";
+import EnquireBand from "../components/ds/EnquireBand.astro";
+import Link from "../components/ds/Link.astro";
+
 import { SERVICES, SITE_URL, BUSINESS, servicePath, type Service } from "../data/site";
-import { BAND } from "../data/site-content";
+import { BAND, CONTACT } from "../data/site-content";
 import { gateFor, indexable } from "../data/page-gates";
-import { ANSWERS, unanswered, questionLabel } from "../data/answers";
+import { unanswered } from "../data/answers";
+import selection from "../../public/images/_selection.json";
 
 export function getStaticPaths() {
   return SERVICES.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -15,13 +39,36 @@ export function getStaticPaths() {
 interface Props { service: Service }
 const { service } = Astro.props;
 
-const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
-
-// The page publishes itself once every question it depends on is answered.
-// Until then it builds, deploys to the branch preview and stays out of search.
 const path = servicePath(service);
 const open = unanswered(gateFor(path));
 const isIndexable = indexable(path);
+const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
+
+/**
+ * Photographs, selected from the client's own library: finished work only, at
+ * quality 4 or 5, spread across different shoot dates so a page is not three
+ * angles of one room. Any file whose name carries "(1)" is excluded as a matter
+ * of rule rather than by list: those are AI-edited duplicates and carry Google's
+ * AI-generated label in the frame. Twelve of them exist; the written denylist
+ * named only five.
+ *
+ * home-office-understairs-storage has no entry, and that is accurate rather
+ * than an oversight: the library holds nothing finished above quality 3 for
+ * home office and nothing at all for under-stair storage. Plate renders an
+ * honest empty frame instead.
+ */
+const photos: { file: string; w: number; h: number }[] =
+  (selection as Record<string, { file: string; w: number; h: number }[]>)[service.slug] ?? [];
+
+/**
+ * Alt text. Deliberately minimal and provably true: the service, and that the
+ * work is finished, both of which come from the triage. It does not describe
+ * the room, the materials or the location, because nobody has yet written a
+ * per-image description and inventing one is the failure the journal draft was
+ * blocked on. Q44 to Q49 are what make real captions possible.
+ */
+const altFor = (n: number) =>
+  `${service.title}, completed installation by ${BUSINESS.legalName}, photograph ${n}`;
 
 const schema = {
   "@context": "https://schema.org",
@@ -31,8 +78,60 @@ const schema = {
   description: service.description,
   provider: { "@id": `${SITE_URL}/#business` },
   areaServed: BUSINESS.areaServed.map((a) => ({ "@type": "Place", name: a })),
-  url: new URL(servicePath(service), SITE_URL).href,
+  url: new URL(path, SITE_URL).href,
 };
+
+/* Question-shaped H2s, each with the questions that answer it. */
+const SECTIONS = [
+  {
+    id: "cost",
+    heading: `What do ${service.title.toLowerCase()} cost?`,
+    lead: "The honest answer is a range, because the room decides it.",
+    rows: [
+      { label: "Range", q: "q10" },
+      { label: "What moves it", q: "q11" },
+      { label: "Smallest job taken", q: "q12" },
+    ],
+  },
+  {
+    id: "how-long",
+    heading: "How long does it take?",
+    lead: "Two different clocks: how far ahead the work is booked, and how long the work itself runs.",
+    rows: [
+      { label: "Booked ahead", q: "q07" },
+      { label: "Survey to drawings", q: "q18" },
+      { label: "Days on site", q: "q30" },
+    ],
+  },
+  {
+    id: "made-from",
+    heading: "What is it made from?",
+    lead: "Engineered board rather than solid timber, and that is a decision rather than a compromise.",
+    rows: [
+      { label: "Materials", q: "q22" },
+      { label: "Finishes", q: "q24" },
+      { label: "Why not solid timber", q: "q43" },
+    ],
+  },
+  {
+    id: "fitting",
+    heading: "How is it fitted?",
+    lead: "London rooms are rarely square. What happens where the piece meets the wall is the whole job.",
+    rows: [
+      { label: "Scribing", q: "q31" },
+      { label: "Clearing up", q: "q33" },
+    ],
+  },
+  {
+    id: "after",
+    heading: "What happens afterwards?",
+    lead: "Timber moves with the first heating season. What matters is who comes back.",
+    rows: [
+      { label: "Guarantee", q: "q35" },
+      { label: "Adjustments", q: "q36" },
+    ],
+  },
+] as const;
 ---
 
 <Base
@@ -42,112 +141,127 @@ const schema = {
   noindex={!isIndexable}
 >
   <article>
-    <header class="border-b border-line bg-sand/40">
-      <div class="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-        <nav aria-label="Breadcrumb" class="mb-5 text-sm text-ink-soft">
-          <a href="/" class="hover:text-timber">Home</a>
-          <span aria-hidden="true" class="px-2">/</span>
-          <span>{service.title}</span>
-        </nav>
-        <h1 class="max-w-4xl text-[length:var(--text-section)] font-semibold">{service.heading}</h1>
-        <p class="mt-5 max-w-2xl text-lg text-ink-soft">{service.summary}</p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#enquire" class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-bone hover:bg-timber-deep">
-            Get a price
-          </a>
-          <a href={BUSINESS.phoneHref} class="rounded-full border border-ink px-6 py-3 text-sm font-medium hover:border-timber hover:text-timber">
-            Call {BUSINESS.phoneDisplay}
-          </a>
-        </div>
+    <!-- Hero -->
+    <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+      <nav aria-label="Breadcrumb" style="margin-bottom:var(--space-10)">
+        <MonoLabel tone="soft">
+          <Link href="/" variant="nav">Home</Link>
+          <span aria-hidden="true" style="padding:0 var(--space-5)">/</span>
+          {service.title}
+        </MonoLabel>
+      </nav>
+
+      <Kicker scribe>{service.primary}</Kicker>
+
+      <Display level={1} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
+        {service.heading}
+      </Display>
+
+      <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+        {service.summary}
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:baseline;margin-top:var(--space-15)">
+        <Link href="#enquire" variant="cta" chamfer>Get a price</Link>
+        <Link href={CONTACT.phoneHref} variant="nav" chamfer>Call {CONTACT.phoneDisplay}</Link>
+        <Link href={CONTACT.whatsapp} variant="nav" chamfer>WhatsApp</Link>
       </div>
-    </header>
+    </Wrap>
 
-    <!--
-      CONTENT TO WRITE, per the playbook: question-shaped H2s, a concise answer
-      before the detail, real numbers (price ranges, lead times, install
-      duration), named area coverage, and three or more photographs of actual
-      completed work. Photo sets are sorted in the shared Drive Photo library.
+    <!-- The work itself, before any of the words -->
+    <Wrap style="padding-bottom:var(--section-y)">
+      <SectionHead meta={photos.length ? `${photos.length} of this work` : undefined} scribe>
+        The work
+      </SectionHead>
 
-      Build order step 5 replaces this block with that structure. What is here
-      now is the gate working: the questions this page depends on, rendered as
-      open questions so they are visible on the branch deploy and countable by
-      `npm run verify`.
-    -->
-    <div class="mx-auto max-w-6xl px-5 py-16">
-      <div class="prose-none max-w-2xl space-y-4 text-ink-soft">
-        {
-          isIndexable ? (
-            <p class="text-ink">Page copy pending, all client answers received.</p>
-          ) : (
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-md)">
+        {photos.length > 0
+          ? photos.map((p, i) => (
+              <Plate
+                photo={p.file}
+                alt={altFor(i + 1)}
+                width={p.w}
+                height={p.h}
+                subject={`Plate ${String(i + 1).padStart(2, "0")} · ${service.title}`}
+                detail="Completed"
+                eager={i === 0}
+                plane={i === 0 ? "left" : false}
+              />
+            ))
+          : (
             <>
-              <p class="text-ink">
-                This page is being written. It is deliberately kept out of search until the copy is
-                real, so nothing unfinished is indexed against{" "}
-                <strong class="text-ink">{service.primary}</strong>.
-              </p>
-              <p>It is waiting on {open.length} answer(s) from the client:</p>
-              <ul class="list-disc space-y-2 pl-5">
-                {open.map((q) => (
-                  <li>
-                    {/* questionLabel, not a local replace: two different
-                        spellings of the same question number made the same
-                        question look like two outstanding ones in the report. */}
-                    <Ask q={questionLabel(q)}>{ANSWERS[q].about}</Ask>
-                  </li>
-                ))}
-              </ul>
+              <Plate subject="Plate 01" detail="None in the library" awaiting="No finished photograph exists for this service yet" />
+              <Plate subject="Plate 02" detail="None in the library" awaiting="Requested from the client" />
             </>
-          )
-        }
+          )}
       </div>
-    </div>
+    </Wrap>
 
-    <section id="enquire" class="border-t border-line bg-sand/40">
-      <div class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-2">
-        <div>
-          <h2 class="text-[length:var(--text-section)] font-semibold">Get a price for your {service.title.toLowerCase()}</h2>
-          <p class="mt-4 max-w-md text-ink-soft">
-            Tell us the room and send a photo or two. We come back with a realistic range before
-            anyone visits.
-          </p>
-          <p class="mt-6 text-sm text-ink-soft">
-            Covering {BUSINESS.areaServed.slice(0, 6).join(", ")} and across north London.
-          </p>
-
-          {/*
-            The three facts the design put on the enquiry band. Each renders as
-            finished copy the moment its answer lands in answers.ts, and as a
-            marked open question until then. The design stated all three
-            outright: "Commissions £3,000-£15,000", "Bench books 6-8 weeks
-            ahead", "North West London". The first was unconfirmed, the second
-            described a bench he does not have, and the third was never checked.
-          */}
-          <ul class="mt-6 space-y-2 text-sm text-ink-soft">
-            {BAND.facts.map((q) => (
-              <li><Value q={q} /></li>
+    <!-- Question-shaped sections -->
+    {SECTIONS.map((section) => (
+      <Wrap style="padding-bottom:var(--section-y)">
+        <SectionHead id={section.id} level={4}>{section.heading}</SectionHead>
+        <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
+          <p style="max-width:var(--measure-short);color:var(--text-quiet)">{section.lead}</p>
+          <SpecTable
+            stamp
+            rows={[]}
+            labelWidth="34%"
+          >
+            {section.rows.map((row) => (
+              <tr>
+                <td style="width:34%;padding:var(--space-4) 0;padding-right:var(--space-8);border-bottom:var(--rule-hair);vertical-align:top;text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);color:var(--ink-soft)">
+                  {row.label}
+                </td>
+                <td style="padding:var(--space-4) 0;border-bottom:var(--rule-hair);vertical-align:top">
+                  <Value q={row.q} />
+                </td>
+              </tr>
             ))}
-          </ul>
+          </SpecTable>
         </div>
-        <div class="rounded-2xl border border-line bg-bone p-6 sm:p-8">
+      </Wrap>
+    ))}
+
+    <!-- Where we work. Confirmed, so it carries no open question. -->
+    <Wrap style="padding-bottom:var(--section-y)">
+      <SectionHead meta="Service area" level={4}>Where we work</SectionHead>
+      <p style="max-width:var(--measure)">
+        {BUSINESS.areaServed.slice(0, -1).join(", ")} and {BUSINESS.areaServed.slice(-1)}.
+      </p>
+    </Wrap>
+
+    <!-- Enquiry -->
+    <section id="enquire">
+      <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+        {BAND.body}
+        <Fragment slot="facts">
+          {BAND.facts.map((q) => (
+            <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+              <Value q={q} />
+            </MonoLabel>
+          ))}
+        </Fragment>
+      </EnquireBand>
+
+      <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
+        <div style="max-width:var(--measure-tight)">
           <EnquiryForm compact />
         </div>
-      </div>
+      </Wrap>
     </section>
 
-    <section class="mx-auto max-w-6xl px-5 py-16">
-      <h2 class="text-xl font-semibold">Also worth a look</h2>
-      <ul class="mt-6 grid gap-4 sm:grid-cols-3">
-        {
-          others.map((s) => (
-            <li class="rounded-2xl border border-line p-5 transition-colors hover:border-timber">
-              <a href={servicePath(s)} class="block">
-                <span class="font-medium">{s.title}</span>
-                <span class="mt-2 block text-sm text-ink-soft">{s.summary}</span>
-              </a>
-            </li>
-          ))
-        }
+    <!-- Cross-links -->
+    <Wrap style="padding-bottom:var(--section-y)">
+      <SectionHead level={5}>Also worth a look</SectionHead>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md)">
+        {others.map((s) => (
+          <li style="border-top:var(--rule-structure);padding-top:var(--space-9)">
+            <Link href={servicePath(s)} variant="nav" chamfer>{s.title}</Link>
+            <p style="margin-top:var(--space-6);font-size:var(--type-body-sm);color:var(--text-quiet)">{s.summary}</p>
+          </li>
+        ))}
       </ul>
-    </section>
+    </Wrap>
   </article>
 </Base>

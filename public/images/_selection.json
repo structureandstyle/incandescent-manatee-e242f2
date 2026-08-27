@@ -1,0 +1,147 @@
+{
+  "fitted-wardrobes": [
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-01.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240827_160509.jpg",
+      "date": "20240827",
+      "quality": "4",
+      "bytes": 36444
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-02.webp",
+      "w": 1400,
+      "h": 777,
+      "source": "20250522_171826.jpg",
+      "date": "20250522",
+      "quality": "4",
+      "bytes": 38268
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-03.webp",
+      "w": 1400,
+      "h": 2295,
+      "source": "20260518_111845.jpg",
+      "date": "20260518",
+      "quality": "4",
+      "bytes": 142374
+    }
+  ],
+  "walk-in-wardrobes": [
+    {
+      "file": "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20250628_123449.jpg",
+      "date": "20250628",
+      "quality": "5",
+      "bytes": 53152
+    },
+    {
+      "file": "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20260125_153923.jpg",
+      "date": "20260125",
+      "quality": "4",
+      "bytes": 220090
+    },
+    {
+      "file": "/images/walk-in-wardrobes/walk-in-wardrobes-03.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20250628_123626.jpg",
+      "date": "20250628",
+      "quality": "5",
+      "bytes": 87964
+    }
+  ],
+  "alcove-units": [
+    {
+      "file": "/images/alcove-units/alcove-units-01.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240827_160434.jpg",
+      "date": "20240827",
+      "quality": "5",
+      "bytes": 84022
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-02.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20251212_152700.jpg",
+      "date": "20251212",
+      "quality": "5",
+      "bytes": 99808
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-03.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240905_170404.jpg",
+      "date": "20240905",
+      "quality": "4",
+      "bytes": 78038
+    }
+  ],
+  "media-walls": [
+    {
+      "file": "/images/media-walls/media-walls-01.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240905_170357.jpg",
+      "date": "20240905",
+      "quality": "5",
+      "bytes": 90902
+    },
+    {
+      "file": "/images/media-walls/media-walls-02.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20251110_161725.jpg",
+      "date": "20251110",
+      "quality": "5",
+      "bytes": 47490
+    },
+    {
+      "file": "/images/media-walls/media-walls-03.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20251104_142618.jpg",
+      "date": "20251104",
+      "quality": "4",
+      "bytes": 66798
+    }
+  ],
+  "bespoke-kitchens": [
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-01.webp",
+      "w": 1400,
+      "h": 788,
+      "source": "IMG-20250505-WA0016.jpg",
+      "date": "20250505",
+      "quality": "4",
+      "bytes": 46250
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-02.webp",
+      "w": 1126,
+      "h": 2000,
+      "source": "IMG-20250505-WA0017.jpg",
+      "date": "20250505",
+      "quality": "4",
+      "bytes": 62366
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-03.webp",
+      "w": 1126,
+      "h": 2000,
+      "source": "IMG-20250505-WA0019.jpg",
+      "date": "20250505",
+      "quality": "4",
+      "bytes": 63252
+    }
+  ]
+}

@@ -12,17 +12,35 @@
 
 import { ready, type QuestionKey } from "./answers";
 
+/**
+ * All seven service pages render from one template, src/pages/[slug].astro, so
+ * they depend on exactly the same questions. Declared once rather than seven
+ * times: the first version of this file listed them per page, drifted from the
+ * template within a day, and left pages whose gate no longer described what
+ * they showed. A page could then have gone indexable while still displaying an
+ * open question.
+ *
+ * The union below is the template read section by section: the hero band
+ * (Q3 area, Q7 lead time, Q10 price), then cost, how long, what it is made
+ * from, how it is fitted, and what happens afterwards. If a section is added to
+ * that template, its questions belong here in the same commit.
+ */
+const SERVICE_PAGE = [
+  "q03", "q07", "q10", "q11", "q12", "q18",
+  "q22", "q24", "q30", "q31", "q33", "q35", "q36", "q43",
+] as const;
+
 export const PAGE_GATES = {
   "/": ["q03", "q07", "q10"],
 
-  // The seven contracted service pages. Wave one first.
-  "/fitted-wardrobes/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
-  "/walk-in-wardrobes/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
-  "/alcove-units/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q31", "q35"],
-  "/fitted-wardrobe-cost/": ["q03", "q07", "q10", "q11", "q12", "q19", "q21", "q35"],
-  "/media-walls/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q35"],
-  "/bespoke-kitchens/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q35"],
-  "/home-office-understairs-storage/": ["q03", "q07", "q10", "q22", "q24", "q26", "q30", "q35"],
+  // The seven contracted service pages, all from the one template.
+  "/fitted-wardrobes/": SERVICE_PAGE,
+  "/walk-in-wardrobes/": SERVICE_PAGE,
+  "/alcove-units/": SERVICE_PAGE,
+  "/fitted-wardrobe-cost/": SERVICE_PAGE,
+  "/media-walls/": SERVICE_PAGE,
+  "/bespoke-kitchens/": SERVICE_PAGE,
+  "/home-office-understairs-storage/": SERVICE_PAGE,
 
   // The brand pages from the design system.
   "/process/": [
