@@ -30,31 +30,51 @@
  * tokens/fonts.css: Archivo, Libre Caslon Display, Libre Caslon Text Italic and
  * Spline Sans Mono, all self-hosted and all present. */
 
+/**
+ * PALETTE RECONCILED, 26 August 2026. The last act of the component port.
+ *
+ * The scaffold shipped its own warm-neutral palette: ink, ink-soft, bone, sand,
+ * timber, line, Inter, and two fluid type steps. The pages are written against
+ * those utility names, so deleting them would break every page at once.
+ * Instead each one is now an ALIAS onto the design system's token of the same
+ * role. `bg-bone` still works and now renders paper; `text-timber` still works
+ * and now renders door green.
+ *
+ * Two consequences worth stating rather than discovering:
+ *
+ * 1. The accent changes hue, not just value. The scaffold's accent was timber
+ *    brown #8a5a2b; the design system's is door green #2C4A3A. Anything that
+ *    read as brown reads as green from this commit on. That is the design, not
+ *    a regression.
+ * 2. These aliases exist to keep the existing pages standing while they are
+ *    rewritten in steps 5 and 6. As each page moves onto the design system's
+ *    components it should stop using them, and when the last one does, this
+ *    whole block goes.
+ *
+ * Not aliased on purpose: --font-sans and --font-mono. Both are defined in
+ * tokens/typography.css and Tailwind's font-sans and font-mono utilities
+ * resolve var(--font-sans) at runtime, so redefining them here would only
+ * create a second place to keep in step.
+ */
 @theme {
-  /* Warm neutrals against a deep ink, with a timber accent. */
-  --color-ink: #1c1a17;
-  --color-ink-soft: #4a453e;
-  --color-bone: #faf8f5;
-  --color-sand: #ece5db;
-  --color-timber: #8a5a2b;
-  --color-timber-deep: #6b4520;
-  --color-line: #ddd4c7;
+  --color-ink: var(--char);
+  --color-ink-soft: var(--ink-soft);
+  --color-bone: var(--paper);
+  /* The scaffold's sand was a panel a shade off the page. The design system
+     expresses that as a wash over paper rather than as its own colour. */
+  --color-sand: var(--wash-char);
+  --color-timber: var(--green);
+  --color-timber-deep: var(--green);
+  --color-line: var(--hair);
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Kept because the Ask annotation and a few pages reference them directly. */
+  --color-green: var(--green);
+  --color-wash-green: var(--wash-green);
 
-  --text-hero: clamp(2.25rem, 1.2rem + 4.4vw, 4.25rem);
-  --text-section: clamp(1.65rem, 1.1rem + 2.1vw, 2.6rem);
-
-  /**
-   * Arriving ahead of the full token port (build order step 2), because the Ask
-   * annotation needs them now. Values are the design system's own, from
-   * tokens/colors.css: door green, and the wash it uses behind an open question.
-   * The rest of the palette lands with the port and supersedes the warm neutrals
-   * above.
-   */
-  --color-green: #2c4a3a;
-  --color-wash-green: rgba(44, 74, 58, 0.28);
-  --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* The two fluid steps the scaffold's pages use by name, mapped onto the
+     design system's display scale so headings match the ported components. */
+  --text-hero: var(--type-display-1);
+  --text-section: var(--type-display-4);
 }
 
 html {

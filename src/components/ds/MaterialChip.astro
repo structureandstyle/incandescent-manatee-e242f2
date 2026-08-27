@@ -1,0 +1,74 @@
+---
+/**
+ * One material: a swatch or photograph, the name in serif, a line on what it is
+ * like to work with, and a reference in the mono voice.
+ * Ported from the design system's components/specification/MaterialChip.jsx.
+ *
+ * A NOTE ON SWATCHES, because this component is where the materials correction
+ * could quietly undo itself.
+ *
+ * The design mapped three chips onto --oak, --walnut and --green, standing for
+ * European oak, American black walnut and painted tulipwood. What is on file is
+ * MDF, veneered MDF and plywood (Q22, pending confirmation). Those tokens
+ * survive as photography references, and reusing them here to stand for a
+ * material that is not that timber would put the removed claim back through the
+ * side door: a chip filled with oak brown, captioned MDF, still says oak.
+ *
+ * So `swatch` has no default. A chip with no swatch and no photograph renders
+ * an empty frame, which is honest. Real swatches get chosen once Q24 says what
+ * the finishes actually are.
+ */
+import MonoLabel from "./MonoLabel.astro";
+
+interface Props {
+  name: string;
+  description?: string;
+  reference?: string;
+  /** A CSS colour. Deliberately no default: see the note above. */
+  swatch?: string;
+  plane?: boolean | "left" | "top";
+  class?: string;
+  style?: string;
+}
+
+const {
+  name,
+  description,
+  reference,
+  swatch,
+  plane = false,
+  class: className,
+  style = "",
+} = Astro.props;
+
+const hasMedia = Astro.slots.has("default");
+const planed = plane !== false && plane != null;
+const direction = plane === true ? "left" : plane;
+
+const frame = [
+  "border:var(--rule-structure)",
+  `background:${swatch || "var(--wash-char)"}`,
+  `aspect-ratio:${hasMedia ? "auto" : "3 / 2"}`,
+  "overflow:hidden",
+].join(";");
+---
+
+<div class={className} style={style}>
+  <div style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
+    <slot />
+  </div>
+
+  <h3 style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-md);margin:var(--space-7) 0 var(--space-3)">
+    {name}
+  </h3>
+
+  {description && (
+    <p style="font-size:var(--type-body-sm);color:var(--ink-soft);max-width:36ch">{description}</p>
+  )}
+
+  {reference && (
+    <MonoLabel style="display:block;margin-top:var(--space-5)">{reference}</MonoLabel>
+  )}
+
+  <slot name="description" />
+</div>
