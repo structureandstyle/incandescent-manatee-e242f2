@@ -1,0 +1,455 @@
+---
+/**
+ * Wardrobe wall, front elevation. The drawing that assembles itself.
+ * Ported from the design system's components/media/WardrobeDrawing.jsx.
+ *
+ * This should have come across in step 4 and did not. It was dropped without
+ * being flagged, which is worse than dropping it deliberately: the token
+ * --t-loop was ported with the comment "the one permitted loop: the wardrobe
+ * drawing redrawing itself", and a token with nothing using it should have
+ * raised the question.
+ *
+ * What it is, in the design system's own terms. Five open bays and nothing in
+ * them: a shelf stack, a long hang over a bench, a short hang, a hang over a
+ * wide drawer with a second rail beneath, and a second shelf stack. No doors,
+ * because an elevation cannot show a swing, and no closed fronts, because they
+ * would hide everything the drawing is for. It is the infrastructure, which is
+ * the part actually being sold.
+ *
+ * Eight stages share ONE clock so they stay in lockstep for ever: there is no
+ * animation-delay anywhere, each stage's window is written into its own
+ * keyframes. The stages map to the four process steps. Visit squares up the
+ * carcass and its bays; Drawing planes in the back, seats the shelves on their
+ * pins and drops the rails; Making shelves the wide bay, runs in the bench box
+ * and lands the seat slab on it; Fitting seats the plinth, takes up the wall
+ * with the scribe fillet, then the dimensions.
+ *
+ * THE PART THAT MATTERS FOR CORRECTNESS: the drawing is authored AT REST. The
+ * animations only add the build. So print, reduced motion and a browser with no
+ * JavaScript all get a finished drawing rather than an empty frame, and a still
+ * capture is never blank. The setting-out lines are never animated at all, so
+ * the board always carries its marking out.
+ *
+ * Two changes from the source, both mechanical:
+ *
+ * 1. The source started its clock from a React useEnter hook and a .go class.
+ *    This uses the site's one IntersectionObserver and the .in class it already
+ *    adds, so no component ships to the browser.
+ * 2. The hiding rules are scoped to html.js. Without that, a visitor with no
+ *    JavaScript would never get .in and the drawing would stay half built. The
+ *    source could not have this bug because its hiding and its revealing were
+ *    the same component.
+ */
+
+interface Props {
+  /** Seconds for the whole build. The system's only loop, and it runs once. */
+  cycle?: number;
+  labels?: boolean;
+  title?: string;
+  class?: string;
+  style?: string;
+}
+
+const {
+  cycle = 7,
+  labels = true,
+  title = "Wardrobe wall, front elevation",
+  class: className,
+  style = "",
+} = Astro.props;
+
+const DIVIDERS = [200, 620, 1660, 2060, 3180, 3600];
+const SHELF_ROWS = [
+  { cls: "sh1", ys: [680, 1000] },
+  { cls: "sh2", ys: [1320, 1640] },
+  { cls: "sh3", ys: [1960, 2280] },
+];
+const RAILS = [
+  { x1: 700, x2: 1580, y: 860 },
+  { x1: 1720, x2: 2000, y: 1360 },
+  { x1: 2140, x2: 3100, y: 860 },
+];
+
+/* Footwear in true side profile. Each shoe draws about 40px wide on the page,
+   so the interior is held to the few seams that still read at that size. All
+   stand on the floor line at y = 0 and run toe-right; `flip` turns one of a
+   pair to face the other way. */
+const COURT = {
+  w: 200,
+  st: ["M196,-6 C180,-12 162,-19 144,-24 C128,-28 116,-30 104,-32 C94,-36 84,-42 76,-50 C66,-64 54,-88 42,-94 C36,-98 28,-96 27,-88 L26,-56 C24,-38 22,-20 20,-2 L30,-2 C34,-22 38,-40 42,-54 L58,-50 C68,-34 76,-16 88,-6 C120,-1 160,-2 196,-6 Z"],
+  hr: ["M92,-12 C124,-7 160,-8 192,-11", "M34,-90 C46,-80 58,-62 72,-48"],
+};
+const OXFORD = {
+  w: 200,
+  st: [
+    "M184,-6 C190,-10 190,-16 186,-20 C172,-24 150,-27 128,-28 C112,-30 100,-33 88,-36 C70,-44 50,-54 30,-57 C20,-58 14,-52 14,-42 L14,0 L52,0 L52,-15 C68,-17 82,-9 102,-4 L168,-4 C176,-4 181,-5 184,-6 Z",
+    "M46,-49 L58,-43", "M60,-45 L72,-39", "M74,-41 L86,-35",
+  ],
+  hr: ["M102,-10 L168,-10", "M128,-28 C126,-21 126,-14 129,-10", "M14,-17 L52,-15"],
+};
+const LOAFER = {
+  w: 200,
+  st: [
+    "M184,-6 C190,-10 190,-16 186,-20 C172,-24 150,-27 126,-29 C104,-33 82,-40 62,-45 C46,-49 30,-53 24,-53 C16,-53 14,-47 14,-40 L14,0 L52,0 L52,-15 C68,-17 82,-9 102,-4 L168,-4 C176,-4 181,-5 184,-6 Z",
+    "M96,-36 L120,-31 L117,-22 L93,-27 Z",
+  ],
+  hr: ["M102,-10 L168,-10", "M126,-25 C144,-22 162,-17 178,-12", "M14,-17 L52,-15", "M102,-30 L112,-28"],
+};
+
+const SHOES = [
+  { of: OXFORD, x: 1672, y: 2595, tone: "st", flip: false },
+  { of: LOAFER, x: 1860, y: 2595, tone: "hr", flip: true },
+  { of: COURT, x: 1670, y: 2130, tone: "st", flip: false },
+  { of: COURT, x: 1855, y: 2130, tone: "hr", flip: true },
+  { of: COURT, x: 1670, y: 2320, tone: "st", flip: false },
+  { of: COURT, x: 1855, y: 2320, tone: "hr", flip: true },
+];
+const shoeTransform = (s: (typeof SHOES)[number], k = 0.9) =>
+  `translate(${s.flip ? s.x + s.of.w * k : s.x},${s.y}) scale(${s.flip ? -k : k},${k})`;
+
+const ariaLabel =
+  `${title}. A hairline drawing that assembles itself in work order, then is dressed: ` +
+  `a suitcase on the top shelf, a coat and a dress on the long rail, shirts and a skirt ` +
+  `on theirs, folded piles, a handbag, and shoes on the shoe shelves.`;
+---
+
+<svg
+  class:list={["ss-wd", className]}
+  data-motion="drawing"
+  viewBox="0 0 3900 2980"
+  preserveAspectRatio="xMidYMid meet"
+  role="img"
+  aria-label={ariaLabel}
+  style={`--wd-cycle:${cycle}s;${style}`}
+>
+  {/* Setting-out lines: never animated, so the board always carries its marking out. */}
+  <g class="set">
+    <rect class="hr" x="200" y="250" width="3400" height="2350" />
+    {DIVIDERS.slice(1, -1).map((x) => <line class="hr" x1={x} y1="250" x2={x} y2="2600" />)}
+    <rect class="hr" x="250" y="2600" width="3300" height="100" />
+  </g>
+
+  <g class="cyc">
+    {/* 01 Visit: the carcass and its five bays square up in the room. */}
+    <g class="carc">
+      {DIVIDERS.map((x) => (
+        <line class="st v" x1={x} y1="250" x2={x} y2="2600" style={`transform-origin:${x}px 250px`} />
+      ))}
+      <line class="st h" x1="200" y1="250" x2="3600" y2="250" style="transform-origin:200px 250px" />
+      <line class="st h" x1="200" y1="330" x2="3600" y2="330" style="transform-origin:200px 330px" />
+      <line class="st h" x1="200" y1="2600" x2="3600" y2="2600" style="transform-origin:200px 2600px" />
+    </g>
+
+    {/* 02 Drawing: the back planes in, shelves seat onto their pins, rails drop in. */}
+    <rect class="fill back" x="200" y="250" width="3400" height="2350" style="transform-origin:200px 250px" />
+
+    {SHELF_ROWS.map((row) => (
+      <g class={row.cls}>
+        {row.ys.map((y) => (
+          <>
+            <line class="st" x1="200" y1={y} x2="620" y2={y} />
+            <line class="st" x1="3180" y1={y} x2="3600" y2={y} />
+            {y === 680 && (
+              <>
+                <line class="st" x1="620" y1={y} x2="3180" y2={y} />
+                <line class="hr" x1="670" y1={y - 26} x2="670" y2={y + 26} />
+                <line class="hr" x1="3130" y1={y - 26} x2="3130" y2={y + 26} />
+              </>
+            )}
+          </>
+        ))}
+        {row.cls === "sh3" && (
+          <>
+            <line class="st" x1="1660" y1="1180" x2="2060" y2="1180" />
+            <line class="hr" x1="1710" y1="1154" x2="1710" y2="1206" />
+            <line class="hr" x1="2010" y1="1154" x2="2010" y2="1206" />
+            <line class="st" x1="1660" y1="2130" x2="2060" y2="2130" />
+            <line class="hr" x1="1710" y1="2104" x2="1710" y2="2156" />
+            <line class="hr" x1="2010" y1="2104" x2="2010" y2="2156" />
+            <line class="st" x1="1660" y1="2320" x2="2060" y2="2320" />
+            <line class="hr" x1="1710" y1="2294" x2="1710" y2="2346" />
+            <line class="hr" x1="2010" y1="2294" x2="2010" y2="2346" />
+          </>
+        )}
+      </g>
+    ))}
+
+    <g class="rail">
+      {RAILS.map((r) => (
+        <>
+          <line class="st" x1={r.x1} y1={r.y} x2={r.x2} y2={r.y} />
+          <line class="st" x1={r.x1} y1={r.y - 50} x2={r.x1} y2={r.y + 50} />
+          <line class="st" x1={r.x2} y1={r.y - 50} x2={r.x2} y2={r.y + 50} />
+        </>
+      ))}
+    </g>
+
+    {/* 03 Making: the wide bay is shelved out, the bench box runs in, the seat
+        slab lands on it. Nothing travels laterally across a bay already drawn. */}
+    <g class="dr1s">
+      <line class="st" x1="2060" y1="1560" x2="3180" y2="1560" />
+      <line class="st" x1="2060" y1="1900" x2="3180" y2="1900" />
+      <line class="st" x1="2060" y1="2240" x2="3180" y2="2240" />
+    </g>
+    <g class="benc">
+      <rect class="st" x="700" y="2130" width="880" height="470" />
+      <line class="st" x1="700" y1="2320" x2="1580" y2="2320" />
+      <line class="st" x1="1020" y1="2460" x2="1260" y2="2460" />
+    </g>
+    {/* The doors stage of the vocabulary is spent here instead: a part landing on a part. */}
+    <rect class="st slab" x="680" y="2080" width="920" height="50" />
+
+    {/* 04 Fitting: the plinth seats down, the scribe fillet takes up the wall. */}
+    <rect class="st pl" x="250" y="2600" width="3300" height="100" />
+    <line class="hr fl" x1="100" y1="2700" x2="3800" y2="2700" style="transform-origin:100px 2700px" />
+    <rect class="fill fil" x="170" y="250" width="30" height="2350" />
+
+    {/* 05 Dressing: the case and clothes go in. */}
+    <g class="cse">
+      <rect class="st" x="760" y="430" width="420" height="245" />
+      <line class="hr" x1="760" y1="520" x2="1180" y2="520" />
+      <line class="st" x1="930" y1="430" x2="930" y2="395" />
+      <line class="st" x1="930" y1="395" x2="1010" y2="395" />
+      <line class="st" x1="1010" y1="395" x2="1010" y2="430" />
+      <line class="st" x1="840" y1="505" x2="840" y2="540" />
+      <line class="st" x1="1100" y1="505" x2="1100" y2="540" />
+      <rect class="st" x="2300" y="430" width="750" height="245" />
+      <line class="st" x1="2610" y1="430" x2="2610" y2="385" />
+      <line class="st" x1="2740" y1="430" x2="2740" y2="385" />
+      <line class="st" x1="2610" y1="385" x2="2740" y2="385" />
+      <line class="hr" x1="2300" y1="510" x2="3050" y2="510" />
+      <line class="st" x1="2450" y1="495" x2="2450" y2="545" />
+      <line class="st" x1="2900" y1="495" x2="2900" y2="545" />
+      <line class="hr" x1="2480" y1="430" x2="2480" y2="675" />
+      <line class="hr" x1="2870" y1="430" x2="2870" y2="675" />
+      <rect class="st" x="1230" y="385" width="130" height="290" />
+      <line class="st" x1="1275" y1="385" x2="1275" y2="355" />
+      <line class="st" x1="1275" y1="355" x2="1315" y2="355" />
+      <line class="st" x1="1315" y1="355" x2="1315" y2="385" />
+      <line class="hr" x1="1295" y1="385" x2="1295" y2="675" />
+      <line class="st" x1="1280" y1="455" x2="1310" y2="455" />
+      <line class="st" x1="1280" y1="605" x2="1310" y2="605" />
+    </g>
+
+    <g class="cot">
+      <line class="st" x1="1090" y1="860" x2="1090" y2="900" />
+      <line class="st" x1="1090" y1="900" x2="960" y2="955" />
+      <line class="st" x1="1090" y1="900" x2="1220" y2="955" />
+      <line class="st" x1="960" y1="955" x2="920" y2="1600" />
+      <line class="st" x1="1220" y1="955" x2="1260" y2="1600" />
+      <line class="st" x1="920" y1="1600" x2="1260" y2="1600" />
+      <line class="hr" x1="1090" y1="955" x2="1090" y2="1600" />
+    </g>
+
+    <g class="shr">
+      <line class="hr" x1="2350" y1="860" x2="2350" y2="895" />
+      <line class="hr" x1="2350" y1="895" x2="2255" y2="940" />
+      <line class="hr" x1="2350" y1="895" x2="2445" y2="940" />
+      <line class="hr" x1="2255" y1="940" x2="2270" y2="1210" />
+      <line class="hr" x1="2445" y1="940" x2="2430" y2="1210" />
+      <line class="hr" x1="2270" y1="1210" x2="2430" y2="1210" />
+      <line class="st" x1="2620" y1="860" x2="2620" y2="895" />
+      <line class="st" x1="2620" y1="895" x2="2525" y2="940" />
+      <line class="st" x1="2620" y1="895" x2="2715" y2="940" />
+      <line class="st" x1="2525" y1="940" x2="2540" y2="1210" />
+      <line class="st" x1="2715" y1="940" x2="2700" y2="1210" />
+      <line class="st" x1="2540" y1="1210" x2="2700" y2="1210" />
+      <line class="hr" x1="2890" y1="860" x2="2890" y2="895" />
+      <line class="hr" x1="2890" y1="895" x2="2795" y2="940" />
+      <line class="hr" x1="2890" y1="895" x2="2985" y2="940" />
+      <line class="hr" x1="2795" y1="940" x2="2810" y2="1210" />
+      <line class="hr" x1="2985" y1="940" x2="2970" y2="1210" />
+      <line class="hr" x1="2810" y1="1210" x2="2970" y2="1210" />
+      <line class="st" x1="1420" y1="860" x2="1420" y2="900" />
+      <line class="st" x1="1420" y1="900" x2="1330" y2="945" />
+      <line class="st" x1="1420" y1="900" x2="1510" y2="945" />
+      <line class="st" x1="1330" y1="945" x2="1345" y2="1300" />
+      <line class="st" x1="1345" y1="1300" x2="1290" y2="1750" />
+      <line class="st" x1="1290" y1="1750" x2="1550" y2="1750" />
+      <line class="st" x1="1550" y1="1750" x2="1495" y2="1300" />
+      <line class="st" x1="1495" y1="1300" x2="1510" y2="945" />
+      <line class="hr" x1="1345" y1="1300" x2="1495" y2="1300" />
+      <line class="st" x1="1860" y1="1360" x2="1860" y2="1400" />
+      <line class="st" x1="1800" y1="1400" x2="1920" y2="1400" />
+      <line class="st" x1="1800" y1="1400" x2="1810" y2="1470" />
+      <line class="st" x1="1920" y1="1400" x2="1910" y2="1470" />
+      <line class="hr" x1="1810" y1="1470" x2="1910" y2="1470" />
+      <line class="st" x1="1810" y1="1470" x2="1770" y2="1880" />
+      <line class="st" x1="1910" y1="1470" x2="1950" y2="1880" />
+      <line class="st" x1="1770" y1="1880" x2="1950" y2="1880" />
+      <line class="hr" x1="1845" y1="1470" x2="1830" y2="1880" />
+      <line class="hr" x1="1875" y1="1470" x2="1890" y2="1880" />
+    </g>
+
+    <g class="fld">
+      <line class="st" x1="250" y1="1100" x2="570" y2="1100" />
+      <line class="hr" x1="250" y1="1155" x2="570" y2="1155" />
+      <line class="st" x1="250" y1="1210" x2="570" y2="1210" />
+      <line class="hr" x1="250" y1="1265" x2="570" y2="1265" />
+      <line class="st" x1="250" y1="1100" x2="250" y2="1320" />
+      <line class="st" x1="570" y1="1100" x2="570" y2="1320" />
+      <line class="st" x1="390" y1="1100" x2="410" y2="1116" />
+      <line class="st" x1="410" y1="1116" x2="430" y2="1100" />
+      <line class="st" x1="3230" y1="940" x2="3550" y2="940" />
+      <line class="hr" x1="3230" y1="965" x2="3550" y2="965" />
+      <line class="st" x1="3230" y1="990" x2="3550" y2="990" />
+      <line class="st" x1="3230" y1="940" x2="3230" y2="1000" />
+      <line class="st" x1="3550" y1="940" x2="3550" y2="1000" />
+      <line class="st" x1="260" y1="1565" x2="540" y2="1565" />
+      <line class="hr" x1="260" y1="1590" x2="540" y2="1590" />
+      <line class="st" x1="260" y1="1615" x2="540" y2="1615" />
+      <line class="st" x1="260" y1="1565" x2="260" y2="1640" />
+      <line class="st" x1="540" y1="1565" x2="540" y2="1640" />
+      <line class="st" x1="3240" y1="1245" x2="3530" y2="1245" />
+      <line class="hr" x1="3240" y1="1270" x2="3530" y2="1270" />
+      <line class="st" x1="3240" y1="1295" x2="3530" y2="1295" />
+      <line class="st" x1="3240" y1="1245" x2="3240" y2="1320" />
+      <line class="st" x1="3530" y1="1245" x2="3530" y2="1320" />
+      <line class="st" x1="2140" y1="1825" x2="2460" y2="1825" />
+      <line class="hr" x1="2140" y1="1850" x2="2460" y2="1850" />
+      <line class="st" x1="2140" y1="1875" x2="2460" y2="1875" />
+      <line class="st" x1="2140" y1="1825" x2="2140" y2="1900" />
+      <line class="st" x1="2460" y1="1825" x2="2460" y2="1900" />
+      <line class="st" x1="2700" y1="1825" x2="3020" y2="1825" />
+      <line class="hr" x1="2700" y1="1850" x2="3020" y2="1850" />
+      <line class="st" x1="2700" y1="1875" x2="3020" y2="1875" />
+      <line class="st" x1="2700" y1="1825" x2="2700" y2="1900" />
+      <line class="st" x1="3020" y1="1825" x2="3020" y2="1900" />
+      <line class="st" x1="2400" y1="2165" x2="2720" y2="2165" />
+      <line class="hr" x1="2400" y1="2190" x2="2720" y2="2190" />
+      <line class="st" x1="2400" y1="2215" x2="2720" y2="2215" />
+      <line class="st" x1="2400" y1="2165" x2="2400" y2="2240" />
+      <line class="st" x1="2720" y1="2165" x2="2720" y2="2240" />
+      <line class="st" x1="3230" y1="1740" x2="3550" y2="1740" />
+      <line class="hr" x1="3230" y1="1795" x2="3550" y2="1795" />
+      <line class="st" x1="3230" y1="1850" x2="3550" y2="1850" />
+      <line class="hr" x1="3230" y1="1905" x2="3550" y2="1905" />
+      <line class="st" x1="3230" y1="1740" x2="3230" y2="1960" />
+      <line class="st" x1="3550" y1="1740" x2="3550" y2="1960" />
+      <line class="st" x1="3370" y1="1740" x2="3390" y2="1756" />
+      <line class="st" x1="3390" y1="1756" x2="3410" y2="1740" />
+    </g>
+
+    {/* A handbag stands on the right-hand shelf, drawn with the folded piles. */}
+    <g class="fld">
+      <line class="st" x1="3300" y1="1640" x2="3480" y2="1640" />
+      <line class="st" x1="3300" y1="1640" x2="3300" y2="1505" />
+      <line class="st" x1="3480" y1="1640" x2="3480" y2="1505" />
+      <line class="st" x1="3300" y1="1505" x2="3480" y2="1505" />
+      <line class="hr" x1="3300" y1="1550" x2="3480" y2="1550" />
+      <polyline class="hr" points="3335,1505 3348,1428 3390,1408 3432,1428 3445,1505" />
+    </g>
+
+    <g class="sho">
+      {SHOES.map((s) => (
+        <g transform={shoeTransform(s)}>
+          {s.of.st.map((d) => <path class={s.tone} d={d} />)}
+          {s.of.hr.map((d) => <path class="hr" d={d} />)}
+        </g>
+      ))}
+    </g>
+
+    <g>
+      <line class="hr dimx" x1="620" y1="2800" x2="1660" y2="2800" style="transform-origin:620px 2800px" />
+      <line class="hr" x1="620" y1="2765" x2="620" y2="2835" />
+      <line class="hr" x1="1660" y1="2765" x2="1660" y2="2835" />
+      <line class="hr dimx" x1="200" y1="2900" x2="3600" y2="2900" style="transform-origin:200px 2900px" />
+      <line class="hr" x1="200" y1="2865" x2="200" y2="2935" />
+      <line class="hr" x1="3600" y1="2865" x2="3600" y2="2935" />
+      <line class="hr dimy" x1="3760" y1="250" x2="3760" y2="2600" style="transform-origin:3760px 250px" />
+      <line class="hr" x1="3725" y1="250" x2="3795" y2="250" />
+      <line class="hr" x1="3725" y1="2600" x2="3795" y2="2600" />
+    </g>
+
+    {labels && (
+      <g class="lab">
+        <text x="1140" y="2770" text-anchor="middle">1040</text>
+        <text x="1900" y="2870" text-anchor="middle">3400</text>
+        <text x="3700" y="1425" text-anchor="middle" transform="rotate(-90 3700 1425)">2350</text>
+        <text x="200" y="180">WARDROBE WALL · ELEVATION · FIVE BAYS · 1:20</text>
+      </g>
+    )}
+  </g>
+</svg>
+
+<style is:global>
+  .ss-wd { width: 100%; height: auto; display: block; overflow: hidden; }
+  .ss-wd line, .ss-wd rect, .ss-wd polyline, .ss-wd path { vector-effect: non-scaling-stroke; }
+  .ss-wd .st { stroke: var(--hair-strong); stroke-width: 1; fill: none; }
+  .ss-wd .hr { stroke: var(--hair); stroke-width: 1; fill: none; }
+  .ss-wd .fill { fill: rgba(34, 29, 24, 0.05); stroke: none; }
+  .ss-wd .set { opacity: 0.55; }
+  .ss-wd text {
+    font-family: var(--font-mono);
+    font-size: 46px;
+    letter-spacing: 5px;
+    fill: var(--ink-soft);
+  }
+  @media (max-width: 700px) { .ss-wd text { display: none; } }
+
+  /* The hiding is scoped to html.js. Without JavaScript nothing ever adds .in,
+     and an unscoped rule would leave the drawing permanently half built. The
+     drawing is authored at rest, so no-JS, print and reduced motion all get the
+     finished elevation. */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .ss-wd:not(.in) .v { transform: scaleY(0); }
+    html.js .ss-wd:not(.in) .h,
+    html.js .ss-wd:not(.in) .fl,
+    html.js .ss-wd:not(.in) .back,
+    html.js .ss-wd:not(.in) .dimx { transform: scaleX(0); }
+    html.js .ss-wd:not(.in) .dimy { transform: scaleY(0); }
+    html.js .ss-wd:not(.in) .sh1, html.js .ss-wd:not(.in) .sh2, html.js .ss-wd:not(.in) .sh3,
+    html.js .ss-wd:not(.in) .rail, html.js .ss-wd:not(.in) .dr1s, html.js .ss-wd:not(.in) .benc,
+    html.js .ss-wd:not(.in) .slab, html.js .ss-wd:not(.in) .pl, html.js .ss-wd:not(.in) .fil,
+    html.js .ss-wd:not(.in) .lab, html.js .ss-wd:not(.in) .cse, html.js .ss-wd:not(.in) .cot,
+    html.js .ss-wd:not(.in) .shr, html.js .ss-wd:not(.in) .fld, html.js .ss-wd:not(.in) .sho { opacity: 0; }
+
+    .ss-wd.in .v { animation: wd-v var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .h, .ss-wd.in .fl { animation: wd-h var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .carc { animation: wd-sq var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .back { animation: wd-back var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .sh1 { animation: wd-sh1 var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .sh2 { animation: wd-sh2 var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .sh3 { animation: wd-sh3 var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .rail { animation: wd-rail var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .dr1s { animation: wd-dr1s var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .benc { animation: wd-benc var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .slab { animation: wd-slab var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .pl { animation: wd-pl var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .fil { animation: wd-fil var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .dimx { animation: wd-dimx var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .dimy { animation: wd-dimy var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .lab { animation: wd-lab var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .cse { animation: wd-cse var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .cot { animation: wd-cot var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .shr { animation: wd-shr var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .fld { animation: wd-fld var(--wd-cycle) linear 1 both; }
+    .ss-wd.in .sho { animation: wd-sho var(--wd-cycle) linear 1 both; }
+  }
+
+  @media print { .ss-wd * { animation: none !important; transform: none !important; opacity: 1 !important; } }
+
+  /* One clock. Every stage's window is written into its own keyframes, so there
+     is no animation-delay anywhere and they stay in lockstep for ever. */
+  @keyframes wd-v { 0% { transform: scaleY(0); animation-timing-function: var(--ease-out); } 5%, 100% { transform: scaleY(1); } }
+  @keyframes wd-h { 0%, 3% { transform: scaleX(0); animation-timing-function: var(--ease-out); } 8%, 100% { transform: scaleX(1); } }
+  @keyframes wd-sq { 0%, 8% { transform: translate(-10px, 10px); animation-timing-function: var(--ease-seat); } 12%, 100% { transform: none; } }
+  @keyframes wd-back { 0%, 12% { transform: scaleX(0); animation-timing-function: var(--ease-out); } 18%, 100% { transform: scaleX(1); } }
+  @keyframes wd-sh1 { 0%, 18% { opacity: 0; transform: translateY(-70px); animation-timing-function: var(--ease-seat); } 22%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-sh2 { 0%, 20.5% { opacity: 0; transform: translateY(-70px); animation-timing-function: var(--ease-seat); } 24.5%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-sh3 { 0%, 23% { opacity: 0; transform: translateY(-70px); animation-timing-function: var(--ease-seat); } 27%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-rail { 0%, 27% { opacity: 0; transform: translateY(-260px); animation-timing-function: var(--ease-seat); } 32%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-dr1s { 0%, 32% { opacity: 0; transform: translateY(-90px); animation-timing-function: var(--ease-seat); } 37%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-benc { 0%, 34.5% { opacity: 0; transform: translateY(-90px); animation-timing-function: var(--ease-seat); } 39.5%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-slab { 0%, 42% { opacity: 0; transform: translateY(-70px); animation-timing-function: var(--ease-seat); } 47%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-pl { 0%, 47% { opacity: 0; transform: translateY(90px); animation-timing-function: var(--ease-seat); } 51%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-fil { 0%, 49% { opacity: 0; transform: translateX(-70px); animation-timing-function: var(--ease-seat); } 53%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-dimx { 0%, 53% { transform: scaleX(0); animation-timing-function: var(--ease-out); } 58%, 100% { transform: scaleX(1); } }
+  @keyframes wd-dimy { 0%, 53% { transform: scaleY(0); animation-timing-function: var(--ease-out); } 58%, 100% { transform: scaleY(1); } }
+  @keyframes wd-lab { 0%, 56% { opacity: 0; transform: translateY(-14px); animation-timing-function: var(--ease-out); } 60%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-cse { 0%, 60% { opacity: 0; transform: translateY(-90px); animation-timing-function: var(--ease-seat); } 64%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-cot { 0%, 64% { opacity: 0; transform: translateY(-120px); animation-timing-function: var(--ease-seat); } 68%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-shr { 0%, 67% { opacity: 0; transform: translateY(-120px); animation-timing-function: var(--ease-seat); } 72%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-fld { 0%, 72% { opacity: 0; transform: translateY(-60px); animation-timing-function: var(--ease-seat); } 76%, 100% { opacity: 1; transform: none; } }
+  @keyframes wd-sho { 0%, 76% { opacity: 0; transform: translateX(-80px); animation-timing-function: var(--ease-seat); } 81%, 100% { opacity: 1; transform: none; } }
+</style>

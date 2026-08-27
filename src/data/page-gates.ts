@@ -34,7 +34,9 @@ const SERVICE_PAGE = [
 ] as const;
 
 export const PAGE_GATES = {
-  "/": ["q03", "q07", "q10"],
+  /* Hero and approach both turn on how he works, the process block carries the
+     untitled stage, and the maker block opens with how he started. */
+  "/": [...BAND_QUESTIONS, "q06", "stage04", "q50"],
 
   // The seven contracted service pages, all from the one template.
   "/fitted-wardrobes/": SERVICE_PAGE,

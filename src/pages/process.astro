@@ -22,6 +22,7 @@ import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import ProcessStep from "../components/ds/ProcessStep.astro";
+import WardrobeDrawing from "../components/ds/WardrobeDrawing.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Value from "../components/Value.astro";
@@ -51,6 +52,18 @@ const ICONS = ["tape", "pencil", undefined, "square"] as const;
       Four stages, and the same four every time. What follows is what actually happens, in order,
       with the numbers attached rather than left vague.
     </p>
+  </Wrap>
+
+  {/*
+    The drawing. This is the page the design system put it on, and the reason
+    holds: it is the answer to a section that needs an image and has none, and
+    this page has no photography at all. It must not go on the service pages,
+    where real plates now exist: the design system is explicit that once the
+    commissions are shot, the plate wins and the drawing moves to a page of its
+    own. Its eight stages map to the four stages listed below it.
+  */}
+  <Wrap style="padding-bottom:var(--section-y)">
+    <WardrobeDrawing />
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">

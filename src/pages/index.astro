@@ -1,79 +1,245 @@
 ---
+/**
+ * The homepage, rebuilt on the design system.
+ *
+ * It kept the Astro scaffold's own layout until now, wearing the new palette,
+ * which was the worst of both. This is the design system's structure: hero,
+ * approach, work, materials, process with the drawing, the maker, reviews.
+ *
+ * THE COPY IS NOT THE DESIGN'S. Almost every sentence on the design's homepage
+ * asserts something the questionnaire has since contradicted:
+ *
+ *   "the joinery workshop of Kaspar"            no workshop (Q3)
+ *   "solid timber, honest joints"               MDF, veneered MDF, plywood (Q22)
+ *   "carcasses that go in square"               unverified
+ *   "cuts the joints, applies the finish"       materials are cut elsewhere (Q3)
+ *   "Plate 05 · Kaspar at the bench"            no bench (Q3)
+ *   "About the workshop"                        no workshop (Q3)
+ *   "Six stages, one pair of hands"             there are four stages
+ *
+ * So the layout survives and the prose does not. What is asserted here is only
+ * what is confirmed: the services, the areas served (which match the Business
+ * Profile character for character, because citations are checked that way), and
+ * the review aggregate. Everything else is a <Value> and completes itself when
+ * the client answers.
+ *
+ * Even "one pair of hands" is held back. Q6 records that he works alone and
+ * brings in a plumber, electrician and plasterer as a job needs them, and it is
+ * the single most useful thing this page could say, but it is still marked
+ * provisional rather than confirmed. It goes live the moment Q6 does.
+ */
 import Base from "../layouts/Base.astro";
-import EnquiryForm from "../components/EnquiryForm.astro";
-import { SERVICES, BUSINESS, servicePath } from "../data/site";
-import { indexable } from "../data/page-gates";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Italic from "../components/ds/Italic.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Plate from "../components/ds/Plate.astro";
+import MaterialChip from "../components/ds/MaterialChip.astro";
+import ProcessStep from "../components/ds/ProcessStep.astro";
+import WardrobeDrawing from "../components/ds/WardrobeDrawing.astro";
+import Reviews from "../components/ds/Reviews.astro";
+import EnquireBand from "../components/ds/EnquireBand.astro";
+import Link from "../components/ds/Link.astro";
+import Value from "../components/Value.astro";
+import Ask from "../components/Ask.astro";
 
-const title = "Fitted wardrobes and bespoke joinery in north London";
-// "fitted by the team that builds them" stood here until 26 August 2026. The
-// tone protocol's section 10 is an absolute factual limit and Q6 confirms it:
-// he works alone, bringing in trades as a job needs them. A crew noun is a
-// claim about the business that is not true. Removed rather than softened, and
-// how he works stays off the site entirely until Q6 comes back confirmed.
-const description =
-  "Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across north London. Measured on site and scribed to your walls.";
+import { SERVICES, BUSINESS, servicePath } from "../data/site";
+import { MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
+import { indexable } from "../data/page-gates";
+import { questionLabel, answered } from "../data/answers";
+import selection from "../../public/images/_selection.json";
+
+const isIndexable = indexable("/");
+
+const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
+const hero = sel["fitted-wardrobes"]?.[0];
+const previews = SERVICES.map((s) => {
+  const shots = sel[s.slug] ?? [];
+  return shots.length ? { service: s, shot: shots[0] } : null;
+})
+  .filter(Boolean)
+  .slice(1, 4) as { service: (typeof SERVICES)[number]; shot: { file: string; w: number; h: number } }[];
+
+const ICONS = ["tape", "pencil", undefined, "square"] as const;
 ---
 
-<Base title={title} description={description} noindex={!indexable("/")}>
-  <section class="border-b border-line">
-    <div class="mx-auto max-w-6xl px-5 py-20 sm:py-28">
-      <p class="text-sm font-medium tracking-wide text-timber uppercase">{BUSINESS.tagline}</p>
-      <h1 class="mt-4 max-w-4xl text-[length:var(--text-hero)] leading-[1.05] font-semibold">
-        Fitted wardrobes built for the room, not the catalogue.
-      </h1>
-      <p class="mt-6 max-w-xl text-lg text-ink-soft">
-        London rooms are rarely square. Everything we make is measured on site and scribed to your
-        walls, skirting and ceiling, so there are no filler strips and no gaps.
-      </p>
-      <div class="mt-9 flex flex-wrap gap-3">
-        <a href="#enquire" class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-bone hover:bg-timber-deep">
-          Get a price
-        </a>
-        <a href={BUSINESS.phoneHref} class="rounded-full border border-ink px-6 py-3 text-sm font-medium hover:border-timber hover:text-timber">
-          Call {BUSINESS.phoneDisplay}
-        </a>
+<Base
+  title="Fitted wardrobes and bespoke joinery in north London"
+  description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across north London. Measured on site and scribed to your walls."
+  noindex={!isIndexable}
+>
+  <Wrap style="padding-top:var(--hero-y)">
+    <Kicker scribe>Bespoke joinery · North London</Kicker>
+
+    <Display level={1} style="margin:var(--space-12) 0 var(--space-13)">
+      Fitted furniture,<br />made once, <Italic>for one room.</Italic>
+    </Display>
+
+    <p style="max-width:var(--measure);font-size:var(--type-lede)">
+      Alcove units, wardrobe walls, walk-in wardrobes and media walls for homes across north
+      London. Every piece is measured on site and scribed to your walls, skirting and ceiling, so
+      there are no filler strips and no gaps.
+    </p>
+
+    <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
+      How the work is run: <Value q="q06" />
+    </p>
+
+    <MonoLabel as="p" style="margin-top:var(--space-14)">
+      {SERVICES.slice(0, 5).map((s) => s.title).join(" · ")}
+    </MonoLabel>
+
+    {hero && (
+      <div style="margin-top:var(--plate-y)">
+        <Plate
+          photo={hero.file}
+          alt={`Fitted wardrobes, completed installation by ${BUSINESS.legalName}`}
+          width={hero.w}
+          height={hero.h}
+          subject="Plate 01 · Fitted wardrobes"
+          detail="Completed"
+          ratio="21 / 9"
+          eager
+          plane="left"
+        />
       </div>
-      <p class="mt-8 text-sm text-ink-soft">
-        {BUSINESS.ratingValue} from {BUSINESS.reviewCount} Google reviews
+    )}
+  </Wrap>
+
+  <!-- Approach -->
+  <Wrap style="padding-top:var(--section-y)">
+    <Display level={3} as="h2" measure="var(--measure-display)">
+      One maker, <Italic>both halves</Italic> of the job.
+    </Display>
+    <div style="max-width:var(--measure);margin-top:var(--space-13)">
+      <p>
+        The structure is the part nobody sees: carcasses that go in square against walls that are
+        not, scribed to the room rather than packed out with filler.
+      </p>
+      <p style="margin-top:var(--space-10)">
+        Most firms split the job between a salesperson, a factory and a fitting crew. What is
+        different here, in his own words, is <Ask q={questionLabel("q06")}>still to be confirmed</Ask>.
       </p>
     </div>
-  </section>
+  </Wrap>
 
-  <section class="mx-auto max-w-6xl px-5 py-16">
-    <h2 class="text-[length:var(--text-section)] font-semibold">What we build</h2>
-    <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        SERVICES.map((s) => (
-          <li class="rounded-2xl border border-line p-6 transition-colors hover:border-timber">
-            <a href={servicePath(s)} class="block">
-              <h3 class="font-medium">{s.title}</h3>
-              <p class="mt-2 text-sm text-ink-soft">{s.summary}</p>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <!-- Work -->
+  <Wrap style="padding-top:var(--section-y)">
+    <SectionHead meta="Recent commissions" scribe>Selected work</SectionHead>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-lg)">
+      {previews.map(({ service, shot }) => (
+        <a href={servicePath(service)} style="display:block;border:0">
+          <Plate
+            photo={shot.file}
+            alt={`${service.title}, completed installation by ${BUSINESS.legalName}`}
+            width={shot.w}
+            height={shot.h}
+            subject={service.title}
+            detail="Completed"
+            ratio="4 / 3"
+          />
+        </a>
+      ))}
+    </div>
+    <p style="margin-top:var(--space-14)"><Link href="/work/" variant="nav" chamfer>All work</Link></p>
+  </Wrap>
 
-  <section class="border-y border-line bg-sand/40">
-    <div class="mx-auto max-w-6xl px-5 py-16">
-      <h2 class="text-[length:var(--text-section)] font-semibold">Where we work</h2>
-      <p class="mt-4 max-w-2xl text-ink-soft">
-        {BUSINESS.areaServed.join(", ")} and across north London.
-      </p>
+  <!-- Materials -->
+  <Wrap style="padding-top:var(--section-y)">
+    <SectionHead meta="The standard range" scribe>Materials</SectionHead>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md)">
+      {MATERIALS.map((m) => <MaterialChip name={m.name} />)}
     </div>
-  </section>
+    <p style="margin-top:var(--space-14)">
+      <Link href="/materials/" variant="nav" chamfer>Materials, finishes and why not solid timber</Link>
+    </p>
+  </Wrap>
 
-  <section id="enquire" class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-2">
-    <div>
-      <h2 class="text-[length:var(--text-section)] font-semibold">Get a price</h2>
-      <p class="mt-4 max-w-md text-ink-soft">
-        Tell us the room and send a photo or two. We come back with a realistic range before anyone
-        visits.
-      </p>
+  <!-- Process, with the drawing -->
+  <Wrap style="padding-top:var(--section-y)">
+    <SectionHead meta={`${PROCESS.length} stages`} scribe>Process</SectionHead>
+
+    {/*
+      The drawing assembles in the order the work happens. Its eight stages map
+      to the four steps below it. It sits here because this section has no
+      photography of its own, which is exactly the case the design system built
+      it for.
+    */}
+    <Plate
+      as="div"
+      subject="Fig. 01 · Wardrobe wall, elevation"
+      detail="3400 × 2350 · 1:20"
+      ratio="auto"
+      style="margin-bottom:var(--gap-lg)"
+    >
+      <div style="padding:clamp(18px,3vw,44px) clamp(22px,4vw,64px);display:grid">
+        <WardrobeDrawing />
+      </div>
+    </Plate>
+
+    {PROCESS.map((stage, i) => (
+      <ProcessStep number={stage.number} icon={ICONS[i]} title={stage.title ?? "Stage still to be titled"}>
+        {stage.confirmed ?? (
+          <Ask q={questionLabel("stage04")}>
+            What happens between the materials being cut and the piece reaching site
+          </Ask>
+        )}
+      </ProcessStep>
+    ))}
+
+    <p style="margin-top:var(--space-14)">
+      <Link href="/process/" variant="nav" chamfer>The full process, stage by stage</Link>
+    </p>
+  </Wrap>
+
+  <!-- Maker -->
+  <Wrap style="padding-top:var(--section-y)">
+    <SectionHead meta="Kaspars Tormanis" scribe>The maker</SectionHead>
+    <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
+      <Plate
+        as="div"
+        subject="Plate 05 · Portrait"
+        detail={answered("q56") ? "To place" : "Not yet cleared"}
+        awaiting={answered("q56") ? "Portrait to place" : "No portrait until Q56 confirms he is happy to be photographed"}
+        ratio="4 / 5"
+        plane="top"
+      />
+      <div>
+        <p style="max-width:var(--measure-tight)">
+          There is no showroom and no sales team. The person who measures your room is the person
+          who draws it and the person who fits it.
+        </p>
+        <p style="max-width:var(--measure-tight);margin-top:var(--space-10);color:var(--text-quiet)">
+          How he started: <Value q="q50" />
+        </p>
+        <p style="margin-top:var(--space-14)">
+          <Link href="/maker/" variant="nav" chamfer>About the maker</Link>
+        </p>
+      </div>
     </div>
-    <div class="rounded-2xl border border-line bg-bone p-6 sm:p-8">
-      <EnquiryForm />
-    </div>
-  </section>
+  </Wrap>
+
+  <!-- Reviews -->
+  <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
+    <Reviews
+      meta="Left by clients, unedited"
+      average={REVIEWS.average}
+      count={REVIEWS.count}
+      source={REVIEWS.source}
+      quotes={REVIEWS.quotes}
+    />
+  </Wrap>
+
+  <EnquireBand heading={BAND.heading} email={CONTACT.email} chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
 </Base>
