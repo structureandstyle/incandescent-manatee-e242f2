@@ -1,0 +1,115 @@
+---
+/**
+ * A framed photograph with a specification caption.
+ *
+ * This is a REWRITE, not a port. The design system used <image-slot>, 64.8KB of
+ * Claude Design canvas runtime that persists a dragged-in image to a JSON
+ * sidecar via window.omelette and is read-only outside that runtime. None of
+ * that belongs in a built site.
+ *
+ * What it does instead, and the rule that matters:
+ *
+ *   photo given  -> a real <img>, lazy, with width and height so it reserves
+ *                   its space and does not shift the page as it loads
+ *   no photo     -> an honest empty frame that says what is missing
+ *
+ * It never renders a decorative stand-in that could be mistaken for the client's
+ * work. The design system's own README made the same commitment in words ("Do
+ * not replace the captions until real plates exist"); here it is structural.
+ *
+ * The caption is a specification line, not a description: subject on the left,
+ * detail on the right, both in the mono voice.
+ */
+import MonoLabel from "./MonoLabel.astro";
+
+interface Props {
+  /** Root-relative path to a real photograph. Omit while none exists. */
+  photo?: string;
+  /** Required whenever `photo` is set. */
+  alt?: string;
+  width?: number;
+  height?: number;
+  /** What the plate is of, e.g. "Plate 02 · Fitted wardrobes". */
+  subject?: string;
+  /** The right-hand half of the caption. */
+  detail?: string;
+  /** What is still needed, shown in the empty frame. */
+  awaiting?: string;
+  ratio?: string;
+  framed?: boolean;
+  as?: string;
+  /** Animate the reveal as a single plane pass. */
+  plane?: boolean | "left" | "top";
+  class?: string;
+  style?: string;
+}
+
+const {
+  photo,
+  alt,
+  width,
+  height,
+  subject,
+  detail,
+  awaiting = "Photograph to place",
+  ratio = "3 / 2",
+  framed = true,
+  as: Tag = "figure",
+  plane = false,
+  class: className,
+  style = "",
+  ...rest
+} = Astro.props;
+
+const Cap = Tag === "figure" ? "figcaption" : "div";
+const planed = plane !== false && plane != null;
+const direction = plane === true ? "left" : plane;
+
+if (photo && !alt) {
+  throw new Error(
+    `Plate: a photograph needs alt text (photo="${photo}"). ` +
+      "Every diagram and image on this site carries one: it is in the signed scope " +
+      "and it is how the primary keyword reaches the image."
+  );
+}
+
+const frameCss = [
+  framed ? "border:var(--rule-structure)" : "border:none",
+  "background:var(--paper)",
+  `aspect-ratio:${ratio}`,
+  "overflow:hidden",
+  "display:grid",
+].join(";");
+
+const hasCaption = Boolean(subject || detail);
+---
+
+<Tag class={className} style={`margin:0;${style}`} {...rest}>
+  <div style={frameCss} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
+    {photo ? (
+      <img
+        src={photo}
+        alt={alt}
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+        style="width:100%;height:100%;object-fit:cover"
+      />
+    ) : (
+      <div style="display:grid;place-items:center;background:var(--wash-char);padding:var(--space-10)">
+        <MonoLabel tone="soft" style="text-align:center">{awaiting}</MonoLabel>
+      </div>
+    )}
+  </div>
+
+  {hasCaption && (
+    <Cap
+      style="display:flex;justify-content:space-between;gap:var(--space-8);flex-wrap:wrap;border-top:var(--rule-structure);padding-top:var(--space-5)"
+      data-motion={planed ? "stamp-group" : undefined}
+    >
+      {subject && <MonoLabel tone="default" style="letter-spacing:var(--ls-mono-table)">{subject}</MonoLabel>}
+      {detail && <MonoLabel style="letter-spacing:var(--ls-mono-table)">{detail}</MonoLabel>}
+    </Cap>
+  )}
+</Tag>

@@ -1,0 +1,27 @@
+---
+/**
+ * The italic serif, used inside display type for emphasis on a single word.
+ * Ported from the Italic export in the design system's Display.jsx.
+ *
+ * It sets its own family because Libre Caslon Text Italic is a different face
+ * from Libre Caslon Display, not a slant of it. The slight size and offset are
+ * optical correction between the two, and are the design system's own values.
+ */
+interface Props {
+  class?: string;
+  style?: string;
+}
+
+const { class: className, style = "", ...rest } = Astro.props;
+
+const css = [
+  "font-family:var(--font-serif-italic)",
+  "font-style:italic",
+  "letter-spacing:0",
+  "font-size:.92em",
+  "margin-left:.04em",
+  style,
+].filter(Boolean).join(";");
+---
+
+<em class={className} style={css} {...rest}><slot /></em>

@@ -1,0 +1,57 @@
+---
+/**
+ * The mono voice: specification labels, kickers, plate captions, spec tables.
+ * Ported from the design system's components/typography/MonoLabel.jsx.
+ *
+ * The port keeps the inline styles rather than converting to Tailwind classes.
+ * Every value is a CSS custom property from src/styles/tokens/, so the styles
+ * are already token-driven, and rewriting them as utilities would fork the
+ * design system's scale into a second place that has to be kept in step.
+ */
+type Tone = "default" | "soft" | "paper" | "paper-soft" | "green";
+type Size = "xs" | "sm" | "md";
+
+interface Props {
+  size?: Size;
+  tone?: Tone;
+  caps?: boolean;
+  as?: string;
+  class?: string;
+  style?: string;
+}
+
+const {
+  size = "sm",
+  tone = "soft",
+  caps = true,
+  as: Tag = "span",
+  class: className,
+  style = "",
+  ...rest
+} = Astro.props;
+
+const TONES: Record<Tone, string> = {
+  default: "var(--char)",
+  soft: "var(--ink-soft)",
+  paper: "var(--ink-rev)",
+  "paper-soft": "var(--ink-rev-quiet)",
+  green: "var(--green)",
+};
+
+const SIZES: Record<Size, string> = {
+  xs: "font-size:var(--type-mono-print);letter-spacing:var(--ls-mono)",
+  sm: "font-size:var(--type-mono);letter-spacing:var(--ls-mono)",
+  md: "font-size:var(--type-mono-md);letter-spacing:var(--ls-mono-md)",
+};
+
+const css = [
+  "font-family:var(--font-mono)",
+  "font-weight:var(--weight-regular)",
+  `text-transform:${caps ? "uppercase" : "none"}`,
+  `color:${TONES[tone] ?? TONES.soft}`,
+  SIZES[size],
+  style,
+].filter(Boolean).join(";");
+---
+
+<Tag class={className} style={css} {...rest}><slot /></Tag>

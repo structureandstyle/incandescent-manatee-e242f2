@@ -1,0 +1,24 @@
+---
+/**
+ * The 1180px page frame with its fluid gutter. Every full-width band puts one
+ * of these inside it; nothing else sets a max width.
+ * Ported from the design system's components/layout/Wrap.jsx.
+ */
+interface Props {
+  as?: string;
+  flush?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const { as: Tag = "div", flush = false, class: className, style = "", ...rest } = Astro.props;
+
+const css = [
+  "max-width:var(--page-max)",
+  "margin:0 auto",
+  `padding:${flush ? "0" : "0 var(--gutter)"}`,
+  style,
+].filter(Boolean).join(";");
+---
+
+<Tag class={className} style={css} {...rest}><slot /></Tag>

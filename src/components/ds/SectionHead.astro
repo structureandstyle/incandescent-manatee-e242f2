@@ -1,0 +1,77 @@
+---
+/**
+ * A section's opening: a structural rule, the title, and an optional mono note
+ * sitting on the same baseline at the far right.
+ * Ported from the design system's components/layout/SectionHead.jsx.
+ *
+ * Two changes from the source, both deliberate:
+ *
+ * 1. The title is the default slot rather than a `title` string prop, so a
+ *    heading can carry <Italic> or a line break. The source took a plain string
+ *    and could not.
+ * 2. The animated variant used two React motion components, <Scribe> for the
+ *    rule and <Square> for the head. Here they are data-motion attributes on
+ *    the elements themselves, implemented by the ported motion CSS. The
+ *    sequence is preserved: the rule draws, then the head squares up under it
+ *    on a 160ms delay.
+ */
+import Display from "./Display.astro";
+import MonoLabel from "./MonoLabel.astro";
+
+interface Props {
+  meta?: string;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  as?: string;
+  tone?: "default" | "paper";
+  scribe?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  meta,
+  level = 4,
+  as = "h2",
+  tone = "default",
+  scribe = false,
+  class: className,
+  style = "",
+  ...rest
+} = Astro.props;
+
+const rev = tone === "paper";
+
+const row = [
+  "display:flex",
+  "align-items:baseline",
+  "justify-content:space-between",
+  "gap:var(--space-12)",
+  "padding-top:var(--space-8)",
+  "flex-wrap:wrap",
+].join(";");
+
+const staticBorder = rev ? "var(--rule-structure-rev)" : "var(--rule-structure)";
+---
+
+{scribe ? (
+  <div class={className} style={`margin-bottom:var(--head-gap);${style}`} {...rest}>
+    <span
+      aria-hidden="true"
+      data-motion="scribe"
+      style={`display:block;height:var(--hairline);background:${rev ? "var(--hair-rev-strong)" : "var(--hair-strong)"}`}
+    ></span>
+    <div data-motion="square" data-from="bottom" data-motion-delay="1" style={row}>
+      <Display level={level} as={as} tone={tone} measure="none"><slot /></Display>
+      {meta && <MonoLabel tone={rev ? "paper-soft" : "soft"}>{meta}</MonoLabel>}
+    </div>
+  </div>
+) : (
+  <div
+    class={className}
+    style={`${row};border-top:${staticBorder};margin-bottom:var(--head-gap);${style}`}
+    {...rest}
+  >
+    <Display level={level} as={as} tone={tone} measure="none"><slot /></Display>
+    {meta && <MonoLabel tone={rev ? "paper-soft" : "soft"}>{meta}</MonoLabel>}
+  </div>
+)}

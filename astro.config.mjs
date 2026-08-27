@@ -18,7 +18,13 @@ export default defineConfig({
   trailingSlash: 'always',
   integrations: [
     sitemap({
-      filter: (page) => !blocked.has(new URL(page).pathname),
+      // Two exclusions. Pages still waiting on the questionnaire, and the
+      // internal design-system preview, which is not a client page and is
+      // noindexed at the template as well.
+      filter: (page) => {
+        const path = new URL(page).pathname;
+        return !blocked.has(path) && !path.startsWith("/ds-preview");
+      },
     }),
   ],
   vite: { plugins: [tailwindcss()] },

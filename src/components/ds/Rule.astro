@@ -1,0 +1,39 @@
+---
+/**
+ * A hairline. The brand's only decoration.
+ * Ported from the design system's components/layout/Rule.jsx.
+ */
+interface Props {
+  strength?: "hair" | "structure";
+  tone?: "default" | "paper";
+  spacing?: number;
+  scribe?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  strength = "hair",
+  tone = "default",
+  spacing = 0,
+  scribe = false,
+  class: className,
+  style = "",
+  ...rest
+} = Astro.props;
+
+const rev = tone === "paper";
+const color =
+  strength === "structure"
+    ? rev ? "var(--hair-rev-strong)" : "var(--hair-strong)"
+    : rev ? "var(--hair-rev)" : "var(--hair)";
+
+const css = [
+  "border:0",
+  `border-top:var(--hairline) solid ${color}`,
+  spacing ? `margin:${spacing}px 0` : "margin:0",
+  style,
+].filter(Boolean).join(";");
+---
+
+<hr class={className} style={css} data-motion={scribe ? "scribe" : undefined} {...rest} />

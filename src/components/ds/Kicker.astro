@@ -1,0 +1,49 @@
+---
+/**
+ * A small mono label with a hairline running off its right. Opens most sections.
+ * Ported from the design system's components/typography/Kicker.jsx.
+ *
+ * The design system's version delegated the animated variant to a <Scribe>
+ * React component. Here `scribe` sets data-motion="scribe" instead, which the
+ * ported motion CSS in src/styles/tokens/motion-actions.css already implements,
+ * so the animated and static variants are one element rather than two
+ * components. The rule is aria-hidden either way: it is a mark, not content.
+ */
+import MonoLabel from "./MonoLabel.astro";
+
+interface Props {
+  tone?: "default" | "soft" | "paper" | "paper-soft" | "green";
+  ruleLength?: number;
+  scribe?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  tone = "soft",
+  ruleLength = 56,
+  scribe = false,
+  class: className,
+  style = "",
+  ...rest
+} = Astro.props;
+
+const paper = tone === "paper" || tone === "paper-soft";
+
+const ruleCss = [
+  `flex:0 0 ${ruleLength}px`,
+  "height:var(--hairline)",
+  `background:${paper ? "var(--hair-rev-strong)" : "var(--hair-strong)"}`,
+].join(";");
+---
+
+<MonoLabel
+  as="p"
+  tone={tone}
+  class={className}
+  style={`display:flex;align-items:center;gap:var(--space-7);${style}`}
+  {...rest}
+>
+  <slot />
+  <span aria-hidden="true" style={ruleCss} data-motion={scribe ? "scribe" : undefined}></span>
+</MonoLabel>

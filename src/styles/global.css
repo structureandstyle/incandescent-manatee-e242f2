@@ -1,18 +1,34 @@
 @import "tailwindcss";
 
-/**
- * Fonts are self-hosted rather than pulled from Google Fonts. The old site
- * loaded eight font files through a blocking stylesheet, which was a large part
- * of its mobile LCP problem. Drop inter-variable.woff2 into /public/fonts and
- * this picks it up; until then the system stack renders and nothing blocks.
+/* The design system, brought over in build order step 2.
+ *
+ * Import order matters. Tailwind's preflight lands first, then the tokens
+ * define the custom properties everything else reads, then base.css sets the
+ * element defaults that must beat preflight (body background and type, link
+ * underlines, the em face, selection colour).
+ *
+ * The Tailwind @theme block below is NOT yet reconciled with these tokens: the
+ * existing pages still use utilities from the old warm-neutral palette
+ * (bg-sand, text-ink-soft, border-line), so both palettes are live while the
+ * pages are rewritten in steps 5 and 6. Expect the two to disagree visually
+ * until Header and Footer are replaced. Reconciling them is the last act of the
+ * port, not the first, because doing it early would break every page at once.
  */
-@font-face {
-  font-family: "Inter";
-  src: url("/fonts/inter-variable.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-display: swap;
-  font-style: normal;
-}
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+@import "./tokens/borders.css";
+@import "./tokens/motion.css";
+@import "./tokens/fonts.css";
+@import "./tokens/base.css";
+@import "./tokens/motion-actions.css";
+@import "./site-layout.css";
+
+/* The Inter @font-face that stood here has been removed. It pointed at
+ * /fonts/inter-variable.woff2, which never existed, so it 404'd on every page
+ * load and the system stack rendered instead. The real faces are now in
+ * tokens/fonts.css: Archivo, Libre Caslon Display, Libre Caslon Text Italic and
+ * Spline Sans Mono, all self-hosted and all present. */
 
 @theme {
   /* Warm neutrals against a deep ink, with a timber accent. */
@@ -42,27 +58,20 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
-body {
-  background: var(--color-bone);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
-  text-wrap: pretty;
-}
-
-h1, h2, h3 {
-  text-wrap: balance;
-  letter-spacing: -0.02em;
-}
-
-/* Visible focus, since the whole site is one large link set. */
-:focus-visible {
-  outline: 2px solid var(--color-timber);
-  outline-offset: 3px;
-}
+/* The body, heading and focus rules that stood here have gone to
+ * tokens/base.css, which is the design system's own version of the same three.
+ * Keeping both meant the local copy won on import order, so the page rendered
+ * on the legacy bone background (#faf8f5) instead of the design system's paper
+ * (#F2EEE3), and headings carried a -0.02em letter-spacing that fought the
+ * per-level tracking Display sets. Caught by reading computed styles in the
+ * browser rather than by looking at the page, where a slightly wrong warm white
+ * is exactly the kind of thing that survives review.
+ *
+ * scroll-behavior, the reduced-motion block and the focus ring all live in
+ * base.css now. The focus ring is door green there, not timber. */
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

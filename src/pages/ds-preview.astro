@@ -1,0 +1,80 @@
+---
+/**
+ * Design system preview. Not a client page.
+ *
+ * Every ported component on one page, so the port can be checked by looking at
+ * it rather than by trusting that it compiled. Kept in the build rather than
+ * thrown away because it is the fastest way to see what a token change does,
+ * and because a component library nobody can look at drifts.
+ *
+ * Always noindex, and excluded from the sitemap in astro.config.mjs.
+ */
+import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Italic from "../components/ds/Italic.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Rule from "../components/ds/Rule.astro";
+import Plate from "../components/ds/Plate.astro";
+import Ask from "../components/Ask.astro";
+---
+
+<Base title="Design system preview" description="Internal component preview." noindex={true}>
+  <Wrap style="padding-top:var(--space-15);padding-bottom:var(--space-18)">
+    <Kicker scribe>Design system</Kicker>
+    <Display level={1} style="margin:var(--space-12) 0 var(--space-13)">
+      The parts, <Italic>as built</Italic>
+    </Display>
+    <p style="max-width:var(--measure);color:var(--text-quiet)">
+      Every component ported from the Claude Design project, rendered against the real tokens and
+      the real self-hosted faces. If a value looks wrong here it is wrong everywhere.
+    </p>
+
+    <SectionHead meta="Six levels" level={5} style="margin-top:var(--space-18)">Serif display</SectionHead>
+    <Display level={1}>Display one</Display>
+    <Display level={2} as="p">Display two</Display>
+    <Display level={3} as="p">Display three</Display>
+    <Display level={4} as="p">Display four</Display>
+    <Display level={5} as="p">Display five</Display>
+    <Display level={6} as="p">Display six</Display>
+
+    <SectionHead meta="Three sizes, five tones" level={5} style="margin-top:var(--space-18)">Mono</SectionHead>
+    <div style="display:flex;flex-direction:column;gap:var(--space-6)">
+      <MonoLabel size="xs">Extra small · specification</MonoLabel>
+      <MonoLabel size="sm">Small · the default label</MonoLabel>
+      <MonoLabel size="md">Medium · a caption</MonoLabel>
+      <MonoLabel tone="default">Default tone</MonoLabel>
+      <MonoLabel tone="green">Green tone</MonoLabel>
+      <MonoLabel caps={false}>Caps off, for a sentence</MonoLabel>
+    </div>
+
+    <SectionHead meta="Hair and structure" level={5} style="margin-top:var(--space-18)">Rules</SectionHead>
+    <Rule />
+    <div style="height:var(--space-8)"></div>
+    <Rule strength="structure" />
+
+    <SectionHead meta="With and without a photograph" level={5} style="margin-top:var(--space-18)">Plates</SectionHead>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap-md)">
+      <Plate
+        subject="Plate 01 · Fitted wardrobes"
+        detail="Awaiting selection"
+        awaiting="Photograph to place from the library"
+      />
+      <Plate
+        subject="Plate 02 · Under-stair storage"
+        detail="None in the library"
+        awaiting="No photograph exists for this service yet"
+        ratio="4 / 3"
+      />
+    </div>
+
+    <SectionHead meta="Never ships" level={5} style="margin-top:var(--space-18)">Open question</SectionHead>
+    <p style="max-width:var(--measure)">
+      A lead time of <Ask q="7">six to eight weeks</Ask> is how an unanswered question reads in draft
+      copy. The green wash, the mono brackets and a visually hidden prefix, so it is never carried by
+      colour alone. Any page containing one stays out of the index.
+    </p>
+  </Wrap>
+</Base>
