@@ -68,7 +68,7 @@ export const PAGE_GATES = {
 
   // No client dependency.
   "/journal/": [],
-  "/contact/": ["q07"],
+  "/contact/": [],
   "/privacy/": [],
   "/thanks/": [],
 } as const satisfies Record<string, readonly QuestionKey[]>;

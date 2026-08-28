@@ -1,0 +1,44 @@
+---
+/**
+ * Not found.
+ *
+ * The rebuild replaced a single-URL React app with real routes, so every deep
+ * link anyone ever saved from the old site now lands somewhere that does not
+ * exist. This page exists so that lands on a way back into the funnel rather
+ * than on Netlify's default.
+ *
+ * No question gate: it states no fact that the content questionnaire owns, so
+ * it is publishable the day it is written. Netlify serves it on a 404 status,
+ * which is what keeps it out of the index without a robots tag.
+ */
+import Base from "../layouts/Base.astro";
+import { BUSINESS } from "../data/site";
+---
+
+<Base
+  title="Page not found"
+  description="That page is not here. Find your way back to Structure & Style, or get in touch about your project."
+>
+  <section class="mx-auto max-w-2xl px-5 py-16 sm:py-20">
+    <p class="text-sm text-ink-soft">404</p>
+    <h1 class="mt-3 text-[length:var(--text-section)] font-semibold">Page not found</h1>
+
+    <div class="mt-6 space-y-4 text-ink-soft">
+      <p>
+        There is nothing at this address. The site was rebuilt recently, so a page you
+        saved earlier may have moved, or the link may simply have a typo in it.
+      </p>
+      <p>
+        Nothing is lost. Start again from the <a href="/" class="underline">home page</a>, or
+        tell us about your project and we will come back to you.
+      </p>
+    </div>
+
+    <div class="mt-10 flex flex-wrap gap-x-6 gap-y-3">
+      <a href="/contact/" class="underline">Send an enquiry</a>
+      <a href={BUSINESS.phoneHref} class="underline">{BUSINESS.phoneDisplay}</a>
+      <a href={BUSINESS.whatsapp} rel="noopener" class="underline">WhatsApp</a>
+      <a href={`mailto:${BUSINESS.email}`} class="underline">{BUSINESS.email}</a>
+    </div>
+  </section>
+</Base>
