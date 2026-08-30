@@ -132,7 +132,7 @@ export const ANSWERS = {
   q33: { value: "Floors and the surrounding area are protected before work starts, and dust extraction runs throughout. The area is tidied at the end of each day, and waste and off-cuts leave with us at the end.", about: "What clearing up actually means" },
   q34: { value: "Clear personal belongings from the area being fitted and make sure we can reach it. Anything project-specific is agreed before installation.", about: "Preparation needed from the client" },
   q35: { value: "2 years on installation and workmanship, 10 years on the structure and joinery, and the manufacturer's warranty on hinges, runners and other moving hardware.", blocking: true, about: "Guarantee: how many years and what it covers. Exclusions recorded in the ops repo transcription" },
-  q36: { value: "Yes. Doors and other moving parts that settle within the two-year aftercare period are adjusted, and we come back to do it.", blocking: true, about: "Whether he returns to adjust a door after the first heating season" },
+  q36: { value: "Yes, doors and other moving parts that settle within the 2-year aftercare period are adjusted, and we come back to do it.", blocking: true, about: "Whether he returns to adjust a door after the first heating season" },
   q37: { value: "Yes. Care advice comes with the finished piece: how to clean each material and finish, and what to avoid.", about: "Maintenance advice for the finishes" },
   q38: { value: "Yes. Drawings and specifications stay on file, so a matching or additional piece later starts from the record rather than from scratch.", about: "Whether drawings are kept on file for a matching piece later" },
 
