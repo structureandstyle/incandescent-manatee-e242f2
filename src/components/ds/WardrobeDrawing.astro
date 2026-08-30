@@ -105,15 +105,19 @@ const LOAFER = {
   hr: ["M17,-8 C60,-11 120,-10 176,-6", "M126,-27 C146,-23 160,-17 172,-10", "M60,-44 C63,-30 63,-15 61,0"],
 };
 
+/* Every shoe draws in full ink. The first version gave each pair's flipped
+   partner the light hairline tone, and at 40px that read as a dark smudge
+   beside a ghost: half the redrawn artwork was nearly invisible, which is why
+   two redraws in a row "looked the same". Scale also up from 0.9 to 1.02. */
 const SHOES = [
-  { of: OXFORD, x: 1672, y: 2595, tone: "st", flip: false },
-  { of: LOAFER, x: 1860, y: 2595, tone: "hr", flip: true },
+  { of: OXFORD, x: 1668, y: 2595, tone: "st", flip: false },
+  { of: LOAFER, x: 1862, y: 2595, tone: "st", flip: true },
   { of: COURT, x: 1670, y: 2130, tone: "st", flip: false },
-  { of: COURT, x: 1855, y: 2130, tone: "hr", flip: true },
+  { of: COURT, x: 1872, y: 2130, tone: "st", flip: true },
   { of: COURT, x: 1670, y: 2320, tone: "st", flip: false },
-  { of: COURT, x: 1855, y: 2320, tone: "hr", flip: true },
+  { of: COURT, x: 1872, y: 2320, tone: "st", flip: true },
 ];
-const shoeTransform = (s: (typeof SHOES)[number], k = 0.9) =>
+const shoeTransform = (s: (typeof SHOES)[number], k = 1.02) =>
   `translate(${s.flip ? s.x + s.of.w * k : s.x},${s.y}) scale(${s.flip ? -k : k},${k})`;
 
 const ariaLabel =
