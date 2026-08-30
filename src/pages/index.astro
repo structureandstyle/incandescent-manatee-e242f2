@@ -54,7 +54,14 @@ import selection from "../../public/images/_selection.json";
 const isIndexable = indexable("/");
 
 const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
-const hero = sel["fitted-wardrobes"]?.[0];
+
+/**
+ * The showpiece, chosen by Denis 30 Aug 2026: the one professionally shot
+ * kitchen the client supplied. A green kitchen was asked for; no green kitchen
+ * exists anywhere in the photo library, so the strongest photograph held
+ * stands in until one is supplied.
+ */
+const hero = { file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.jpg", w: 1600, h: 1068 };
 const previews = SERVICES.map((s) => {
   const shots = sel[s.slug] ?? [];
   return shots.length ? { service: s, shot: shots[0] } : null;
@@ -62,7 +69,10 @@ const previews = SERVICES.map((s) => {
   .filter(Boolean)
   .slice(1, 4) as { service: (typeof SERVICES)[number]; shot: { file: string; w: number; h: number } }[];
 
-const ICONS = ["tape", "pencil", undefined, "square"] as const;
+/* The plane joined stage 03 on 30 Aug 2026, once the stage-04 answer confirmed
+   finishing work is real: machining, edging and finishing to the drawings, and
+   pieces built up and finished in the room. See the note in ProcessStep.astro. */
+const ICONS = ["tape", "pencil", "plane", "square"] as const;
 ---
 
 <Base
@@ -95,10 +105,10 @@ const ICONS = ["tape", "pencil", undefined, "square"] as const;
       <div style="margin-top:var(--plate-y)">
         <Plate
           photo={hero.file}
-          alt={`Fitted wardrobes, completed installation by ${BUSINESS.legalName}`}
+          alt={`Bespoke kitchen, completed installation by ${BUSINESS.legalName}`}
           width={hero.w}
           height={hero.h}
-          subject="Plate 01 · Fitted wardrobes"
+          subject="Plate 01 · Bespoke kitchen"
           detail="Completed"
           ratio="21 / 9"
           eager
@@ -151,7 +161,7 @@ const ICONS = ["tape", "pencil", undefined, "square"] as const;
   <Wrap style="padding-top:var(--section-y)">
     <SectionHead meta="The standard range" scribe>Materials</SectionHead>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md)">
-      {MATERIALS.map((m) => <MaterialChip name={m.name} />)}
+      {MATERIALS.map((m) => <MaterialChip name={m.name} swatch={m.swatch} />)}
     </div>
     <p style="margin-top:var(--space-14)">
       <Link href="/materials/" variant="nav" chamfer>Materials, finishes and why not solid timber</Link>

@@ -117,18 +117,20 @@ export const REVIEWS = {
  * change one, change both. His Q22 ruling also stands: who cuts the material,
  * and the arrangement behind it, stays off the site.
  *
- * Swatch colours are deliberately not assigned. The design mapped oak, walnut
- * and painted tulipwood onto --oak, --walnut and --green; those tokens survive
- * as photography references but must not be reused to stand for materials that
- * are not those timbers. Picking the real swatches is a design decision, now
- * unblocked by Q24 but not yet made.
+ * Swatches, chosen 30 Aug 2026 now Q24 names the finishes: abstract finish
+ * tones drawn in CSS, not photographs and not found imagery. Each depicts the
+ * finish category truthfully: paint as a flat painted colour, veneer as a
+ * timber tone (veneer is real timber), plywood as its striped edge, the board
+ * families as flat neutrals. Web-found photographs were considered and
+ * rejected: unlicensed imagery on a client site is a rights problem, and a
+ * photograph of someone else's material reads as a claim about ours.
  */
 export const MATERIALS = [
-  { name: "MDF and MR MDF", description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles." },
-  { name: "Veneered board", description: "The character of real timber with the stability of an engineered board." },
-  { name: "Plywood", description: "Strong and durable, with a distinctive exposed edge where the design calls for it." },
-  { name: "Melamine and decorative board", description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes." },
-  { name: "Specialist decorative boards", description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces." },
+  { name: "MDF and MR MDF", description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles.", swatch: "var(--green)" },
+  { name: "Veneered board", description: "The character of real timber with the stability of an engineered board.", swatch: "linear-gradient(100deg, var(--oak), color-mix(in srgb, var(--oak) 78%, var(--char)) 55%, var(--oak))" },
+  { name: "Plywood", description: "Strong and durable, with a distinctive exposed edge where the design calls for it.", swatch: "repeating-linear-gradient(0deg, color-mix(in srgb, var(--oak) 45%, var(--paper)) 0 11px, color-mix(in srgb, var(--oak) 80%, var(--char)) 11px 14px)" },
+  { name: "Melamine and decorative board", description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes.", swatch: "color-mix(in srgb, var(--char) 10%, var(--paper))" },
+  { name: "Specialist decorative boards", description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces.", swatch: "color-mix(in srgb, var(--char) 86%, var(--paper))" },
 ] as const;
 
 /* -------------------------------------------------------------- work */
@@ -168,8 +170,10 @@ export const PROCESS = [
         the questionnaire, the ops docs, or his own old site. Stripped 30 Aug
         2026 by the Truth gate; restored only if Kaspar confirms it. */
     confirmed:
-      "We meet at the room, usually for 45 to 60 minutes. We talk through layout, storage, materials, finishes and the overall look.",
+      "We meet at the room, usually for 45 to 60 minutes. We start with what the piece is for and what it needs to hold, then work through layout, storage, materials, finishes and the overall look.",
     questions: ["q13", "q14", "q15", "q16"] as QuestionKey[],
+    /** Stamped mono facts on the process page, all from confirmed answers. */
+    details: ["Usually 45 to 60 minutes", "At the room"],
   },
   {
     number: "02",
@@ -178,6 +182,7 @@ export const PROCESS = [
     confirmed:
       "The measured survey takes about an hour. A fixed, itemised quotation follows, and once it is accepted and the deposit paid, a design week runs: scaled drawings and elevations issued for review, with up to two rounds of revisions included.",
     questions: ["q17", "q18", "q19", "q20", "q21"] as QuestionKey[],
+    details: ["Survey about an hour", "Drawings within the design week", "Two revision rounds included"],
   },
   {
     number: "03",
@@ -186,6 +191,7 @@ export const PROCESS = [
     confirmed:
       "Components are machined, edged and finished to the approved drawings. Some pieces arrive as sections ready to assemble; others are built up and finished in the room, whichever gets the better result.",
     questions: ["stage04", "q26", "q27", "q28", "q29"] as QuestionKey[],
+    details: ["Programme agreed per project", "Blum and Hafele hardware"],
   },
   {
     number: "04",
@@ -193,6 +199,7 @@ export const PROCESS = [
     confirmed:
       "Typically 2 to 3 days on site for a straightforward wardrobe wall. Everything is scribed to your walls, floors and ceiling and finished in place, with the area tidied at the end of each day and cleared completely at the end.",
     questions: ["q30", "q31", "q32", "q33", "q34"] as QuestionKey[],
+    details: ["Typically 2 to 3 days on site", "Tidied at the end of each day"],
   },
 ] as const;
 

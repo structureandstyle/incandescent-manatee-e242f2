@@ -12,18 +12,15 @@
  * A NOTE ON THE PLANE GLYPH, which matters more than it looks.
  *
  * The four icons map to the four stages: tape to the visit, pencil to the
- * drawings, PLANE to the making, square to the fitting. The plane is a bench
- * plane, and its accessible name in the source is literally "bench plane". It
- * is kept here because it is artwork rather than a claim, and because we do not
- * actually know that it is wrong: questionnaire Q3 establishes only that the
- * client has no workshop and that materials are cut to size elsewhere. What
- * happens between the cutting and the fitting is the unnumbered stage-04
- * question, and it is unanswered.
+ * drawings, PLANE to the making, square to the fitting. The glyph was held off
+ * stage 03 while the unnumbered stage-04 question was unanswered, because
+ * choosing it would have asserted what happens between cutting and fitting.
  *
- * So: do not put this glyph on stage 03 until that question comes back. If the
- * answer is that panels arrive cut and are assembled on site, a bench plane is
- * a picture of something that never happens. src/data/site-content.ts holds
- * that stage with a null title for the same reason.
+ * The answer arrived 30 Aug 2026: components are machined, edged and finished
+ * to the approved drawings, and pieces are built up and finished in the room.
+ * Finishing work is real, so the glyph went on (Denis's call, same day). Its
+ * accessible name is "hand plane", not the source's "bench plane": there is no
+ * bench, and the one word was the difference between artwork and a claim.
  */
 
 type Tone = "bd" | "md" | "chf" | "pfl" | "ppl" | "hl";
@@ -93,7 +90,7 @@ const GLYPHS: Record<string, Glyph[]> = {
 const ICON_NAMES: Record<string, string> = {
   tape: "measuring tape",
   pencil: "pencil",
-  plane: "bench plane",
+  plane: "hand plane",
   square: "try square",
 };
 
@@ -113,11 +110,17 @@ interface Props {
   number?: string;
   title: string;
   icon?: "tape" | "pencil" | "plane" | "square";
+  /**
+   * Short mono facts stamped in under the copy, row by row: durations, counts,
+   * what is included. The design system's process page carried these on every
+   * stage (its StageDetails), and they are ported here as a stamp-group.
+   */
+  details?: string[];
   class?: string;
   style?: string;
 }
 
-const { number, title, icon, class: className, style = "" } = Astro.props;
+const { number, title, icon, details, class: className, style = "" } = Astro.props;
 const glyph = icon && GLYPHS[icon] ? GLYPHS[icon] : null;
 ---
 
@@ -155,7 +158,22 @@ const glyph = icon && GLYPHS[icon] ? GLYPHS[icon] : null;
   )}
 
   <h3 style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-lg)">{title}</h3>
-  <p style="max-width:var(--measure-tight)"><slot /></p>
+  <div>
+    <p style="max-width:var(--measure-tight)"><slot /></p>
+    {details && details.length > 0 && (
+      <p
+        data-motion="stamp-group"
+        style="display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-4) var(--space-9);margin-top:var(--space-9)"
+      >
+        {details.map((d, i) => (
+          <>
+            {i > 0 && <span style="font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)" aria-hidden="true">·</span>}
+            <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono);text-transform:uppercase;color:var(--ink-soft)">{d}</span>
+          </>
+        ))}
+      </p>
+    )}
+  </div>
 </div>
 
 <style>

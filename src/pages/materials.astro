@@ -55,7 +55,7 @@ const isIndexable = indexable("/materials/");
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:var(--gap-lg)">
       {MATERIALS.map((m) => (
-        <MaterialChip name={m.name}>
+        <MaterialChip name={m.name} swatch={m.swatch}>
           <Fragment slot="description">
             <p style="font-size:var(--type-body-sm);color:var(--ink-soft);max-width:36ch;margin-top:var(--space-3)">
               {m.description}

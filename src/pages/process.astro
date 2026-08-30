@@ -33,8 +33,10 @@ import { questionLabel, ANSWERS, answered } from "../data/answers";
 
 const isIndexable = indexable("/process/");
 
-/* Icons per stage. Stage 03 has none: choosing one asserts what happens there. */
-const ICONS = ["tape", "pencil", undefined, "square"] as const;
+/* Icons per stage. Stage 03 got the plane on 30 Aug 2026: the stage-04 answer
+   confirmed finishing work is real, so the glyph no longer asserts anything
+   unknown. See the note in ProcessStep.astro. */
+const ICONS = ["tape", "pencil", "plane", "square"] as const;
 ---
 
 <Base
@@ -68,11 +70,23 @@ const ICONS = ["tape", "pencil", undefined, "square"] as const;
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Four stages" scribe>The commission</SectionHead>
 
+    {/* The dimension rail, from the design's process page: one vertical
+        hairline scribing in down the stage column, the drawing convention the
+        rest of the page already speaks. */}
+    <div style="position:relative">
+      <span
+        aria-hidden="true"
+        data-motion="scribe"
+        data-axis="y"
+        style="position:absolute;left:76px;top:0;bottom:0;width:1px;background:var(--hair)"
+      ></span>
+
     {PROCESS.map((stage, i) => (
       <ProcessStep
         number={stage.number}
         icon={ICONS[i]}
         title={stage.title ?? "Stage still to be titled"}
+        details={[...stage.details]}
       >
         {stage.confirmed ? (
           <span>{stage.confirmed}{" "}</span>
@@ -95,6 +109,7 @@ const ICONS = ["tape", "pencil", undefined, "square"] as const;
           ))}
       </ProcessStep>
     ))}
+    </div>
   </Wrap>
 
   <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
