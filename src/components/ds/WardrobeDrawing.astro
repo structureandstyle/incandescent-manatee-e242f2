@@ -75,32 +75,34 @@ const RAILS = [
    stand on the floor line at y = 0 and run toe-right; `flip` turns one of a
    pair to face the other way.
 
-   Redrawn 30 Aug 2026: the first set read as clunky at page size. Each
-   silhouette is now one continuous closed path with a proper sole return, the
-   court's heel pin slimmed to six units, and every transition eased through a
-   curve rather than a corner. */
+   Redrawn 30 Aug 2026, twice. The first redraw was authored blind and shipped
+   without being looked at; it read exactly as clunky as the originals. This
+   set was iterated visually at page scale before it shipped: the court gets a
+   real raised counter, a slim raked heel and an arch that lifts off the floor;
+   the flats get proper toe spring and a taller back. The proportions are the
+   fix: the old shoes were too long and too low to read as shoes at 40px. */
 const COURT = {
-  w: 200,
+  w: 172,
   st: [
-    "M40,-60 C34,-42 31,-26 30,-14 C29,-9 28,-4 28,0 L34,0 C35,-8 36,-16 38,-22 C46,-27 58,-24 72,-17 C94,-7 122,-3 150,-3 C166,-3 182,-3 194,-4 C186,-13 170,-21 150,-26 C128,-31 108,-32 96,-34 C84,-47 68,-58 54,-63 C48,-65 43,-64 40,-60 Z",
+    "M30,-64 C24,-52 22,-40 24,-30 L28,-2 L28,0 L36,0 L38,-26 C42,-24 52,-20 70,-14 C88,-8 108,-4 124,-2 L166,-2 C170,-3 170,-4 168,-6 C158,-13 146,-18 128,-22 C110,-26 94,-28 82,-30 C68,-38 50,-52 40,-61 C36,-65 32,-67 30,-64 Z",
   ],
-  hr: ["M100,-13 C130,-8 162,-7 190,-7", "M52,-58 C60,-50 70,-42 84,-36"],
+  hr: ["M42,-59 C50,-51 62,-42 78,-33", "M92,-11 C118,-6 144,-5 162,-5"],
 };
 const OXFORD = {
-  w: 200,
+  w: 182,
   st: [
-    "M20,-42 C20,-50 28,-54 38,-50 C56,-43 74,-34 96,-29 C122,-23 150,-20 174,-17 C186,-15 192,-10 192,-5 C192,-1 187,0 178,0 L24,0 C17,0 14,-4 14,-12 C14,-24 16,-34 20,-42 Z",
-    "M50,-42 L60,-35", "M63,-39 L73,-32", "M76,-36 L86,-29",
+    "M26,-52 C18,-46 16,-30 16,-12 C16,-4 19,0 28,0 L160,0 C170,0 177,-1 178,-6 C179,-13 172,-20 158,-25 C139,-31 119,-34 102,-37 C88,-41 74,-46 62,-50 C48,-55 32,-57 26,-52 Z",
+    "M66,-40 L76,-33", "M78,-37 L88,-30", "M90,-34 L100,-27",
   ],
-  hr: ["M14,-9 C60,-12 120,-10 190,-6", "M44,-46 C50,-32 52,-16 50,0", "M150,-21 C156,-13 158,-6 158,0"],
+  hr: ["M17,-8 C60,-11 120,-10 176,-6", "M58,-49 C61,-33 61,-16 59,0", "M140,-29 C146,-19 148,-9 148,-1"],
 };
 const LOAFER = {
-  w: 200,
+  w: 182,
   st: [
-    "M20,-40 C20,-48 28,-51 38,-48 C58,-41 76,-33 98,-28 C124,-23 150,-20 174,-17 C186,-15 192,-10 192,-5 C192,-1 187,0 178,0 L24,0 C17,0 14,-4 14,-12 C14,-23 16,-32 20,-40 Z",
-    "M88,-33 L114,-27 L111,-18 L85,-24 Z",
+    "M26,-46 C18,-41 16,-28 16,-11 C16,-4 19,0 28,0 L160,0 C170,0 177,-1 178,-6 C179,-13 172,-19 158,-24 C139,-30 121,-33 104,-35 C90,-38 76,-42 64,-45 C50,-49 32,-51 26,-46 Z",
+    "M86,-36 C96,-33 106,-32 116,-31 L114,-22 C104,-23 94,-24 84,-27 Z",
   ],
-  hr: ["M14,-9 C60,-12 120,-10 190,-6", "M124,-25 C144,-21 162,-16 178,-11", "M95,-30 L104,-28"],
+  hr: ["M17,-8 C60,-11 120,-10 176,-6", "M126,-27 C146,-23 160,-17 172,-10", "M60,-44 C63,-30 63,-15 61,0"],
 };
 
 const SHOES = [
