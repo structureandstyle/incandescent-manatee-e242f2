@@ -30,7 +30,7 @@ const BAND_QUESTIONS = ["q03", "q07", "q10"] as const;
 
 const SERVICE_PAGE = [
   "q03", "q07", "q10", "q11", "q12", "q18",
-  "q22", "q24", "q30", "q31", "q33", "q35", "q36", "q43",
+  "q22", "q24", "q28", "q30", "q31", "q33", "q35", "q36", "q43",
 ] as const;
 
 export const PAGE_GATES = {
@@ -63,7 +63,7 @@ export const PAGE_GATES = {
     "stage04", "q26", "q27", "q28", "q29",          // 03 still untitled
     "q30", "q31", "q32", "q33", "q34",              // 04 Fitting
   ],
-  "/materials/": [...BAND_QUESTIONS, "q22", "q24", "q39", "q40", "q43"],
+  "/materials/": [...BAND_QUESTIONS, "q22", "q24", "q28", "q39", "q40", "q43"],
   "/work/": [...BAND_QUESTIONS, "q44", "q45", "q46", "q47", "q48", "q49"],
   /* Was "/maker/" gated on Q50 to Q53. The client changed direction 30 Aug
      2026: no personal profile, so the page became About Structure & Style and

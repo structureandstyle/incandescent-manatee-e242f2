@@ -15,7 +15,9 @@ export const BUSINESS = {
   companyNumber: "16822866",
   /** Exactly as it reads on the Business Profile. */
   profileName: "Structure & Style – Bespoke Carpentry & Interiors",
-  tagline: "Bespoke carpentry and joinery across north London",
+  /* London-led per Kaspar's Q3 answer and Denis's ruling, 30 Aug 2026. The
+     named districts below stay: they are where the demand and the reviews are. */
+  tagline: "Bespoke carpentry and joinery across London",
   phoneDisplay: "07309 872555",
   phoneHref: "tel:+447309872555",
   whatsapp: "https://wa.me/447309872555",
@@ -72,7 +74,7 @@ export const SERVICES: Service[] = [
     heading: "Fitted wardrobes in London, made to measure",
     primary: "fitted wardrobes london",
     description:
-      "Built-in and fitted wardrobes made to measure for your room, designed around what you store and fitted wall to wall. Serving Hampstead, Camden and north London.",
+      "Built-in and fitted wardrobes made to measure for your room, designed around what you store and fitted wall to wall. Serving Hampstead, Camden and all of London.",
     summary:
       "Built-in wardrobes scribed to your walls, ceiling and floor, with the hanging, shelving and drawer split worked out around what you actually keep.",
     wave: 1,
