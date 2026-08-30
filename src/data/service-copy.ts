@@ -1,0 +1,208 @@
+/**
+ * Wave-one page bodies: fitted wardrobes, walk-in wardrobes, alcove units and
+ * the cost guide. Written 30 Aug 2026 against SS_COPY_TONE_PROTOCOL_v1.4 (ops
+ * repo root) and sourced ONLY from confirmed facts:
+ *
+ *   - the client's questionnaire answers (`answers.ts`, ingested 30 Aug 2026,
+ *     transcription in the ops repo at docs/content-questionnaire-answers.md)
+ *   - `site.ts` service definitions and the Business Profile facts
+ *
+ * Nothing here asserts a specific past job, a figure, or a capability the
+ * answers do not support: the Truth gate blocked ten invented case claims on
+ * 24 Aug and nothing of that kind is written again. Case-study material waits
+ * on Q44 to Q49.
+ *
+ * Prices never appear in these strings. Every price on the site renders
+ * through <Value q="q10"> so the pricing document completes the pages itself.
+ *
+ * The manufacturing FAQ line appears exactly once on the site, on the fitted
+ * wardrobes page, in the protocol's fixed wording. Do not repeat it anywhere
+ * (protocol section 10: one FAQ entry is the whole allocation).
+ *
+ * Wave-two pages (media walls, kitchens, home office) have no entry yet and
+ * the template renders nothing extra for them.
+ */
+
+export type ServiceCopy = {
+  /** Body paragraphs rendered after the photography, before the spec sections. */
+  intro: string[];
+  /** Extra sections rendered after the spec sections. */
+  sections: { meta: string; heading: string; body: string[] }[];
+  /** Question-and-answer block. First sentence of every answer answers. */
+  faqs: { q: string; a: string }[];
+};
+
+export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
+  "fitted-wardrobes": {
+    intro: [
+      "A fitted wardrobe is measured against your walls, floor and ceiling, then designed around what you keep. The run uses the top of the room and both corners rather than losing them.",
+      "The inside is planned first: hanging heights, shelving, drawers and anything that needs a home. You do not need to arrive knowing any of that. Asking the right questions at the first visit is our job, not yours.",
+    ],
+    sections: [
+      {
+        meta: "The work",
+        heading: "What a fitted wardrobe run includes",
+        body: [
+          "The work covers wardrobe walls, alcove-to-alcove runs, and wardrobes that follow sloping ceilings and awkward room shapes. Doors are hinged on Blum hardware, in painted, veneered or decorative board finishes.",
+          "Inside, drawer banks run on Blum systems, and integrated lighting is wired in where the design calls for it. Veneer grain is matched across adjoining doors, so a run reads as one piece rather than a row of panels.",
+        ],
+      },
+      {
+        meta: "Fit",
+        heading: "Cut to the wall as it actually is",
+        body: [
+          "Walls, floors and ceilings are rarely straight, so each piece is scribed: cut to follow the line of the room rather than left with gaps.",
+          "Fitting a straightforward wardrobe wall typically takes 2 to 3 days on site. Hand-painting or on-site construction can take it closer to a week, and you get the dates when the project is programmed.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Where is the furniture made?",
+        a: "Components are made to our drawings by specialist suppliers, then cut and fitted in your home by us. Which supplier depends on the job.",
+      },
+      {
+        q: "What guarantee comes with a fitted wardrobe?",
+        a: "The guarantee covers installation and workmanship for 2 years and the structure and joinery for 10 years. Hinges, runners and other moving hardware carry their manufacturer's warranty.",
+      },
+      {
+        q: "Will you come back if a door moves?",
+        a: "Yes, doors and other moving parts that settle within the 2-year aftercare period are adjusted, and we come back to do it.",
+      },
+      {
+        q: "How do I look after the finish?",
+        a: "That depends on the material and finish, so the care advice comes with the finished piece: how to clean it and what to avoid. Natural veneers develop subtly with age and light. Painted and decorative finishes stay more consistent.",
+      },
+    ],
+  },
+
+  "walk-in-wardrobes": {
+    intro: [
+      "A walk-in wardrobe is planned as one room rather than a run of units. Rails, drawer banks, shoe storage and shelving are set out together, so the lines carry through from wall to wall.",
+      "Loft rooms, box rooms and eaves take fitted storage well, because the awkward angles are measured and used rather than boxed off. The first visit happens at the room itself and usually takes 45 to 60 minutes.",
+    ],
+    sections: [
+      {
+        meta: "Planning",
+        heading: "Designed around what you keep",
+        body: [
+          "Rail heights come from what hangs. Drawer and shelf splits come from what folds. We ask about all of it at the consultation, so you do not need to arrive with a plan.",
+          "Mirrors, glass, metal details and specialist handles can be worked into the design, and integrated lighting is specified where the design calls for it.",
+        ],
+      },
+      {
+        meta: "Finish",
+        heading: "Matching what you already own",
+        body: [
+          "Finishes include spray-painted and hand-painted work, natural and stained veneers, and decorative boards. There is no single house finish: the right one depends on the design, how the room is used and what it needs to match.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "How soon can a walk-in wardrobe be fitted?",
+        a: "Lead time is typically 4 to 8 weeks, depending on the project and the current schedule. Installation dates are allocated when the deposit is paid and confirmed as the project progresses.",
+      },
+      {
+        q: "Do you design it, or do I?",
+        a: "Either route works: straightforward projects can go straight to quotation. Where design development is needed, drawings and visuals follow once the quotation is accepted, with up to two revision rounds included.",
+      },
+      {
+        q: "Can it match furniture we already have?",
+        a: "Yes, matching existing furniture and finishes within the property is one of the things the finish is chosen for.",
+      },
+      {
+        q: "What do you need from us before fitting?",
+        a: "Clear personal belongings from the area being fitted and make sure we can reach it. Anything project-specific is agreed before installation, and floors and the surrounding area are protected before work starts.",
+      },
+    ],
+  },
+
+  "alcove-units": {
+    intro: [
+      "No two alcoves in a period house are the same width, and most walls are not straight either. Each unit is measured to its own alcove, then scribed: cut to follow the wall, so doors sit flush and lines run true.",
+      "A unit can run to sill height with shelving above, or floor to ceiling across the chimney breast wall. The proportions follow the room, and the inside is planned around what will actually live there.",
+    ],
+    sections: [
+      {
+        meta: "The work",
+        heading: "Cupboards, shelving and full-height runs",
+        body: [
+          "Base cupboards with shelving over is the classic arrangement, and it is right for most rooms. Full-height cupboards, open bookshelves and display shelving with integrated lighting all follow the same rule: the alcove is measured first, and the design follows it.",
+          "Painted finishes suit alcove work, because the joinery reads as part of the room. Veneers and decorative boards are there where a different look is wanted, and grain is matched across adjoining doors.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "How are uneven walls and skirting handled?",
+        a: "Every piece is cut to follow the line of the wall, floor and ceiling rather than left with gaps. Fitted and finished, the unit should look like it belongs to the room.",
+      },
+      {
+        q: "Do you take small jobs?",
+        a: "Yes, down to a general minimum of £2,000 of project value. If you are not sure whether yours fits, ask before ruling it out.",
+      },
+      {
+        q: "Can the units match our existing woodwork?",
+        a: "Yes, the finish is chosen partly around what it needs to match, whether existing furniture or the room's own joinery.",
+      },
+      {
+        q: "How long does it take from survey to fitting?",
+        a: "The overall lead time is typically 4 to 8 weeks, with dates confirmed as the project is programmed. We set aside one week for design and issue drawings for review by the end of it.",
+      },
+    ],
+  },
+
+  "fitted-wardrobe-cost": {
+    intro: [
+      "Every fitted wardrobe is priced as a whole job, to its own room. A range is the honest starting point, and a firm number follows one visit.",
+      "What follows is what actually moves the price, how the quotation works, and what it includes.",
+    ],
+    sections: [
+      {
+        meta: "The price",
+        heading: "What moves a fitted wardrobe up its range",
+        body: [
+          "Size and complexity lead. A longer run, a difficult room shape or a sloping ceiling adds work at the survey, at the drawings and at the fitting.",
+          "Premium materials and veneers cost more than painted board, and specialist finishes add finishing time. Hand-painting on site can add days to the installation itself.",
+          "Bespoke internal layouts, integrated lighting, and complex hardware and detailing move the figure the same way: they add design time, parts and fitting time.",
+        ],
+      },
+      {
+        meta: "The process",
+        heading: "How the quotation works",
+        body: [
+          "The first visit usually takes 45 to 60 minutes, and a measured survey takes about an hour. The quotation that follows is fixed and itemised for the agreed scope.",
+          "There is no separate design fee: design costs sit inside the quotation. Drawings start once the quotation is accepted and the deposit paid, with up to two rounds of revisions included.",
+          "Projects generally start at £2,000 of value.",
+        ],
+      },
+      {
+        meta: "Reading a quote",
+        heading: "What our quotation itemises",
+        body: [
+          "The quotation is itemised for the agreed scope: the design, the materials and finishes, and the internal layout are specified before anything is ordered. You can see what the number is made of.",
+          "Two guarantees and a warranty sit behind the number. Installation and workmanship are covered for 2 years, the structure and joinery for 10 years, and moving hardware carries its manufacturer's warranty.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Why is there no single price for fitted wardrobes?",
+        a: "Because the room decides it. Length, shape, materials, finish and the internal layout all move the figure, so the honest answer is a range, firmed up after one visit.",
+      },
+      {
+        q: "Does the price include design?",
+        a: "Yes, any design work the project needs is included in the quotation, and there is no separate design fee.",
+      },
+      {
+        q: "Is there a minimum job size?",
+        a: "Projects generally start at £2,000 of value. If yours sits near that line, ask before ruling it out.",
+      },
+      {
+        q: "Do fitted wardrobes add value to a house?",
+        a: "Nobody can give you an honest figure for that, and a number quoted without a source is a guess. What is checkable is the space: a run built to the room uses the full height and the corners, which freestanding furniture cannot. Whether that shows up in a valuation depends on the house and the buyer.",
+      },
+    ],
+  },
+};

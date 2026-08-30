@@ -28,6 +28,7 @@ import Link from "../components/ds/Link.astro";
 
 import { SERVICES, SITE_URL, BUSINESS, servicePath, type Service } from "../data/site";
 import { BAND, CONTACT } from "../data/site-content";
+import { SERVICE_COPY } from "../data/service-copy";
 import { gateFor, indexable } from "../data/page-gates";
 import { unanswered } from "../data/answers";
 import selection from "../../public/images/_selection.json";
@@ -43,6 +44,14 @@ const path = servicePath(service);
 const open = unanswered(gateFor(path));
 const isIndexable = indexable(path);
 const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
+
+/**
+ * Wave-one body copy and FAQs, where written (src/data/service-copy.ts).
+ * Wave-two pages have no entry yet and render nothing extra. The intro sits
+ * after the photography, never before it: protocol section 11, photography
+ * leads.
+ */
+const copy = SERVICE_COPY[service.slug];
 
 /**
  * Photographs, selected from the client's own library: finished work only, at
@@ -198,6 +207,16 @@ const SECTIONS = [
       </div>
     </Wrap>
 
+    {copy && (
+      <Wrap style="padding-bottom:var(--section-y)">
+        <div style="max-width:var(--measure)">
+          {copy.intro.map((p, i) => (
+            <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
+          ))}
+        </div>
+      </Wrap>
+    )}
+
     <!-- Question-shaped sections -->
     {SECTIONS.map((section) => (
       <Wrap style="padding-bottom:var(--section-y)">
@@ -224,6 +243,17 @@ const SECTIONS = [
       </Wrap>
     ))}
 
+    {copy && copy.sections.map((sec) => (
+      <Wrap style="padding-bottom:var(--section-y)">
+        <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
+        <div style="max-width:var(--measure)">
+          {sec.body.map((p, i) => (
+            <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
+          ))}
+        </div>
+      </Wrap>
+    ))}
+
     <!-- Where we work. Confirmed, so it carries no open question. -->
     <Wrap style="padding-bottom:var(--section-y)">
       <SectionHead meta="Service area" level={4}>Where we work</SectionHead>
@@ -231,6 +261,21 @@ const SECTIONS = [
         {BUSINESS.areaServed.slice(0, -1).join(", ")} and {BUSINESS.areaServed.slice(-1)}.
       </p>
     </Wrap>
+
+    {copy && copy.faqs.length > 0 && (
+      <Wrap style="padding-bottom:var(--section-y)">
+        {/* No FAQPage schema: Google discontinued FAQ rich results 7 May 2026.
+            The mechanism is the visible answer text, so every first sentence
+            answers its question. */}
+        <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+        {copy.faqs.map((f) => (
+          <div style="margin-top:var(--space-13);max-width:var(--measure)">
+            <SectionHead level={5}>{f.q}</SectionHead>
+            <p style="margin-top:var(--space-6)">{f.a}</p>
+          </div>
+        ))}
+      </Wrap>
+    )}
 
     <!-- Enquiry -->
     <section id="enquire">

@@ -163,9 +163,12 @@ export const PROCESS = [
   {
     number: "01",
     title: "Visit",
-    /** Free, at the client's home, samples brought along. Length is Q14. */
+    /** Length is Q14. The old "no charge, samples brought along" line carried
+        a "Confirmed" note from the design era with no source anywhere: not in
+        the questionnaire, the ops docs, or his own old site. Stripped 30 Aug
+        2026 by the Truth gate; restored only if Kaspar confirms it. */
     confirmed:
-      "We meet at the room, usually for 45 to 60 minutes. No charge for the first visit, and material samples come with us. We talk through layout, storage, materials, finishes and the overall look.",
+      "We meet at the room, usually for 45 to 60 minutes. We talk through layout, storage, materials, finishes and the overall look.",
     questions: ["q13", "q14", "q15", "q16"] as QuestionKey[],
   },
   {
