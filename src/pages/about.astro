@@ -1,0 +1,90 @@
+---
+/**
+ * The About page. It was the Maker page until 30 August 2026.
+ *
+ * The client's Part 6 answer changed the page's direction: no personal
+ * profile, no name, no portrait, no career history at this stage. Structure &
+ * Style is presented as a company, in "we", and this page explains what the
+ * company does, the standard it works to, and what a client can expect. The
+ * personal story may return later as the business develops; nothing here
+ * forecloses that.
+ *
+ * Two constraints survive from the maker version:
+ *
+ * Section 10 of the tone protocol is still an absolute factual limit: no crew
+ * nouns, no workshop, no manufacturing claimed as ours. Company voice does not
+ * license a single plural that implies staff. The protocol's requirement to
+ * state the one-person fact plainly on this page now conflicts with the
+ * client's Q60 ruling against solo-operation framing; that conflict is logged
+ * in the ops repo's protocol defect register and is not resolved here. What
+ * this page says instead is the accountability fact both rules allow: the
+ * person who measures is the person who draws and fits.
+ *
+ * No portrait appears. Q56 was withdrawn with the rest of Part 6.
+ */
+import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import EnquireBand from "../components/ds/EnquireBand.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Value from "../components/Value.astro";
+
+import { BAND, CONTACT } from "../data/site-content";
+import { indexable } from "../data/page-gates";
+
+const isIndexable = indexable("/about/");
+---
+
+<Base
+  title="About Structure & Style"
+  description="What Structure & Style does, the standard the work is held to, and what to expect from a commission, from the first visit through to aftercare."
+  noindex={!isIndexable}
+>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>About</Kicker>
+    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
+      The standard we work to
+    </Display>
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      Structure & Style plans, builds and fits bespoke furniture for London homes, and runs the
+      whole commission from the first visit through to aftercare.
+    </p>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Our approach" level={4}>How a commission runs</SectionHead>
+    <p style="max-width:var(--measure)"><Value q="q06" /></p>
+
+    <div style="margin-top:var(--space-16)">
+      <SectionHead meta="In plain terms" level={4}>The standard</SectionHead>
+      <p style="max-width:var(--measure)"><Value q="q29" /></p>
+    </div>
+
+    <div style="margin-top:var(--space-16)">
+      <SectionHead meta="Accountability" level={4}>Who does the work</SectionHead>
+      <p style="max-width:var(--measure)">
+        The person who measures your room is the person who draws it and the person who fits it.
+        Plumbing, electrics and plastering are brought in when a job needs them, and coordinated as
+        part of the commission rather than left to you.
+      </p>
+    </div>
+
+    <div style="margin-top:var(--space-16)">
+      <SectionHead meta="Where we work" level={4}>Service area</SectionHead>
+      <p style="max-width:var(--measure)"><Value q="q03" suffix="." /></p>
+    </div>
+  </Wrap>
+
+  <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
+</Base>

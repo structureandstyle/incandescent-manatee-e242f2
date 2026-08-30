@@ -65,7 +65,9 @@ export const NAV = [
   { label: "Process", href: "/process/" },
   { label: "Materials", href: "/materials/" },
   { label: "Work", href: "/work/" },
-  { label: "Maker", href: "/maker/" },
+  /* Was Maker. The client's Part 6 direction change, 30 Aug 2026: company
+     presentation, no personal profile. */
+  { label: "About", href: "/about/" },
   { label: "Journal", href: "/journal/" },
 ] as const;
 
@@ -109,21 +111,24 @@ export const REVIEWS = {
 /* ---------------------------------------------------------- materials */
 
 /**
- * PROVISIONAL. The three names come from what the client has told us and are
- * pending his confirmation under Q22, which also asks whether this is the full
- * range and who cuts the material to size. Every description is Q39, the one he
- * reaches for is Q40, and how the choice is framed is Q43.
+ * CONFIRMED under Q22 and Q39, 30 Aug 2026. The range is broader than the
+ * three boards previously on file, and each description is his Q39 answer for
+ * that material. The same five lines sit as the Q39 record in `answers.ts`:
+ * change one, change both. His Q22 ruling also stands: who cuts the material,
+ * and the arrangement behind it, stays off the site.
  *
  * Swatch colours are deliberately not assigned. The design mapped oak, walnut
  * and painted tulipwood onto --oak, --walnut and --green; those tokens survive
  * as photography references but must not be reused to stand for materials that
- * are not those timbers. Picking the real swatches is a design decision that
- * waits on knowing the actual finishes (Q24).
+ * are not those timbers. Picking the real swatches is a design decision, now
+ * unblocked by Q24 but not yet made.
  */
 export const MATERIALS = [
-  { name: "MDF", descriptionQ: "q39" as QuestionKey },
-  { name: "Veneered MDF", descriptionQ: "q39" as QuestionKey },
-  { name: "Plywood", descriptionQ: "q39" as QuestionKey },
+  { name: "MDF and MR MDF", description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles." },
+  { name: "Veneered board", description: "The character of real timber with the stability of an engineered board." },
+  { name: "Plywood", description: "Strong and durable, with a distinctive exposed edge where the design calls for it." },
+  { name: "Melamine and decorative board", description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes." },
+  { name: "Specialist decorative boards", description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces." },
 ] as const;
 
 /* -------------------------------------------------------------- work */
@@ -146,40 +151,44 @@ export const COMMISSIONS = [] as {
 /* ----------------------------------------------------------- process */
 
 /**
- * Four stages. Stages 1, 2 and 4 have a confirmed shape and unconfirmed detail.
- * Stage 3 has neither: it cannot be titled until Q-stage04 says what actually
- * happens between the materials being cut and the piece reaching site.
+ * Four stages, all four now titled and written from his 30 Aug 2026 answers.
  *
- * The design filled stage 3 with "Benchwork in the workshop: cutting, jointing,
- * finishing. One commission on the bench at a time." That is the single most
- * confidently written sentence in the design and it is false.
+ * Stage 3 spent a week untitled, correctly: the design had filled it with
+ * "Benchwork in the workshop: cutting, jointing, finishing. One commission on
+ * the bench at a time", which was confidently written and false (no workshop,
+ * Q3). The unnumbered stage-04 answer is what actually happens, and the copy
+ * below carries it without claiming the making as ours.
  */
 export const PROCESS = [
   {
     number: "01",
     title: "Visit",
-    /** Free, at the client's home, samples brought along. Confirmed. */
+    /** Free, at the client's home, samples brought along. Length is Q14. */
     confirmed:
-      "We meet at the room. No charge for the first visit, and material samples come with us.",
+      "We meet at the room, usually for 45 to 60 minutes. No charge for the first visit, and material samples come with us. We talk through layout, storage, materials, finishes and the overall look.",
     questions: ["q13", "q14", "q15", "q16"] as QuestionKey[],
   },
   {
     number: "02",
     title: "Survey and drawings",
-    confirmed: "Scaled elevations and a fixed, itemised quotation.",
+    /** Order per Q13 and Q21: quotation first, drawings once it is accepted. */
+    confirmed:
+      "The measured survey takes about an hour. A fixed, itemised quotation follows, and once it is accepted and the deposit paid, a design week runs: scaled drawings and elevations issued for review, with up to two rounds of revisions included.",
     questions: ["q17", "q18", "q19", "q20", "q21"] as QuestionKey[],
   },
   {
-    /** Title withheld. See Q-stage04. */
     number: "03",
-    title: null,
-    confirmed: null,
+    title: "Production",
+    /** The once-unknown stage, per the stage-04 answer. */
+    confirmed:
+      "Components are machined, edged and finished to the approved drawings. Some pieces arrive as sections ready to assemble; others are built up and finished in the room, whichever gets the better result.",
     questions: ["stage04", "q26", "q27", "q28", "q29"] as QuestionKey[],
   },
   {
     number: "04",
     title: "Fitting",
-    confirmed: "Scribed to your walls and floors, and finished in place.",
+    confirmed:
+      "Typically 2 to 3 days on site for a straightforward wardrobe wall. Everything is scribed to your walls, floors and ceiling and finished in place, with the area tidied at the end of each day and cleared completely at the end.",
     questions: ["q30", "q31", "q32", "q33", "q34"] as QuestionKey[],
   },
 ] as const;

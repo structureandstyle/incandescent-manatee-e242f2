@@ -48,7 +48,7 @@ import Ask from "../components/Ask.astro";
 import { SERVICES, BUSINESS, servicePath } from "../data/site";
 import { MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
 import { indexable } from "../data/page-gates";
-import { questionLabel, answered } from "../data/answers";
+import { questionLabel } from "../data/answers";
 import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/");
@@ -111,16 +111,17 @@ const ICONS = ["tape", "pencil", undefined, "square"] as const;
   <!-- Approach -->
   <Wrap style="padding-top:var(--section-y)">
     <Display level={3} as="h2" measure="var(--measure-display)">
-      One maker, <Italic>both halves</Italic> of the job.
+      One commission, <Italic>start to finish.</Italic>
     </Display>
     <div style="max-width:var(--measure);margin-top:var(--space-13)">
       <p>
         The structure is the part nobody sees: carcasses that go in square against walls that are
         not, scribed to the room rather than packed out with filler.
       </p>
+      {/* Q29, his words. He refused any framing against other firms, so the
+          paragraph states the standard rather than a comparison. */}
       <p style="margin-top:var(--space-10)">
-        Most firms split the job between a salesperson, a factory and a fitting crew. What is
-        different here, in his own words, is <Ask q={questionLabel("q06")}>still to be confirmed</Ask>.
+        The standard every commission is held to: <Value q="q29" />
       </p>
     </div>
   </Wrap>
@@ -194,30 +195,22 @@ const ICONS = ["tape", "pencil", undefined, "square"] as const;
     </p>
   </Wrap>
 
-  <!-- Maker -->
+  <!-- About. Was the maker section until the client's Part 6 direction
+       change, 30 Aug 2026: company presentation, no personal name, no
+       portrait. -->
   <Wrap style="padding-top:var(--section-y)">
-    <SectionHead meta="Kaspars Tormanis" scribe>The maker</SectionHead>
-    <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
-      <Plate
-        as="div"
-        subject="Plate 05 · Portrait"
-        detail={answered("q56") ? "To place" : "Not yet cleared"}
-        awaiting={answered("q56") ? "Portrait to place" : "No portrait until Q56 confirms he is happy to be photographed"}
-        ratio="4 / 5"
-        plane="top"
-      />
-      <div>
-        <p style="max-width:var(--measure-tight)">
-          There is no showroom and no sales team. The person who measures your room is the person
-          who draws it and the person who fits it.
-        </p>
-        <p style="max-width:var(--measure-tight);margin-top:var(--space-10);color:var(--text-quiet)">
-          How he started: <Value q="q50" />
-        </p>
-        <p style="margin-top:var(--space-14)">
-          <Link href="/maker/" variant="nav" chamfer>About the maker</Link>
-        </p>
-      </div>
+    <SectionHead meta="The company" scribe>About Structure & Style</SectionHead>
+    <div style="max-width:var(--measure)">
+      <p>
+        There is no showroom and no sales team. The person who measures your room is the person
+        who draws it and the person who fits it.
+      </p>
+      <p style="margin-top:var(--space-10);color:var(--text-quiet)">
+        What stands behind the work: <Value q="q35" />
+      </p>
+      <p style="margin-top:var(--space-14)">
+        <Link href="/about/" variant="nav" chamfer>About Structure & Style</Link>
+      </p>
     </div>
   </Wrap>
 

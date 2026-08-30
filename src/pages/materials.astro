@@ -3,21 +3,20 @@
  * The materials page.
  *
  * The design system's version listed European oak, American black walnut and
- * painted tulipwood, with quarter-sawn grain references and a swatch each. What
- * is on file is MDF, veneered MDF and plywood. The three names here are
- * provisional pending Q22, which also asks whether that is the full range.
+ * painted tulipwood, with quarter-sawn grain references and a swatch each. The
+ * confirmed range (Q22, 30 Aug 2026) is engineered board throughout: five
+ * families, each carrying its Q39 description from `site-content.ts`. Q22's
+ * ruling also stands: who cuts the material, and the arrangement behind it,
+ * stays off the site.
  *
- * No swatches. The design mapped its chips onto --oak, --walnut and --green,
- * and reusing those to stand for materials that are not those timbers would put
- * the removed claim back through the side door: a chip filled with oak brown
- * and captioned MDF still says oak. Real swatches get chosen when Q24 says what
- * the finishes actually are.
+ * No swatches yet. The design mapped its chips onto --oak, --walnut and
+ * --green, and reusing those to stand for materials that are not those timbers
+ * would put the removed claim back through the side door: a chip filled with
+ * oak brown and captioned MDF still says oak. Q24 is now answered, so choosing
+ * real swatches is unblocked, but it is a design decision not yet made.
  *
- * Q43 is the argument this page has to win, and it is deliberately his to make
- * rather than ours: engineered board over solid timber is a considered choice
- * for fitted furniture, more dimensionally stable and better under a painted
- * finish, not a downgrade. Being straight about it reads as expertise. Writing
- * it for him would be inventing his reasoning.
+ * Q43 is the argument this page has to win, and it is his: engineered board
+ * over solid timber as a considered choice, in his reasoning rather than ours.
  */
 import Base from "../layouts/Base.astro";
 import Wrap from "../components/ds/Wrap.astro";
@@ -59,7 +58,7 @@ const isIndexable = indexable("/materials/");
         <MaterialChip name={m.name}>
           <Fragment slot="description">
             <p style="font-size:var(--type-body-sm);color:var(--ink-soft);max-width:36ch;margin-top:var(--space-3)">
-              <Value q={m.descriptionQ} />
+              {m.description}
             </p>
           </Fragment>
         </MaterialChip>
@@ -67,7 +66,8 @@ const isIndexable = indexable("/materials/");
     </div>
 
     <p style="max-width:var(--measure);margin-top:var(--space-15);color:var(--text-quiet)">
-      Whether that is the full range, and who cuts the material to size, is <Value q="q22" />.
+      The full range: <Value q="q22" join=", " suffix="." /> Each is chosen for the design, the
+      use, the finish and the budget of the project.
     </p>
   </Wrap>
 
@@ -80,7 +80,7 @@ const isIndexable = indexable("/materials/");
     <SectionHead meta="The one worth asking about" level={4}>Why not solid timber</SectionHead>
     <p style="max-width:var(--measure)"><Value q="q43" /></p>
     <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
-      The material he reaches for first, and why: <Value q="q40" />
+      The one we reach for first: <Value q="q40" />
     </p>
   </Wrap>
 

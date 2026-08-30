@@ -34,9 +34,12 @@ const SERVICE_PAGE = [
 ] as const;
 
 export const PAGE_GATES = {
-  /* Hero and approach both turn on how he works, the process block carries the
-     untitled stage, and the maker block opens with how he started. */
-  "/": [...BAND_QUESTIONS, "q06", "stage04", "q50"],
+  /* Hero and approach both turn on how the work is run, the process block
+     carries the once-untitled stage, and the about block carries the Q29
+     standard and the Q35 guarantee. Q50 left this gate 30 Aug 2026 with the
+     Part 6 direction change: the maker story is declined, so nothing may wait
+     on it. */
+  "/": [...BAND_QUESTIONS, "q06", "stage04", "q29", "q35"],
 
   // The seven contracted service pages, all from the one template.
   "/fitted-wardrobes/": SERVICE_PAGE,
@@ -62,9 +65,10 @@ export const PAGE_GATES = {
   ],
   "/materials/": [...BAND_QUESTIONS, "q22", "q24", "q39", "q40", "q43"],
   "/work/": [...BAND_QUESTIONS, "q44", "q45", "q46", "q47", "q48", "q49"],
-  /* Q56 gates the portrait rather than appearing as copy, so it is not here:
-     the page is publishable without a photograph of him. */
-  "/maker/": [...BAND_QUESTIONS, "q06", "q50", "q51", "q52", "q53"],
+  /* Was "/maker/" gated on Q50 to Q53. The client changed direction 30 Aug
+     2026: no personal profile, so the page became About Structure & Style and
+     depends only on the company answers it shows. */
+  "/about/": [...BAND_QUESTIONS, "q06", "q29"],
 
   // No client dependency.
   "/journal/": [],
