@@ -134,6 +134,19 @@ export const SERVICES: Service[] = [
       "Cabinets, tall units and islands built to the room, including the runs standard units cannot cover.",
     wave: 2,
   },
+];
+
+/**
+ * Deferred, 31 Aug 2026, Denis's call: the page ships when its imagery exists.
+ * The photo library holds ZERO usable under-stair photographs and no finished
+ * home office, and a service page with empty plates sells nothing. This is a
+ * deferral of a signed wave-two page, not a drop: it is recorded in the ops
+ * repo's engagement status, Kaspar gets told in the next update, and the ask
+ * that brings it back is him photographing an under-stair or home office job.
+ * To restore: move the entry back into SERVICES and re-add its gate in
+ * page-gates.ts.
+ */
+export const DEFERRED_SERVICES: Service[] = [
   {
     slug: "home-office-understairs-storage",
     title: "Home office and under-stair storage",

@@ -48,7 +48,8 @@ export const PAGE_GATES = {
   "/fitted-wardrobe-cost/": SERVICE_PAGE,
   "/media-walls/": SERVICE_PAGE,
   "/bespoke-kitchens/": SERVICE_PAGE,
-  "/home-office-understairs-storage/": SERVICE_PAGE,
+  /* home-office-understairs-storage deferred 31 Aug 2026 with its SERVICES
+     entry: no route, no gate. See DEFERRED_SERVICES in site.ts. */
 
   /**
    * The brand pages. Each list is that page read section by section, plus the
