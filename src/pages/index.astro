@@ -46,7 +46,8 @@ import Value from "../components/Value.astro";
 import Ask from "../components/Ask.astro";
 
 import { SERVICES, BUSINESS, servicePath } from "../data/site";
-import { MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
+import Faq from "../components/ds/Faq.astro";
+import { HOMEPAGE_FAQS, MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
 import { indexable } from "../data/page-gates";
 import { questionLabel } from "../data/answers";
 import selection from "../../public/images/_selection.json";
@@ -230,7 +231,7 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
   </Wrap>
 
   <!-- Reviews -->
-  <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
+  <Wrap style="padding-top:var(--section-y)">
     <Reviews
       meta="Left by clients, unedited"
       average={REVIEWS.average}
@@ -238,6 +239,14 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
       source={REVIEWS.source}
       quotes={REVIEWS.quotes}
     />
+  </Wrap>
+
+  <!-- Questions. The researched set: see HOMEPAGE_FAQS in site-content.ts. -->
+  <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      {HOMEPAGE_FAQS.map((f) => <Faq q={f.q}>{f.a}</Faq>)}
+    </div>
   </Wrap>
 
   <EnquireBand heading={BAND.heading} email={CONTACT.email} chamfer>

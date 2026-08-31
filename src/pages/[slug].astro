@@ -24,6 +24,7 @@ import SectionHead from "../components/ds/SectionHead.astro";
 import Plate from "../components/ds/Plate.astro";
 import SpecTable from "../components/ds/SpecTable.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
+import Faq from "../components/ds/Faq.astro";
 import Link from "../components/ds/Link.astro";
 
 import { SERVICES, SITE_URL, BUSINESS, servicePath, type Service } from "../data/site";
@@ -273,16 +274,10 @@ const SECTIONS = [
 
     {copy && copy.faqs.length > 0 && (
       <Wrap style="padding-bottom:var(--section-y)">
-        {/* No FAQPage schema: Google discontinued FAQ rich results 7 May 2026.
-            The mechanism is the visible answer text, so every first sentence
-            answers its question. */}
         <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
-        {copy.faqs.map((f) => (
-          <div style="margin-top:var(--space-13);max-width:var(--measure)">
-            <SectionHead level={5}>{f.q}</SectionHead>
-            <p style="margin-top:var(--space-6)">{f.a}</p>
-          </div>
-        ))}
+        <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+          {copy.faqs.map((f) => <Faq q={f.q}>{f.a}</Faq>)}
+        </div>
       </Wrap>
     )}
 

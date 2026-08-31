@@ -29,12 +29,30 @@ import Kicker from "../components/ds/Kicker.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
+import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 
+import { BUSINESS } from "../data/site";
 import { BAND, CONTACT } from "../data/site-content";
 import { indexable } from "../data/page-gates";
 
 const isIndexable = indexable("/about/");
+
+/**
+ * The conduct practices, in the plain-word forms approved at tone protocol
+ * v1.4 section 11. These are the only publishable conduct facts; nothing may
+ * be added here without confirmation. The accountability fact (the person who
+ * measured does the fitting) has its own section above and is not repeated.
+ */
+const CONDUCT = [
+  "Floors covered in taped-down protective board, furniture wrapped and moved aside, doorways sealed with zipped dust screens.",
+  "Dust extraction connected to every cutting tool, with an air scrubber running in the room.",
+  "Cutting outside where access allows, otherwise in one sealed room. Never in a hallway or a communal area.",
+  "8am to 5pm on weekdays in houses. In a managed block, whatever hours the building sets.",
+  "Insurance and the safety paperwork go to the managing agent before the start date, with the building's sign-off in place before anything begins.",
+  "The lift booked and protected before any delivery, with stair protection down on delivery days.",
+  "The room vacuumed and the tools stacked at the end of every day, usable overnight.",
+];
 ---
 
 <Base
@@ -48,14 +66,18 @@ const isIndexable = indexable("/about/");
       The standard we work to
     </Display>
     <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
-      Structure & Style plans, builds and fits bespoke furniture for London homes, and runs the
-      whole commission from the first visit through to aftercare.
+      We design, measure, fit and finish bespoke furniture for London homes, and we run the whole
+      commission from the first visit through to aftercare.
     </p>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Our approach" level={4}>How a commission runs</SectionHead>
     <p style="max-width:var(--measure)"><Value q="q06" /></p>
+    <p style="max-width:var(--measure);margin-top:var(--space-8);color:var(--text-quiet)">
+      Four stages, the same four every time: visit, survey and drawings, production, fitting.
+      <Link href="/process/" variant="nav" style="margin-left:var(--space-5)">The full process, stage by stage</Link>
+    </p>
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="In plain terms" level={4}>The standard</SectionHead>
@@ -64,16 +86,66 @@ const isIndexable = indexable("/about/");
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="Accountability" level={4}>Who does the work</SectionHead>
+      {/* The trades-coordination sentence that used to follow here was cut by
+          the Truth gate 31 Aug 2026: it traced only to q06's PROVISIONAL note,
+          never to a confirmed answer. It returns if Kaspar confirms it. */}
       <p style="max-width:var(--measure)">
         The person who measures your room is the person who draws it and the person who fits it.
-        Plumbing, electrics and plastering are brought in when a job needs them, and coordinated as
-        part of the commission rather than left to you.
+      </p>
+    </div>
+
+    <div style="margin-top:var(--space-16)">
+      <SectionHead meta="Design" level={4}>Before anything is ordered</SectionHead>
+      <p style="max-width:var(--measure)">
+        Every project gets a measured survey and a fixed, itemised quotation. Where design
+        development is needed, a design week follows the quotation being accepted and the deposit
+        paid: scaled drawings and elevations, issued for review. Up to two rounds of revisions are
+        included, and any design cost sits inside the quotation.
+      </p>
+    </div>
+
+    <div style="margin-top:var(--space-16)">
+      <SectionHead meta="Materials" level={4}>Engineered board, on purpose</SectionHead>
+      <p style="max-width:var(--measure)">
+        Engineered board over solid timber is a considered choice rather than a compromise: more
+        stable and more consistent. Real wood veneer carries the timber look where one is wanted.
+        It also keeps large amounts of solid hardwood out of furniture that does not need them.
+      </p>
+      <p style="margin-top:var(--space-8)">
+        <Link href="/materials/" variant="nav" chamfer>The range, the finishes and the reasoning</Link>
+      </p>
+    </div>
+
+    <div style="margin-top:var(--space-16)">
+      <SectionHead meta="In your home" level={4}>What to expect while we work</SectionHead>
+      <p style="max-width:var(--measure)">
+        The work happens inside a home that stays lived in. These are the working practices on
+        every job.
+      </p>
+      <ul style="list-style:none;margin:var(--space-10) 0 0;padding:0;max-width:var(--measure);display:grid;gap:var(--space-7)">
+        {CONDUCT.map((line) => (
+          <li style="border-top:var(--rule-hair);padding-top:var(--space-6)">{line}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div style="margin-top:var(--space-16)">
+      <SectionHead meta="Afterwards" level={4}>Once the work is finished</SectionHead>
+      <p style="max-width:var(--measure)"><Value q="q35" suffix="." /></p>
+      <p style="max-width:var(--measure);margin-top:var(--space-8)">
+        If doors or other moving parts settle within the 2-year aftercare period, we come back and
+        adjust them. Care advice for the specific material and finish comes with the piece.
+        Drawings and specifications stay on file, so a matching piece later starts from the record
+        rather than from scratch.
       </p>
     </div>
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="Where we work" level={4}>Service area</SectionHead>
-      <p style="max-width:var(--measure)"><Value q="q03" suffix="." /></p>
+      <p style="max-width:var(--measure)">
+        <Value q="q03" />, including {BUSINESS.areaServed.slice(0, -1).join(", ")} and{" "}
+        {BUSINESS.areaServed.slice(-1)}.
+      </p>
     </div>
   </Wrap>
 

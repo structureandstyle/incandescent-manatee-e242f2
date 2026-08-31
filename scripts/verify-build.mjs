@@ -44,6 +44,8 @@ const FACTUAL = [
   [/\bon the bench\b/gi, "on the bench; he has no bench (Q3)"],
   [/\bbench is booked\b/gi, "bench booked; use lead time wording from Q7"],
   [/\bwe manufacture\b/gi, "claims manufacturing (protocol 10)"],
+  [/\bwe (build|make)\b/gi, "claims making (protocol 5 provenance ban)"],
+  [/\b(builds|makes) and fits\b/gi, "claims making in third person (protocol 5)"],
   [/\b(our|the|a) (team|crew|joiners|craftsmen|fitters)\b/gi, "crew noun; he works alone (Q6)"],
   [/\bwe are a team\b/gi, "crew noun; he works alone (Q6)"],
   [/\bcut on site\b/gi, "promises work is cut on site (protocol 10)"],

@@ -1,0 +1,48 @@
+---
+/**
+ * One collapsed question. Native <details>/<summary>: no JavaScript, keyboard
+ * and screen-reader behaviour for free, and the answer text is in the DOM, so
+ * Google indexes it exactly as if it were open. No FAQPage schema anywhere:
+ * Google discontinued FAQ rich results on 7 May 2026, and the mechanism now is
+ * the visible answer text itself, which is why every answer's first sentence
+ * answers the question.
+ */
+interface Props {
+  q: string;
+  class?: string;
+  style?: string;
+}
+
+const { q, class: className, style = "" } = Astro.props;
+---
+
+<details class:list={["ss-faq", className]} style={style}>
+  <summary>
+    <span style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-md)">{q}</span>
+    <span class="ss-faq-mark" aria-hidden="true">+</span>
+  </summary>
+  <p style="max-width:var(--measure);padding:var(--space-6) 0 var(--space-9);color:var(--text-quiet)">
+    <slot />
+  </p>
+</details>
+
+<style is:global>
+  .ss-faq { border-top: var(--rule-hair); }
+  .ss-faq summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-8);
+    padding: var(--space-8) 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .ss-faq summary::-webkit-details-marker { display: none; }
+  .ss-faq .ss-faq-mark {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    color: var(--ink-soft);
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+  .ss-faq[open] .ss-faq-mark { transform: rotate(45deg); }
+</style>

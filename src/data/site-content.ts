@@ -153,6 +153,34 @@ export const COMMISSIONS = [] as {
 /* ----------------------------------------------------------- process */
 
 /**
+ * The homepage questions, from the FAQ research of 24 Aug 2026 (ops repo,
+ * deliverables/homepage-faq.md: live People Also Ask plus Search Console),
+ * reworked 31 Aug 2026 to company voice and the confirmed answers. Four of the
+ * researched six ship now. The price question waits on Q10 and joins this list
+ * the day the pricing document lands, because it is the highest-volume
+ * question of them all; the what-if-he-is-ill question waits on the one
+ * approved sentence the protocol requires and Kaspar has not yet given.
+ */
+export const HOMEPAGE_FAQS = [
+  {
+    q: "Who actually does the work?",
+    a: "The person who measures your room is the person who draws it and the person who fits it. Nobody is sent in their place.",
+  },
+  {
+    q: "How long does a commission take?",
+    a: "Lead time is typically 4 to 8 weeks, and a straightforward wardrobe wall takes 2 to 3 days on site. You get the dates when the project is programmed.",
+  },
+  {
+    q: "What guarantee comes with the work?",
+    a: "The guarantee covers installation and workmanship for 2 years and the structure and joinery for 10 years. Hinges, runners and other moving hardware carry their manufacturer's warranty.",
+  },
+  {
+    q: "Do fitted wardrobes add value to a house?",
+    a: "Nobody can give you an honest figure for that. What is checkable is the space: a run built to the room uses the full height and the corners. Whether it shows in a valuation depends on the house and the buyer.",
+  },
+] as const;
+
+/**
  * Four stages, all four now titled and written from his 30 Aug 2026 answers.
  *
  * Stage 3 spent a week untitled, correctly: the design had filled it with

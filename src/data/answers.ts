@@ -68,7 +68,12 @@ export const ANSWERS = {
   q03: { value: "Serving homes across London", blocking: true, about: "Business base: any physical base worth naming, or service area only" },
   q04: { value: "info@structureandstyle.co.uk", about: "Email" },
   q05: { value: "07309 872555", about: "Phone and WhatsApp, already public" },
-  q06: { value: "Structure & Style manages each project from start to finish, coordinating everything from the first design conversation through to manufacture, installation and aftercare.", about: "How the work is run" },
+  /** Rephrased 31 Aug 2026, two Truth-gate catches: his answer said "through
+      to manufacture", and the protocol caps manufacturing at one FAQ line
+      site-wide (section 10), so the word cannot ride this value onto every
+      page that renders it; and the brand speaks as "we", never in the third
+      person (section 7). The coordination meaning is untouched. */
+  q06: { value: "We manage each project from start to finish, coordinating everything from the first design conversation through to final installation and aftercare.", about: "How the work is run" },
   q07: { value: "Lead time typically 4 to 8 weeks", blocking: true, about: "Current lead time, how far ahead the work is booked" },
   q08: { value: "None currently.", about: "Social accounts actively used, or none" },
   q09: { value: "Public liability insurance of £5 million. Not currently VAT registered.", about: "Public liability cover and amount, trade bodies, accreditations" },

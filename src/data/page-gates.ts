@@ -67,8 +67,10 @@ export const PAGE_GATES = {
   "/work/": [...BAND_QUESTIONS, "q44", "q45", "q46", "q47", "q48", "q49"],
   /* Was "/maker/" gated on Q50 to Q53. The client changed direction 30 Aug
      2026: no personal profile, so the page became About Structure & Style and
-     depends only on the company answers it shows. */
-  "/about/": [...BAND_QUESTIONS, "q06", "q29"],
+     depends only on the company answers it shows. Expanded 31 Aug 2026 to the
+     full Our Approach page his Part 6 answer specified; Q35 joined the gate
+     with the aftercare section. */
+  "/about/": [...BAND_QUESTIONS, "q06", "q29", "q35"],
 
   // No client dependency.
   "/journal/": [],
