@@ -1,8 +1,13 @@
 ---
 import { SERVICES } from "../data/site";
 
-interface Props { compact?: boolean }
-const { compact = false } = Astro.props;
+interface Props {
+  compact?: boolean;
+  /** Prefix for element ids, so the page form and the modal form can coexist
+      without duplicate ids. Field names are untouched: same Netlify form. */
+  idPrefix?: string;
+}
+const { compact = false, idPrefix = "" } = Astro.props;
 
 /**
  * Netlify Forms. The site is already on Netlify so this costs nothing and adds
@@ -34,34 +39,34 @@ const { compact = false } = Astro.props;
 
   <div class="grid gap-4 sm:grid-cols-2">
     <div>
-      <label for="name" class="block text-sm font-medium">Your name</label>
+      <label for={`${idPrefix}name`} class="block text-sm font-medium">Your name</label>
       <input
-        id="name" name="name" type="text" required autocomplete="name"
+        id={`${idPrefix}name`} name="name" type="text" required autocomplete="name"
         class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
       />
     </div>
     <div>
-      <label for="phone" class="block text-sm font-medium">Phone</label>
+      <label for={`${idPrefix}phone`} class="block text-sm font-medium">Phone</label>
       <input
-        id="phone" name="phone" type="tel" required autocomplete="tel"
+        id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel"
         class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
       />
     </div>
   </div>
 
   <div>
-    <label for="email" class="block text-sm font-medium">Email</label>
+    <label for={`${idPrefix}email`} class="block text-sm font-medium">Email</label>
     <input
-      id="email" name="email" type="email" required autocomplete="email"
+      id={`${idPrefix}email`} name="email" type="email" required autocomplete="email"
       class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
     />
   </div>
 
   <div class="grid gap-4 sm:grid-cols-2">
     <div>
-      <label for="service" class="block text-sm font-medium">What do you need?</label>
+      <label for={`${idPrefix}service`} class="block text-sm font-medium">What do you need?</label>
       <select
-        id="service" name="service"
+        id={`${idPrefix}service`} name="service"
         class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
       >
         {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => (
@@ -71,35 +76,35 @@ const { compact = false } = Astro.props;
       </select>
     </div>
     <div>
-      <label for="area" class="block text-sm font-medium">Which area of London?</label>
+      <label for={`${idPrefix}area`} class="block text-sm font-medium">Which area of London?</label>
       <input
-        id="area" name="area" type="text"
+        id={`${idPrefix}area`} name="area" type="text"
         class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
       />
     </div>
   </div>
 
   <div>
-    <label for="detail" class="block text-sm font-medium">Tell us about the job</label>
+    <label for={`${idPrefix}detail`} class="block text-sm font-medium">Tell us about the job</label>
     <textarea
-      id="detail" name="detail" rows={compact ? 3 : 5}
+      id={`${idPrefix}detail`} name="detail" rows={compact ? 3 : 5}
       class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
     ></textarea>
   </div>
 
   <div>
-    <label for="photos" class="block text-sm font-medium">Photos of the space (optional)</label>
+    <label for={`${idPrefix}photos`} class="block text-sm font-medium">Photos of the space (optional)</label>
     <p class="mt-1 text-xs text-ink-soft">A couple of pictures of the room saves a visit and gets you a closer price.</p>
     <input
-      id="photos" name="photos" type="file" accept="image/*" multiple
+      id={`${idPrefix}photos`} name="photos" type="file" accept="image/*" multiple
       class="mt-2 w-full text-sm file:mr-3 file:rounded-full file:border-0 file:bg-sand file:px-4 file:py-2 file:text-sm"
     />
   </div>
 
   <div>
-    <label for="source" class="block text-sm font-medium">How did you hear about us?</label>
+    <label for={`${idPrefix}source`} class="block text-sm font-medium">How did you hear about us?</label>
     <input
-      id="source" name="source" type="text"
+      id={`${idPrefix}source`} name="source" type="text"
       class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
     />
   </div>
