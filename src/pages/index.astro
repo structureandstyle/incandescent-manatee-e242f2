@@ -149,7 +149,10 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
   <!-- Work -->
   <Wrap style="padding-top:var(--section-y)">
     <SectionHead meta="Recent commissions" scribe>Selected work</SectionHead>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-lg)">
+    {/* Two by two, filling the width: the 420px floor means at most two
+        columns inside the page measure, so four cards sit as two even rows
+        instead of three plus an orphan. Collapses to one column on mobile. */}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
       {previews.map(({ service, shots }) => (
         <div
           data-carousel
