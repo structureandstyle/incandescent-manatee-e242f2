@@ -1,6 +1,11 @@
 {
   "fitted-wardrobes": [
     {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-04.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
       "file": "/images/fitted-wardrobes/fitted-wardrobes-01.webp",
       "w": 1400,
       "h": 1050,
@@ -59,6 +64,16 @@
   ],
   "alcove-units": [
     {
+      "file": "/images/alcove-units/alcove-units-04.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-05.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
       "file": "/images/alcove-units/alcove-units-01.webp",
       "w": 1400,
       "h": 1050,
@@ -88,6 +103,11 @@
   ],
   "media-walls": [
     {
+      "file": "/images/media-walls/media-walls-04.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
       "file": "/images/media-walls/media-walls-01.webp",
       "w": 1400,
       "h": 1050,
@@ -116,6 +136,31 @@
     }
   ],
   "bespoke-kitchens": [
+    {
+      "file": "/images/bespoke-kitchens/kitchen-shaker-showpiece.jpg",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-07.webp",
+      "w": 1636,
+      "h": 1091
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-04.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-05.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-06.webp",
+      "w": 1600,
+      "h": 1064
+    },
     {
       "file": "/images/bespoke-kitchens/bespoke-kitchens-01.webp",
       "w": 1400,

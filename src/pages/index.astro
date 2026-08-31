@@ -57,15 +57,12 @@ const isIndexable = indexable("/");
 const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
 
 /**
- * The showpiece: the green kitchen, supplied by Denis 31 Aug 2026 (recovered
- * from the chat paste; no copy existed in the photo library). Shown at its
- * own aspect ratio, uncropped, on his instruction.
+ * The showpiece: the green kitchen, supplied by Denis 31 Aug 2026, shown at
+ * its own aspect ratio, uncropped, on his instruction.
  *
- * PROVENANCE UNCONFIRMED: this photograph is not in the client's 295-file
- * library or any batch he sent. The alt text claims it as his completed work,
- * so before launch Kaspar must confirm it is his own job. If it is an
- * inspiration image from elsewhere, it cannot ship: real photography of his
- * own work only.
+ * Provenance CONFIRMED the same day: Kaspar's photo drop (triaged into the
+ * library, see the ops repo's docs/photo-library.md) contains another frame
+ * of the same kitchen, and Denis confirmed the whole drop as his work.
  */
 const hero = { file: "/images/bespoke-kitchens/green-kitchen.webp", w: 1636, h: 1091 };
 /**
