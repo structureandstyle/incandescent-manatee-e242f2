@@ -42,7 +42,16 @@ const { service } = Astro.props;
 
 const path = servicePath(service);
 const open = unanswered(gateFor(path));
-const isIndexable = indexable(path);
+/**
+ * Two gates, both must pass. The answer gate is the questionnaire machinery.
+ * The copy gate holds back any service page that has no entry in
+ * SERVICE_COPY: without its own intro, sections and FAQs, a page is the
+ * shared template with different photographs, and seven near-identical pages
+ * going indexable together is doorway-page territory. Wave two (media walls,
+ * kitchens, home office) stays noindexed until its copy is written, even
+ * after Q10 lands.
+ */
+const isIndexable = indexable(path) && Boolean(SERVICE_COPY[service.slug]);
 const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
 
 /**

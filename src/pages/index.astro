@@ -56,12 +56,17 @@ const isIndexable = indexable("/");
 const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
 
 /**
- * The showpiece, chosen by Denis 30 Aug 2026: the one professionally shot
- * kitchen the client supplied. A green kitchen was asked for; no green kitchen
- * exists anywhere in the photo library, so the strongest photograph held
- * stands in until one is supplied.
+ * The showpiece: the green kitchen, supplied by Denis 31 Aug 2026 (recovered
+ * from the chat paste; no copy existed in the photo library). Shown at its
+ * own aspect ratio, uncropped, on his instruction.
+ *
+ * PROVENANCE UNCONFIRMED: this photograph is not in the client's 295-file
+ * library or any batch he sent. The alt text claims it as his completed work,
+ * so before launch Kaspar must confirm it is his own job. If it is an
+ * inspiration image from elsewhere, it cannot ship: real photography of his
+ * own work only.
  */
-const hero = { file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.jpg", w: 1600, h: 1068 };
+const hero = { file: "/images/bespoke-kitchens/green-kitchen.webp", w: 1636, h: 1091 };
 const previews = SERVICES.map((s) => {
   const shots = sel[s.slug] ?? [];
   return shots.length ? { service: s, shot: shots[0] } : null;
@@ -110,7 +115,7 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
           height={hero.h}
           subject="Plate 01 · Bespoke kitchen"
           detail="Completed"
-          ratio="21 / 9"
+          ratio="1636 / 1091"
           eager
           plane="left"
         />
