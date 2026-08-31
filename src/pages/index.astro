@@ -68,12 +68,19 @@ const sel = selection as Record<string, { file: string; w: number; h: number }[]
  * own work only.
  */
 const hero = { file: "/images/bespoke-kitchens/green-kitchen.webp", w: 1636, h: 1091 };
+/**
+ * Selected work: four carousels, each cycling its service's own selection.
+ * Bespoke kitchens joined 31 Aug 2026 on Denis's instruction. The images open
+ * the lightbox; navigation to the service page moved to a named link under
+ * each card, because a photograph that navigates when you expected it to
+ * enlarge reads as a bug.
+ */
 const previews = SERVICES.map((s) => {
   const shots = sel[s.slug] ?? [];
-  return shots.length ? { service: s, shot: shots[0] } : null;
+  return shots.length ? { service: s, shots } : null;
 })
   .filter(Boolean)
-  .slice(1, 4) as { service: (typeof SERVICES)[number]; shot: { file: string; w: number; h: number } }[];
+  .slice(1, 5) as { service: (typeof SERVICES)[number]; shots: { file: string; w: number; h: number }[] }[];
 
 /* The plane joined stage 03 on 30 Aug 2026, once the stage-04 answer confirmed
    finishing work is real: machining, edging and finishing to the drawings, and
@@ -146,22 +153,73 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
   <Wrap style="padding-top:var(--section-y)">
     <SectionHead meta="Recent commissions" scribe>Selected work</SectionHead>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-lg)">
-      {previews.map(({ service, shot }) => (
-        <a href={servicePath(service)} style="display:block;border:0">
+      {previews.map(({ service, shots }) => (
+        <div
+          data-carousel
+          data-files={JSON.stringify(shots.map((s) => s.file))}
+          data-alt-base={`${service.title}, completed installation by ${BUSINESS.legalName}`}
+        >
           <Plate
-            photo={shot.file}
-            alt={`${service.title}, completed installation by ${BUSINESS.legalName}`}
-            width={shot.w}
-            height={shot.h}
+            photo={shots[0].file}
+            alt={`${service.title}, completed installation by ${BUSINESS.legalName}, photograph 1`}
+            width={shots[0].w}
+            height={shots[0].h}
             subject={service.title}
             detail="Completed"
             ratio="4 / 3"
-          />
-        </a>
+          >
+            <Fragment slot="controls">
+              <span style="display:flex;align-items:baseline;gap:var(--space-6)">
+                <button
+                  type="button"
+                  data-car-prev
+                  aria-label={`Previous ${service.title.toLowerCase()} photograph`}
+                  style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
+                >&larr;</button>
+                <MonoLabel tone="soft" style="letter-spacing:var(--ls-mono-table)">
+                  <span data-car-count>{`01 / ${String(shots.length).padStart(2, "0")}`}</span>
+                </MonoLabel>
+                <button
+                  type="button"
+                  data-car-next
+                  aria-label={`Next ${service.title.toLowerCase()} photograph`}
+                  style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
+                >&rarr;</button>
+              </span>
+            </Fragment>
+          </Plate>
+          <p style="margin-top:var(--space-6)">
+            <Link href={servicePath(service)} variant="nav">{service.title}</Link>
+          </p>
+        </div>
       ))}
     </div>
     <p style="margin-top:var(--space-14)"><Link href="/work/" variant="nav" chamfer>All work</Link></p>
   </Wrap>
+
+  <script>
+    // The work carousels. Arrows cycle the card through its service's own
+    // photographs; the counter keeps place; clicking the image still opens
+    // the lightbox at whichever photograph is showing. Without JavaScript the
+    // first photograph stands and the arrows do nothing, which is honest.
+    document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((card) => {
+      const files: string[] = JSON.parse(card.dataset.files || "[]");
+      if (files.length < 2) return;
+      const img = card.querySelector("img");
+      const count = card.querySelector("[data-car-count]");
+      if (!img) return;
+      let i = 0;
+      const pad = (n: number) => String(n).padStart(2, "0");
+      const show = (next: number) => {
+        i = (next + files.length) % files.length;
+        img.src = files[i];
+        img.alt = `${card.dataset.altBase}, photograph ${i + 1}`;
+        if (count) count.textContent = `${pad(i + 1)} / ${pad(files.length)}`;
+      };
+      card.querySelector("[data-car-prev]")?.addEventListener("click", () => show(i - 1));
+      card.querySelector("[data-car-next]")?.addEventListener("click", () => show(i + 1));
+    });
+  </script>
 
   <!-- Materials -->
   <Wrap style="padding-top:var(--section-y)">

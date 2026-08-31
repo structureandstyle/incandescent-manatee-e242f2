@@ -127,6 +127,7 @@ const hasCaption = Boolean(subject || detail);
     >
       {subject && <MonoLabel tone="default" style="letter-spacing:var(--ls-mono-table)">{subject}</MonoLabel>}
       {detail && <MonoLabel style="letter-spacing:var(--ls-mono-table)">{detail}</MonoLabel>}
+      <slot name="controls" />
     </Cap>
   )}
 </Tag>
