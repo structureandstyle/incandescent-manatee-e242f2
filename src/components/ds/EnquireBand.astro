@@ -22,7 +22,13 @@ interface Props {
   kicker?: string;
   heading: string;
   email?: string;
-  cta?: { label: string; href: string };
+  /**
+   * Primary action. Defaults to the enquiry form, because a form submission is
+   * the one enquiry channel that attributes itself end to end (GA4 event on
+   * /thanks/, a record in Netlify Forms). Pass null on a page where the form
+   * sits directly below the band. Email stays, demoted to the second action.
+   */
+  cta?: { label: string; href: string } | null;
   stamp?: boolean;
   chamfer?: boolean;
   class?: string;
@@ -33,7 +39,7 @@ const {
   kicker = "Enquiries",
   heading,
   email,
-  cta,
+  cta = { label: "Get a quote", href: "/contact/" },
   stamp = false,
   chamfer = false,
   class: className,
@@ -41,6 +47,16 @@ const {
 } = Astro.props;
 
 const hasFacts = Astro.slots.has("facts");
+
+/**
+ * The subject line is the attribution. A visitor who emails through this link
+ * sends a message that names its own source, so the shared enquiry log can
+ * record it as found via the website without anyone having to ask. Copying
+ * the address by hand loses the marker; the form CTA above exists so fewer do.
+ */
+const mailHref = email
+  ? `mailto:${email}?subject=${encodeURIComponent("Enquiry via structureandstyle.co.uk")}`
+  : undefined;
 ---
 
 <section
@@ -60,11 +76,11 @@ const hasFacts = Astro.slots.has("facts");
 
     {(email || cta) && (
       <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:baseline;margin-top:var(--space-14)">
-        {email && (
-          <Link variant="mail" tone="paper" chamfer={chamfer} href={`mailto:${email}`}>{email}</Link>
-        )}
         {cta && (
-          <Link variant="nav" tone="paper" chamfer={chamfer} href={cta.href}>{cta.label}</Link>
+          <Link variant="cta" tone="paper" chamfer={chamfer} href={cta.href}>{cta.label}</Link>
+        )}
+        {email && (
+          <Link variant="mail" tone="paper" chamfer={chamfer} href={mailHref}>{email}</Link>
         )}
       </div>
     )}

@@ -283,7 +283,8 @@ const SECTIONS = [
 
     <!-- Enquiry -->
     <section id="enquire">
-      <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+      {/* cta suppressed: the form itself sits directly below this band. */}
+      <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} cta={null} chamfer>
         {BAND.body}
         <Fragment slot="facts">
           {BAND.facts.map((q) => (
