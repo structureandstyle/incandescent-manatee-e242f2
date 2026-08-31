@@ -26,6 +26,14 @@
 export type ServiceCopy = {
   /** Body paragraphs rendered after the photography, before the spec sections. */
   intro: string[];
+  /**
+   * Per-service lead lines for the shared spec sections, keyed by section id
+   * (cost, how-long, made-from, fitting, after). The spec-table FACTS are
+   * identical across pages by design; these leads are what stops the five
+   * sections reading as the same page seven times. A missing key falls back
+   * to the template's generic lead.
+   */
+  leads?: Record<string, string>;
   /** Extra sections rendered after the spec sections. */
   sections: { meta: string; heading: string; body: string[] }[];
   /** Question-and-answer block. First sentence of every answer answers. */
@@ -38,6 +46,13 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "A fitted wardrobe is measured against your walls, floor and ceiling, then designed around what you keep. The run uses the top of the room and both corners rather than losing them.",
       "The inside is planned first: hanging heights, shelving, drawers and anything that needs a home. You do not need to arrive knowing any of that. Asking the right questions at the first visit is our job, not yours.",
     ],
+    leads: {
+      "cost": "The honest answer is a range until the room is measured, and one visit turns it into a firm number.",
+      "how-long": "The lead time runs in weeks, and the fitting itself takes days rather than weeks.",
+      "made-from": "Which board suits a wardrobe wall depends on the room, the finish you want and the budget.",
+      "fitting": "Ceilings, floors and walls are rarely straight, and a wardrobe wall meets all three at once.",
+      "after": "Doors and hinges do the daily work, so the cover on workmanship and moving parts is listed plainly.",
+    },
     sections: [
       {
         meta: "The work",
@@ -81,6 +96,13 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "A walk-in wardrobe is planned as one room rather than a run of units. Rails, drawer banks, shoe storage and shelving are set out together, so the lines carry through from wall to wall.",
       "Loft rooms, box rooms and eaves take fitted storage well, because the awkward angles are measured and used rather than boxed off. The first visit happens at the room itself and usually takes 45 to 60 minutes.",
     ],
+    leads: {
+      "cost": "A whole room's fit-out sits behind a single itemised quotation for the agreed scope.",
+      "how-long": "A design week sets the whole room out on paper before anything is ordered.",
+      "made-from": "In a walk-in the inside is on show, so interior finishes matter as much as fronts.",
+      "fitting": "A flat, square wall is the exception in these rooms rather than the rule.",
+      "after": "Rails, runners and hinges carry the daily traffic, and each carries its manufacturer's warranty.",
+    },
     sections: [
       {
         meta: "Planning",
@@ -123,6 +145,13 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "No two alcoves in a period house are the same width, and most walls are not straight either. Each unit is measured to its own alcove, then scribed: cut to follow the wall, so doors sit flush and lines run true.",
       "A unit can run to sill height with shelving above, or floor to ceiling across the chimney breast wall. The proportions follow the room, and the inside is planned around what will actually live there.",
     ],
+    leads: {
+      "cost": "A smaller piece follows the same pricing logic, and the table below is the honest version of it.",
+      "how-long": "Design and drawings for alcove work run through the same week set aside for every project.",
+      "made-from": "Painted finishes are chosen for alcove work when the unit should match the room's existing woodwork.",
+      "fitting": "Chimney breasts lean and alcove walls bow, so the unit is cut to the wall it actually meets.",
+      "after": "Shelves carry real weight for years, and the 10-year cover on structure and joinery is the line that matters.",
+    },
     sections: [
       {
         meta: "The work",
@@ -158,6 +187,13 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "Every fitted wardrobe is priced as a whole job, to its own room. A range is the honest starting point, and a firm number follows one visit.",
       "What follows is what actually moves the price, how the quotation works, and what it includes.",
     ],
+    leads: {
+      "cost": "This page is the whole answer: the range, what moves it, and what the number includes.",
+      "how-long": "The same complexity that moves the price also stretches or shortens the programme.",
+      "made-from": "Premium veneers and specialist finishes sit higher in the range than painted board, as the factors below show.",
+      "fitting": "This is where the days on site inside the figure actually come from.",
+      "after": "What stands behind the number: the cover on the work after the invoice is paid.",
+    },
     sections: [
       {
         meta: "The price",

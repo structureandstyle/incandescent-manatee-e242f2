@@ -108,7 +108,8 @@ const hasCaption = Boolean(subject || detail);
         loading={eager ? "eager" : "lazy"}
         fetchpriority={eager ? "high" : undefined}
         decoding={eager ? "sync" : "async"}
-        style="width:100%;height:100%;object-fit:cover"
+        data-plate-photo
+        style="width:100%;height:100%;object-fit:cover;cursor:zoom-in"
       />
     ) : Astro.slots.has("default") ? (
       <slot />
