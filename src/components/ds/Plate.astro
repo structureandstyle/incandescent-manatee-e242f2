@@ -25,6 +25,11 @@
  *
  * The caption is a specification line, not a description: subject on the left,
  * detail on the right, both in the mono voice.
+ *
+ * The photograph is focusable and labelled as a control since 1 Sep 2026: the
+ * zoom-in cursor promised an action a keyboard could not reach. The lightbox
+ * script in Base.astro opens it on Enter and Space. The alt attribute stays
+ * untouched for the signed scope's keyword requirement.
  */
 import MonoLabel from "./MonoLabel.astro";
 
@@ -109,6 +114,9 @@ const hasCaption = Boolean(subject || detail);
         fetchpriority={eager ? "high" : undefined}
         decoding={eager ? "sync" : "async"}
         data-plate-photo
+        tabindex="0"
+        role="button"
+        aria-label={`Enlarge: ${alt}`}
         style="width:100%;height:100%;object-fit:cover;cursor:zoom-in"
       />
     ) : Astro.slots.has("default") ? (

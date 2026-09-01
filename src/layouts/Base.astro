@@ -246,14 +246,57 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       // Progressive enhancement over the same <img>: no library, one overlay
       // built lazily on first use, closed by click, Escape or the button.
       // Without JavaScript the images are simply images, which is fine.
+      //
+      // NAVIGABLE since 1 Sep 2026, Denis's ask: an enlarged photograph could
+      // not be swiped. The lightbox now knows the set it opened from: a work
+      // carousel's own photographs when opened from one, otherwise every plate
+      // photograph on the page in reading order. Swipe, the arrow keys and the
+      // on-screen arrows all move through that set; a tap outside the controls
+      // still closes.
       let box: HTMLDivElement | null = null;
       let lastFocus: Element | null = null;
+      let set: { src: string; alt: string }[] = [];
+      let idx = 0;
 
       function closeBox() {
         if (!box) return;
         box.style.display = "none";
         document.documentElement.style.overflow = "";
         if (lastFocus instanceof HTMLElement) lastFocus.focus();
+      }
+
+      const pad = (n: number) => String(n).padStart(2, "0");
+
+      function showAt(next: number) {
+        if (!box || !set.length) return;
+        idx = (next + set.length) % set.length;
+        const big = box.querySelector("img")!;
+        const cap = box.querySelector("p")!;
+        big.src = set[idx].src;
+        big.alt = set[idx].alt;
+        cap.textContent =
+          set.length > 1 ? `${pad(idx + 1)} / ${pad(set.length)} · ${set[idx].alt}` : set[idx].alt;
+        // The neighbours load while this one is looked at, so a swipe lands
+        // on a picture rather than on a blank frame.
+        if (set.length > 1) {
+          new Image().src = set[(idx + 1) % set.length].src;
+          new Image().src = set[(idx - 1 + set.length) % set.length].src;
+        }
+      }
+
+      // The set a photograph belongs to: its carousel's files if it sits in
+      // one, otherwise every plate photograph on the page.
+      function setFor(img: HTMLImageElement): { src: string; alt: string }[] {
+        const car = img.closest<HTMLElement>("[data-carousel]");
+        if (car && car.dataset.files) {
+          const files: string[] = JSON.parse(car.dataset.files);
+          const altBase = car.dataset.altBase || img.alt;
+          return files.map((f, n) => ({ src: f, alt: `${altBase}, photograph ${n + 1}` }));
+        }
+        return [...document.querySelectorAll<HTMLImageElement>("img[data-plate-photo]")].map((el) => ({
+          src: el.currentSrc || el.src,
+          alt: el.alt,
+        }));
       }
 
       function openBox(img: HTMLImageElement) {
@@ -265,21 +308,77 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
           box.style.cssText =
             "position:fixed;inset:0;z-index:200;display:none;place-items:center;" +
             "background:rgba(24,21,17,.94);padding:clamp(16px,4vw,48px);cursor:zoom-out";
+          const navBtn =
+            "position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;" +
+            "color:rgba(242,238,227,.9);font-family:var(--font-mono);font-size:30px;line-height:1;" +
+            "cursor:pointer;padding:16px";
           box.innerHTML =
             '<img style="max-width:100%;max-height:82vh;object-fit:contain;display:block;border:1px solid rgba(242,238,227,.25)" alt="">' +
             '<p style="margin-top:12px;font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:.08em;text-transform:uppercase;color:rgba(242,238,227,.75);text-align:center"></p>' +
-            '<button type="button" aria-label="Close" style="position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(242,238,227,.9);font-size:28px;line-height:1;cursor:pointer">&times;</button>';
+            '<button type="button" aria-label="Close" style="position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(242,238,227,.9);font-size:28px;line-height:1;cursor:pointer">&times;</button>' +
+            `<button type="button" data-box-prev aria-label="Previous photograph" style="${navBtn};left:6px">&larr;</button>` +
+            `<button type="button" data-box-next aria-label="Next photograph" style="${navBtn};right:6px">&rarr;</button>`;
           box.addEventListener("click", closeBox);
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeBox();
+          box.querySelector("[data-box-prev]")!.addEventListener("click", (e) => {
+            e.stopPropagation();
+            showAt(idx - 1);
           });
+          box.querySelector("[data-box-next]")!.addEventListener("click", (e) => {
+            e.stopPropagation();
+            showAt(idx + 1);
+          });
+          document.addEventListener("keydown", (e) => {
+            if (!box || box.style.display === "none") return;
+            if (e.key === "Escape") closeBox();
+            if (e.key === "ArrowLeft") showAt(idx - 1);
+            if (e.key === "ArrowRight") showAt(idx + 1);
+            // aria-modal promises the page behind is inert, so Tab must stay
+            // inside: cycle through the dialog's own visible buttons.
+            if (e.key === "Tab") {
+              const btns = [...box.querySelectorAll<HTMLElement>("button")].filter(
+                (b) => b.style.display !== "none"
+              );
+              if (!btns.length) return;
+              e.preventDefault();
+              const at = btns.indexOf(document.activeElement as HTMLElement);
+              const next = e.shiftKey
+                ? (at - 1 + btns.length) % btns.length
+                : (at + 1) % btns.length;
+              btns[next].focus();
+            }
+          });
+          // The swipe. Horizontal beats vertical and 40px beats a tap; a tap
+          // stays a tap and closes as before.
+          let x0 = 0;
+          let y0 = 0;
+          box.addEventListener(
+            "touchstart",
+            (e) => {
+              x0 = e.touches[0].clientX;
+              y0 = e.touches[0].clientY;
+            },
+            { passive: true }
+          );
+          box.addEventListener(
+            "touchend",
+            (e) => {
+              const dx = e.changedTouches[0].clientX - x0;
+              const dy = e.changedTouches[0].clientY - y0;
+              if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+              showAt(dx < 0 ? idx + 1 : idx - 1);
+            },
+            { passive: true }
+          );
           document.body.appendChild(box);
         }
-        const big = box.querySelector("img")!;
-        const cap = box.querySelector("p")!;
-        big.src = img.currentSrc || img.src;
-        big.alt = img.alt;
-        cap.textContent = img.alt;
+        set = setFor(img);
+        const seen = img.currentSrc || img.src;
+        const found = set.findIndex((s) => seen.endsWith(s.src) || s.src.endsWith(seen));
+        showAt(found >= 0 ? found : 0);
+        const many = set.length > 1;
+        box.querySelectorAll<HTMLElement>("[data-box-prev],[data-box-next]").forEach((b) => {
+          b.style.display = many ? "" : "none";
+        });
         box.style.display = "grid";
         document.documentElement.style.overflow = "hidden";
         lastFocus = document.activeElement;
@@ -291,6 +390,17 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         const img = target?.closest?.("img[data-plate-photo]");
         if (!(img instanceof HTMLImageElement)) return;
         // A plate inside a link (the homepage work grid) keeps its navigation.
+        if (img.closest("a")) return;
+        e.preventDefault();
+        openBox(img);
+      });
+
+      // The keyboard entry point: the plates are focusable buttons
+      // (Plate.astro), so Enter and Space must do what a click does.
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        const img = document.activeElement;
+        if (!(img instanceof HTMLImageElement) || !img.matches("[data-plate-photo]")) return;
         if (img.closest("a")) return;
         e.preventDefault();
         openBox(img);

@@ -4,6 +4,13 @@
  * like to work with, and a reference in the mono voice.
  * Ported from the design system's components/specification/MaterialChip.jsx.
  *
+ * EXPANDABLE since 1 September 2026, on Denis's ask: pressing a material opens
+ * it up with what it is, where it is used, and what weighs for and against it.
+ * Same mechanism as Faq.astro, native <details>/<summary>: no JavaScript,
+ * keyboard and screen-reader behaviour for free, and the detail text is in the
+ * DOM for Google either way. A chip given any of `uses`, `pros` or `cons`
+ * renders as a disclosure; a chip given none renders exactly as before.
+ *
  * A NOTE ON SWATCHES, because this component is where the materials correction
  * could quietly undo itself.
  *
@@ -28,6 +35,12 @@ interface Props {
   name: string;
   description?: string;
   reference?: string;
+  /** One or two sentences on where the material goes. */
+  uses?: string;
+  /** What weighs in its favour, spec-table voice. */
+  pros?: readonly string[];
+  /** What weighs against it, stated as plainly as the pros. */
+  cons?: readonly string[];
   /** A CSS colour. Deliberately no default: see the note above. */
   swatch?: string;
   plane?: boolean | "left" | "top";
@@ -39,6 +52,9 @@ const {
   name,
   description,
   reference,
+  uses,
+  pros,
+  cons,
   swatch,
   plane = false,
   class: className,
@@ -48,6 +64,7 @@ const {
 const hasMedia = Astro.slots.has("default");
 const planed = plane !== false && plane != null;
 const direction = plane === true ? "left" : plane;
+const expandable = Boolean(uses || pros?.length || cons?.length);
 
 const frame = [
   "border:var(--rule-structure)",
@@ -57,22 +74,109 @@ const frame = [
 ].join(";");
 ---
 
-<div class={className} style={style}>
-  <div style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
-    <slot />
-  </div>
+{
+  expandable ? (
+    <details class:list={["ss-mat", className]} style={style}>
+      <summary>
+        <div style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
+          <slot />
+        </div>
+        <span class="ss-mat-head">
+          <span style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-md)">
+            {name}
+          </span>
+          <span class="ss-mat-mark" aria-hidden="true">+</span>
+        </span>
+      </summary>
 
-  <h3 style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-md);margin:var(--space-7) 0 var(--space-3)">
-    {name}
-  </h3>
+      <div class="ss-mat-body">
+        {description && (
+          <p style="font-size:var(--type-body-sm);color:var(--ink-soft)">{description}</p>
+        )}
 
-  {description && (
-    <p style="font-size:var(--type-body-sm);color:var(--ink-soft);max-width:36ch">{description}</p>
-  )}
+        {uses && (
+          <>
+            <MonoLabel as="p" tone="soft" style="margin-top:var(--space-8)">Used for</MonoLabel>
+            <p style="font-size:var(--type-body-sm);margin-top:var(--space-3)">{uses}</p>
+          </>
+        )}
 
-  {reference && (
-    <MonoLabel style="display:block;margin-top:var(--space-5)">{reference}</MonoLabel>
-  )}
+        {pros && pros.length > 0 && (
+          <>
+            <MonoLabel as="p" tone="soft" style="margin-top:var(--space-8)">In its favour</MonoLabel>
+            <ul class="ss-mat-list">
+              {pros.map((p) => <li>{p}</li>)}
+            </ul>
+          </>
+        )}
 
-  <slot name="description" />
-</div>
+        {cons && cons.length > 0 && (
+          <>
+            <MonoLabel as="p" tone="soft" style="margin-top:var(--space-8)">The trade-offs</MonoLabel>
+            <ul class="ss-mat-list">
+              {cons.map((c) => <li>{c}</li>)}
+            </ul>
+          </>
+        )}
+      </div>
+    </details>
+  ) : (
+    <div class={className} style={style}>
+      <div style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
+        <slot />
+      </div>
+
+      <h3 style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-md);margin:var(--space-7) 0 var(--space-3)">
+        {name}
+      </h3>
+
+      {description && (
+        <p style="font-size:var(--type-body-sm);color:var(--ink-soft);max-width:36ch">{description}</p>
+      )}
+
+      {reference && (
+        <MonoLabel style="display:block;margin-top:var(--space-5)">{reference}</MonoLabel>
+      )}
+
+      <slot name="description" />
+    </div>
+  )
+}
+
+<style is:global>
+  .ss-mat summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  .ss-mat summary::-webkit-details-marker { display: none; }
+  .ss-mat .ss-mat-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-6);
+    margin-top: var(--space-7);
+  }
+  .ss-mat .ss-mat-mark {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    color: var(--ink-soft);
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+  .ss-mat[open] .ss-mat-mark { transform: rotate(45deg); }
+  .ss-mat summary:focus-visible { outline: 1px solid var(--green); outline-offset: 4px; }
+  .ss-mat .ss-mat-body {
+    padding: var(--space-4) 0 var(--space-4);
+    max-width: 44ch;
+  }
+  .ss-mat .ss-mat-list {
+    list-style: none;
+    margin: var(--space-3) 0 0;
+    padding: 0;
+  }
+  .ss-mat .ss-mat-list li {
+    font-size: var(--type-body-sm);
+    padding: var(--space-3) 0;
+    border-top: var(--rule-hair);
+  }
+  .ss-mat .ss-mat-list li:first-child { border-top: none; padding-top: 0; }
+</style>

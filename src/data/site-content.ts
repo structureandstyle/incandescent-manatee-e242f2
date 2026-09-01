@@ -92,45 +92,180 @@ export const BAND = {
 /* ------------------------------------------------------------ reviews */
 
 /**
- * Aggregate only. Confirmed against the Business Profile on 23 August 2026:
- * 15 reviews at 5.0, all 15 answered as of 24 August.
+ * Read live from the public profile on 1 September 2026: 14 reviews at 5.0.
+ * The count moved DOWN from the 22 August baseline of 15, and the review that
+ * left the profile is Arthur Kvasnei's. Recorded in the ops repo baseline
+ * (A6.1); the site states what the profile shows today.
  *
- * `quotes` is deliberately empty. The design shipped four placeholder strings
- * that described what a quote should do rather than quoting anyone. Real
- * quotes come from the profile, unedited, from genuine past customers, with no
- * gating and no incentives, which is a compliance red line in the playbook and
- * not merely a preference.
+ * The quotes are real, transcribed verbatim from the profile on 1 September
+ * 2026. Compliance line: genuine past customers only, unedited, no gating, no
+ * incentives. Unedited means unedited, and that rule decides the selection:
+ * a review is quotable only when its COMPLETE text also passes the site's own
+ * gates. Eleven of the fourteen carry text; eight of those eleven are excluded
+ * because their verbatim text names a person (the Q1/Q60 ruling keeps every
+ * personal name off the site, and two also name Uwe, who left in April 2026),
+ * says "the team" (the verify gate's crew-noun ban, and a headcount the
+ * business does not have), or carries an em dash (the style gate). What
+ * remains is below. Never trim a review around a problem word: pick a
+ * different review.
  */
 export const REVIEWS = {
-  count: 15,
+  count: 14,
   average: "5.0",
   source: "Google Business Profile",
-  quotes: [] as { text: string; meta: string }[],
+  /** The public profile, for the click-through. The cid is the listing's
+      stable id, taken from the Maps place URL on 1 September 2026. */
+  profileUrl: "https://maps.google.com/?cid=14703132250787863880",
+  quotes: [
+    {
+      text: "Really pleased with the work. They did our wall panelling, new doors, skirting and architraves and everything looks sharp and properly finished. Turned up when they said they would and left the place tidy. Would happily recommend.",
+      meta: "Rafael C · Panelling, doors and skirting",
+    },
+    {
+      text: "I’m very happy with the finish, everything looks as we explained and wanted. Definitely recommend",
+      meta: "Vasily S · August 2026",
+    },
+    {
+      text: "Very happy with everything. Recommend",
+      meta: "Erald G · May 2026",
+    },
+  ],
 } as const;
 
 /* ---------------------------------------------------------- materials */
 
 /**
  * CONFIRMED under Q22 and Q39, 30 Aug 2026. The range is broader than the
- * three boards previously on file, and each description is his Q39 answer for
- * that material. The same five lines sit as the Q39 record in `answers.ts`:
- * change one, change both. His Q22 ruling also stands: who cuts the material,
- * and the arrangement behind it, stays off the site.
+ * three boards previously on file, and each `description` is his Q39 answer
+ * for that material. The same five lines sit as the Q39 record in
+ * `answers.ts`: change one, change both. His Q22 ruling also stands: who cuts
+ * the material, and the arrangement behind it, stays off the site.
+ *
+ * The SIXTH entry is not a Q39 line. Hardware joined 1 September 2026 on
+ * Denis's ask for an even grid, and it is the one addition already confirmed
+ * on file: its description is the Q28 answer, and Denis's 30 Aug ruling puts
+ * Blum and Hafele into materials contexts as a quality signal, named where
+ * hardware is genuinely the subject. This card is that subject.
+ *
+ * `uses`, `pros` and `cons` were added 1 September 2026 for the expandable
+ * cards. The rule for every line: general facts about the material family, or
+ * facts confirmed in the questionnaire (grain matching Q23, ageing Q41,
+ * hardware warranty Q35). Nothing about who cuts, nothing about any specific
+ * job, and no finish word (hand-painted, solid timber) the protocol reserves
+ * for verified jobs.
  *
  * Swatches, chosen 30 Aug 2026 now Q24 names the finishes: abstract finish
  * tones drawn in CSS, not photographs and not found imagery. Each depicts the
  * finish category truthfully: paint as a flat painted colour, veneer as a
  * timber tone (veneer is real timber), plywood as its striped edge, the board
- * families as flat neutrals. Web-found photographs were considered and
- * rejected: unlicensed imagery on a client site is a rights problem, and a
- * photograph of someone else's material reads as a claim about ours.
+ * families as flat neutrals, hardware as a flat metal grey. Web-found
+ * photographs were considered and rejected: unlicensed imagery on a client
+ * site is a rights problem, and a photograph of someone else's material reads
+ * as a claim about ours.
  */
 export const MATERIALS = [
-  { name: "MDF and MR MDF", description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles.", swatch: "var(--green)" },
-  { name: "Veneered board", description: "The character of real timber with the stability of an engineered board.", swatch: "linear-gradient(100deg, var(--oak), color-mix(in srgb, var(--oak) 78%, var(--char)) 55%, var(--oak))" },
-  { name: "Plywood", description: "Strong and durable, with a distinctive exposed edge where the design calls for it.", swatch: "repeating-linear-gradient(0deg, color-mix(in srgb, var(--oak) 45%, var(--paper)) 0 11px, color-mix(in srgb, var(--oak) 80%, var(--char)) 11px 14px)" },
-  { name: "Melamine and decorative board", description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes.", swatch: "color-mix(in srgb, var(--char) 10%, var(--paper))" },
-  { name: "Specialist decorative boards", description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces.", swatch: "color-mix(in srgb, var(--char) 86%, var(--paper))" },
+  {
+    key: "mdf",
+    name: "MDF and MR MDF",
+    description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles.",
+    swatch: "var(--green)",
+    uses: "Painted wardrobes, alcove units, panelling and detailed door profiles. The moisture-resistant version, MR MDF, goes where damp is a risk.",
+    pros: [
+      "Stays flat and does not move with the seasons",
+      "Takes paint smoothly, with no grain showing through",
+      "Profiles, grooves and mouldings cut cleanly",
+      "Consistent all the way through, with no knots or voids",
+    ],
+    cons: [
+      "Bare edges soak up paint, so they are sealed before finishing",
+      "Standard board swells if it sits wet, which is what the moisture-resistant version is for",
+      "No grain of its own: a timber look comes from veneer or a wood-effect board instead",
+    ],
+  },
+  {
+    key: "veneer",
+    name: "Veneered board",
+    description: "The character of real timber with the stability of an engineered board.",
+    swatch: "linear-gradient(100deg, var(--oak), color-mix(in srgb, var(--oak) 78%, var(--char)) 55%, var(--oak))",
+    uses: "Wardrobe doors, panelling and shelving where real timber should show. Where the design calls for it, grain is matched across adjoining doors so the run reads as one piece.",
+    pros: [
+      "A real timber surface: oak veneer is oak, cut thin",
+      "Far more stable across a fitted run than timber in one piece",
+      "Grain and pattern can be matched door to door",
+    ],
+    cons: [
+      "The timber layer is thin, so a deep scratch cannot be sanded out the way solid wood can",
+      "Every visible edge is finished with a matching timber strip, which is part of the work",
+      "Natural veneers develop subtly with age and light; painted and decorative finishes stay more consistent",
+    ],
+  },
+  {
+    key: "plywood",
+    name: "Plywood",
+    description: "Strong and durable, with a distinctive exposed edge where the design calls for it.",
+    swatch: "repeating-linear-gradient(0deg, color-mix(in srgb, var(--oak) 45%, var(--paper)) 0 11px, color-mix(in srgb, var(--oak) 80%, var(--char)) 11px 14px)",
+    uses: "The boxes and frames behind fitted furniture, long shelf spans, and designs that show its striped edge on purpose.",
+    pros: [
+      "Strong for its weight, and stiff over a long shelf span",
+      "Holds screws and fixings well",
+      "The striped edge is a finish in its own right",
+    ],
+    cons: [
+      "Costs more than MDF for the same panel",
+      "Face grain varies from sheet to sheet",
+      "Paint needs more preparation on plywood than on MDF",
+    ],
+  },
+  {
+    key: "melamine",
+    name: "Melamine and decorative board",
+    description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes.",
+    swatch: "color-mix(in srgb, var(--char) 10%, var(--paper))",
+    uses: "Wardrobe interiors, storage runs and complete pieces where the budget leads. The finish arrives on the board, ready made.",
+    pros: [
+      "Hard-wearing and wipes clean",
+      "Colour and texture identical panel to panel",
+      "The widest choice of colours, textures and wood finishes in the range",
+      "No site finishing, which keeps cost and time down",
+    ],
+    cons: [
+      "The finish is fixed in the factory, so it cannot be repainted later",
+      "A hard knock can chip an edge, and a chip cannot be invisibly repaired",
+    ],
+  },
+  {
+    key: "specialist",
+    name: "Specialist decorative boards",
+    description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces.",
+    swatch: "color-mix(in srgb, var(--char) 86%, var(--paper))",
+    uses: "Doors and visible fronts where the surface leads the design: super-matt, high-gloss, textured and stone-effect pieces.",
+    pros: [
+      "Surfaces paint and veneer cannot give: deep gloss, soft matt, stone and texture",
+      "Factory-made finishes, consistent and hard-wearing",
+    ],
+    cons: [
+      "The most expensive boards in the range",
+      "A damaged panel is usually replaced rather than repaired",
+    ],
+  },
+  {
+    key: "hardware",
+    name: "Hardware",
+    /** The Q28 answer, shortened to the two named brands. Named here because
+        hardware is the subject of this card, per the 30 Aug 2026 ruling. */
+    description: "Blum for hinges and drawer systems, Hafele for furniture hardware and lighting.",
+    swatch: "color-mix(in srgb, var(--char) 38%, var(--paper))",
+    uses: "Hinges, drawer runners, lift-up doors, interior fittings and lighting: the moving parts of every piece.",
+    pros: [
+      "Precise adjustment, so doors and drawers line up and stay lined up",
+      "Moving hardware carries its manufacturer's warranty on top of our own guarantee",
+      "Both brands publish their ranges, so what we specify can be looked up",
+    ],
+    cons: [
+      "Branded hardware costs more than unbranded",
+      "The moving parts do the hardest work in a piece, so this is the wrong place to save",
+    ],
+  },
 ] as const;
 
 /* -------------------------------------------------------------- work */

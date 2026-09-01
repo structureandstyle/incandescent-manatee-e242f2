@@ -39,8 +39,10 @@ export const BUSINESS = {
     { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "18:00" },
     { days: ["Saturday"], opens: "09:00", closes: "14:00" },
   ],
-  /** Captured from the Business Profile on 22 August 2026. */
-  reviewCount: 15,
+  /** Read live from the public profile on 1 September 2026. Down from the
+      22 August baseline of 15: Arthur Kvasnei's review is no longer on the
+      profile. See the ops repo baseline record, A6.1. */
+  reviewCount: 14,
   ratingValue: "5.0",
 } as const;
 

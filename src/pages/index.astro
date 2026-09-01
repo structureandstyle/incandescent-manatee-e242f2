@@ -221,11 +221,22 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
     });
   </script>
 
-  <!-- Materials -->
+  <!-- Materials. Expandable since 1 Sep 2026: each card opens with where the
+       material is used and what weighs for and against it, and hardware joined
+       as the sixth card so the grid sits even. Copy rules in site-content.ts. -->
   <Wrap style="padding-top:var(--section-y)">
-    <SectionHead meta="The standard range" scribe>Materials</SectionHead>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md)">
-      {MATERIALS.map((m) => <MaterialChip name={m.name} swatch={m.swatch} />)}
+    <SectionHead meta="Boards, finishes and hardware" scribe>Materials</SectionHead>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md);align-items:start">
+      {MATERIALS.map((m) => (
+        <MaterialChip
+          name={m.name}
+          swatch={m.swatch}
+          description={m.description}
+          uses={m.uses}
+          pros={m.pros}
+          cons={m.cons}
+        />
+      ))}
     </div>
     <p style="margin-top:var(--space-14)">
       <Link href="/materials/" variant="nav" chamfer>Materials, finishes and why not solid timber</Link>
@@ -288,13 +299,15 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
     </div>
   </Wrap>
 
-  <!-- Reviews -->
+  <!-- Reviews. Real quotes, verbatim from the profile, and the whole block
+       links out to it: see REVIEWS in site-content.ts for the selection rule. -->
   <Wrap style="padding-top:var(--section-y)">
     <Reviews
       meta="Left by clients, unedited"
       average={REVIEWS.average}
       count={REVIEWS.count}
       source={REVIEWS.source}
+      href={REVIEWS.profileUrl}
       quotes={REVIEWS.quotes}
     />
   </Wrap>

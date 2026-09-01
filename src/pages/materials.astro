@@ -50,18 +50,28 @@ const isIndexable = indexable("/materials/");
     </p>
   </Wrap>
 
+  {/* The board families only: hardware has its own card on the homepage grid
+      but its own whole section further down this page, so it stays off this
+      grid rather than appearing twice. Each card opens with where the material
+      is used and what weighs for and against it (added 1 Sep 2026). */}
   <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead meta={`${MATERIALS.length} in the standard range`} scribe>The range</SectionHead>
+    <SectionHead
+      meta={`${MATERIALS.filter((m) => m.key !== "hardware").length} in the standard range`}
+      scribe
+    >
+      The range
+    </SectionHead>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:var(--gap-lg)">
-      {MATERIALS.map((m) => (
-        <MaterialChip name={m.name} swatch={m.swatch}>
-          <Fragment slot="description">
-            <p style="font-size:var(--type-body-sm);color:var(--ink-soft);max-width:36ch;margin-top:var(--space-3)">
-              {m.description}
-            </p>
-          </Fragment>
-        </MaterialChip>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:var(--gap-lg);align-items:start">
+      {MATERIALS.filter((m) => m.key !== "hardware").map((m) => (
+        <MaterialChip
+          name={m.name}
+          swatch={m.swatch}
+          description={m.description}
+          uses={m.uses}
+          pros={m.pros}
+          cons={m.cons}
+        />
       ))}
     </div>
 

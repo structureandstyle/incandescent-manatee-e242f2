@@ -24,10 +24,18 @@
  *
  * Compliance line, restated because it governs what may ever go here: genuine
  * past customers only, unedited, no gating, no incentives.
+ *
+ * QUOTES FILLED AND LINKED, 1 September 2026. Three verbatim quotes from the
+ * profile render on the right, and `href` makes the block an exit to the
+ * profile itself: each quote is a link, and a nav link under the aggregate
+ * carries the rest of the count. Both open in a new tab, because a visitor
+ * mid-way down the homepage should come back to it. GA4's enhanced
+ * measurement counts the outbound click on its own; no custom event.
  */
 import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
 import SectionHead from "./SectionHead.astro";
+import Link from "./Link.astro";
 
 interface Props {
   title?: string;
@@ -35,6 +43,8 @@ interface Props {
   average?: string;
   count?: number;
   source?: string;
+  /** The public profile the reviews live on. Given, everything links to it. */
+  href?: string;
   quotes?: readonly { text: string; meta?: string }[];
   scribe?: boolean;
   stamp?: boolean;
@@ -48,6 +58,7 @@ const {
   average = "5.0",
   count,
   source,
+  href,
   quotes = [],
   scribe = true,
   stamp = false,
@@ -85,6 +96,14 @@ const hasQuotes = quotes.length > 0;
         <MonoLabel as="p" tone="soft" style="margin-top:var(--space-5)">{source}</MonoLabel>
       )}
 
+      {href && (
+        <p style="margin-top:var(--space-10)">
+          <Link href={href} variant="nav" chamfer target="_blank" rel="noopener">
+            All {count} reviews on Google
+          </Link>
+        </p>
+      )}
+
       {!hasQuotes && (
         <MonoLabel as="p" tone="soft" caps={false} style="margin-top:var(--space-10);max-width:44ch;letter-spacing:var(--ls-mono-tight);line-height:1.62">
           Individual reviews are shown once they are taken from the profile unedited.
@@ -97,25 +116,62 @@ const hasQuotes = quotes.length > 0;
         {quotes.map((q, i) => (
           <li
             data-reviews-item
-            style={`display:grid;grid-template-columns:66px minmax(0,1fr);gap:var(--space-6);padding:var(--space-12) 0;border-top:${i ? "var(--rule-hair)" : "var(--rule-structure)"}`}
+            style={`border-top:${i ? "var(--rule-hair)" : "var(--rule-structure)"}`}
           >
-            <MonoLabel as="span" tone="soft" style="padding-top:4px">
-              Rev. {String(i + 1).padStart(2, "0")}
-            </MonoLabel>
-            <div>
-              <MonoLabel
-                as="p"
-                tone="default"
-                caps={false}
-                style="font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
-              >{q.text}</MonoLabel>
-              {q.meta && (
-                <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
-              )}
-            </div>
+            {/* The whole quote is the link when the profile URL is given, so a
+                reader lands on the source rather than on our transcription. */}
+            {href ? (
+              <a
+                class="ss-review-link"
+                href={href}
+                target="_blank"
+                rel="noopener"
+                aria-label={`Read this review and all ${count} others on Google`}
+                style="display:grid;grid-template-columns:66px minmax(0,1fr);gap:var(--space-6);padding:var(--space-12) 0;text-decoration:none;color:inherit"
+              >
+                <MonoLabel as="span" tone="soft" style="padding-top:4px">
+                  Rev. {String(i + 1).padStart(2, "0")}
+                </MonoLabel>
+                <div>
+                  <MonoLabel
+                    as="p"
+                    tone="default"
+                    caps={false}
+                    style="font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
+                  >{q.text}</MonoLabel>
+                  {q.meta && (
+                    <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
+                  )}
+                </div>
+              </a>
+            ) : (
+              <div style="display:grid;grid-template-columns:66px minmax(0,1fr);gap:var(--space-6);padding:var(--space-12) 0">
+                <MonoLabel as="span" tone="soft" style="padding-top:4px">
+                  Rev. {String(i + 1).padStart(2, "0")}
+                </MonoLabel>
+                <div>
+                  <MonoLabel
+                    as="p"
+                    tone="default"
+                    caps={false}
+                    style="font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
+                  >{q.text}</MonoLabel>
+                  {q.meta && (
+                    <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
+                  )}
+                </div>
+              </div>
+            )}
           </li>
         ))}
       </ol>
     )}
   </div>
 </section>
+
+<style is:global>
+  .ss-review-link p { transition: color var(--t-fast) var(--ease-out); }
+  .ss-review-link:hover p:first-of-type,
+  .ss-review-link:focus-visible p:first-of-type { color: var(--green); }
+  .ss-review-link:focus-visible { outline: 1px solid var(--green); outline-offset: 4px; }
+</style>
