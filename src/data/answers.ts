@@ -79,11 +79,19 @@ export const ANSWERS = {
   q09: { value: "Public liability insurance of £5 million. Not currently VAT registered.", about: "Public liability cover and amount, trade bodies, accreditations" },
 
   // Part 2 — pricing
+  /**
+   * ANSWERED 31 Aug 2026: the pricing document arrived
+   * (Structure_and_Style_Guide_Pricing_Wardrobes_Alcoves.pdf, ops repo).
+   * This value is the short site-wide band fact; the per-service guide-price
+   * lines live on each Service in `site.ts`, and the full finish-by-width
+   * tables render on the cost guide from `service-copy.ts`. The document
+   * prices wardrobes and alcoves; walk-ins, media walls and kitchens carry
+   * the honest per-project line until he prices them.
+   */
   q10: {
-    value: null,
+    value: "Fitted wardrobes from £2,300",
     blocking: true,
-    provisional: ["Fitted wardrobes £3,000 to £8,000", "Kitchens £5,000 to £15,000"],
-    about: "Per-service price ranges: promised 30 Aug 2026 as a separate pricing document, still to arrive",
+    about: "Per-service price ranges, from the pricing document of 31 Aug 2026",
   },
   q11: { value: "Size and complexity: difficult room shapes, sloping ceilings, bespoke internal layouts, premium materials and veneers, specialist finishes, integrated lighting and extra detailing.", about: "What moves a job to the top of its range" },
   q12: { value: "Generally £2,000 of project value.", about: "Minimum job size" },

@@ -163,6 +163,10 @@ export const COMMISSIONS = [] as {
  */
 export const HOMEPAGE_FAQS = [
   {
+    q: "What does a fitted wardrobe cost?",
+    a: "Guide prices start at £2,300 for a 2-door wardrobe in melamine, and £2,500 hand-painted. Width, finish and any internal drawers or lighting move the figure, and a firm number follows one visit. The cost guide gives every step.",
+  },
+  {
     q: "Who actually does the work?",
     a: "The person who measures your room is the person who draws it and the person who fits it. Nobody is sent in their place.",
   },

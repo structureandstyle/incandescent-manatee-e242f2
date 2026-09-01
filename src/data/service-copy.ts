@@ -12,8 +12,10 @@
  * 24 Aug and nothing of that kind is written again. Case-study material waits
  * on Q44 to Q49.
  *
- * Prices never appear in these strings. Every price on the site renders
- * through <Value q="q10"> so the pricing document completes the pages itself.
+ * Prices appear ONLY in the priceTables and priceNotes of the cost guide,
+ * transcribed from the client's pricing document of 31 Aug 2026, and in the
+ * per-service price lines in site.ts from the same source. No other string
+ * carries a figure beyond the confirmed £2,000 general minimum.
  *
  * The manufacturing FAQ line appears exactly once on the site, on the fitted
  * wardrobes page, in the protocol's fixed wording. Do not repeat it anywhere
@@ -36,6 +38,16 @@ export type ServiceCopy = {
   leads?: Record<string, string>;
   /** Extra sections rendered after the spec sections. */
   sections: { meta: string; heading: string; body: string[] }[];
+  /**
+   * Guide-price tables, rendered directly after the cost section. Source:
+   * the client's pricing document, 31 Aug 2026 (ops repo,
+   * Structure_and_Style_Guide_Pricing_Wardrobes_Alcoves.pdf). Figures are
+   * transcribed, never invented; the board brand named in the source stays
+   * off the page pending a ruling (see the ops notes).
+   */
+  priceTables?: { title: string; note: string; columns: string[]; rows: string[][] }[];
+  /** Paragraphs rendered under the price tables. */
+  priceNotes?: string[];
   /** Question-and-answer block. First sentence of every answer answers. */
   faqs: { q: string; a: string }[];
 };
@@ -184,8 +196,36 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
 
   "fitted-wardrobe-cost": {
     intro: [
-      "Every fitted wardrobe is priced as a whole job, to its own room. A range is the honest starting point, and a firm number follows one visit.",
+      "Every fitted wardrobe is priced as a whole job, to its own room. The guide tables below give the honest starting points, and a firm number follows one visit.",
       "What follows is what actually moves the price, how the quotation works, and what it includes.",
+    ],
+    priceTables: [
+      {
+        title: "Fitted wardrobes, guide starting prices",
+        note: "The starting specification: a made-to-measure fitted wardrobe with a straightforward internal layout, standard shelving and hanging space, soft-close hinges, delivery and professional installation.",
+        columns: ["Finish", "2 doors, up to 1.2m", "3 doors, up to 1.8m", "4 doors, up to 2.4m"],
+        rows: [
+          ["Melamine board", "from £2,300", "from £3,200", "from £4,000"],
+          ["Hand-painted MDF", "from £2,500", "from £3,500", "from £4,500"],
+          ["Professionally sprayed MDF", "from £3,200", "from £4,300", "from £5,400"],
+          ["Oak veneer, stained and lacquered", "from £3,700", "from £5,000", "from £6,300"],
+        ],
+      },
+      {
+        title: "Alcove units, guide starting prices for a pair",
+        note: "Based on a pair of fitted alcove units either side of a chimney breast. Each is a base cupboard with two doors and three open shelves above, up to about 1m wide per alcove.",
+        columns: ["Finish", "Pair of alcove units"],
+        rows: [
+          ["Melamine board", "from £3,300"],
+          ["Hand-painted MDF", "from £3,600"],
+          ["Professionally sprayed MDF", "from £4,000"],
+          ["Oak veneer, stained and lacquered", "from £6,000"],
+        ],
+      },
+    ],
+    priceNotes: [
+      "Drawers, integrated lighting, mirrors, shoe storage, pull-out accessories and extra shelving are priced separately to the specification. So are premium hardware, decorative door details, cornices, specialist backing panels, TV and media integration and other bespoke options.",
+      "These are guide starting prices rather than fixed quotations. The final figure depends on exact dimensions, internal layout, materials and finish, design details, access and site conditions. A detailed, itemised quotation follows the measured survey.",
     ],
     leads: {
       "cost": "This page is the whole answer: the range, what moves it, and what the number includes.",

@@ -100,14 +100,23 @@ const schema = {
   url: new URL(path, SITE_URL).href,
 };
 
-/* Question-shaped H2s, each with the questions that answer it. */
-const SECTIONS = [
+/* Question-shaped H2s, each with the questions that answer it. A row carries
+   either a questionnaire key (q) or confirmed literal copy (text): the guide
+   price became per-service literal copy when the pricing document arrived on
+   31 Aug 2026, because one site-wide q10 value cannot price seven services. */
+type Row = { label: string; q?: Parameters<typeof unanswered>[0][number]; text?: string };
+const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
   {
     id: "cost",
-    heading: `What do ${service.title.toLowerCase()} cost?`,
+    /* The cost guide's own title is already the cost question, so interpolating
+       it produced "What do what fitted wardrobes cost cost?". */
+    heading:
+      service.slug === "fitted-wardrobe-cost"
+        ? "The guide prices, by size and finish"
+        : `What do ${service.title.toLowerCase()} cost?`,
     lead: "The honest answer is a range, because the room decides it.",
     rows: [
-      { label: "Range", q: "q10" },
+      { label: "Guide price", text: service.price },
       { label: "What moves it", q: "q11" },
       { label: "Smallest job taken", q: "q12" },
     ],
@@ -151,7 +160,7 @@ const SECTIONS = [
       { label: "Adjustments", q: "q36" },
     ],
   },
-] as const;
+];
 ---
 
 <Base
@@ -229,28 +238,70 @@ const SECTIONS = [
 
     <!-- Question-shaped sections -->
     {SECTIONS.map((section) => (
-      <Wrap style="padding-bottom:var(--section-y)">
-        <SectionHead id={section.id} level={4}>{section.heading}</SectionHead>
-        <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
-          <p style="max-width:var(--measure-short);color:var(--text-quiet)">{copy?.leads?.[section.id] ?? section.lead}</p>
-          <SpecTable
-            stamp
-            rows={[]}
-            labelWidth="34%"
-          >
-            {section.rows.map((row) => (
-              <tr>
-                <td style="width:34%;padding:var(--space-4) 0;padding-right:var(--space-8);border-bottom:var(--rule-hair);vertical-align:top;text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);color:var(--ink-soft)">
-                  {row.label}
-                </td>
-                <td style="padding:var(--space-4) 0;border-bottom:var(--rule-hair);vertical-align:top">
-                  <Value q={row.q} />
-                </td>
-              </tr>
+      <>
+        <Wrap style="padding-bottom:var(--section-y)">
+          <SectionHead id={section.id} level={4}>{section.heading}</SectionHead>
+          <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
+            <p style="max-width:var(--measure-short);color:var(--text-quiet)">{copy?.leads?.[section.id] ?? section.lead}</p>
+            <SpecTable
+              stamp
+              rows={[]}
+              labelWidth="34%"
+            >
+              {section.rows.map((row) => (
+                <tr>
+                  <td style="width:34%;padding:var(--space-4) 0;padding-right:var(--space-8);border-bottom:var(--rule-hair);vertical-align:top;text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);color:var(--ink-soft)">
+                    {row.label}
+                  </td>
+                  <td style="padding:var(--space-4) 0;border-bottom:var(--rule-hair);vertical-align:top">
+                    {row.q ? <Value q={row.q} /> : row.text}
+                  </td>
+                </tr>
+              ))}
+            </SpecTable>
+          </div>
+        </Wrap>
+
+        {section.id === "cost" && copy?.priceTables && (
+          <Wrap style="padding-bottom:var(--section-y)">
+            {copy.priceTables.map((t) => (
+              <div style="margin-bottom:var(--space-15)">
+                <SectionHead level={5}>{t.title}</SectionHead>
+                <p style="max-width:var(--measure);margin-top:var(--space-5);font-size:var(--type-body-sm);color:var(--text-quiet)">
+                  {t.note}
+                </p>
+                <div style="overflow-x:auto;margin-top:var(--space-9)">
+                  <table style="width:100%;border-collapse:collapse;min-width:520px">
+                    <thead>
+                      <tr>
+                        {t.columns.map((c) => (
+                          <th style="text-align:left;padding:var(--space-4) var(--space-8) var(--space-4) 0;border-bottom:var(--rule-structure);text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);font-weight:var(--weight-regular);color:var(--ink-soft)">
+                            {c}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {t.rows.map((r) => (
+                        <tr>
+                          {r.map((cell, i) => (
+                            <td style={`padding:var(--space-5) var(--space-8) var(--space-5) 0;border-bottom:var(--rule-hair);vertical-align:top${i === 0 ? "" : ";font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table)"}`}>
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             ))}
-          </SpecTable>
-        </div>
-      </Wrap>
+            {copy.priceNotes?.map((n) => (
+              <p style="max-width:var(--measure);margin-top:var(--space-8);font-size:var(--type-body-sm);color:var(--text-quiet)">{n}</p>
+            ))}
+          </Wrap>
+        )}
+      </>
     ))}
 
     {copy && copy.sections.map((sec) => (

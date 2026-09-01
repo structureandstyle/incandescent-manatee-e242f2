@@ -59,6 +59,14 @@ export type Service = {
   description: string;
   /** One line used on the homepage grid. */
   summary: string;
+  /**
+   * The guide-price line for the page's cost section. Sourced from the
+   * client's pricing document of 31 Aug 2026
+   * (Structure_and_Style_Guide_Pricing_Wardrobes_Alcoves.pdf, ops repo).
+   * Services it does not price carry the honest per-project line instead,
+   * per tone protocol section 12: never "price on application" alone.
+   */
+  price: string;
   wave: 1 | 2;
 };
 
@@ -70,6 +78,8 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     slug: "fitted-wardrobes",
+    price:
+      "From £2,300 for a 2-door run up to 1.2m in melamine. Width and finish move it: from £4,000 at 4 doors, and painted, sprayed and oak veneer finishes step up from there. Internal drawers and integrated lighting add to any of them.",
     title: "Fitted wardrobes",
     heading: "Fitted wardrobes in London, made to measure",
     primary: "fitted wardrobes london",
@@ -81,6 +91,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "walk-in-wardrobes",
+    price:
+      "Priced per room. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Walk-in wardrobes",
     heading: "Bespoke walk-in wardrobes and dressing rooms",
     primary: "bespoke walk in wardrobe",
@@ -92,6 +104,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "alcove-units",
+    price:
+      "From £3,300 for a pair of alcove units in melamine, from £3,600 hand-painted, and from £6,000 in oak veneer. Based on base cupboards with shelving over, up to about 1m per alcove. Shelving detail, drawers and lighting move it further.",
     title: "Alcove units and shelving",
     heading: "Alcove units, cupboards and shelving",
     primary: "alcove units london",
@@ -103,6 +117,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "fitted-wardrobe-cost",
+    price:
+      "From £2,300 for a 2-door wardrobe in melamine to £6,300 and up for 4 doors in oak veneer. The tables below give every step between.",
     title: "What fitted wardrobes cost",
     heading: "How much do fitted wardrobes cost in London?",
     primary: "built in wardrobe cost",
@@ -114,6 +130,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "media-walls",
+    price:
+      "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Media walls and TV units",
     heading: "Media walls and built-in TV units",
     primary: "media wall london",
@@ -125,6 +143,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "bespoke-kitchens",
+    price:
+      "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Bespoke kitchens",
     heading: "Bespoke kitchens, made to measure",
     primary: "bespoke kitchens london",
@@ -149,6 +169,8 @@ export const SERVICES: Service[] = [
 export const DEFERRED_SERVICES: Service[] = [
   {
     slug: "home-office-understairs-storage",
+    price:
+      "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Home office and under-stair storage",
     heading: "Home office and under-stair storage",
     primary: "under stairs storage london",
