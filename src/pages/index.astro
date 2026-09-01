@@ -36,6 +36,7 @@ import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import Plate from "../components/ds/Plate.astro";
+import PlateCarousel from "../components/ds/PlateCarousel.astro";
 import MaterialChip from "../components/ds/MaterialChip.astro";
 import ProcessStep from "../components/ds/ProcessStep.astro";
 import WardrobeDrawing from "../components/ds/WardrobeDrawing.astro";
@@ -160,40 +161,12 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
         instead of three plus an orphan. Collapses to one column on mobile. */}
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
       {previews.map(({ service, shots }) => (
-        <div
-          data-carousel
-          data-files={JSON.stringify(shots.map((s) => s.file))}
-          data-alt-base={`${service.title}, completed installation by ${BUSINESS.legalName}`}
-        >
-          <Plate
-            photo={shots[0].file}
-            alt={`${service.title}, completed installation by ${BUSINESS.legalName}, photograph 1`}
-            width={shots[0].w}
-            height={shots[0].h}
+        <div>
+          <PlateCarousel
+            shots={shots}
+            altBase={`${service.title}, completed installation by ${BUSINESS.legalName}`}
             subject={service.title}
-            detail="Completed"
-            ratio="4 / 3"
-          >
-            <Fragment slot="controls">
-              <span style="display:flex;align-items:baseline;gap:var(--space-6)">
-                <button
-                  type="button"
-                  data-car-prev
-                  aria-label={`Previous ${service.title.toLowerCase()} photograph`}
-                  style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
-                >&larr;</button>
-                <MonoLabel tone="soft" style="letter-spacing:var(--ls-mono-table)">
-                  <span data-car-count>{`01 / ${String(shots.length).padStart(2, "0")}`}</span>
-                </MonoLabel>
-                <button
-                  type="button"
-                  data-car-next
-                  aria-label={`Next ${service.title.toLowerCase()} photograph`}
-                  style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
-                >&rarr;</button>
-              </span>
-            </Fragment>
-          </Plate>
+          />
           <p style="margin-top:var(--space-6)">
             <Link href={servicePath(service)} variant="nav">{service.title}</Link>
           </p>
@@ -202,30 +175,6 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
     </div>
     <p style="margin-top:var(--space-14)"><Link href="/work/" variant="nav" chamfer>All work</Link></p>
   </Wrap>
-
-  <script>
-    // The work carousels. Arrows cycle the card through its service's own
-    // photographs; the counter keeps place; clicking the image still opens
-    // the lightbox at whichever photograph is showing. Without JavaScript the
-    // first photograph stands and the arrows do nothing, which is honest.
-    document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((card) => {
-      const files: string[] = JSON.parse(card.dataset.files || "[]");
-      if (files.length < 2) return;
-      const img = card.querySelector("img");
-      const count = card.querySelector("[data-car-count]");
-      if (!img) return;
-      let i = 0;
-      const pad = (n: number) => String(n).padStart(2, "0");
-      const show = (next: number) => {
-        i = (next + files.length) % files.length;
-        img.src = files[i];
-        img.alt = `${card.dataset.altBase}, photograph ${i + 1}`;
-        if (count) count.textContent = `${pad(i + 1)} / ${pad(files.length)}`;
-      };
-      card.querySelector("[data-car-prev]")?.addEventListener("click", () => show(i - 1));
-      card.querySelector("[data-car-next]")?.addEventListener("click", () => show(i + 1));
-    });
-  </script>
 
   <!-- Materials. Expandable since 1 Sep 2026: each card opens with where the
        material is used and what weighs for and against it, and hardware joined
@@ -326,7 +275,7 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
     </div>
   </Wrap>
 
-  <EnquireBand heading={BAND.heading} email={CONTACT.email} chamfer>
+  <EnquireBand heading={BAND.heading} chamfer>
     {BAND.body}
     <Fragment slot="facts">
       {BAND.facts.map((q) => (

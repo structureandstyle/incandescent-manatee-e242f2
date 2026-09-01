@@ -8,57 +8,61 @@
  * None of it was sourced. Q44 exists precisely because nobody knows which jobs
  * are real, so COMMISSIONS is empty and stays empty.
  *
- * What this page can honestly show today is the photography, which is real:
- * finished work, triaged, quality 4 and 5. What it cannot show is why any of it
- * was difficult, which is the part that sells. The questionnaire says it better
- * than a comment can: a page of finished photographs with no story behind them
- * is a gallery, not a case for hiring you.
+ * SHAPE SETTLED 1 September 2026, Denis's direction, third iteration that day:
+ * six collapsed categories, one carousel card each, the same pattern as the
+ * homepage's Selected work. The full-gallery version (every photograph laid
+ * out) ran to 29 plates and scrolled forever; the carousels keep every
+ * photograph reachable, with the lightbox swiping through a category's own
+ * set. Five categories are the services with photography; the sixth, doors
+ * and panelling, is real reviewed work with no service page of its own.
  *
- * So the plates are here and the stories are marked as open. When Q44 to Q49
- * come back, each commission becomes a case with its own specification table
- * and this page stops being a gallery.
+ * The "jobs behind them" block (the Q44 to Q49 asks, rendered) came off the
+ * same day on Denis's instruction. The questions are NOT answered and the
+ * page's gate in page-gates.ts still holds it out of the index until they
+ * are; only the on-page rendering of the wait went.
  */
 import Base from "../layouts/Base.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
-import Plate from "../components/ds/Plate.astro";
+import PlateCarousel from "../components/ds/PlateCarousel.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 
-import { COMMISSIONS, BAND, CONTACT } from "../data/site-content";
+import { BAND } from "../data/site-content";
 import { BUSINESS, SERVICES, servicePath } from "../data/site";
 import { indexable } from "../data/page-gates";
 import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/work/");
 
-/* Every service with its own photographs, in full: Denis's direction,
-   1 Sep 2026, replacing the one-plate-per-service teaser grid. The selection
-   in _selection.json is already the published best of the library (triaged,
-   quality 4 and 5), so each group renders its service's whole selection in
-   selection order, professional frames first. */
 const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
-const galleries = SERVICES.map((s) => {
-  const shots = sel[s.slug] ?? [];
-  return shots.length ? { service: s, shots } : null;
-}).filter(Boolean) as { service: (typeof SERVICES)[number]; shots: { file: string; w: number; h: number }[] }[];
 
-/* Doors, panelling and skirting: real, reviewed work (it is what the site's
-   third review quotes) with no service page of its own, so it shows here as
-   its own group. Alt text is per frame because the frames differ in subject,
-   and inventing a wardrobe out of a panelled wall would fail the Truth gate. */
-const doorsPanelling = (sel["doors-panelling"] ?? []).map((shot, i) => ({
-  shot,
-  alt: [
-    `Fitted hallway storage bench and cupboards by the front door, completed installation by ${BUSINESS.legalName}`,
-    `Bedroom wall panelling, completed installation by ${BUSINESS.legalName}`,
-  ][i] ?? `Doors and panelling, completed installation by ${BUSINESS.legalName}`,
-  subject: ["Hallway storage and cupboards", "Bedroom wall panelling"][i] ?? "Doors and panelling",
-}));
+/* The six categories: every service with photography, in SERVICES order, then
+   doors and panelling from the 31 Aug drop. Each carries its full selection;
+   the card cycles it. */
+const categories = (
+  SERVICES.map((s) => {
+    const shots = sel[s.slug] ?? [];
+    return shots.length
+      ? { title: s.title, shots, href: servicePath(s), alt: `${s.title}, completed installation by ${BUSINESS.legalName}` }
+      : null;
+  }).filter(Boolean) as { title: string; shots: { file: string; w: number; h: number }[]; href?: string; alt: string }[]
+).concat(
+  (sel["doors-panelling"] ?? []).length
+    ? [
+        {
+          title: "Doors and panelling",
+          shots: sel["doors-panelling"],
+          href: undefined,
+          alt: `Doors and panelling, completed installation by ${BUSINESS.legalName}`,
+        },
+      ]
+    : []
+);
 ---
 
 <Base
@@ -77,75 +81,24 @@ const doorsPanelling = (sel["doors-panelling"] ?? []).map((shot, i) => ({
     </p>
   </Wrap>
 
-  {galleries.map(({ service, shots }, gi) => (
-    <Wrap style="padding-bottom:var(--section-y)">
-      <SectionHead meta={`${shots.length} photograph${shots.length === 1 ? "" : "s"}`} scribe>
-        {service.title}
-      </SectionHead>
-
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
-        {shots.map((shot, i) => (
-          <Plate
-            photo={shot.file}
-            alt={`${service.title}, completed installation by ${BUSINESS.legalName}, photograph ${i + 1}`}
-            width={shot.w}
-            height={shot.h}
-            subject={`${service.title} · ${String(i + 1).padStart(2, "0")}`}
-            detail="Completed"
-            eager={gi === 0 && i === 0}
-          />
-        ))}
-      </div>
-
-      <p style="margin-top:var(--space-12)">
-        <Link href={servicePath(service)} variant="nav" chamfer>About {service.title.toLowerCase()}</Link>
-      </p>
-    </Wrap>
-  ))}
-
-  {doorsPanelling.length > 0 && (
-    <Wrap style="padding-bottom:var(--section-y)">
-      <SectionHead meta={`${doorsPanelling.length} photographs`} scribe>Doors and panelling</SectionHead>
-
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
-        {doorsPanelling.map(({ shot, alt, subject }) => (
-          <Plate
-            photo={shot.file}
-            alt={alt}
-            width={shot.w}
-            height={shot.h}
-            subject={subject}
-            detail="Completed"
-          />
-        ))}
-      </div>
-    </Wrap>
-  )}
-
   <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead meta={COMMISSIONS.length ? undefined : "Waiting on the client"} level={4}>
-      The jobs behind them
-    </SectionHead>
+    <SectionHead meta={`${categories.length} categories`} scribe>Finished work</SectionHead>
 
-    {COMMISSIONS.length === 0 && (
-      <div style="max-width:var(--measure)">
-        <p style="color:var(--text-quiet)">
-          Four to six commissions get written up here, each with the room, the problem, the
-          materials and what was difficult about it. Which jobs, and the story of each, is{" "}
-          <Value q="q44" />
-        </p>
-        <ul style="list-style:none;margin:var(--space-14) 0 0;padding:0;display:grid;gap:var(--space-9)">
-          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">Room and problem</MonoLabel><Value q="q45" /></li>
-          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">Materials and size</MonoLabel><Value q="q46" /></li>
-          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">What was difficult</MonoLabel><Value q="q47" /></li>
-          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">How long it took</MonoLabel><Value q="q48" /></li>
-          <li><MonoLabel tone="soft" style="margin-right:var(--space-6)">Named or quoted</MonoLabel><Value q="q49" /></li>
-        </ul>
-      </div>
-    )}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
+      {categories.map((c, i) => (
+        <div>
+          <PlateCarousel shots={c.shots} altBase={c.alt} subject={c.title} eager={i === 0} />
+          {c.href && (
+            <p style="margin-top:var(--space-6)">
+              <Link href={c.href} variant="nav">{c.title}</Link>
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
   </Wrap>
 
-  <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
+  <EnquireBand heading="If you have a room in mind, start here." chamfer>
     {BAND.body}
     <Fragment slot="facts">
       {BAND.facts.map((q) => (

@@ -1,0 +1,112 @@
+---
+/**
+ * A plate that cycles through a set of photographs: arrows in the caption,
+ * a counter keeping place, and the lightbox opening at whichever photograph
+ * is showing (Base.astro reads this component's data attributes to know the
+ * set it should swipe through).
+ *
+ * Extracted 1 September 2026 from the homepage's Selected work cards, when
+ * Denis asked the work page to collapse its full galleries back into one
+ * card per category: the same behaviour was about to exist in two inline
+ * copies, so it became a component. Without JavaScript the first photograph
+ * stands and the arrows do nothing, which is honest.
+ */
+import Plate from "./Plate.astro";
+import MonoLabel from "./MonoLabel.astro";
+
+interface Shot {
+  file: string;
+  w: number;
+  h: number;
+}
+
+interface Props {
+  shots: readonly Shot[];
+  /** "Fitted wardrobes, completed installation by ..." — ", photograph N" is appended. */
+  altBase: string;
+  subject: string;
+  detail?: string;
+  ratio?: string;
+  eager?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  shots,
+  altBase,
+  subject,
+  detail = "Completed",
+  ratio = "4 / 3",
+  eager = false,
+  class: className,
+  style = "",
+} = Astro.props;
+
+const many = shots.length > 1;
+const pad = (n: number) => String(n).padStart(2, "0");
+---
+
+<div
+  class={className}
+  style={style}
+  data-carousel
+  data-files={JSON.stringify(shots.map((s) => s.file))}
+  data-alt-base={altBase}
+>
+  <Plate
+    photo={shots[0].file}
+    alt={`${altBase}, photograph 1`}
+    width={shots[0].w}
+    height={shots[0].h}
+    subject={subject}
+    detail={detail}
+    ratio={ratio}
+    eager={eager}
+  >
+    {many && (
+      <Fragment slot="controls">
+        <span style="display:flex;align-items:baseline;gap:var(--space-6)">
+          <button
+            type="button"
+            data-car-prev
+            aria-label={`Previous ${subject.toLowerCase()} photograph`}
+            style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
+          >&larr;</button>
+          <MonoLabel tone="soft" style="letter-spacing:var(--ls-mono-table)">
+            <span data-car-count>{`01 / ${pad(shots.length)}`}</span>
+          </MonoLabel>
+          <button
+            type="button"
+            data-car-next
+            aria-label={`Next ${subject.toLowerCase()} photograph`}
+            style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
+          >&rarr;</button>
+        </span>
+      </Fragment>
+    )}
+  </Plate>
+</div>
+
+<script>
+  // The wiring, once per page however many carousels render. Arrows cycle the
+  // card through its own photographs; the counter keeps place; clicking the
+  // image opens the lightbox at whichever photograph is showing.
+  document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((card) => {
+    const files: string[] = JSON.parse(card.dataset.files || "[]");
+    if (files.length < 2) return;
+    const img = card.querySelector("img");
+    const count = card.querySelector("[data-car-count]");
+    if (!img) return;
+    let i = 0;
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const show = (next: number) => {
+      i = (next + files.length) % files.length;
+      img.src = files[i];
+      img.alt = `${card.dataset.altBase}, photograph ${i + 1}`;
+      if (count) count.textContent = `${pad(i + 1)} / ${pad(files.length)}`;
+    };
+    card.querySelector("[data-car-prev]")?.addEventListener("click", () => show(i - 1));
+    card.querySelector("[data-car-next]")?.addEventListener("click", () => show(i + 1));
+  });
+</script>
