@@ -4,12 +4,22 @@
  * like to work with, and a reference in the mono voice.
  * Ported from the design system's components/specification/MaterialChip.jsx.
  *
- * EXPANDABLE since 1 September 2026, on Denis's ask: pressing a material opens
- * it up with what it is, where it is used, and what weighs for and against it.
- * Same mechanism as Faq.astro, native <details>/<summary>: no JavaScript,
- * keyboard and screen-reader behaviour for free, and the detail text is in the
- * DOM for Google either way. A chip given any of `uses`, `pros` or `cons`
- * renders as a disclosure; a chip given none renders exactly as before.
+ * THE POP, 1 September 2026, Denis's direction after seeing the first
+ * expandable version: pressing a card no longer unfolds an accordion under it
+ * (which made rows jump), it pops the material itself. A native <dialog>
+ * opens, the material's own swatch is the canvas, and the copy sits on it
+ * over a dark wash, like an image with text on it. The wash is one consistent
+ * rule because the swatches run light to near-black and striped, and paper
+ * text on a washed swatch is legible on all of them where per-material text
+ * colours would be six special cases. A band of the pure, unwashed swatch
+ * stays at the top so the wash never misstates the finish tone.
+ *
+ * Native <dialog> is the same choice the enquiry modal made: Escape, focus
+ * trap and focus return come free, a backdrop press closes, and the copy is
+ * server-rendered in the DOM either way. Without JavaScript the button does
+ * nothing and the grid is simply the grid, which matches the lightbox's
+ * stance. A chip given any of `uses`, `pros` or `cons` gets the pop; a chip
+ * given none renders exactly as it always did.
  *
  * A NOTE ON SWATCHES, because this component is where the materials correction
  * could quietly undo itself.
@@ -64,7 +74,9 @@ const {
 const hasMedia = Astro.slots.has("default");
 const planed = plane !== false && plane != null;
 const direction = plane === true ? "left" : plane;
-const expandable = Boolean(uses || pros?.length || cons?.length);
+const expandable = Boolean(uses || (pros && pros.length) || (cons && cons.length));
+
+const popId = `mat-pop-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
 const frame = [
   "border:var(--rule-structure)",
@@ -76,50 +88,68 @@ const frame = [
 
 {
   expandable ? (
-    <details class:list={["ss-mat", className]} style={style}>
-      <summary>
-        <div style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
+    <div class={className} style={style}>
+      <button
+        type="button"
+        class="ss-mat-open"
+        data-mat-open={popId}
+        aria-haspopup="dialog"
+        aria-controls={popId}
+      >
+        <span class="ss-mat-frame" style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
           <slot />
-        </div>
+        </span>
         <span class="ss-mat-head">
           <span style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-md)">
             {name}
           </span>
           <span class="ss-mat-mark" aria-hidden="true">+</span>
         </span>
-      </summary>
+      </button>
 
-      <div class="ss-mat-body">
-        {description && (
-          <p style="font-size:var(--type-body-sm);color:var(--ink-soft)">{description}</p>
-        )}
+      <dialog id={popId} class="ss-mat-pop" aria-label={name} style={`--mat-swatch:${swatch || "var(--wash-char)"}`}>
+        <div class="ss-mat-pop-band" aria-hidden="true"></div>
+        <div class="ss-mat-pop-body">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-8)">
+            <MonoLabel as="p" tone="paper-soft">Materials</MonoLabel>
+            <button type="button" class="ss-mat-close" data-mat-close aria-label="Close">&times;</button>
+          </div>
 
-        {uses && (
-          <>
-            <MonoLabel as="p" tone="soft" style="margin-top:var(--space-8)">Used for</MonoLabel>
-            <p style="font-size:var(--type-body-sm);margin-top:var(--space-3)">{uses}</p>
-          </>
-        )}
+          <h3 style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-lg);margin:var(--space-5) 0 var(--space-4)">
+            {name}
+          </h3>
 
-        {pros && pros.length > 0 && (
-          <>
-            <MonoLabel as="p" tone="soft" style="margin-top:var(--space-8)">In its favour</MonoLabel>
-            <ul class="ss-mat-list">
-              {pros.map((p) => <li>{p}</li>)}
-            </ul>
-          </>
-        )}
+          {description && (
+            <p style="font-size:var(--type-body-sm);color:rgba(242,238,227,.8)">{description}</p>
+          )}
 
-        {cons && cons.length > 0 && (
-          <>
-            <MonoLabel as="p" tone="soft" style="margin-top:var(--space-8)">The trade-offs</MonoLabel>
-            <ul class="ss-mat-list">
-              {cons.map((c) => <li>{c}</li>)}
-            </ul>
-          </>
-        )}
-      </div>
-    </details>
+          {uses && (
+            <>
+              <MonoLabel as="p" tone="paper-soft" style="margin-top:var(--space-10)">Used for</MonoLabel>
+              <p style="font-size:var(--type-body-sm);margin-top:var(--space-3)">{uses}</p>
+            </>
+          )}
+
+          {pros && pros.length > 0 && (
+            <>
+              <MonoLabel as="p" tone="paper-soft" style="margin-top:var(--space-10)">In its favour</MonoLabel>
+              <ul class="ss-mat-pop-list">
+                {pros.map((p) => <li>{p}</li>)}
+              </ul>
+            </>
+          )}
+
+          {cons && cons.length > 0 && (
+            <>
+              <MonoLabel as="p" tone="paper-soft" style="margin-top:var(--space-10)">The trade-offs</MonoLabel>
+              <ul class="ss-mat-pop-list">
+                {cons.map((c) => <li>{c}</li>)}
+              </ul>
+            </>
+          )}
+        </div>
+      </dialog>
+    </div>
   ) : (
     <div class={className} style={style}>
       <div style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
@@ -143,40 +173,102 @@ const frame = [
   )
 }
 
+<script>
+  // The pop wiring, run once per page however many chips render. A press on
+  // the card opens its own dialog; the backdrop, Escape and the button close
+  // it. Focus trap and focus return are the native element's.
+  document.querySelectorAll<HTMLButtonElement>("[data-mat-open]").forEach((btn) => {
+    const dlg = document.getElementById(btn.dataset.matOpen || "") as HTMLDialogElement | null;
+    if (!dlg || typeof dlg.showModal !== "function") return;
+    btn.addEventListener("click", () => dlg.showModal());
+    dlg.addEventListener("click", (e) => {
+      if (e.target === dlg) dlg.close();
+    });
+    dlg.querySelector("[data-mat-close]")?.addEventListener("click", () => dlg.close());
+  });
+
+  // Escape closes. The native element does this on its own in a real browser;
+  // the explicit handler costs one line and removes the dependence on it.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    document.querySelectorAll<HTMLDialogElement>("dialog.ss-mat-pop[open]").forEach((d) => d.close());
+  });
+</script>
+
 <style is:global>
-  .ss-mat summary {
+  .ss-mat-open {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font: inherit;
+    color: inherit;
     cursor: pointer;
-    list-style: none;
   }
-  .ss-mat summary::-webkit-details-marker { display: none; }
-  .ss-mat .ss-mat-head {
+  .ss-mat-open:focus-visible { outline: 1px solid var(--green); outline-offset: 4px; }
+  .ss-mat-open .ss-mat-frame { display: block; }
+  .ss-mat-open .ss-mat-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-6);
     margin-top: var(--space-7);
   }
-  .ss-mat .ss-mat-mark {
+  .ss-mat-open .ss-mat-mark {
     font-family: var(--font-mono);
     font-size: var(--type-mono);
     color: var(--ink-soft);
     transition: transform var(--t-fast) var(--ease-out);
   }
-  .ss-mat[open] .ss-mat-mark { transform: rotate(45deg); }
-  .ss-mat summary:focus-visible { outline: 1px solid var(--green); outline-offset: 4px; }
-  .ss-mat .ss-mat-body {
-    padding: var(--space-4) 0 var(--space-4);
-    max-width: 44ch;
+  .ss-mat-open:hover .ss-mat-mark { transform: rotate(90deg); }
+
+  /* The pop itself: the swatch is the canvas. The body carries a dark wash so
+     paper text reads on every swatch in the range; the band above it stays
+     pure so the wash never misstates the finish tone. */
+  .ss-mat-pop {
+    width: min(620px, 94vw);
+    max-height: 92vh;
+    overflow-y: auto;
+    border: var(--rule-structure);
+    padding: 0;
+    margin: auto;
+    background: var(--mat-swatch);
+    color: var(--paper);
   }
-  .ss-mat .ss-mat-list {
+  .ss-mat-pop::backdrop { background: rgba(24, 21, 17, 0.6); }
+  .ss-mat-pop[open] { animation: ss-mat-pop-in var(--t-fast) var(--ease-out); }
+  @keyframes ss-mat-pop-in {
+    from { opacity: 0; transform: scale(0.985); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ss-mat-pop[open] { animation: none; }
+  }
+  .ss-mat-pop-band { height: clamp(64px, 12vw, 104px); }
+  .ss-mat-pop-body {
+    background: rgba(24, 21, 17, 0.78);
+    padding: clamp(20px, 4vw, 40px);
+  }
+  .ss-mat-close {
+    background: none;
+    border: none;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    color: rgba(242, 238, 227, 0.9);
+    padding: 0;
+  }
+  .ss-mat-pop-list {
     list-style: none;
     margin: var(--space-3) 0 0;
     padding: 0;
   }
-  .ss-mat .ss-mat-list li {
+  .ss-mat-pop-list li {
     font-size: var(--type-body-sm);
     padding: var(--space-3) 0;
-    border-top: var(--rule-hair);
+    border-top: 1px solid rgba(242, 238, 227, 0.22);
   }
-  .ss-mat .ss-mat-list li:first-child { border-top: none; padding-top: 0; }
+  .ss-mat-pop-list li:first-child { border-top: none; padding-top: 0; }
 </style>

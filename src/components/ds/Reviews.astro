@@ -3,10 +3,11 @@
  * The reviews block: an aggregate on the left, indexed quotes on the right.
  * Ported from the design system's components/sections/Reviews.jsx.
  *
- * No stars, no badge, no third-party card. The rating mark is five squares,
- * because nothing in this brand is rounded, and the quotes are set in the mono
- * annotation voice, lower case at reading size, indexed and ruled like a plate
- * caption. All of that is the design system's and is kept.
+ * No badge, no third-party card. The quotes are set in the mono annotation
+ * voice, lower case at reading size, indexed and ruled like a plate caption.
+ * The rating mark was five squares in the design system ("nothing in this
+ * brand is rounded"); Denis overruled on 1 September 2026 and it is five
+ * stars, drawn inline as SVG so they stay crisp and carry the ink green.
  *
  * ONE BEHAVIOURAL CHANGE, and it is why this file is longer than the source.
  *
@@ -81,9 +82,15 @@ const hasQuotes = quotes.length > 0;
         <Display level={2} as="p" measure="none">{average}</Display>
         <span aria-hidden="true" style="display:flex;gap:var(--space-3);padding-bottom:var(--space-4)">
           {[0, 1, 2, 3, 4].map((i) => (
-            <span
-              style={`width:7px;height:7px;border:1px solid var(--green);background:${i < filled ? "var(--green)" : "transparent"}`}
-            ></span>
+            <svg width="14" height="14" viewBox="0 0 24 24" style="display:block">
+              <path
+                d="M12 2.5l2.95 6.35 6.95.7-5.2 4.7 1.5 6.85L12 17.6l-6.2 3.5 1.5-6.85-5.2-4.7 6.95-.7z"
+                fill={i < filled ? "var(--green)" : "none"}
+                stroke="var(--green)"
+                stroke-width="1.5"
+                stroke-linejoin="round"
+              />
+            </svg>
           ))}
         </span>
       </div>
