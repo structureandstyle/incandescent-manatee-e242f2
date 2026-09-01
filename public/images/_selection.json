@@ -74,6 +74,24 @@
       "h": 1068
     },
     {
+      "file": "/images/alcove-units/alcove-units-06.webp",
+      "w": 1600,
+      "h": 1068,
+      "source": "Windows office tv finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 81002
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-07.webp",
+      "w": 1600,
+      "h": 1069,
+      "source": "Fireplace finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 71468
+    },
+    {
       "file": "/images/alcove-units/alcove-units-01.webp",
       "w": 1400,
       "h": 1050,
@@ -147,6 +165,15 @@
       "h": 1091
     },
     {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-08.webp",
+      "w": 1600,
+      "h": 1066,
+      "source": "Living fireplace kitchen finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 68066
+    },
+    {
       "file": "/images/bespoke-kitchens/bespoke-kitchens-04.webp",
       "w": 1600,
       "h": 1068
@@ -187,6 +214,26 @@
       "date": "20250505",
       "quality": "4",
       "bytes": 63252
+    }
+  ],
+  "doors-panelling": [
+    {
+      "file": "/images/doors-panelling/doors-panelling-01.webp",
+      "w": 1600,
+      "h": 1064,
+      "source": "hallway main door finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 50154
+    },
+    {
+      "file": "/images/doors-panelling/doors-panelling-02.webp",
+      "w": 1600,
+      "h": 1066,
+      "source": "Future wall finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 59288
     }
   ]
 }

@@ -26,6 +26,7 @@ import SectionHead from "../components/ds/SectionHead.astro";
 import Plate from "../components/ds/Plate.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
+import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 
 import { COMMISSIONS, BAND, CONTACT } from "../data/site-content";
@@ -35,13 +36,29 @@ import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/work/");
 
-/* One plate per service that has photography, so the page shows range rather
-   than three angles of the same room. */
+/* Every service with its own photographs, in full: Denis's direction,
+   1 Sep 2026, replacing the one-plate-per-service teaser grid. The selection
+   in _selection.json is already the published best of the library (triaged,
+   quality 4 and 5), so each group renders its service's whole selection in
+   selection order, professional frames first. */
 const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
-const gallery = SERVICES.map((s) => {
+const galleries = SERVICES.map((s) => {
   const shots = sel[s.slug] ?? [];
-  return shots.length ? { service: s, shot: shots[0] } : null;
-}).filter(Boolean) as { service: (typeof SERVICES)[number]; shot: { file: string; w: number; h: number } }[];
+  return shots.length ? { service: s, shots } : null;
+}).filter(Boolean) as { service: (typeof SERVICES)[number]; shots: { file: string; w: number; h: number }[] }[];
+
+/* Doors, panelling and skirting: real, reviewed work (it is what the site's
+   third review quotes) with no service page of its own, so it shows here as
+   its own group. Alt text is per frame because the frames differ in subject,
+   and inventing a wardrobe out of a panelled wall would fail the Truth gate. */
+const doorsPanelling = (sel["doors-panelling"] ?? []).map((shot, i) => ({
+  shot,
+  alt: [
+    `Fitted hallway storage bench and cupboards by the front door, completed installation by ${BUSINESS.legalName}`,
+    `Bedroom wall panelling, completed installation by ${BUSINESS.legalName}`,
+  ][i] ?? `Doors and panelling, completed installation by ${BUSINESS.legalName}`,
+  subject: ["Hallway storage and cupboards", "Bedroom wall panelling"][i] ?? "Doors and panelling",
+}));
 ---
 
 <Base
@@ -60,23 +77,50 @@ const gallery = SERVICES.map((s) => {
     </p>
   </Wrap>
 
-  <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead meta={`${gallery.length} services shown`} scribe>Finished work</SectionHead>
+  {galleries.map(({ service, shots }, gi) => (
+    <Wrap style="padding-bottom:var(--section-y)">
+      <SectionHead meta={`${shots.length} photograph${shots.length === 1 ? "" : "s"}`} scribe>
+        {service.title}
+      </SectionHead>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:var(--gap-lg)">
-      {gallery.map(({ service, shot }, i) => (
-        <Plate
-          photo={shot.file}
-          alt={`${service.title}, completed installation by ${BUSINESS.legalName}`}
-          width={shot.w}
-          height={shot.h}
-          subject={service.title}
-          detail="Completed"
-          eager={i === 0}
-        />
-      ))}
-    </div>
-  </Wrap>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
+        {shots.map((shot, i) => (
+          <Plate
+            photo={shot.file}
+            alt={`${service.title}, completed installation by ${BUSINESS.legalName}, photograph ${i + 1}`}
+            width={shot.w}
+            height={shot.h}
+            subject={`${service.title} · ${String(i + 1).padStart(2, "0")}`}
+            detail="Completed"
+            eager={gi === 0 && i === 0}
+          />
+        ))}
+      </div>
+
+      <p style="margin-top:var(--space-12)">
+        <Link href={servicePath(service)} variant="nav" chamfer>About {service.title.toLowerCase()}</Link>
+      </p>
+    </Wrap>
+  ))}
+
+  {doorsPanelling.length > 0 && (
+    <Wrap style="padding-bottom:var(--section-y)">
+      <SectionHead meta={`${doorsPanelling.length} photographs`} scribe>Doors and panelling</SectionHead>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
+        {doorsPanelling.map(({ shot, alt, subject }) => (
+          <Plate
+            photo={shot.file}
+            alt={alt}
+            width={shot.w}
+            height={shot.h}
+            subject={subject}
+            detail="Completed"
+          />
+        ))}
+      </div>
+    </Wrap>
+  )}
 
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta={COMMISSIONS.length ? undefined : "Waiting on the client"} level={4}>
@@ -99,17 +143,6 @@ const gallery = SERVICES.map((s) => {
         </ul>
       </div>
     )}
-  </Wrap>
-
-  <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead level={5}>By service</SectionHead>
-    <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:var(--gap-md)">
-      {SERVICES.map((s) => (
-        <li style="border-top:var(--rule-hair);padding-top:var(--space-8)">
-          <a href={servicePath(s)}>{s.title}</a>
-        </li>
-      ))}
-    </ul>
   </Wrap>
 
   <EnquireBand heading="If you have a room in mind, start here." email={CONTACT.email} chamfer>
