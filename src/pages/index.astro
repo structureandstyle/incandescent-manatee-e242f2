@@ -107,8 +107,14 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
       How the work is run: <Value q="q06" />
     </p>
 
+    {/* The services, by name. This was slice(0, 5), which silently picked up
+        the cost guide when it was inserted fourth in SERVICES (Denis caught
+        it on the homepage, 1 Sep 2026) and pushed out bespoke kitchens, whose
+        carousel and hero photograph sit right below. The cost guide is a
+        guide, not a service, so it is excluded by slug rather than by
+        position. */}
     <MonoLabel as="p" style="margin-top:var(--space-14)">
-      {SERVICES.slice(0, 5).map((s) => s.title).join(" · ")}
+      {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => s.title).join(" · ")}
     </MonoLabel>
 
     {hero && (
