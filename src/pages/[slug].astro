@@ -89,7 +89,7 @@ const photos: { file: string; w: number; h: number }[] =
 const altFor = (n: number) =>
   `${service.title}, completed installation by ${BUSINESS.legalName}, photograph ${n}`;
 
-const schema = {
+const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
   name: service.title,
@@ -99,6 +99,32 @@ const schema = {
   areaServed: BUSINESS.areaServed.map((a) => ({ "@type": "Place", name: a })),
   url: new URL(path, SITE_URL).href,
 };
+
+/* The breadcrumb the page already shows, as data. */
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: service.title, item: new URL(path, SITE_URL).href },
+  ],
+};
+
+/* The page's own questions, as data. Only where the copy carries them. */
+const faqSchema =
+  copy && copy.faqs.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: copy.faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }
+    : null;
+
+const schema = [serviceSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [])];
 
 /* Question-shaped H2s, each with the questions that answer it. A row carries
    either a questionnaire key (q) or confirmed literal copy (text): the guide
@@ -319,7 +345,8 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
     <Wrap style="padding-bottom:var(--section-y)">
       <SectionHead meta="Service area" level={4}>Where we work</SectionHead>
       <p style="max-width:var(--measure)">
-        {BUSINESS.areaServed.slice(0, -1).join(", ")} and {BUSINESS.areaServed.slice(-1)}.
+        Across London, including {BUSINESS.areaServed.slice(0, -1).join(", ")} and{" "}
+        {BUSINESS.areaServed.slice(-1)}.
       </p>
     </Wrap>
 

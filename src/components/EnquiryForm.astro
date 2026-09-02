@@ -20,6 +20,13 @@ const { compact = false, idPrefix = "" } = Astro.props;
  * Never reuse the old QuoteRequest.tsx. Its submit handler set a success flag
  * and discarded everything, while telling the visitor they would hear back
  * within 24 hours.
+ *
+ * STYLED ON THE DESIGN TOKENS since 2 Sep 2026. The form arrived with the
+ * scaffold's Tailwind utilities, and the token base stylesheet resets
+ * `button` outside any cascade layer, which beats a layered utility however
+ * late it loads: the submit button rendered as bare text with no background
+ * on every page. The scoped rules below are unlayered too, and carry the
+ * specificity to win. Field names, ids and Netlify attributes are untouched.
  */
 ---
 
@@ -30,45 +37,33 @@ const { compact = false, idPrefix = "" } = Astro.props;
   netlify-honeypot="company-website"
   enctype="multipart/form-data"
   action="/thanks/"
-  class={compact ? "space-y-4" : "space-y-5"}
+  class:list={["enquiry-form", compact && "is-compact"]}
 >
   <input type="hidden" name="form-name" value="enquiry" />
-  <p class="hidden">
+  <p hidden>
     <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
   </p>
 
-  <div class="grid gap-4 sm:grid-cols-2">
+  <div class="row">
     <div>
-      <label for={`${idPrefix}name`} class="block text-sm font-medium">Your name</label>
-      <input
-        id={`${idPrefix}name`} name="name" type="text" required autocomplete="name"
-        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
-      />
+      <label for={`${idPrefix}name`}>Your name</label>
+      <input id={`${idPrefix}name`} name="name" type="text" required autocomplete="name" />
     </div>
     <div>
-      <label for={`${idPrefix}phone`} class="block text-sm font-medium">Phone</label>
-      <input
-        id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel"
-        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
-      />
+      <label for={`${idPrefix}phone`}>Phone</label>
+      <input id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel" />
     </div>
   </div>
 
   <div>
-    <label for={`${idPrefix}email`} class="block text-sm font-medium">Email</label>
-    <input
-      id={`${idPrefix}email`} name="email" type="email" required autocomplete="email"
-      class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
-    />
+    <label for={`${idPrefix}email`}>Email</label>
+    <input id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" />
   </div>
 
-  <div class="grid gap-4 sm:grid-cols-2">
+  <div class="row">
     <div>
-      <label for={`${idPrefix}service`} class="block text-sm font-medium">What do you need?</label>
-      <select
-        id={`${idPrefix}service`} name="service"
-        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
-      >
+      <label for={`${idPrefix}service`}>What do you need?</label>
+      <select id={`${idPrefix}service`} name="service">
         {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => (
           <option value={s.title}>{s.title}</option>
         ))}
@@ -76,68 +71,137 @@ const { compact = false, idPrefix = "" } = Astro.props;
       </select>
     </div>
     <div>
-      <label for={`${idPrefix}area`} class="block text-sm font-medium">Which area of London?</label>
-      <input
-        id={`${idPrefix}area`} name="area" type="text"
-        class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
-      />
+      <label for={`${idPrefix}area`}>Which area of London?</label>
+      <input id={`${idPrefix}area`} name="area" type="text" />
     </div>
   </div>
 
   <div>
-    <label for={`${idPrefix}detail`} class="block text-sm font-medium">Tell us about the job</label>
-    <textarea
-      id={`${idPrefix}detail`} name="detail" rows={compact ? 3 : 5}
-      class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
-    ></textarea>
+    <label for={`${idPrefix}detail`}>Tell us about the job</label>
+    <textarea id={`${idPrefix}detail`} name="detail" rows={compact ? 3 : 5}></textarea>
   </div>
 
   <div>
-    <label for={`${idPrefix}photos`} class="block text-sm font-medium">Photos of the space (optional)</label>
-    <p class="mt-1 text-xs text-ink-soft">A couple of pictures of the room saves a visit and gets you a closer price.</p>
-    <input
-      id={`${idPrefix}photos`} name="photos" type="file" accept="image/*" multiple
-      class="mt-2 w-full text-sm file:mr-3 file:rounded-full file:border-0 file:bg-sand file:px-4 file:py-2 file:text-sm"
-    />
+    <label for={`${idPrefix}photos`}>Photos of the space (optional)</label>
+    <p class="help">A couple of pictures of the room saves a visit and gets you a closer price.</p>
+    <input id={`${idPrefix}photos`} name="photos" type="file" accept="image/*" multiple />
   </div>
 
   <div>
-    <label for={`${idPrefix}source`} class="block text-sm font-medium">How did you hear about us?</label>
-    <input
-      id={`${idPrefix}source`} name="source" type="text"
-      class="mt-1 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-sm"
-    />
+    <label for={`${idPrefix}source`}>How did you hear about us?</label>
+    <input id={`${idPrefix}source`} name="source" type="text" />
   </div>
 
-  <button
-    type="submit"
-    class="w-full rounded-full bg-ink px-6 py-3 text-sm font-medium text-bone transition-colors hover:bg-timber-deep sm:w-auto"
-  >
-    Send enquiry
-  </button>
+  <div class="actions">
+    <button type="submit">Send enquiry</button>
+  </div>
 
-  <p class="text-xs text-ink-soft">
-    We use your details to reply to this enquiry and nothing else. See our
-    <a href="/privacy/" class="underline">privacy notice</a>.
+  <p class="help">
+    We use your details to reply to this enquiry and nothing else. See our{" "}
+    <a href="/privacy/">privacy notice</a>.
   </p>
 </form>
 
-{/*
-  Netlify posts the form, then redirects to /thanks/. The GA4 event fires there
-  rather than here, so it only counts submissions that actually succeeded.
-  This flag is what tells /thanks/ it was reached by a submission rather than a
-  refresh, a bookmark or a direct hit. Website enquiries are counted as
-  F2F-generated under the agreement, so an inflated number is a commercial
-  problem, not just a reporting one.
-*/}
-<script is:inline>
-  document.addEventListener("submit", (e) => {
-    const form = e.target;
-    if (!form || form.getAttribute("name") !== "enquiry") return;
-    try {
-      sessionStorage.setItem("ss_enquiry_submitted", String(Date.now()));
-    } catch (err) {
-      /* private mode: the enquiry still sends, it just goes uncounted */
+<style>
+  .enquiry-form {
+    display: grid;
+    gap: var(--space-9);
+  }
+  .enquiry-form.is-compact {
+    gap: var(--space-8);
+  }
+  .enquiry-form .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    gap: var(--space-8);
+  }
+  .enquiry-form label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: var(--space-3);
+  }
+  .enquiry-form input,
+  .enquiry-form select,
+  .enquiry-form textarea {
+    display: block;
+    width: 100%;
+    font: inherit;
+    font-size: var(--type-body);
+    color: var(--char);
+    background: var(--paper);
+    border: var(--rule-hair);
+    border-radius: 0;
+    padding: var(--space-5) var(--space-6);
+    transition: border-color var(--t-fast) var(--ease-out);
+  }
+  .enquiry-form input:focus,
+  .enquiry-form select:focus,
+  .enquiry-form textarea:focus {
+    border-color: var(--hair-strong);
+  }
+  .enquiry-form textarea {
+    resize: vertical;
+    min-height: 5.5em;
+  }
+  .enquiry-form input[type="file"] {
+    font-size: var(--type-body-sm);
+    color: var(--ink-soft);
+    padding: var(--space-4) var(--space-5);
+  }
+  .enquiry-form input[type="file"]::file-selector-button {
+    font: inherit;
+    font-family: var(--font-sans);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--char);
+    background: none;
+    border: var(--rule-structure);
+    padding: var(--space-3) var(--space-6);
+    margin-right: var(--space-6);
+    cursor: pointer;
+  }
+  .enquiry-form .help {
+    font-size: var(--type-body-sm);
+    color: var(--text-quiet);
+    margin: 0;
+  }
+  .enquiry-form label + .help {
+    margin: calc(var(--space-3) * -1) 0 var(--space-4);
+  }
+  .enquiry-form .help a {
+    color: var(--green);
+    border-bottom: 1px solid rgba(44, 74, 58, 0.4);
+  }
+  .enquiry-form .actions {
+    padding-top: var(--space-3);
+  }
+  /* Specific enough to beat the token base sheet's `button { background: none }`. */
+  form.enquiry-form button[type="submit"] {
+    font-family: var(--font-sans);
+    font-weight: var(--weight-medium);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--green);
+    border: 1px solid var(--green);
+    padding: var(--space-7) var(--space-12);
+    cursor: pointer;
+    transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+  }
+  form.enquiry-form button[type="submit"]:hover,
+  form.enquiry-form button[type="submit"]:focus-visible {
+    background: var(--char);
+    border-color: var(--char);
+  }
+  @media (max-width: 520px) {
+    form.enquiry-form button[type="submit"] {
+      width: 100%;
     }
-  });
-</script>
+  }
+</style>

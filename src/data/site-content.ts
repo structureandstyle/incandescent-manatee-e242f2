@@ -68,7 +68,9 @@ export const NAV = [
   /* Was Maker. The client's Part 6 direction change, 30 Aug 2026: company
      presentation, no personal profile. */
   { label: "About", href: "/about/" },
-  { label: "Journal", href: "/journal/" },
+  /* Journal returns to the nav the day the first article publishes. Until
+     then a primary nav link to an empty section costs credibility on every
+     page. The route stays live and noindexed (2 Sep 2026). */
 ] as const;
 
 export const ENQUIRE_HREF = "/contact/";

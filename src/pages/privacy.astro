@@ -1,99 +1,114 @@
 ---
+/**
+ * Signed month-1 deliverable, and the thing that makes analytics lawful on
+ * this site. Two facts still outstanding before this is final:
+ *   - the ICO registration number, once registration completes
+ *   - the retention period, once the client confirms how long he keeps enquiries
+ *
+ * Ported to the design system 2 Sep 2026. The wording is unchanged.
+ */
 import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Link from "../components/ds/Link.astro";
 import { BUSINESS } from "../data/site";
 
-// Signed month-1 deliverable, and the thing that makes analytics lawful on this
-// site. Two facts still outstanding before this is final:
-//   - the ICO registration number, once registration completes
-//   - the retention period, once the client confirms how long he keeps enquiries
 const updated = "August 2026";
 ---
 
 <Base
   title="Privacy notice"
-  description="How Structure & Style handles the information you send through this website."
+  description="How Structure & Style handles the information you send through this website: what is collected, why, who processes it, how long it is kept and your rights."
 >
-  <section class="mx-auto max-w-2xl px-5 py-16 sm:py-20">
-    <h1 class="text-[length:var(--text-section)] font-semibold">Privacy notice</h1>
-    <p class="mt-3 text-sm text-ink-soft">Last updated {updated}</p>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Privacy</Kicker>
+    <Display level={2} as="h1" style="margin:var(--space-12) 0 var(--space-10)">
+      Privacy notice
+    </Display>
+    <MonoLabel as="p">Last updated {updated}</MonoLabel>
+  </Wrap>
 
-    <div class="mt-10 space-y-8 text-ink-soft">
-      <div>
-        <h2 class="text-lg font-semibold text-ink">Who we are</h2>
-        <p class="mt-2">
-          This site belongs to {BUSINESS.legalName}, registered in England and Wales, company number
+  <Wrap style="padding-bottom:var(--section-y)">
+    <div style="max-width:var(--measure);display:grid;gap:var(--space-15)">
+      <section>
+        <SectionHead level={5}>Who we are</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          This site belongs to {BUSINESS.legalName}, registered in England and Wales, company number{" "}
           {BUSINESS.companyNumber}. We are the data controller for the information described here.
-          You can reach us at <a href={`mailto:${BUSINESS.email}`} class="underline">{BUSINESS.email}</a>
+          You can reach us at <Link href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</Link>{" "}
           or {BUSINESS.phoneDisplay}.
         </p>
-      </div>
+      </section>
 
-      <div>
-        <h2 class="text-lg font-semibold text-ink">What we collect, and why</h2>
-        <p class="mt-2">
+      <section>
+        <SectionHead level={5}>What we collect, and why</SectionHead>
+        <p style="margin-top:var(--space-8)">
           If you send an enquiry we collect your name, phone number, email address, the area you are
           in, whatever you tell us about the job, any photographs you attach, and how you heard about
           us. We use it to answer your enquiry, quote for the work, and carry it out if you go ahead.
         </p>
-        <p class="mt-2">
+        <p style="margin-top:var(--space-8)">
           The lawful basis is taking steps at your request before entering a contract, and our
           legitimate interest in responding to people who contact us.
         </p>
-      </div>
+      </section>
 
-      <div>
-        <h2 class="text-lg font-semibold text-ink">Photographs you send us</h2>
-        <p class="mt-2">
+      <section>
+        <SectionHead level={5}>Photographs you send us</SectionHead>
+        <p style="margin-top:var(--space-8)">
           Photographs you attach to an enquiry are used to understand the space and price the work.
           We do not publish them. Photographs of completed work are only used in our own marketing
           where the customer has agreed to it.
         </p>
-      </div>
+      </section>
 
-      <div>
-        <h2 class="text-lg font-semibold text-ink">Analytics</h2>
-        <p class="mt-2">
+      <section>
+        <SectionHead level={5}>Analytics</SectionHead>
+        <p style="margin-top:var(--space-8)">
           We use Google Analytics to understand how people find and use this site: pages viewed,
           roughly where visitors are, what device they use, and which links they tap. IP addresses
           are shortened by Google before storage and we cannot identify you from any of it. We do not
           use analytics for advertising.
         </p>
-      </div>
+      </section>
 
-      <div>
-        <h2 class="text-lg font-semibold text-ink">Who else sees your information</h2>
-        <p class="mt-2">
+      <section>
+        <SectionHead level={5}>Who else sees your information</SectionHead>
+        <p style="margin-top:var(--space-8)">
           Our website is hosted by Netlify, and enquiries submitted through the form are processed by
           them on our behalf. Analytics data is processed by Google. Flowtoform Limited, trading as
           Flow to Form, maintains this website for us and may see enquiry data in the course of that
           work, under a written agreement. We do not sell your information to anyone and we do not
           use it for marketing lists.
         </p>
-      </div>
+      </section>
 
-      <div>
-        <h2 class="text-lg font-semibold text-ink">How long we keep it</h2>
-        <p class="mt-2">
+      <section>
+        <SectionHead level={5}>How long we keep it</SectionHead>
+        <p style="margin-top:var(--space-8)">
           Enquiries that do not become jobs are kept while there is a realistic prospect of the work
           going ahead, then deleted. Records relating to completed work are kept for six years, which
           is the period we need them for tax and for any claim about the work.
         </p>
-      </div>
+      </section>
 
-      <div>
-        <h2 class="text-lg font-semibold text-ink">Your rights</h2>
-        <p class="mt-2">
+      <section>
+        <SectionHead level={5}>Your rights</SectionHead>
+        <p style="margin-top:var(--space-8)">
           You can ask us for a copy of the information we hold about you, ask us to correct it, ask
-          us to delete it, or object to how we are using it. Email
-          <a href={`mailto:${BUSINESS.email}`} class="underline">{BUSINESS.email}</a> and we will
+          us to delete it, or object to how we are using it. Email{" "}
+          <Link href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</Link> and we will
           reply within a month.
         </p>
-        <p class="mt-2">
+        <p style="margin-top:var(--space-8)">
           If you are unhappy with how we have handled your information you can complain to the
-          Information Commissioner's Office at
-          <a href="https://ico.org.uk" rel="noopener" class="underline">ico.org.uk</a>.
+          Information Commissioner's Office at{" "}
+          <Link href="https://ico.org.uk" rel="noopener">ico.org.uk</Link>.
         </p>
-      </div>
+      </section>
     </div>
-  </section>
+  </Wrap>
 </Base>

@@ -32,4 +32,4 @@
 }
 /* Five nav slots do not fit beside the wordmark below about 820px, so the row breaks
    there rather than at the phone breakpoint. */
-@media (max-width:430px){[data-site-header] nav[aria-label="Primary"]{justify-content:flex-start;gap:var(--gap-sm)!important}}
+@media (max-width:430px){[data-site-header] nav[aria-label="Primary"]{justify-content:flex-start;gap:0 var(--space-10)!important;flex-wrap:wrap;overflow-x:visible}}

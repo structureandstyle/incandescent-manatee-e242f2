@@ -4,11 +4,21 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { readdirSync, existsSync } from 'node:fs';
 import { blockedPaths } from './src/data/page-gates';
+import { SERVICES } from './src/data/site';
+import { SERVICE_COPY } from './src/data/service-copy';
 
 // Pages still waiting on the content questionnaire stay out of the sitemap.
 // Same source as the noindex tag each page sends, so the two cannot drift into
 // the state where the sitemap advertises a page whose own head says noindex.
 const blocked = new Set(blockedPaths());
+
+// The service template carries a second gate the question machinery does not
+// see: a service page with no entry in SERVICE_COPY renders as the shared
+// template with different photographs and stays noindexed (see
+// src/pages/[slug].astro). The sitemap has to honour that gate too, or it
+// advertises pages whose own head says noindex. Caught 2 Sep 2026: media walls
+// and bespoke kitchens were both in the sitemap.
+for (const s of SERVICES) if (!SERVICE_COPY[s.slug]) blocked.add(`/${s.slug}/`);
 
 // The journal index noindexes itself while it has no published articles, and
 // it has no question gate to express that, so it was being advertised in the
@@ -19,6 +29,11 @@ const JOURNAL_DIR = './src/content/journal';
 const journalIsEmpty =
   !existsSync(JOURNAL_DIR) || readdirSync(JOURNAL_DIR).filter((f) => f.endsWith('.md')).length === 0;
 if (journalIsEmpty) blocked.add('/journal/');
+
+// The thank-you page exists only as the landing after a form submission and
+// carries the enquiry_form event. It is noindexed at the template and has no
+// business in the sitemap.
+blocked.add('/thanks/');
 
 // https://astro.build/config
 export default defineConfig({

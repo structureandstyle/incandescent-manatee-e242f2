@@ -1,27 +1,39 @@
 ---
+/**
+ * The landing after a form submission. Netlify redirects here only once it
+ * has accepted the POST, which is why the form's GA4 event fires from this
+ * page and not from the submit button. Noindexed and out of the sitemap: it
+ * is not a destination, it is a receipt.
+ *
+ * Ported to the design system 2 Sep 2026.
+ */
 import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import Link from "../components/ds/Link.astro";
 import { BUSINESS } from "../data/site";
 ---
 
 <Base
   title="Thank you"
   description="Your enquiry has been received."
+  noindex
 >
-  <section class="mx-auto max-w-2xl px-5 py-24 text-center">
-    <h1 class="text-[length:var(--text-section)] font-semibold">Thank you, that has come through.</h1>
-    <p class="mt-5 text-lg text-ink-soft">
-      We read every enquiry ourselves and will come back to you shortly. If it is urgent, calling is
-      quicker.
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Enquiries</Kicker>
+    <Display level={2} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
+      Thank you, that has come through.
+    </Display>
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      We read every enquiry ourselves and come back to you with anything we need to know. If it
+      is urgent, calling is quicker.
     </p>
-    <div class="mt-9 flex flex-wrap justify-center gap-3">
-      <a href={BUSINESS.phoneHref} class="rounded-full bg-ink px-6 py-3 text-sm font-medium text-bone hover:bg-timber-deep">
-        Call {BUSINESS.phoneDisplay}
-      </a>
-      <a href="/" class="rounded-full border border-ink px-6 py-3 text-sm font-medium hover:border-timber hover:text-timber">
-        Back to the site
-      </a>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:baseline;margin-top:var(--space-15)">
+      <Link href={BUSINESS.phoneHref} variant="cta" chamfer>Call {BUSINESS.phoneDisplay}</Link>
+      <Link href="/" variant="nav" chamfer>Back to the site</Link>
     </div>
-  </section>
+  </Wrap>
 
   {/*
     The third enquiry channel. tel: and wa.me fire from Base.astro; the form

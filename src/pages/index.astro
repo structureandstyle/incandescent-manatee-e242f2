@@ -84,11 +84,23 @@ const previews = SERVICES.map((s) => {
    finishing work is real: machining, edging and finishing to the drawings, and
    pieces built up and finished in the room. See the note in ProcessStep.astro. */
 const ICONS = ["tape", "pencil", "plane", "square"] as const;
+
+/* The homepage questions, as data. */
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: HOMEPAGE_FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 ---
 
 <Base
   title="Fitted wardrobes and bespoke joinery in London"
   description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across London. Measured on site and scribed to your walls."
+  schema={faqSchema}
   noindex={!isIndexable}
 >
   <Wrap style="padding-top:var(--hero-y)">

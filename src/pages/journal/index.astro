@@ -67,17 +67,13 @@ const held = all.filter((p) => p.data.blocked !== false);
       </ul>
     ) : (
       <div style="max-width:var(--measure);border-top:var(--rule-structure);padding-top:var(--space-12)">
+        {/* Client-facing wording. The reason the first article is held (its
+            Truth gate, see the ops repo) is ours to know, not the visitor's. */}
         <p style="color:var(--text-quiet)">
-          Nothing is published here yet, and that is deliberate rather than pending. The first
-          article is written and has not cleared its accuracy gate: it made claims about client
-          briefs that no photograph could evidence. It publishes once those come from the client
-          rather than from us.
+          Nothing is published here yet. Each article is written from a finished commission
+          rather than from a catalogue, and the first appears once the project behind it has
+          been photographed and written up.
         </p>
-        {held.length > 0 && (
-          <MonoLabel as="p" tone="soft" style="margin-top:var(--space-10)">
-            {held.length} draft{held.length === 1 ? "" : "s"} held
-          </MonoLabel>
-        )}
       </div>
     )}
   </Wrap>

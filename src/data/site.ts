@@ -125,7 +125,7 @@ export const SERVICES: Service[] = [
     heading: "How much do fitted wardrobes cost in London?",
     primary: "built in wardrobe cost",
     description:
-      "What fitted and walk-in wardrobes actually cost in London, what drives the price up or down, and how to compare quotes properly.",
+      "What fitted wardrobes and alcove units actually cost in London, guide prices by size and finish, what moves the figure, and how to read a quotation.",
     summary:
       "Honest price ranges, what moves them, and the questions worth asking before you accept any quote.",
     wave: 1,

@@ -1,55 +1,99 @@
 ---
+/**
+ * The contact page. Ported to the design system 2 Sep 2026: it was the last
+ * page still wearing the scaffold's Tailwind markup, a bold sans heading and a
+ * rounded card beside every other page's serif and hairlines.
+ *
+ * Copy corrected on the way in. The old lede promised "a realistic range
+ * before anyone visits", which no questionnaire answer supports: the process
+ * is a reply, a visit, and a fixed itemised quotation (Q13, Q17, Q20). The
+ * form stays first because it is the one enquiry channel that attributes
+ * itself end to end, and because dimensions and photographs genuinely make
+ * the first answer better. Never framed as call deflection.
+ *
+ * Hours render from BUSINESS.openingHours, which mirrors the Business Profile
+ * (Mon to Fri 08:00 to 18:00, Sat 09:00 to 14:00), so the two cannot drift.
+ */
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Link from "../components/ds/Link.astro";
 import { BUSINESS } from "../data/site";
 import { indexable } from "../data/page-gates";
+
+const dayShort = (d: string) => d.slice(0, 3);
+const hours = BUSINESS.openingHours.map((h) => {
+  const days =
+    h.days.length > 1 ? `${dayShort(h.days[0])} to ${dayShort(h.days[h.days.length - 1])}` : dayShort(h.days[0]);
+  return `${days} ${h.opens} to ${h.closes}`;
+});
+
+const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry via structureandstyle.co.uk")}`;
 ---
 
 <Base
   title="Get a quote"
-  description="Tell us about your fitted wardrobe, walk-in wardrobe or joinery project and we will come back with a realistic price range. Serving homes across London."
+  description="Tell us the room, rough dimensions and a photo or two, and Structure & Style will come back to you. Bespoke fitted furniture and joinery across London."
   noindex={!indexable("/contact/")}
 >
-  <section class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-2 lg:py-24">
-    <div>
-      <h1 class="text-[length:var(--text-section)] font-semibold">Get a quote</h1>
-      <p class="mt-5 max-w-md text-lg text-ink-soft">
-        Tell us the room and send a photo or two. We come back with a realistic range before anyone
-        visits, so nobody wastes an afternoon.
-      </p>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Enquiries</Kicker>
+    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
+      Get a quote
+    </Display>
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      Tell us the room and send a photo or two. We reply with anything we need to know, then
+      a visit at the room and a fixed, itemised quotation.
+    </p>
+  </Wrap>
 
-      <dl class="mt-10 space-y-4 text-sm">
-        <div>
-          <dt class="font-medium">Phone</dt>
-          <dd><a href={BUSINESS.phoneHref} class="text-ink-soft hover:text-timber">{BUSINESS.phoneDisplay}</a></dd>
-          {/* Form-first, framed as the lead's benefit, never as call deflection:
-              the range genuinely needs the dimensions and the photos. */}
-          <dd class="mt-1 text-sm text-ink-soft">
-            A call works too. The form gets you a firmer answer, because the range needs the
-            dimensions and the photos either way.
+  <Wrap style="padding-bottom:var(--section-y)">
+    <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
+      <dl style="margin:0;display:grid;gap:var(--space-10);max-width:var(--measure-short)">
+        <div style="border-top:var(--rule-structure);padding-top:var(--space-6)">
+          <dt><MonoLabel as="span">Phone</MonoLabel></dt>
+          <dd style="margin:var(--space-4) 0 0">
+            <Link href={BUSINESS.phoneHref} variant="nav" chamfer>Call {BUSINESS.phoneDisplay}</Link>
+          </dd>
+          <dd style="margin:var(--space-5) 0 0;font-size:var(--type-body-sm);color:var(--text-quiet);max-width:var(--measure-short)">
+            A call works too. The form gets you a firmer first answer, because that answer
+            needs the dimensions and the photographs either way.
           </dd>
         </div>
-        <div>
-          <dt class="font-medium">WhatsApp</dt>
-          <dd><a href={BUSINESS.whatsapp} rel="noopener" class="text-ink-soft hover:text-timber">Message us</a></dd>
+        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+          <dt><MonoLabel as="span">WhatsApp</MonoLabel></dt>
+          <dd style="margin:var(--space-4) 0 0">
+            <Link href={BUSINESS.whatsapp} variant="nav" chamfer rel="noopener">Message us</Link>
+          </dd>
         </div>
-        <div>
-          <dt class="font-medium">Email</dt>
-          <dd><a href={`mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry via structureandstyle.co.uk")}`} class="text-ink-soft hover:text-timber">{BUSINESS.email}</a></dd>
+        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+          <dt><MonoLabel as="span">Email</MonoLabel></dt>
+          <dd style="margin:var(--space-4) 0 0">
+            <Link href={mailto} variant="inline" chamfer>{BUSINESS.email}</Link>
+          </dd>
         </div>
-        <div>
-          <dt class="font-medium">Hours</dt>
-          <dd class="text-ink-soft">Monday to Friday 8am to 6pm, Saturday 9am to 2pm</dd>
+        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+          <dt><MonoLabel as="span">Hours</MonoLabel></dt>
+          {hours.map((h) => (
+            <dd style="margin:var(--space-4) 0 0;color:var(--text-quiet)">{h}</dd>
+          ))}
         </div>
-        <div>
-          <dt class="font-medium">Where we work</dt>
-          <dd class="text-ink-soft">{BUSINESS.areaServed.join(", ")} and across London.</dd>
+        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+          <dt><MonoLabel as="span">Where we work</MonoLabel></dt>
+          <dd style="margin:var(--space-4) 0 0;color:var(--text-quiet)">
+            Across London, including {BUSINESS.areaServed.slice(0, -1).join(", ")} and{" "}
+            {BUSINESS.areaServed.slice(-1)}.
+          </dd>
         </div>
       </dl>
-    </div>
 
-    <div class="rounded-2xl border border-line bg-sand/40 p-6 sm:p-8">
-      <EnquiryForm />
+      <div style="border:var(--rule-structure);padding:clamp(20px,4vw,40px);background:var(--paper)">
+        <MonoLabel as="p" style="margin-bottom:var(--space-10)">Send an enquiry</MonoLabel>
+        <EnquiryForm />
+      </div>
     </div>
-  </section>
+  </Wrap>
 </Base>
