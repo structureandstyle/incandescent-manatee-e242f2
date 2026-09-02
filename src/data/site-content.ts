@@ -377,19 +377,34 @@ export const PROCESS = [
     /** Length is Q14. The old "no charge, samples brought along" line carried
         a "Confirmed" note from the design era with no source anywhere: not in
         the questionnaire, the ops docs, or his own old site. Stripped 30 Aug
-        2026 by the Truth gate; restored only if Kaspar confirms it. */
+        2026 by the Truth gate; restored only if Kaspar confirms it.
+
+        Rewritten 2 Sep 2026, on Denis reading "We meet at the room" and saying
+        it looked bad. He was right, and the sentence was ours rather than
+        Kaspar's, so there was nothing to protect. Two problems went with it.
+        The agenda that followed, "layout, storage, materials, finishes and the
+        look", traces to no answer at all: it survived from the design era the
+        same way the samples line did. And Q15, one of his best answers, was
+        going unused anywhere on the site: it is our job to ask the right
+        questions, not the client's to arrive knowing every detail. That is
+        the sentence a first-time client actually needs. */
     confirmed:
-      "We meet at the room, usually for 45 to 60 minutes. We start with what the piece is for and what it has to hold. From there we work through layout, storage, materials, finishes and the look.",
+      "We visit your home to see the room, usually for 45 to 60 minutes. It runs longer for a larger or more complex project. You do not need to have every answer ready: asking the right questions is our job.",
     questions: ["q13", "q14", "q15", "q16"] as QuestionKey[],
     /** Stamped mono facts on the process page, all from confirmed answers. */
-    details: ["Usually 45 to 60 minutes", "At the room"],
+    details: ["Usually 45 to 60 minutes", "In your home"],
   },
   {
     number: "02",
     title: "Survey and drawings",
-    /** Order per Q13 and Q21: quotation first, drawings once it is accepted. */
+    /** Order per Q13 and Q21: quotation first, drawings once it is accepted.
+
+        The design week is CONDITIONAL and was being stated as automatic.
+        Q13 says straightforward jobs go straight to quotation and only
+        projects needing design development get the week. Read as a promise,
+        the old wording committed us to a design week on every job. */
     confirmed:
-      "The measured survey takes about an hour, and a fixed, itemised quotation follows. Once it is accepted and the deposit paid, a design week runs. Scaled drawings and elevations go out for review, with up to two rounds of revisions included.",
+      "The measured survey takes about an hour on site, longer for larger or more complex projects. A fixed, itemised quotation follows, and design costs sit inside it where your project needs design work. Where a design week runs, drawings are issued for review with up to two rounds of revisions included.",
     questions: ["q17", "q18", "q19", "q20", "q21"] as QuestionKey[],
     details: ["Survey about an hour", "Drawings within the design week", "Two revision rounds included"],
   },
@@ -402,18 +417,43 @@ export const PROCESS = [
        stage-04 facts about assembly and finishing in the room are his and
        stay. */
     title: "Preparation",
+    /** The third sentence is Q32 and is new here. The stage claimed a
+        programme "agreed per project" on its chip and said nothing about
+        timing in the body, which left the chip asserting something the copy
+        never supported. Q32 is the actual fact and it is the one a client
+        wants at this point: the installation period is agreed at deposit,
+        the dates firm up as the work progresses. */
     confirmed:
-      "Components are prepared to the approved drawings and specification. Some pieces arrive as sections ready to assemble; others are built up and finished in the room, whichever gets the better result.",
-    questions: ["stage04", "q26", "q27", "q28", "q29"] as QuestionKey[],
+      "Components are prepared to the approved drawings and specification. Some pieces arrive as sections ready to assemble; others are built up and finished in the room, whichever gets the better result. The installation period is agreed when the deposit is paid, and the dates are confirmed as the project progresses.",
+    questions: ["stage04", "q26", "q27", "q28", "q32"] as QuestionKey[],
     details: ["Programme agreed per project", "Blum and Hafele hardware"],
   },
   {
     number: "04",
     title: "Fitting",
+    /** Three corrections, 2 Sep 2026.
+
+        The week-long case now names its real driver. Q30 ties it to on-site
+        construction or hand-painting, and the copy had generalised that to
+        "more complex projects", which is a wider promise than he made: it
+        tells a reader any involved job runs a week. "Built up in the room" is
+        Q30's on-site construction in the words stage 03 already uses.
+        Hand-painting stays out, because section 5 allows it only where it is
+        verified true of the job being shown.
+
+        The scribing gloss keeps "which means". Without it the sentence reads
+        as two separate things done to the edge rather than one being the
+        definition of the other, and the definition is the only reason
+        section 7 permits the word at all. It ends at "the room" rather than
+        listing wall, floor and ceiling, which the home page lede three
+        screens above already says almost word for word.
+
+        The clearing-up sentence carries Q33's dust extraction instead of
+        repeating the daily tidy, which the chip beside it already stamps. */
     confirmed:
-      "Typically 2 to 3 days on site for a straightforward wardrobe wall. Every edge is scribed, which means cut to follow the line of your wall, floor and ceiling. The area is tidied at the end of each day and cleared at the end.",
-    questions: ["q30", "q31", "q32", "q33", "q34"] as QuestionKey[],
-    details: ["Typically 2 to 3 days on site", "Tidied at the end of each day"],
+      "Typically 2 to 3 days on site for a straightforward wardrobe wall, closer to a week where it is built up in the room. Every edge is scribed, which means cut to follow the line of the room. Floors and the surrounding area are protected before work starts, and dust extraction runs throughout.",
+    questions: ["q30", "q31", "q33", "q34"] as QuestionKey[],
+    details: ["Typically 2 to 3 days", "Tidied at the end of each day"],
   },
 ] as const;
 
