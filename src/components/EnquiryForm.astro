@@ -42,6 +42,41 @@ const CHOICES = [
 ];
 
 /**
+ * What to write in the job box, shown as a placeholder, 2 Sep 2026 on Denis's
+ * ask: give someone a shape to copy so they start typing instead of composing.
+ *
+ * Each one is the same three things in the same order, because those are the
+ * three the first reply actually needs: the room, rough sizes, and what the
+ * piece has to hold. Nobody writes that unprompted, and an enquiry without it
+ * costs a round trip before anything useful can be said back.
+ *
+ * Keyed by service title so a service page shows an example of its own work.
+ * The contact page and the modal have no service, so they get the wardrobe
+ * example: it is the commonest job and it models the same shape.
+ *
+ * These are examples, not claims. Keep the numbers ordinary and the language
+ * the way a person would actually type it.
+ */
+const JOB_EXAMPLE_DEFAULT =
+  "Bedroom wall about 3m wide and 2.4m to the ceiling. Hanging both sides, drawers in the middle.";
+
+const JOB_EXAMPLES: Record<string, string> = {
+  "Fitted wardrobes": JOB_EXAMPLE_DEFAULT,
+  "Walk-in wardrobes":
+    "Box room about 2m by 2.5m. Hanging on two walls, shoe shelves and a bank of drawers.",
+  "Alcove units and shelving":
+    "Two alcoves either side of the chimney breast, about 1m wide. Cupboards below, open shelves above.",
+  "Media walls and TV units":
+    "Living room chimney wall, 65 inch TV. Cables and a console to hide, sockets already there.",
+  "Bespoke kitchens":
+    "Galley kitchen about 4m long. One wall of units and a tall run for the oven and fridge.",
+  "Home office and under-stair storage":
+    "Under the stairs, about 2m along and sloping. Coats, shoes and a bit of shelving.",
+};
+
+const jobExample = (service && JOB_EXAMPLES[service]) || JOB_EXAMPLE_DEFAULT;
+
+/**
  * "How did you hear about us?" was a free-text box until 2 September 2026.
  * It is a dropdown now, Denis's call, and the option list is not cosmetic.
  *
@@ -157,12 +192,21 @@ const SOURCES = [
 
   <div>
     <label for={`${idPrefix}area`}>Which area of London?</label>
-    <input id={`${idPrefix}area`} name="area" type="text" />
+    <input
+      id={`${idPrefix}area`} name="area" type="text"
+      placeholder="Hampstead, Camden, or your postcode"
+    />
   </div>
 
   <div>
     <label for={`${idPrefix}detail`}>Tell us about the job</label>
-    <textarea id={`${idPrefix}detail`} name="detail" rows={compact ? 3 : 5}></textarea>
+    <p class="help">The room, rough sizes, and what it needs to hold is plenty.</p>
+    <textarea
+      id={`${idPrefix}detail`}
+      name="detail"
+      rows={compact ? 3 : 5}
+      placeholder={jobExample}
+    ></textarea>
   </div>
 
   <div>
@@ -233,6 +277,12 @@ const SOURCES = [
   .enquiry-form textarea {
     resize: vertical;
     min-height: 5.5em;
+  }
+  /* Lighter than the help text, so an example never reads as something already
+     typed, and dark enough to be worth reading. */
+  .enquiry-form ::placeholder {
+    color: rgba(34, 29, 24, 0.45);
+    opacity: 1;
   }
   .enquiry-form input[type="file"] {
     font-size: var(--type-body-sm);
