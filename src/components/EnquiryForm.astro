@@ -1,17 +1,45 @@
 ---
-import { SERVICES } from "../data/site";
+import { SERVICES, DEFERRED_SERVICES } from "../data/site";
 
 interface Props {
   compact?: boolean;
   /** Prefix for element ids, so the page form and the modal form can coexist
       without duplicate ids. Field names are untouched: same Netlify form. */
   idPrefix?: string;
-  /** The service to preselect: a service page passes its own title. Anywhere
-      else the list opens on "Choose one" rather than silently defaulting to
+  /** The service to tick on arrival: a service page passes its own title.
+      Anywhere else nothing is ticked, rather than silently defaulting to
       fitted wardrobes, which is what every alcove enquiry used to arrive as. */
   service?: string;
 }
 const { compact = false, idPrefix = "", service } = Astro.props;
+
+/**
+ * What a lead can ask for. Checkboxes rather than a single choice since
+ * 2 September 2026, Denis's call, and it is the right shape: a room being
+ * fitted out rarely needs one thing, and a dropdown forced those leads to pick
+ * the biggest item and mention the rest in the message, or not at all.
+ *
+ * Netlify Forms records repeated inputs sharing a name, so every ticked box
+ * arrives against `service` without changing how the form is wired.
+ *
+ * Two entries are not live service pages, and both are deliberate:
+ *
+ *   Flooring is work he takes. It is a category on his Business Profile with
+ *   two services under it, added on the strength of his own description and
+ *   repeated mentions in his reviews. There is no page because there is no
+ *   usable photography, which is a reason not to publish a page and no reason
+ *   at all to refuse the enquiry.
+ *
+ *   Home office and under-stair storage is one of the six service pages in the
+ *   signed scope, deferred on 31 August until its imagery exists. The page is
+ *   deferred; the work is not.
+ */
+const CHOICES = [
+  ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => s.title),
+  ...DEFERRED_SERVICES.map((s) => s.title),
+  "Flooring",
+  "Something else",
+];
 
 /**
  * "How did you hear about us?" was a free-text box until 2 September 2026.
@@ -108,21 +136,28 @@ const SOURCES = [
     <input id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" />
   </div>
 
-  <div class="row">
-    <div>
-      <label for={`${idPrefix}service`}>What do you need?</label>
-      <select id={`${idPrefix}service`} name="service">
-        <option value="" selected={!service}>Choose one</option>
-        {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => (
-          <option value={s.title} selected={service === s.title}>{s.title}</option>
-        ))}
-        <option value="Something else">Something else</option>
-      </select>
+  <fieldset class="choices-field">
+    <legend>What do you need?</legend>
+    <p class="help">Tick everything that applies.</p>
+    <div class="choices">
+      {CHOICES.map((label, i) => (
+        <label class="choice" for={`${idPrefix}service-${i}`}>
+          <input
+            id={`${idPrefix}service-${i}`}
+            type="checkbox"
+            name="service"
+            value={label}
+            checked={service === label}
+          />
+          <span>{label}</span>
+        </label>
+      ))}
     </div>
-    <div>
-      <label for={`${idPrefix}area`}>Which area of London?</label>
-      <input id={`${idPrefix}area`} name="area" type="text" />
-    </div>
+  </fieldset>
+
+  <div>
+    <label for={`${idPrefix}area`}>Which area of London?</label>
+    <input id={`${idPrefix}area`} name="area" type="text" />
   </div>
 
   <div>
@@ -215,6 +250,68 @@ const SOURCES = [
     border: var(--rule-structure);
     padding: var(--space-3) var(--space-6);
     margin-right: var(--space-6);
+    cursor: pointer;
+  }
+  .enquiry-form fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  .enquiry-form legend {
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .enquiry-form .choices-field .help {
+    margin: var(--space-3) 0 var(--space-6);
+  }
+  .enquiry-form .choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
+    gap: var(--space-5) var(--space-9);
+  }
+  /* The choices are values, not field labels, so they read as body text. The
+     design system draws the same line in its spec tables: mono for the label
+     column, body for what it says. Without this they inherit the mono
+     uppercase of every other label in the form and eight of them in a column
+     read as a wall. */
+  .enquiry-form .choice {
+    font-family: var(--font-sans);
+    font-weight: var(--weight-regular);
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--char);
+    margin-bottom: 0;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-6);
+    font-size: var(--type-body-sm);
+    cursor: pointer;
+    /* A tap target rather than a line of text: these sit close together and
+       are the first thing a thumb reaches for. */
+    padding: var(--space-3) 0;
+    min-height: 30px;
+  }
+  /* On a phone the whole row has to clear the 44px a thumb needs. It is worth
+     the extra height here: a mis-tap on this field sends the wrong enquiry. */
+  @media (max-width: 640px) {
+    .enquiry-form .choice {
+      min-height: 44px;
+      padding: var(--space-5) 0;
+    }
+  }
+  .enquiry-form .choice input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    padding: 0;
+    border: var(--rule-structure);
+    background: var(--paper);
+    accent-color: var(--green);
     cursor: pointer;
   }
   .enquiry-form .help {

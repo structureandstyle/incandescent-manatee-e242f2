@@ -206,6 +206,9 @@ const faqSchema = {
         <MaterialChip
           name={m.name}
           swatch={m.swatch}
+          {/* The hardware swatch is a photograph of parts, not a finish, so it
+              keeps no pure band above the wash. See MaterialChip. */}
+          band={m.key !== "hardware"}
           description={m.description}
           uses={m.uses}
           pros={m.pros}

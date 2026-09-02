@@ -53,6 +53,20 @@ interface Props {
   cons?: readonly string[];
   /** A CSS colour. Deliberately no default: see the note above. */
   swatch?: string;
+  /**
+   * Show the band of pure, unwashed swatch across the top of the pop.
+   *
+   * True for a material, because the band is what stops the dark wash
+   * misstating the finish tone: you see the real colour of the oak or the
+   * green board before reading copy laid over a dimmed version of it.
+   *
+   * False when the swatch is a photograph of objects rather than a surface.
+   * The hardware swatch is hinges laid out on a grey sweep, so the band
+   * cropped a strip of that sweep and read as an unrelated silver bar above
+   * the panel (Denis, 2 Sep 2026). There is no finish tone to protect, so the
+   * wash runs to the top edge instead.
+   */
+  band?: boolean;
   plane?: boolean | "left" | "top";
   class?: string;
   style?: string;
@@ -66,6 +80,7 @@ const {
   pros,
   cons,
   swatch,
+  band = true,
   plane = false,
   class: className,
   style = "",
@@ -108,7 +123,7 @@ const frame = [
       </button>
 
       <dialog id={popId} class="ss-mat-pop" aria-label={name} style={`--mat-swatch:${swatch || "var(--wash-char)"}`}>
-        <div class="ss-mat-pop-band" aria-hidden="true"></div>
+        {band && <div class="ss-mat-pop-band" aria-hidden="true"></div>}
         <div class="ss-mat-pop-body">
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-8)">
             <MonoLabel as="p" tone="paper-soft">Materials</MonoLabel>
