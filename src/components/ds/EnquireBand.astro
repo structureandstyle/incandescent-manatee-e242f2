@@ -17,6 +17,7 @@
 import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
 import Link from "./Link.astro";
+import { CONTACT } from "../../data/site-content";
 
 interface Props {
   kicker?: string;
@@ -35,6 +36,12 @@ interface Props {
    * remit, and in the schema; the band funnels to the form.
    */
   cta?: { label: string; href: string } | null;
+  /**
+   * Offer the phone and WhatsApp beside the form, under a line asking which
+   * the reader would rather use. Defaults on wherever there is a call to
+   * action at all.
+   */
+  direct?: boolean;
   stamp?: boolean;
   chamfer?: boolean;
   class?: string;
@@ -45,6 +52,7 @@ const {
   kicker = "Enquiries",
   heading,
   cta = { label: "Get a quote", href: "/contact/" },
+  direct = true,
   stamp = false,
   chamfer = false,
   class: className,
@@ -69,11 +77,95 @@ const hasFacts = Astro.slots.has("facts");
       </p>
     )}
 
+    {/*
+      The form leads and the two direct channels sit beside it, 2 Sep 2026,
+      Denis's ask. This is not a reversal of his 1 September ruling that took
+      the email address off this band: that ruling was about attribution, and
+      the address is the one channel that loses it, since a copied address
+      arrives with nothing attached. A tel: or wa.me tap fires its own GA4
+      event from Base.astro, so both of these are as attributable as the form
+      and none of them costs the commission evidence.
+
+      The call to action is bigger than a nav label here because it is the one
+      action this whole band exists to ask for.
+    */}
     {cta && (
-      <div style="margin-top:var(--space-14)">
-        <Link variant="cta" tone="paper" chamfer={chamfer} href={cta.href}>{cta.label}</Link>
+      <div class="band-actions">
+        <a class="band-cta" href={cta.href}>{cta.label}</a>
+
+        {direct && (
+          <p class="band-direct">
+            <MonoLabel as="span" tone="paper-soft">Prefer to call or message?</MonoLabel>
+            <Link variant="nav" tone="paper" chamfer href={CONTACT.phoneHref}>
+              Call {CONTACT.phoneDisplay}
+            </Link>
+            <Link variant="nav" tone="paper" chamfer href={CONTACT.whatsapp} rel="noopener">
+              WhatsApp
+            </Link>
+          </p>
+        )}
       </div>
     )}
+
+    <style>
+      .band-actions {
+        margin-top: var(--space-14);
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--space-10) var(--space-15);
+      }
+      /* Not a nav link: the one action the band is asking for, at a size that
+         says so, and a filled block so it reads as a control rather than a
+         line of text on a dark ground. */
+      .band-cta {
+        display: inline-block;
+        font-family: var(--font-sans);
+        font-weight: var(--weight-medium);
+        font-size: var(--type-label-lg);
+        letter-spacing: var(--ls-label);
+        text-transform: uppercase;
+        color: var(--green);
+        background: var(--paper);
+        border: 1px solid var(--paper);
+        padding: var(--space-8) var(--space-14);
+        transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+      }
+      .band-cta:hover,
+      .band-cta:focus-visible {
+        background: none;
+        color: var(--paper);
+      }
+      .band-direct {
+        margin: 0;
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: var(--space-6) var(--space-10);
+      }
+      /* On a phone the two sit one above the other, the button runs the full
+         width so it is unmissable and easy to hit, and the question keeps its
+         own line so the phone number and WhatsApp stay side by side under it
+         rather than splitting across two. */
+      @media (max-width: 560px) {
+        .band-actions {
+          flex-direction: column;
+          align-items: stretch;
+          gap: var(--space-12);
+        }
+        .band-cta {
+          text-align: center;
+          padding: var(--space-9) var(--space-14);
+        }
+        .band-direct {
+          flex-direction: column;
+          gap: var(--space-7);
+        }
+        .band-direct :global(a) {
+          align-self: flex-start;
+        }
+      }
+    </style>
 
     {hasFacts && (
       <div

@@ -54,6 +54,9 @@
 
   /* UI labels (uppercase Archivo, nav and buttons) */
   --type-label:12px;
+  /* One step up, for a call to action that has to outweigh a nav label without
+     turning into a heading. Added 2 Sep 2026 for the enquiry band. */
+  --type-label-lg:14px;
   --ls-label:.16em;
   --ls-label-loose:.16em;
 
