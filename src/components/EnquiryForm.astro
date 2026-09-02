@@ -14,6 +14,35 @@ interface Props {
 const { compact = false, idPrefix = "", service } = Astro.props;
 
 /**
+ * "How did you hear about us?" was a free-text box until 2 September 2026.
+ * It is a dropdown now, Denis's call, and the option list is not cosmetic.
+ *
+ * This answer is the one the shared enquiry log records in its "Found us via"
+ * column, and clause 2 of the agreement counts an enquiry as F2F-generated
+ * when it is "recorded as having found you through Google or the website". So
+ * the three options Denis named are the three the contract actually turns on:
+ * Google counts, the website counts, a personal recommendation does not.
+ *
+ * `value` matches the log's own vocabulary (its Channel column validates
+ * against a list carrying Referral and Other) while the label stays in the
+ * words a visitor would use. Change one, change the log.
+ *
+ * "Something else" is the fourth entry and it is deliberate: a lead who came
+ * from a citation site or a van sign would otherwise pick one of three wrong
+ * answers, and a mislabelled attribution is a commission figure we cannot
+ * defend. The log carries "Other" for the same reason.
+ *
+ * Left optional, as the text box was. Never add a required field to a lead
+ * form to improve our own reporting.
+ */
+const SOURCES = [
+  { value: "Google", label: "Google" },
+  { value: "Referral", label: "Someone recommended you" },
+  { value: "Website", label: "Your website" },
+  { value: "Something else", label: "Something else" },
+];
+
+/**
  * Netlify Forms. The site is already on Netlify so this costs nothing and adds
  * no infrastructure, and it produces a timestamped, attributable record.
  *
@@ -94,7 +123,10 @@ const { compact = false, idPrefix = "", service } = Astro.props;
 
   <div>
     <label for={`${idPrefix}source`}>How did you hear about us?</label>
-    <input id={`${idPrefix}source`} name="source" type="text" />
+    <select id={`${idPrefix}source`} name="source">
+      <option value="" selected>Choose one</option>
+      {SOURCES.map((o) => <option value={o.value}>{o.label}</option>)}
+    </select>
   </div>
 
   <div class="actions">
