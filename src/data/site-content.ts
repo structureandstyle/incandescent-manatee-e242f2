@@ -286,12 +286,18 @@ export const MATERIALS = [
     name: "Hardware",
     /** The Q28 answer, shortened to the two named brands. Named here because
         hardware is the subject of this card, per the 30 Aug 2026 ruling. */
-    description: "Blum for hinges and drawer systems, Hafele for furniture hardware and lighting.",
+    description: "Blum for hinges and drawer systems, Hafele for furniture hardware and lighting, with soft-close as standard.",
     /* The hinge programme laid out: the range this card is describing, rather
        than one hinge. From Denis's sample set, 2 Sep 2026. */
     swatch: "url(/images/materials/hardware.webp) center / cover",
-    uses: "Hinges, drawer runners, lift-up doors, interior fittings and lighting: the moving parts of every piece.",
+    uses: "Hinges, drawer runners, lift-up doors, interior fittings and lighting: the moving parts of every piece, and the ones you put a hand on every day.",
     pros: [
+      /* Soft-close is in the client's own pricing document, as part of the
+         starting specification for a fitted wardrobe. It is a quoted inclusion,
+         not an upsell, and saying so is worth more than the feature is. */
+      "Soft-close on doors and drawers, in the starting specification rather than an upgrade",
+      "A door slows at the end of its travel and lands quietly instead of banging shut",
+      "A loaded drawer runs out straight and pulls back without a shove",
       "Precise adjustment, so doors and drawers line up and stay lined up",
       "Moving hardware carries its manufacturer's warranty on top of our own guarantee",
       "Both brands publish their ranges, so what we specify can be looked up",
@@ -299,6 +305,7 @@ export const MATERIALS = [
     cons: [
       "Branded hardware costs more than unbranded",
       "The moving parts do the hardest work in a piece, so this is the wrong place to save",
+      "Soft-close mechanisms are what wears first on any piece, which is why the warranty matters",
     ],
   },
 ] as const;
