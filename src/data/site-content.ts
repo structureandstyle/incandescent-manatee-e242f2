@@ -165,34 +165,30 @@ export const REVIEWS = {
  * imagery is a rights problem and a photograph of someone else's material
  * reads as a claim about ours.
  *
- * All six are photographs as of 2 Sep 2026, and they come from two places.
+ * ALL SIX ARE MATERIAL SAMPLES as of 2 Sep 2026, from the set Denis curates by
+ * hand in the ops repo's `Photos/Materials`, one file per card. They show the
+ * board itself, which a photograph of finished work cannot: a painted door
+ * shows the paint, not the MDF under it.
  *
- * MDF, veneered board and plywood are SUPPLIER PRODUCT SAMPLES from the set
- * Denis put in the ops repo's Photos/Materials folder. They show the board
- * itself, which a photograph of finished work cannot: a painted door shows the
- * paint, not the MDF under it. They are third-party product photographs, and
- * the rights position is written down in
- * public/images/materials/README.md rather than left implicit.
+ * Do not re-derive these crops by eye. `scripts/build-material-swatches.py` in
+ * the ops repo maps his filenames onto the filenames below and rewrites them
+ * all in one command, which is what makes swapping a sample cheap. Change a
+ * filename here and change it there in the same commit.
  *
- * Melamine and decorative board, specialist boards and hardware are crops of
- * KASPAR'S OWN WORK, kept because for those three his own photography says the
- * thing better: a wood-effect interior, a high-gloss door, and a Blum hinge
- * with the brand legible on the arm.
- *
- * The split is not arbitrary. Use his own work wherever it shows the material
- * plainly. Use a sample only where the board is hidden under a finish in every
- * photograph we hold.
+ * They are third-party product photographs. The rights question was put to
+ * Denis on 2 Sep 2026 and he ruled they stay; the position is recorded in
+ * public/images/materials/README.md and is closed, not open.
  */
 export const MATERIALS = [
   {
     key: "mdf",
     name: "MDF and MR MDF",
     description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles.",
-    /* Raw MDF with a machined bead profile, from the sample set Denis
-       supplied on 2 Sep 2026. A supplier's product photograph, not his work:
-       see the provenance and the rights note in
-       public/images/materials/README.md. It replaced a crop of his own painted
-       doors, which showed the finish rather than the board. */
+    /* Moisture-resistant MDF, green all the way through, from Denis's sample
+       set. The green is the point: it is how MR MDF is told apart from
+       standard board on site, so the swatch carries a fact rather than a
+       colour. Regenerate with scripts/build-material-swatches.py in the ops
+       repo, which is what maps his filenames onto these. */
     swatch: "url(/images/materials/mdf-board.webp) center / cover",
     uses: "Painted wardrobes, alcove units, panelling and detailed door profiles. The moisture-resistant version, MR MDF, goes where damp is a risk.",
     pros: [
@@ -252,9 +248,9 @@ export const MATERIALS = [
     key: "melamine",
     name: "Melamine and decorative board",
     description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes.",
-    /* A crop of his own walk-in interior (walk-in-wardrobes-02): a wood-effect
-       decorative board, finish arrived on the board. Real job, 2 Sep 2026. */
-    swatch: "url(/images/materials/decorative-board.webp) center / cover",
+    /* A melamine-faced board, its finish arrived on the board and its edge
+       showing. From Denis's sample set, 2 Sep 2026. */
+    swatch: "url(/images/materials/melamine-board.webp) center / cover",
     uses: "Wardrobe interiors, storage runs and complete pieces where the budget leads. The finish arrives on the board, ready made.",
     pros: [
       "Hard-wearing and wipes clean",
@@ -271,9 +267,9 @@ export const MATERIALS = [
     key: "specialist",
     name: "Specialist decorative boards",
     description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces.",
-    /* A crop of his own high-gloss kitchen doors (bespoke-kitchens-05). Real
-       job, 2 Sep 2026. Veneer, plywood and hardware keep their drawn swatches
-       until a photograph of the real thing exists: see the README. */
+    /* A fluted timber-faced panel: the textured end of this card's range,
+       which the flat boards elsewhere in the grid cannot show. From Denis's
+       sample set, 2 Sep 2026. */
     swatch: "url(/images/materials/specialist-board.webp) center / cover",
     uses: "Doors and visible fronts where the surface leads the design: super-matt, high-gloss, textured and stone-effect pieces.",
     pros: [
@@ -291,9 +287,8 @@ export const MATERIALS = [
     /** The Q28 answer, shortened to the two named brands. Named here because
         hardware is the subject of this card, per the 30 Aug 2026 ruling. */
     description: "Blum for hinges and drawer systems, Hafele for furniture hardware and lighting.",
-    /* A Blum concealed hinge on one of his own doors, the brand stamped on the
-       arm. The card names Blum for hinges; this is that claim, photographed.
-       2 Sep 2026. */
+    /* The hinge programme laid out: the range this card is describing, rather
+       than one hinge. From Denis's sample set, 2 Sep 2026. */
     swatch: "url(/images/materials/hardware.webp) center / cover",
     uses: "Hinges, drawer runners, lift-up doors, interior fittings and lighting: the moving parts of every piece.",
     pros: [

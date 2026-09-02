@@ -32,6 +32,9 @@ import { MATERIALS, BAND, CONTACT } from "../data/site-content";
 import { indexable } from "../data/page-gates";
 
 const isIndexable = indexable("/materials/");
+
+/** The hardware card, rendered in its own section rather than the range grid. */
+const HARDWARE = MATERIALS.find((m) => m.key === "hardware");
 ---
 
 <Base
@@ -89,14 +92,34 @@ const isIndexable = indexable("/materials/");
   {/* Named brands allowed here by Denis's ruling, 30 Aug 2026: Blum and Hafele
       are what he actually specifies (Q28), and buyers recognise them. The
       protocol's supplier ban now reads as amended for hardware; the cutting
-      arrangement stays unnamed, which is the client's own Q22 ruling. */}
+      arrangement stays unnamed, which is the client's own Q22 ruling.
+
+      The card joined this section on 2 Sep 2026, Denis's ask. Hardware was the
+      one material on this page with a heading and no picture, because it is
+      held out of the range grid above to avoid appearing twice. Held out of a
+      grid should not have meant shown without an image: it gets its own card
+      here, beside the copy, and it pops open like every other material. */}
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Hardware" level={4}>What the moving parts are</SectionHead>
-    <p style="max-width:var(--measure)"><Value q="q28" /></p>
-    <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
-      Hinges, drawer runners and other moving hardware also carry their manufacturer's warranty,
-      on top of our own guarantee.
-    </p>
+    <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start;margin-top:var(--space-12)">
+      {HARDWARE && (
+        <MaterialChip
+          name={HARDWARE.name}
+          swatch={HARDWARE.swatch}
+          description={HARDWARE.description}
+          uses={HARDWARE.uses}
+          pros={HARDWARE.pros}
+          cons={HARDWARE.cons}
+        />
+      )}
+      <div>
+        <p style="max-width:var(--measure)"><Value q="q28" /></p>
+        <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
+          Hinges, drawer runners and other moving hardware also carry their manufacturer's warranty,
+          on top of our own guarantee.
+        </p>
+      </div>
+    </div>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
