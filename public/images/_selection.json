@@ -218,6 +218,13 @@
   ],
   "doors-panelling": [
     {
+      "file": "/images/doors-panelling/doors-panelling-03.webp",
+      "w": 1411,
+      "h": 1114,
+      "source": "Green door outside.png",
+      "date": "20260902"
+    },
+    {
       "file": "/images/doors-panelling/doors-panelling-01.webp",
       "w": 1600,
       "h": 1064,

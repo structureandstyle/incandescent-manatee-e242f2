@@ -38,14 +38,14 @@ plywood board claims nothing about a job. It is a straightforward copyright
 question, and it is why the earlier version of this file rejected web-found
 photography outright.
 
-**The clean fix is cheap and permanent: photograph the offcuts.** Kaspar has a
-piece of every board he uses. A corner of each on a clean surface in daylight
-takes five minutes, and the site then owns its material photography outright and
-matches the rest of the site's warmth rather than a white studio background. The
-ask is logged in the ops repo.
+**Ruled by Denis, 2 September 2026: they stay.** The question was put and
+answered, so this section is a record rather than an open item. Do not re-raise
+it as a blocker.
 
-Until then these three ship on Denis's instruction, with the position recorded
-here rather than discovered later.
+**The improvement still worth having: photograph the offcuts.** Not because of
+the rights question, but because a corner of Kaspar's own board on a clean
+surface in daylight matches the warmth of the rest of the site, where a white
+studio background does not. Five minutes of his time. It is on the ask list.
 
 ## Not used, and why
 
