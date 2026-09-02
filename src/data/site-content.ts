@@ -379,7 +379,7 @@ export const PROCESS = [
         the questionnaire, the ops docs, or his own old site. Stripped 30 Aug
         2026 by the Truth gate; restored only if Kaspar confirms it. */
     confirmed:
-      "We meet at the room, usually for 45 to 60 minutes. We start with what the piece is for and what it needs to hold, then work through layout, storage, materials, finishes and the overall look.",
+      "We meet at the room, usually for 45 to 60 minutes. We start with what the piece is for and what it has to hold. From there we work through layout, storage, materials, finishes and the look.",
     questions: ["q13", "q14", "q15", "q16"] as QuestionKey[],
     /** Stamped mono facts on the process page, all from confirmed answers. */
     details: ["Usually 45 to 60 minutes", "At the room"],
@@ -389,7 +389,7 @@ export const PROCESS = [
     title: "Survey and drawings",
     /** Order per Q13 and Q21: quotation first, drawings once it is accepted. */
     confirmed:
-      "The measured survey takes about an hour. A fixed, itemised quotation follows. Once it is accepted and the deposit paid, a design week runs. Scaled drawings and elevations are issued for review, with up to two rounds of revisions included.",
+      "The measured survey takes about an hour, and a fixed, itemised quotation follows. Once it is accepted and the deposit paid, a design week runs. Scaled drawings and elevations go out for review, with up to two rounds of revisions included.",
     questions: ["q17", "q18", "q19", "q20", "q21"] as QuestionKey[],
     details: ["Survey about an hour", "Drawings within the design week", "Two revision rounds included"],
   },
@@ -411,7 +411,7 @@ export const PROCESS = [
     number: "04",
     title: "Fitting",
     confirmed:
-      "Typically 2 to 3 days on site for a straightforward wardrobe wall. Everything is scribed to your walls, floors and ceiling and finished in place. The area is tidied at the end of each day and cleared completely at the end.",
+      "Typically 2 to 3 days on site for a straightforward wardrobe wall. Every edge is scribed, which means cut to follow the line of your wall, floor and ceiling. The area is tidied at the end of each day and cleared at the end.",
     questions: ["q30", "q31", "q32", "q33", "q34"] as QuestionKey[],
     details: ["Typically 2 to 3 days on site", "Tidied at the end of each day"],
   },

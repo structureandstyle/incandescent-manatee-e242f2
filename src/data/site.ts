@@ -53,6 +53,23 @@ export type Service = {
   slug: string;
   /** Nav and card label. */
   title: string;
+  /**
+   * What this service is called everywhere OTHER than its own page.
+   *
+   * It exists for one service. Protocol section 5 bans "media wall" as a
+   * brand-facing term and then carves out one exception: it may appear on a
+   * single search-facing page, because the phrase carries 90,500 UK searches a
+   * month and throwing that away is its own kind of mistake. It may never
+   * appear on the home page, in a hero, or in a service page title.
+   *
+   * That is a real conflict, not a contradiction: the phrase is worth having
+   * where a searcher types it and worth avoiding where a buyer reads it. So
+   * the page keeps the keyword in its title and heading, and `label` carries
+   * an approved alternative everywhere else.
+   *
+   * Defaults to `title`, so this stays empty for every other service.
+   */
+  label?: string;
   /** <h1>. Carries the primary keyword without reading like it does. */
   heading: string;
   /** Primary keyword, for the record rather than for stuffing. */
@@ -101,7 +118,7 @@ export const SERVICES: Service[] = [
     description:
       "Built-in and fitted wardrobes made to measure for your room, designed around what you store and fitted wall to wall, across Hampstead, Camden and London.",
     summary:
-      "Built-in wardrobes scribed to your walls, ceiling and floor, with the hanging, shelving and drawer split worked out around what you actually keep.",
+      "Built-in wardrobes cut to follow your walls, ceiling and floor, with the hanging, shelving and drawer split worked out around what you actually keep.",
     wave: 1,
   },
   {
@@ -131,7 +148,7 @@ export const SERVICES: Service[] = [
     description:
       "Alcove cupboards and shelving built into chimney breast recesses across London, measured and scribed individually so doors sit flush and lines run true.",
     summary:
-      "No two alcoves in a period house are the same width. Each unit is built to its own measurements and scribed to the wall.",
+      "No two alcoves in a period house are the same width. Each unit is built to its own measurements and cut to follow the wall.",
     wave: 1,
   },
   {
@@ -156,10 +173,11 @@ export const SERVICES: Service[] = [
     price:
       "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Media walls and TV units",
+    label: "Built-in TV units",
     heading: "Media walls and built-in TV units",
     primary: "media wall london",
     description:
-      "Media walls and built-in TV units with cable routing, ventilation and electrics planned in from the start, so the finished wall sits flush.",
+      "Media walls and built-in TV units for London homes, with cable routing, ventilation and electrics planned from the start, so the finished wall sits flush.",
     summary:
       "Cable routing, ventilation and console space planned from the start, with electrics and plastering coordinated as part of the job.",
     wave: 2,
@@ -174,7 +192,7 @@ export const SERVICES: Service[] = [
     heading: "Bespoke kitchens, made to measure",
     primary: "bespoke kitchens london",
     description:
-      "Bespoke kitchen design, build and installation in London, including the awkward runs around chimney breasts, boilers and sloping ceilings.",
+      "Bespoke kitchen design, build and installation for London homes, including the awkward runs around chimney breasts, boilers, boxing and sloping ceilings.",
     summary:
       "Cabinets, tall units and islands built to the room, including the runs standard units cannot cover.",
     wave: 2,
@@ -209,3 +227,6 @@ export const DEFERRED_SERVICES: Service[] = [
 ];
 
 export const servicePath = (s: Service) => `/${s.slug}/`;
+
+/** What to call a service anywhere but its own page. See `label` above. */
+export const serviceLabel = (s: Service) => s.label ?? s.title;

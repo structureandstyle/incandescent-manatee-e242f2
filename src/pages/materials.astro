@@ -87,9 +87,14 @@ const isIndexable = indexable("/materials/");
     {/* "board range", not "range": Q22 is his list of boards, and the grid
         above now also carries the hardware. His answer is untouched; the words
         around it say what it covers. */}
-    <p style="max-width:var(--measure);margin-top:var(--space-15);color:var(--text-quiet)">
-      The full board range: <Value q="q22" join=", " suffix="." /> Each is chosen for the design,
-      the use, the finish and the budget of the project.
+    {/* The lead-in is a label, not the first half of his sentence. Welded on,
+        it pushed his own list past the 25-word ceiling in section 7; lifted
+        out, his answer stands as it is and the label does its own job. Same
+        treatment as the home page. */}
+    <MonoLabel as="p" tone="soft" style="margin-top:var(--space-15)">The full board range</MonoLabel>
+    <p style="max-width:var(--measure);margin-top:var(--space-5);color:var(--text-quiet)">
+      <Value q="q22" join=", " suffix="." /> Each is chosen for the design, the use, the finish
+      and the budget of the project.
     </p>
   </Wrap>
 

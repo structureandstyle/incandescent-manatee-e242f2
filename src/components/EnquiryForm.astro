@@ -1,5 +1,5 @@
 ---
-import { SERVICES, DEFERRED_SERVICES } from "../data/site";
+import { SERVICES, DEFERRED_SERVICES, serviceLabel } from "../data/site";
 
 interface Props {
   compact?: boolean;
@@ -35,8 +35,12 @@ const { compact = false, idPrefix = "", service } = Astro.props;
  *   deferred; the work is not.
  */
 const CHOICES = [
-  ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => s.title),
-  ...DEFERRED_SERVICES.map((s) => s.title),
+  // serviceLabel, not title: this list is read by a visitor, and one service
+  // keeps a search term in its own page title that protocol 5 bans everywhere
+  // else. The enquiry log records whatever is ticked, so the label is what
+  // lands in it, and the two stay in step.
+  ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map(serviceLabel),
+  ...DEFERRED_SERVICES.map(serviceLabel),
   "Flooring",
   "Something else",
 ];

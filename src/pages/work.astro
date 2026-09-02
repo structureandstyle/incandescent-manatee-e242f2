@@ -33,7 +33,7 @@ import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 
 import { BAND } from "../data/site-content";
-import { BUSINESS, SERVICES, servicePath } from "../data/site";
+import { BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
 import selection from "../../public/images/_selection.json";
 
@@ -48,7 +48,7 @@ const categories = (
   SERVICES.map((s) => {
     const shots = sel[s.slug] ?? [];
     return shots.length
-      ? { title: s.title, shots, href: servicePath(s), alt: `${s.title}, completed installation by ${BUSINESS.legalName}` }
+      ? { title: serviceLabel(s), shots, href: servicePath(s), alt: `${serviceLabel(s)}, completed installation by ${BUSINESS.legalName}` }
       : null;
   }).filter(Boolean) as { title: string; shots: { file: string; w: number; h: number }[]; href?: string; alt: string }[]
 ).concat(
@@ -67,7 +67,7 @@ const categories = (
 
 <Base
   title="Recent work"
-  description="Finished fitted wardrobes, walk-in wardrobes, alcove units, media walls and kitchens across London."
+  description="Photographs of completed installations across London: fitted wardrobes, walk-in wardrobes, alcove units, built-in TV units and bespoke kitchens."
   noindex={!isIndexable}
 >
   <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">

@@ -27,7 +27,7 @@ import EnquireBand from "../components/ds/EnquireBand.astro";
 import Faq from "../components/ds/Faq.astro";
 import Link from "../components/ds/Link.astro";
 
-import { SERVICES, SITE_URL, BUSINESS, servicePath, type Service } from "../data/site";
+import { SERVICES, SITE_URL, BUSINESS, servicePath, serviceLabel, type Service } from "../data/site";
 import { BAND, CONTACT } from "../data/site-content";
 import { SERVICE_COPY } from "../data/service-copy";
 import { gateFor, indexable } from "../data/page-gates";
@@ -392,7 +392,7 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
       <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md)">
         {others.map((s) => (
           <li style="border-top:var(--rule-structure);padding-top:var(--space-9)">
-            <Link href={servicePath(s)} variant="nav" chamfer>{s.title}</Link>
+            <Link href={servicePath(s)} variant="nav" chamfer>{serviceLabel(s)}</Link>
             <p style="margin-top:var(--space-6);font-size:var(--type-body-sm);color:var(--text-quiet)">{s.summary}</p>
           </li>
         ))}

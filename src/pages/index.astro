@@ -46,7 +46,7 @@ import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 import Ask from "../components/Ask.astro";
 
-import { SERVICES, BUSINESS, servicePath } from "../data/site";
+import { SERVICES, BUSINESS, servicePath, serviceLabel } from "../data/site";
 import Faq from "../components/ds/Faq.astro";
 import { HOMEPAGE_FAQS, MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
 import { indexable } from "../data/page-gates";
@@ -97,9 +97,14 @@ const faqSchema = {
 };
 ---
 
+{/* The description said "scribed to your walls and ceiling" until 2 Sep 2026.
+    Section 7 allows the term once per page when it is defined in the same
+    sentence, and a search snippet is read with no page around it, so the
+    definition the Process section carries never reaches the person reading
+    this. Plain words instead. */}
 <Base
   title="Fitted wardrobes and joinery, London"
-  description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across London, measured on site and scribed to your walls and ceiling."
+  description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across London, measured on site and cut to follow your walls and ceiling."
   schema={faqSchema}
   noindex={!isIndexable}
 >
@@ -111,13 +116,9 @@ const faqSchema = {
     </Display>
 
     <p style="max-width:var(--measure);font-size:var(--type-lede)">
-      Alcove units, wardrobe walls, walk-in wardrobes and media walls for homes across London.
-      Every piece is measured on site and scribed to your walls, skirting and ceiling, so
-      there are no filler strips and no gaps.
-    </p>
-
-    <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
-      How the work is run: <Value q="q06" />
+      Alcove units, wardrobe walls, walk-in wardrobes and built-in TV units, for homes across
+      London. Every piece is measured in your room and cut to follow the line of the wall. It
+      meets the floor and the ceiling without gaps or filler strips.
     </p>
 
     {/* The services, by name. This was slice(0, 5), which silently picked up
@@ -133,7 +134,7 @@ const faqSchema = {
       {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s, i) => (
         <>
           {i > 0 && <span aria-hidden="true"> · </span>}
-          <a href={servicePath(s)} style="color:inherit">{s.title}</a>
+          <a href={servicePath(s)} style="color:inherit">{serviceLabel(s)}</a>
         </>
       ))}
     </MonoLabel>
@@ -153,6 +154,19 @@ const faqSchema = {
         />
       </div>
     )}
+
+    {/* This block sat ABOVE the plate until 2 Sep 2026, which put two blocks of
+        claim in front of the first photograph on the page. Protocol section 11
+        orders the proof: photography of finished work leads, before any claim.
+        Below the plate it is also read after the thing it describes.
+
+        The label is separate from his answer rather than inline, which is how
+        it was: welded on it made one 26-word sentence, over the section 7
+        ceiling of 25. A label is a label. */}
+    <MonoLabel as="p" tone="soft" style="margin-top:var(--plate-y)">How the work is run</MonoLabel>
+    <p style="max-width:var(--measure);margin-top:var(--space-5);color:var(--text-quiet)">
+      <Value q="q06" />
+    </p>
   </Wrap>
 
   <!-- Approach -->
@@ -162,13 +176,15 @@ const faqSchema = {
     </Display>
     <div style="max-width:var(--measure);margin-top:var(--space-13)">
       <p>
-        The structure is the part nobody sees: the boxes behind the doors go in square against
-        walls that are not, cut to the room rather than packed out with filler.
+        The part nobody sees is the frame behind the doors. It goes in square against a wall that
+        rarely is, and the difference is cut away rather than filled.
       </p>
       {/* Q29, his words. He refused any framing against other firms, so the
-          paragraph states the standard rather than a comparison. */}
-      <p style="margin-top:var(--space-10)">
-        The standard every commission is held to: <Value q="q29" />
+          paragraph states the standard rather than a comparison. The lead-in
+          moved out of the sentence for the same reason as the one above. */}
+      <MonoLabel as="p" tone="soft" style="margin-top:var(--space-12)">The standard it is held to</MonoLabel>
+      <p style="margin-top:var(--space-5)">
+        <Value q="q29" />
       </p>
     </div>
   </Wrap>
@@ -184,11 +200,11 @@ const faqSchema = {
         <div>
           <PlateCarousel
             shots={shots}
-            altBase={`${service.title}, completed installation by ${BUSINESS.legalName}`}
-            subject={service.title}
+            altBase={`${serviceLabel(service)}, completed installation by ${BUSINESS.legalName}`}
+            subject={serviceLabel(service)}
           />
           <p style="margin-top:var(--space-6)">
-            <Link href={servicePath(service)} variant="nav">{service.title}</Link>
+            <Link href={servicePath(service)} variant="nav">{serviceLabel(service)}</Link>
           </p>
         </div>
       ))}
@@ -264,12 +280,25 @@ const faqSchema = {
   <Wrap style="padding-top:var(--section-y)">
     <SectionHead meta="The company" scribe>About Structure & Style</SectionHead>
     <div style="max-width:var(--measure)">
+      {/* The accountability line lives on /about/ and in the homepage FAQ that
+          asks the question directly. Protocol 10 permits it where
+          accountability is the point and forbids multiplying it, and three
+          times on two pages was multiplying it. This says something else,
+          sourced to Q13 and Q14, which put the first visit at the room.
+
+          "There is no showroom and no sales team" opened this paragraph until
+          the Truth gate took it out on 2 Sep 2026. Nothing confirms it. Q03
+          says no operating address is PUBLISHED, which is an instruction to
+          stay silent about premises, not permission to assert a negative about
+          them. A checkable-sounding claim with nothing under it is the exact
+          defect that blocked ten journal statements on 24 August. */}
       <p>
-        There is no showroom and no sales team. The person who measures your room is the person
-        who draws it and the person who fits it.
+        The design is worked out in the room itself, against the wall it has to fit. The first
+        visit is to your home and takes 45 to 60 minutes.
       </p>
-      <p style="margin-top:var(--space-10);color:var(--text-quiet)">
-        What stands behind the work: <Value q="q35" />
+      <MonoLabel as="p" tone="soft" style="margin-top:var(--space-12)">What stands behind it</MonoLabel>
+      <p style="margin-top:var(--space-5);color:var(--text-quiet)">
+        <Value q="q35" />
       </p>
       <p style="margin-top:var(--space-14)">
         <Link href="/about/" variant="nav" chamfer>About Structure & Style</Link>

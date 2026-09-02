@@ -140,11 +140,16 @@ const hasQuotes = quotes.length > 0;
                   Rev. {String(i + 1).padStart(2, "0")}
                 </MonoLabel>
                 <div>
+                  {/* A blockquote, not a paragraph. It is semantically what
+                      this is, and it marks the text as verbatim: these are
+                      customers' own words, quoted unedited, so no copy pass and
+                      no tone gate may touch them. scripts/copy-gate.py in the
+                      ops repo skips blockquote for exactly that reason. */}
                   <MonoLabel
-                    as="p"
+                    as="blockquote"
                     tone="default"
                     caps={false}
-                    style="font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
+                    style="margin:0;font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
                   >{q.text}</MonoLabel>
                   {q.meta && (
                     <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
@@ -157,11 +162,16 @@ const hasQuotes = quotes.length > 0;
                   Rev. {String(i + 1).padStart(2, "0")}
                 </MonoLabel>
                 <div>
+                  {/* A blockquote, not a paragraph. It is semantically what
+                      this is, and it marks the text as verbatim: these are
+                      customers' own words, quoted unedited, so no copy pass and
+                      no tone gate may touch them. scripts/copy-gate.py in the
+                      ops repo skips blockquote for exactly that reason. */}
                   <MonoLabel
-                    as="p"
+                    as="blockquote"
                     tone="default"
                     caps={false}
-                    style="font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
+                    style="margin:0;font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
                   >{q.text}</MonoLabel>
                   {q.meta && (
                     <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
