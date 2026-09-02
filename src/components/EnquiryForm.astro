@@ -19,18 +19,25 @@ const { compact = false, idPrefix = "", service } = Astro.props;
  *
  * This answer is the one the shared enquiry log records in its "Found us via"
  * column, and clause 2 of the agreement counts an enquiry as F2F-generated
- * when it is "recorded as having found you through Google or the website". So
- * the three options Denis named are the three the contract actually turns on:
- * Google counts, the website counts, a personal recommendation does not.
+ * when it is "recorded as having found you through Google or the website".
  *
  * `value` matches the log's own vocabulary (its Channel column validates
  * against a list carrying Referral and Other) while the label stays in the
  * words a visitor would use. Change one, change the log.
  *
- * "Something else" is the fourth entry and it is deliberate: a lead who came
- * from a citation site or a van sign would otherwise pick one of three wrong
- * answers, and a mislabelled attribution is a commission figure we cannot
- * defend. The log carries "Other" for the same reason.
+ * THERE IS NO "WEBSITE" OPTION, and that is deliberate. It shipped with one
+ * for a few hours on 2 September and Denis removed it the same day, correctly:
+ * anyone filling this form in is already on the website, so the website cannot
+ * be how they heard about us. The question would have invited a shrug, and a
+ * shrugged answer is worse than an empty one because it still looks like data.
+ * The genuine website-found case is a visitor who browses, then phones or
+ * messages: that arrives on another channel entirely and the log records it
+ * there. Nothing is lost by leaving it off the form.
+ *
+ * "Something else" is the escape hatch: a lead from a citation site or a van
+ * sign would otherwise pick one of two wrong answers, and a mislabelled
+ * attribution is a commission figure we cannot defend. The log carries "Other"
+ * for the same reason.
  *
  * Left optional, as the text box was. Never add a required field to a lead
  * form to improve our own reporting.
@@ -38,7 +45,6 @@ const { compact = false, idPrefix = "", service } = Astro.props;
 const SOURCES = [
   { value: "Google", label: "Google" },
   { value: "Referral", label: "Someone recommended you" },
-  { value: "Website", label: "Your website" },
   { value: "Something else", label: "Something else" },
 ];
 
