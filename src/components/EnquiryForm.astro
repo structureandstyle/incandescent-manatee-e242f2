@@ -25,6 +25,15 @@ const { compact = false, idPrefix = "", service } = Astro.props;
  * against a list carrying Referral and Other) while the label stays in the
  * words a visitor would use. Change one, change the log.
  *
+ * THE SEARCH OPTION IS NOT "GOOGLE". Widened 2 September 2026, Denis's point:
+ * a lead can arrive from Bing or DuckDuckGo, and a bare "Google" would push
+ * them into "Something else" or make them answer wrongly. The label names
+ * Google anyway, because that is the word people use for searching, and adds
+ * the rest so nobody hesitates. Nothing is lost by not isolating Google here:
+ * Search Console and the Business Profile measure Google far more precisely
+ * than a self-reported dropdown ever could, and what this field uniquely
+ * catches is the traffic no analytics can see.
+ *
  * THERE IS NO "WEBSITE" OPTION, and that is deliberate. It shipped with one
  * for a few hours on 2 September and Denis removed it the same day, correctly:
  * anyone filling this form in is already on the website, so the website cannot
@@ -43,7 +52,7 @@ const { compact = false, idPrefix = "", service } = Astro.props;
  * form to improve our own reporting.
  */
 const SOURCES = [
-  { value: "Google", label: "Google" },
+  { value: "Search", label: "Google or another search engine" },
   { value: "Referral", label: "Someone recommended you" },
   { value: "Something else", label: "Something else" },
 ];
