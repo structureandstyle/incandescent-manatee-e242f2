@@ -1,38 +1,69 @@
 # Material swatches
 
-All six material cards carry a **photograph of the client's own finished
-work**, cropped to the surface itself. They replaced CSS-drawn colour blocks on
-2 September 2026, on Denis's direction: a materials section on a joinery site
-should show the material.
+Six cards, six photographs, from two sources. Updated 2 September 2026.
 
-Every crop comes from a photograph already published on this site, so nothing
-new is asserted and no stock imagery is introduced. That is a compliance line,
-not a preference: presenting stock as the studio's work is a red line, and it
-is what the legacy site did with its Unsplash share image.
+## Where each one comes from
 
-| File | Card | Cropped from | What it shows |
+| File | Card | Source | What it shows |
 |---|---|---|---|
-| `painted-mdf.webp` | MDF and MR MDF | `fitted-wardrobes/fitted-wardrobes-02.webp` | A painted panelled door face. Painted furniture is what this board is for. |
-| `decorative-board.webp` | Melamine and decorative board | `walk-in-wardrobes/walk-in-wardrobes-02.webp` | A wood-effect board interior, edge banded. The finish arrived on the board. |
-| `specialist-board.webp` | Specialist decorative boards | `bespoke-kitchens/bespoke-kitchens-05.webp` | A high-gloss door face, one of the finishes the card names. |
-| `veneered-board.webp` | Veneered board | ops `ss1/20260125_153902.jpg` | Oak-faced cubby dividers with edge banding. |
-| `plywood.webp` | Plywood | ops `ss1/20250528_092038.jpg` | Plywood carcasses in a utility run, cropped to the board faces and edges. |
-| `hardware.webp` | Hardware | ops `ss/20260528_104803.jpg` | A Blum concealed hinge, the brand stamped on the arm. The card names Blum for hinges. |
+| `mdf-board.webp` | MDF and MR MDF | **Supplier sample** | Raw MDF with a machined bead profile. |
+| `veneered-board.webp` | Veneered board | **Supplier sample** | Oak veneered MDF with its edge banding. |
+| `plywood.webp` | Plywood | **Supplier sample** | A hardwood-core board corner, laminations showing. |
+| `decorative-board.webp` | Melamine and decorative board | Kaspar's own work, `walk-in-wardrobes-02.webp` | A wood-effect board interior, edge banded. |
+| `specialist-board.webp` | Specialist decorative boards | Kaspar's own work, `bespoke-kitchens-05.webp` | A high-gloss door face. |
+| `hardware.webp` | Hardware | Kaspar's own work, ops `ss/20260528_104803.jpg` | A Blum concealed hinge, brand stamped on the arm. |
 
-The last three came from the full 295-file triage in the ops repo, not from the
-30 photographs already on the site. Two were classified "detail" and one
-"in-progress", which is why nothing on the site had used them.
+## The rule behind the split
 
-**One thing to confirm with the client.** The veneer swatch is identified as
-veneer by our own triage note rather than by him, and it sits beside a
-decorative-board swatch that is also a wood finish. If he says either is the
-other, swap the file rather than the copy.
+Use his own work wherever it shows the material plainly. Use a supplier sample
+only where the board is hidden under a finish in every photograph we hold.
 
-**The plywood crop is deliberately tight.** The source frame is a utility room
-mid-install with tools and a ladder in it. Protocol section 10 bans any image
-implying a workshop, so the crop holds only the board faces and their exposed
-edges: the material, not a making scene.
+MDF, veneer and plywood fail that test. A painted door photographs the paint,
+not the MDF underneath, and plywood appears in his library only as carcasses in
+a room. The three samples show the board itself, which is what the card is for.
 
-Re-cropping: the fractions are in the ops repo's site notes and in the commit
-that added these files. Keep the crops abstract. A crop that reads as a room
-belongs in a plate, not in a swatch.
+The other three pass it, so they stay his: a wood-effect interior, a gloss door,
+and a hinge with the brand legible, which is better evidence for the copy naming
+Blum than any catalogue photograph would be.
+
+## The rights position, stated rather than assumed
+
+**The three supplier samples are third-party product photographs**, from the set
+supplied on 2 September 2026 and filed in the ops repo at `Photos/Materials`.
+They came off manufacturer and merchant listings. We hold no licence for them.
+
+This is not the compliance red line the engagement already guards against, which
+is stock imagery presented as project work: a card captioned "Plywood" showing a
+plywood board claims nothing about a job. It is a straightforward copyright
+question, and it is why the earlier version of this file rejected web-found
+photography outright.
+
+**The clean fix is cheap and permanent: photograph the offcuts.** Kaspar has a
+piece of every board he uses. A corner of each on a clean surface in daylight
+takes five minutes, and the site then owns its material photography outright and
+matches the rest of the site's warmth rather than a white studio background. The
+ask is logged in the ops repo.
+
+Until then these three ship on Denis's instruction, with the position recorded
+here rather than discovered later.
+
+## Not used, and why
+
+From the same supplied set:
+
+- **White high-gloss board.** Cropped to the board it reads as a blank white
+  card against the paper background. Kaspar's own grey gloss door does the job.
+- **Green MR MDF.** Accurate, and rather good, but the card is "MDF and MR MDF"
+  and the profiled door carries more information in one frame.
+- **Blum hinge range, catalogue flat lay.** A strong image with worse provenance
+  than a Blum hinge photographed on his own door.
+- **Walnut fluted wall panel.** A styled interior with a chair in it, and the
+  closest thing in the set to another brand's marketing standing in for ours.
+  The textured-surface idea is worth keeping; the source should not be a
+  retailer's lifestyle shot.
+
+## Re-cropping
+
+Let the board fill the frame and keep the crop abstract. A crop that reads as a
+room belongs in a plate, not in a swatch. The crop fractions are in the commit
+that added each file.

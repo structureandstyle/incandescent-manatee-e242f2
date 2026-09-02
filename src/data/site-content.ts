@@ -165,25 +165,35 @@ export const REVIEWS = {
  * imagery is a rights problem and a photograph of someone else's material
  * reads as a claim about ours.
  *
- * All six are photographs as of 2 Sep 2026. The last two were found by
- * searching the full 295-file triage in the ops repo rather than the 30 images
- * already on the site: the veneer crop and the Blum hinge were both sitting in
- * the "detail" classification, and the plywood in an in-progress frame.
+ * All six are photographs as of 2 Sep 2026, and they come from two places.
  *
- * One thing to confirm with the client, and it is the reason this note exists:
- * the veneer swatch and the decorative-board swatch are both wood-finish
- * surfaces, and the veneer one is identified as veneer by our own triage note
- * rather than by him. If he says otherwise, swap the file, not the copy.
+ * MDF, veneered board and plywood are SUPPLIER PRODUCT SAMPLES from the set
+ * Denis put in the ops repo's Photos/Materials folder. They show the board
+ * itself, which a photograph of finished work cannot: a painted door shows the
+ * paint, not the MDF under it. They are third-party product photographs, and
+ * the rights position is written down in
+ * public/images/materials/README.md rather than left implicit.
+ *
+ * Melamine and decorative board, specialist boards and hardware are crops of
+ * KASPAR'S OWN WORK, kept because for those three his own photography says the
+ * thing better: a wood-effect interior, a high-gloss door, and a Blum hinge
+ * with the brand legible on the arm.
+ *
+ * The split is not arbitrary. Use his own work wherever it shows the material
+ * plainly. Use a sample only where the board is hidden under a finish in every
+ * photograph we hold.
  */
 export const MATERIALS = [
   {
     key: "mdf",
     name: "MDF and MR MDF",
     description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles.",
-    /* A crop of his own painted wardrobe doors (fitted-wardrobes-02): paint on
-       a profiled MDF door is what this board is for. Real finish, real job,
-       2 Sep 2026. See public/images/materials/README.md. */
-    swatch: "url(/images/materials/painted-mdf.webp) center / cover",
+    /* Raw MDF with a machined bead profile, from the sample set Denis
+       supplied on 2 Sep 2026. A supplier's product photograph, not his work:
+       see the provenance and the rights note in
+       public/images/materials/README.md. It replaced a crop of his own painted
+       doors, which showed the finish rather than the board. */
+    swatch: "url(/images/materials/mdf-board.webp) center / cover",
     uses: "Painted wardrobes, alcove units, panelling and detailed door profiles. The moisture-resistant version, MR MDF, goes where damp is a risk.",
     pros: [
       "Stays flat and does not move with the seasons",
@@ -201,8 +211,10 @@ export const MATERIALS = [
     key: "veneer",
     name: "Veneered board",
     description: "The character of real timber with the stability of an engineered board.",
-    /* Oak-faced boards and edge banding in one of his own walk-in interiors,
-       the frame the triage identified as veneer with edge banding. 2 Sep 2026. */
+    /* Oak veneered MDF with its edge banding, from Denis's sample set,
+       2 Sep 2026. It replaced a crop of his own walk-in interior that our
+       triage read as veneer but he had never confirmed: the sample says what
+       the board is without anyone having to identify it. */
     swatch: "url(/images/materials/veneered-board.webp) center / cover",
     uses: "Wardrobe doors, panelling and shelving where real timber should show. Where the design calls for it, grain is matched across adjoining doors so the run reads as one piece.",
     pros: [
@@ -220,9 +232,9 @@ export const MATERIALS = [
     key: "plywood",
     name: "Plywood",
     description: "Strong and durable, with a distinctive exposed edge where the design calls for it.",
-    /* Plywood carcasses in a utility run, cropped to the board faces and their
-       exposed edges. Cropped away from the tools and the ladder in the source
-       frame: this is the material, not a making scene (protocol 10). 2 Sep 2026. */
+    /* A hardwood-core plywood board corner with the laminations showing, from
+       Denis's sample set, 2 Sep 2026. It replaced a crop of plywood carcasses
+       on one of his sites, which read as a room rather than as the board. */
     swatch: "url(/images/materials/plywood.webp) center / cover",
     uses: "The boxes and frames behind fitted furniture, long shelf spans, and designs that show its striped edge on purpose.",
     pros: [
