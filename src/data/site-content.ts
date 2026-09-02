@@ -387,9 +387,15 @@ export const PROCESS = [
         same way the samples line did. And Q15, one of his best answers, was
         going unused anywhere on the site: it is our job to ask the right
         questions, not the client's to arrive knowing every detail. That is
-        the sentence a first-time client actually needs. */
+        the sentence a first-time client actually needs.
+
+        "The space", not "the room", on Denis's reading 2 Sep 2026. It is also
+        the more accurate word: an alcove, a landing or a run of wall is not a
+        room, and half the services are not fitted in one. Checked against the
+        section 5 lists first, since "space" is the kind of word an estate
+        agent reaches for. It is not on them. */
     confirmed:
-      "We visit your home to see the room, usually for 45 to 60 minutes. It runs longer for a larger or more complex project. You do not need to have every answer ready: asking the right questions is our job.",
+      "We visit your home to see the space, usually for 45 to 60 minutes. It runs longer for a larger or more complex project. You do not need to have every answer ready: asking the right questions is our job.",
     questions: ["q13", "q14", "q15", "q16"] as QuestionKey[],
     /** Stamped mono facts on the process page, all from confirmed answers. */
     details: ["Usually 45 to 60 minutes", "In your home"],
