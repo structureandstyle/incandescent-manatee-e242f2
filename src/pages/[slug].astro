@@ -76,8 +76,12 @@ const copy = SERVICE_COPY[service.slug];
  * home office and nothing at all for under-stair storage. Plate renders an
  * honest empty frame instead.
  */
+const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
+/* The cost guide is the wardrobe product priced, so it shows the wardrobe
+   photography. Without this it rendered the empty-frame state ("none in the
+   library, requested from the client") on an indexable page (2 Sep 2026). */
 const photos: { file: string; w: number; h: number }[] =
-  (selection as Record<string, { file: string; w: number; h: number }[]>)[service.slug] ?? [];
+  sel[service.slug] ?? (service.slug === "fitted-wardrobe-cost" ? sel["fitted-wardrobes"] ?? [] : []);
 
 /**
  * Alt text. Deliberately minimal and provably true: the service, and that the
@@ -190,7 +194,7 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
 ---
 
 <Base
-  title={service.heading}
+  title={service.metaTitle ?? service.heading}
   description={service.description}
   schema={schema}
   noindex={!isIndexable}
@@ -218,8 +222,8 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
 
       <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:baseline;margin-top:var(--space-15)">
         <Link href="#enquire" variant="cta" chamfer>Get a price</Link>
-        <Link href={CONTACT.phoneHref} variant="nav" chamfer>Call {CONTACT.phoneDisplay}</Link>
-        <Link href={CONTACT.whatsapp} variant="nav" chamfer>WhatsApp</Link>
+        <Link href={CONTACT.phoneHref} variant="nav" chamfer style="padding:var(--space-6) 0">Call {CONTACT.phoneDisplay}</Link>
+        <Link href={CONTACT.whatsapp} variant="nav" chamfer style="padding:var(--space-6) 0">WhatsApp</Link>
       </div>
     </Wrap>
 
@@ -365,7 +369,9 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
       <EnquireBand heading="If you have a room in mind, start here." cta={null} chamfer>
         {BAND.body}
         <Fragment slot="facts">
-          {BAND.facts.map((q) => (
+          {/* This page's own price line, then the shared lead time and area. */}
+          <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">{service.bandPrice}</MonoLabel>
+          {BAND.facts.slice(1).map((q) => (
             <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
               <Value q={q} />
             </MonoLabel>
@@ -375,7 +381,7 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
 
       <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
         <div style="max-width:var(--measure-tight)">
-          <EnquiryForm compact />
+          <EnquiryForm compact service={service.title} />
         </div>
       </Wrap>
     </section>

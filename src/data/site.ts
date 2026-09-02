@@ -59,6 +59,17 @@ export type Service = {
   primary: string;
   /** Meta description. Aim 140 to 155 characters. */
   description: string;
+  /**
+   * The <title>, where the H1 runs past the roughly 60 characters a result
+   * page shows. Optional: a page whose heading is short enough uses it.
+   */
+  metaTitle?: string;
+  /**
+   * The one price line the enquiry band shows on this page. Site-wide it
+   * used to show "Fitted wardrobes from £2,300" on every service page, a
+   * wardrobe price above the alcove form (2 Sep 2026).
+   */
+  bandPrice: string;
   /** One line used on the homepage grid. */
   summary: string;
   /**
@@ -80,19 +91,23 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     slug: "fitted-wardrobes",
+    metaTitle: "Fitted wardrobes London, made to measure",
+    bandPrice: "Fitted wardrobes from £2,300",
     price:
       "From £2,300 for a 2-door run up to 1.2m in melamine. Width and finish move it: from £4,000 at 4 doors, and painted, sprayed and oak veneer finishes step up from there. Internal drawers and integrated lighting add to any of them.",
     title: "Fitted wardrobes",
     heading: "Fitted wardrobes in London, made to measure",
     primary: "fitted wardrobes london",
     description:
-      "Built-in and fitted wardrobes made to measure for your room, designed around what you store and fitted wall to wall. Serving Hampstead, Camden and all of London.",
+      "Built-in and fitted wardrobes made to measure for your room, designed around what you store and fitted wall to wall, across Hampstead, Camden and London.",
     summary:
       "Built-in wardrobes scribed to your walls, ceiling and floor, with the hanging, shelving and drawer split worked out around what you actually keep.",
     wave: 1,
   },
   {
     slug: "walk-in-wardrobes",
+    metaTitle: "Bespoke walk-in wardrobes, London",
+    bandPrice: "Projects generally from £2,000",
     price:
       "Priced per room. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Walk-in wardrobes",
@@ -106,19 +121,23 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "alcove-units",
+    metaTitle: "Alcove units and shelving in London",
+    bandPrice: "Alcove units from £3,300 a pair",
     price:
       "From £3,300 for a pair of alcove units in melamine, from £3,600 hand-painted, and from £6,000 in oak veneer. Based on base cupboards with shelving over, up to about 1m per alcove. Shelving detail, drawers and lighting move it further.",
     title: "Alcove units and shelving",
-    heading: "Alcove units, cupboards and shelving",
+    heading: "Alcove units, cupboards and shelving in London",
     primary: "alcove units london",
     description:
-      "Alcove cupboards and shelving built into chimney breast recesses, measured and scribed individually so doors sit flush and lines run true.",
+      "Alcove cupboards and shelving built into chimney breast recesses across London, measured and scribed individually so doors sit flush and lines run true.",
     summary:
       "No two alcoves in a period house are the same width. Each unit is built to its own measurements and scribed to the wall.",
     wave: 1,
   },
   {
     slug: "fitted-wardrobe-cost",
+    metaTitle: "Built-in wardrobe cost in London",
+    bandPrice: "Fitted wardrobes from £2,300",
     price:
       "From £2,300 for a 2-door wardrobe in melamine to £6,300 and up for 4 doors in oak veneer. The tables below give every step between.",
     title: "What fitted wardrobes cost",
@@ -132,6 +151,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "media-walls",
+    metaTitle: "Media walls and TV units, London",
+    bandPrice: "Projects generally from £2,000",
     price:
       "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Media walls and TV units",
@@ -145,6 +166,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "bespoke-kitchens",
+    metaTitle: "Bespoke kitchens in London",
+    bandPrice: "Projects generally from £2,000",
     price:
       "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Bespoke kitchens",
@@ -171,6 +194,7 @@ export const SERVICES: Service[] = [
 export const DEFERRED_SERVICES: Service[] = [
   {
     slug: "home-office-understairs-storage",
+    bandPrice: "Projects generally from £2,000",
     price:
       "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Home office and under-stair storage",

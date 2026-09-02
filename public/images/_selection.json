@@ -64,12 +64,12 @@
   ],
   "alcove-units": [
     {
-      "file": "/images/alcove-units/alcove-units-04.webp",
+      "file": "/images/alcove-units/alcove-units-05.webp",
       "w": 1600,
       "h": 1068
     },
     {
-      "file": "/images/alcove-units/alcove-units-05.webp",
+      "file": "/images/alcove-units/alcove-units-04.webp",
       "w": 1600,
       "h": 1068
     },
@@ -121,11 +121,6 @@
   ],
   "media-walls": [
     {
-      "file": "/images/media-walls/media-walls-04.webp",
-      "w": 1600,
-      "h": 1068
-    },
-    {
       "file": "/images/media-walls/media-walls-01.webp",
       "w": 1400,
       "h": 1050,
@@ -133,6 +128,11 @@
       "date": "20240905",
       "quality": "5",
       "bytes": 90902
+    },
+    {
+      "file": "/images/media-walls/media-walls-04.webp",
+      "w": 1600,
+      "h": 1068
     },
     {
       "file": "/images/media-walls/media-walls-02.webp",
@@ -155,7 +155,12 @@
   ],
   "bespoke-kitchens": [
     {
-      "file": "/images/bespoke-kitchens/kitchen-shaker-showpiece.jpg",
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-06.webp",
+      "w": 1600,
+      "h": 1064
+    },
+    {
+      "file": "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp",
       "w": 1600,
       "h": 1068
     },
@@ -182,11 +187,6 @@
       "file": "/images/bespoke-kitchens/bespoke-kitchens-05.webp",
       "w": 1600,
       "h": 1068
-    },
-    {
-      "file": "/images/bespoke-kitchens/bespoke-kitchens-06.webp",
-      "w": 1600,
-      "h": 1064
     },
     {
       "file": "/images/bespoke-kitchens/bespoke-kitchens-01.webp",

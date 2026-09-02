@@ -156,21 +156,34 @@ export const REVIEWS = {
  * job, and no finish word (hand-painted, solid timber) the protocol reserves
  * for verified jobs.
  *
- * Swatches, chosen 30 Aug 2026 now Q24 names the finishes: abstract finish
- * tones drawn in CSS, not photographs and not found imagery. Each depicts the
- * finish category truthfully: paint as a flat painted colour, veneer as a
- * timber tone (veneer is real timber), plywood as its striped edge, the board
- * families as flat neutrals, hardware as a flat metal grey. Web-found
- * photographs were considered and rejected: unlicensed imagery on a client
- * site is a rights problem, and a photograph of someone else's material reads
- * as a claim about ours.
+ * Swatches. Drawn in CSS from 30 Aug 2026, and FOUR OF THE SIX BECAME REAL
+ * PHOTOGRAPHS on 2 Sep 2026 (Denis: a materials section should show the
+ * material). Each photographed swatch is a crop of the client's own finished
+ * work, taken from a photograph already published on this site, so nothing new
+ * is asserted and no stock imagery enters: see public/images/materials/README.md
+ * for the crop table. Web-found photography stays rejected, because unlicensed
+ * imagery is a rights problem and a photograph of someone else's material
+ * reads as a claim about ours.
+ *
+ * All six are photographs as of 2 Sep 2026. The last two were found by
+ * searching the full 295-file triage in the ops repo rather than the 30 images
+ * already on the site: the veneer crop and the Blum hinge were both sitting in
+ * the "detail" classification, and the plywood in an in-progress frame.
+ *
+ * One thing to confirm with the client, and it is the reason this note exists:
+ * the veneer swatch and the decorative-board swatch are both wood-finish
+ * surfaces, and the veneer one is identified as veneer by our own triage note
+ * rather than by him. If he says otherwise, swap the file, not the copy.
  */
 export const MATERIALS = [
   {
     key: "mdf",
     name: "MDF and MR MDF",
     description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles.",
-    swatch: "var(--green)",
+    /* A crop of his own painted wardrobe doors (fitted-wardrobes-02): paint on
+       a profiled MDF door is what this board is for. Real finish, real job,
+       2 Sep 2026. See public/images/materials/README.md. */
+    swatch: "url(/images/materials/painted-mdf.webp) center / cover",
     uses: "Painted wardrobes, alcove units, panelling and detailed door profiles. The moisture-resistant version, MR MDF, goes where damp is a risk.",
     pros: [
       "Stays flat and does not move with the seasons",
@@ -188,7 +201,9 @@ export const MATERIALS = [
     key: "veneer",
     name: "Veneered board",
     description: "The character of real timber with the stability of an engineered board.",
-    swatch: "linear-gradient(100deg, var(--oak), color-mix(in srgb, var(--oak) 78%, var(--char)) 55%, var(--oak))",
+    /* Oak-faced boards and edge banding in one of his own walk-in interiors,
+       the frame the triage identified as veneer with edge banding. 2 Sep 2026. */
+    swatch: "url(/images/materials/veneered-board.webp) center / cover",
     uses: "Wardrobe doors, panelling and shelving where real timber should show. Where the design calls for it, grain is matched across adjoining doors so the run reads as one piece.",
     pros: [
       "A real timber surface: oak veneer is oak, cut thin",
@@ -205,7 +220,10 @@ export const MATERIALS = [
     key: "plywood",
     name: "Plywood",
     description: "Strong and durable, with a distinctive exposed edge where the design calls for it.",
-    swatch: "repeating-linear-gradient(0deg, color-mix(in srgb, var(--oak) 45%, var(--paper)) 0 11px, color-mix(in srgb, var(--oak) 80%, var(--char)) 11px 14px)",
+    /* Plywood carcasses in a utility run, cropped to the board faces and their
+       exposed edges. Cropped away from the tools and the ladder in the source
+       frame: this is the material, not a making scene (protocol 10). 2 Sep 2026. */
+    swatch: "url(/images/materials/plywood.webp) center / cover",
     uses: "The boxes and frames behind fitted furniture, long shelf spans, and designs that show its striped edge on purpose.",
     pros: [
       "Strong for its weight, and stiff over a long shelf span",
@@ -222,7 +240,9 @@ export const MATERIALS = [
     key: "melamine",
     name: "Melamine and decorative board",
     description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes.",
-    swatch: "color-mix(in srgb, var(--char) 10%, var(--paper))",
+    /* A crop of his own walk-in interior (walk-in-wardrobes-02): a wood-effect
+       decorative board, finish arrived on the board. Real job, 2 Sep 2026. */
+    swatch: "url(/images/materials/decorative-board.webp) center / cover",
     uses: "Wardrobe interiors, storage runs and complete pieces where the budget leads. The finish arrives on the board, ready made.",
     pros: [
       "Hard-wearing and wipes clean",
@@ -239,7 +259,10 @@ export const MATERIALS = [
     key: "specialist",
     name: "Specialist decorative boards",
     description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces.",
-    swatch: "color-mix(in srgb, var(--char) 86%, var(--paper))",
+    /* A crop of his own high-gloss kitchen doors (bespoke-kitchens-05). Real
+       job, 2 Sep 2026. Veneer, plywood and hardware keep their drawn swatches
+       until a photograph of the real thing exists: see the README. */
+    swatch: "url(/images/materials/specialist-board.webp) center / cover",
     uses: "Doors and visible fronts where the surface leads the design: super-matt, high-gloss, textured and stone-effect pieces.",
     pros: [
       "Surfaces paint and veneer cannot give: deep gloss, soft matt, stone and texture",
@@ -256,7 +279,10 @@ export const MATERIALS = [
     /** The Q28 answer, shortened to the two named brands. Named here because
         hardware is the subject of this card, per the 30 Aug 2026 ruling. */
     description: "Blum for hinges and drawer systems, Hafele for furniture hardware and lighting.",
-    swatch: "color-mix(in srgb, var(--char) 38%, var(--paper))",
+    /* A Blum concealed hinge on one of his own doors, the brand stamped on the
+       arm. The card names Blum for hinges; this is that claim, photographed.
+       2 Sep 2026. */
+    swatch: "url(/images/materials/hardware.webp) center / cover",
     uses: "Hinges, drawer runners, lift-up doors, interior fittings and lighting: the moving parts of every piece.",
     pros: [
       "Precise adjustment, so doors and drawers line up and stay lined up",
@@ -349,16 +375,21 @@ export const PROCESS = [
     title: "Survey and drawings",
     /** Order per Q13 and Q21: quotation first, drawings once it is accepted. */
     confirmed:
-      "The measured survey takes about an hour. A fixed, itemised quotation follows, and once it is accepted and the deposit paid, a design week runs: scaled drawings and elevations issued for review, with up to two rounds of revisions included.",
+      "The measured survey takes about an hour. A fixed, itemised quotation follows. Once it is accepted and the deposit paid, a design week runs. Scaled drawings and elevations are issued for review, with up to two rounds of revisions included.",
     questions: ["q17", "q18", "q19", "q20", "q21"] as QuestionKey[],
     details: ["Survey about an hour", "Drawings within the design week", "Two revision rounds included"],
   },
   {
     number: "03",
-    title: "Production",
-    /** The once-unknown stage, per the stage-04 answer. */
+    /* Was "Production" with "machined, edged and finished". Tone protocol
+       section 10 gives making one FAQ entry and no heading, and offers the
+       wording the site may use: components are prepared to the approved
+       drawings, and that is the whole story. Retitled 2 Sep 2026; the
+       stage-04 facts about assembly and finishing in the room are his and
+       stay. */
+    title: "Preparation",
     confirmed:
-      "Components are machined, edged and finished to the approved drawings. Some pieces arrive as sections ready to assemble; others are built up and finished in the room, whichever gets the better result.",
+      "Components are prepared to the approved drawings and specification. Some pieces arrive as sections ready to assemble; others are built up and finished in the room, whichever gets the better result.",
     questions: ["stage04", "q26", "q27", "q28", "q29"] as QuestionKey[],
     details: ["Programme agreed per project", "Blum and Hafele hardware"],
   },
@@ -366,7 +397,7 @@ export const PROCESS = [
     number: "04",
     title: "Fitting",
     confirmed:
-      "Typically 2 to 3 days on site for a straightforward wardrobe wall. Everything is scribed to your walls, floors and ceiling and finished in place, with the area tidied at the end of each day and cleared completely at the end.",
+      "Typically 2 to 3 days on site for a straightforward wardrobe wall. Everything is scribed to your walls, floors and ceiling and finished in place. The area is tidied at the end of each day and cleared completely at the end.",
     questions: ["q30", "q31", "q32", "q33", "q34"] as QuestionKey[],
     details: ["Typically 2 to 3 days on site", "Tidied at the end of each day"],
   },

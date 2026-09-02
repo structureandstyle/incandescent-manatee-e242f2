@@ -14,6 +14,8 @@ import Logo from "./Logo.astro";
 
 interface Props {
   lines?: readonly string[];
+  /** Contact links, rendered as a row above the legal lines. */
+  links?: readonly { label: string; href: string }[];
   showMark?: boolean;
   brand?: boolean;
   class?: string;
@@ -22,6 +24,7 @@ interface Props {
 
 const {
   lines = [],
+  links = [],
   showMark = true,
   brand = false,
   class: className,
@@ -43,6 +46,16 @@ const {
       )}
     </div>
 
+    {links.length > 0 && (
+      <div style="display:flex;gap:var(--space-9) var(--space-14);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
+        {links.map((l) => (
+          <a
+            href={l.href}
+            style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-soft);border-bottom:1px solid var(--hair-rev-strong);padding:var(--space-4) 0;display:inline-block"
+          >{l.label}</a>
+        ))}
+      </div>
+    )}
     <div style="display:flex;justify-content:space-between;gap:var(--space-9);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
       {lines.map((l) => (
         <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint)">{l}</span>

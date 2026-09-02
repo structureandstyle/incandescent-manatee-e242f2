@@ -196,7 +196,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
 
   "fitted-wardrobe-cost": {
     intro: [
-      "Every fitted wardrobe is priced as a whole job, to its own room. The guide tables below give the honest starting points, and a firm number follows one visit.",
+      "Every fitted or built-in wardrobe is priced as a whole job, to its own room. The guide tables below give the honest starting points, and a firm number follows one visit.",
       "What follows is what actually moves the price, how the quotation works, and what it includes.",
     ],
     priceTables: [

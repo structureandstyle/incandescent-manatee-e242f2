@@ -12,10 +12,20 @@ import SiteFooter from "./ds/SiteFooter.astro";
 import { BUSINESS } from "../data/site";
 
 const year = 2026;
+
+/* The contact routes, on every page. The address lives here by Denis's 1 Sep
+   2026 ruling (off the enquiry band, kept on the contact page, in the footer
+   and in the schema). The mailto subject labels the source, as on contact. */
+const links = [
+  { label: `Call ${BUSINESS.phoneDisplay}`, href: BUSINESS.phoneHref },
+  { label: "WhatsApp", href: BUSINESS.whatsapp },
+  { label: BUSINESS.email, href: `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry via structureandstyle.co.uk")}` },
+];
 ---
 
 <SiteFooter
   brand
+  links={links}
   lines={[
     `${BUSINESS.legalName} · Company no. ${BUSINESS.companyNumber}`,
     `Bespoke joinery and fitted furniture · London`,

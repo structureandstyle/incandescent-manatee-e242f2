@@ -98,8 +98,8 @@ const faqSchema = {
 ---
 
 <Base
-  title="Fitted wardrobes and bespoke joinery in London"
-  description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across London. Measured on site and scribed to your walls."
+  title="Fitted wardrobes and joinery, London"
+  description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across London, measured on site and scribed to your walls and ceiling."
   schema={faqSchema}
   noindex={!isIndexable}
 >
@@ -126,8 +126,16 @@ const faqSchema = {
         carousel and hero photograph sit right below. The cost guide is a
         guide, not a service, so it is excluded by slug rather than by
         position. */}
+    {/* Each name links to its page: this strip was plain text, so the
+        homepage carried no link at all to the fitted wardrobes page, the
+        flagship, since the four carousels below are the other services. */}
     <MonoLabel as="p" style="margin-top:var(--space-14)">
-      {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => s.title).join(" · ")}
+      {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true"> · </span>}
+          <a href={servicePath(s)} style="color:inherit">{s.title}</a>
+        </>
+      ))}
     </MonoLabel>
 
     {hero && (
@@ -154,8 +162,8 @@ const faqSchema = {
     </Display>
     <div style="max-width:var(--measure);margin-top:var(--space-13)">
       <p>
-        The structure is the part nobody sees: carcasses that go in square against walls that are
-        not, scribed to the room rather than packed out with filler.
+        The structure is the part nobody sees: the boxes behind the doors go in square against
+        walls that are not, cut to the room rather than packed out with filler.
       </p>
       {/* Q29, his words. He refused any framing against other firms, so the
           paragraph states the standard rather than a comparison. */}

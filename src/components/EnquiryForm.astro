@@ -6,8 +6,12 @@ interface Props {
   /** Prefix for element ids, so the page form and the modal form can coexist
       without duplicate ids. Field names are untouched: same Netlify form. */
   idPrefix?: string;
+  /** The service to preselect: a service page passes its own title. Anywhere
+      else the list opens on "Choose one" rather than silently defaulting to
+      fitted wardrobes, which is what every alcove enquiry used to arrive as. */
+  service?: string;
 }
-const { compact = false, idPrefix = "" } = Astro.props;
+const { compact = false, idPrefix = "", service } = Astro.props;
 
 /**
  * Netlify Forms. The site is already on Netlify so this costs nothing and adds
@@ -64,8 +68,9 @@ const { compact = false, idPrefix = "" } = Astro.props;
     <div>
       <label for={`${idPrefix}service`}>What do you need?</label>
       <select id={`${idPrefix}service`} name="service">
+        <option value="" selected={!service}>Choose one</option>
         {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s) => (
-          <option value={s.title}>{s.title}</option>
+          <option value={s.title} selected={service === s.title}>{s.title}</option>
         ))}
         <option value="Something else">Something else</option>
       </select>

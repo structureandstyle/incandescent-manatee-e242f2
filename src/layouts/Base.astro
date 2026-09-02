@@ -25,9 +25,11 @@ interface Props {
    * for an unfinished one by `npm run verify`.
    */
   noindex?: boolean;
+  /** The 404 template has no real address to point a canonical at. */
+  noCanonical?: boolean;
 }
 
-const { title, description, schema, image = "/og-default.jpg", noindex = false } = Astro.props;
+const { title, description, schema, image = "/og-default.jpg", noindex = false, noCanonical = false } = Astro.props;
 
 // Self-referencing canonical on every template. The old site had one canonical
 // on one page and Google overrode it anyway, because the Business Profile was
@@ -80,7 +82,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     <script is:inline>document.documentElement.classList.add("js");</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {!noCanonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {
       /* Draft copy is never indexable. `noindex` is driven by the page's gate in
@@ -100,12 +102,15 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     <meta name="twitter:card" content="summary_large_image" />
 
     {/*
-      Font preload stays commented until inter-variable.woff2 is actually in
-      /public/fonts. Preloading a missing file 404s on every page load and buys
-      nothing. Until then the system stack renders, which blocks nothing at all
-      and is a large improvement on the old site's eight blocking font files.
-      <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin />
+      Two preloads, no more: the display serif paints the H1 and the body sans
+      paints everything under it, so both sit on the largest contentful paint.
+      The italic, the mono and the heavier sans weights load on demand through
+      @font-face with font-display: swap (tokens/fonts.css). Both files are in
+      /public/fonts; a preload of a missing file 404s on every page load, which
+      is why the earlier Inter preload stayed commented out until it was gone.
     */}
+    <link rel="preload" href="/fonts/libre-caslon-display-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/archivo-400.woff2" as="font" type="font/woff2" crossorigin />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 
