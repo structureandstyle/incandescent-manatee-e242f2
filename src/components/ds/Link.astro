@@ -13,15 +13,25 @@
  * resting hairline thickens by transform, an absent one draws in from the left.
  * Never an animated border-width, which would reflow the line on every frame.
  *
- * Four variants:
+ * Five variants:
  *   inline  green, a resting hairline at 40%, for a link inside prose
  *   nav     uppercase label, no resting line, draws in from the left
  *   cta     uppercase label in door green, underline always present
  *   mail    the serif italic, large, for the address on the enquiry band
+ *   button  a filled box, for the one action a page is actually asking for
+ *
+ * BUTTON, added 4 Sep 2026 for the 404's way back. The filled-box treatment
+ * already existed three times over, hand-rolled in the enquiry form's submit,
+ * the cookie notice's Accept and the enquiry band's call to action, and a
+ * fourth copy on the 404 would have set the pattern of copying it. It lives
+ * here instead, because a link that looks like a button is still a link and
+ * this file is where links are styled. Its 44px minimum matches the touch
+ * target the rest of the site's controls are measured against, and the chamfer
+ * rule skips it: a filled box has no hairline to thicken.
  */
 interface Props {
   href: string;
-  variant?: "inline" | "nav" | "cta" | "mail";
+  variant?: "inline" | "nav" | "cta" | "mail" | "button";
   tone?: "default" | "paper";
   chamfer?: boolean;
   current?: boolean;
@@ -85,6 +95,29 @@ const {
   .v-cta {
     color: var(--green);
     border-bottom-color: var(--green);
+  }
+
+  .v-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 var(--space-12);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    background: var(--surface-accent);
+    border: 1px solid var(--surface-accent);
+    border-bottom-color: var(--surface-accent);
+    color: var(--text-on-accent);
+  }
+
+  .v-button:hover,
+  .v-button:focus-visible {
+    background: var(--char);
+    border-color: var(--char);
+    border-bottom-color: var(--char);
   }
 
   .v-mail {

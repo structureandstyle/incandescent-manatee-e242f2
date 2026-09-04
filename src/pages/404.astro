@@ -23,7 +23,7 @@ import { BUSINESS } from "../data/site";
 
 <Base
   title="Page not found"
-  description="That page is not here. Find your way back to Structure & Style, or get in touch about your project."
+  description="That page is not here. The site was rebuilt recently, so an address you saved may have moved. Head back to the home page, or tell us about your project."
   noCanonical
 >
   <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
@@ -36,12 +36,21 @@ import { BUSINESS } from "../data/site";
         There is nothing at this address. The site was rebuilt recently, so a page you saved
         earlier may have moved, or the link may simply have a typo in it.
       </p>
+      {/* The way back was an inline link inside a sentence, which on the one
+          page where a visitor is lost is the weakest possible form for the one
+          thing they need. It is a button now, first and on its own line, with
+          the enquiry routes kept underneath: someone who has hit a dead end is
+          lost, not necessarily ready to enquire. Denis's call, 4 Sep 2026. */}
       <p style="margin-top:var(--space-8)">
-        Nothing is lost. Start again from the <Link href="/">home page</Link>, or tell us about
-        your project and we will come back to you.
+        Nothing is lost. The work, the prices and the process are all still here.
       </p>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:var(--space-10) var(--space-14);align-items:baseline;margin-top:var(--space-15)">
+
+    <p style="margin-top:var(--space-14)">
+      <Link href="/" variant="button">Back to the home page</Link>
+    </p>
+
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-10) var(--space-14);align-items:baseline;margin-top:var(--space-13)">
       <Link href="/contact/" variant="cta" chamfer>Send an enquiry</Link>
       <Link href={BUSINESS.phoneHref} variant="nav" chamfer>Call {BUSINESS.phoneDisplay}</Link>
       <Link href={BUSINESS.whatsapp} variant="nav" chamfer rel="noopener">WhatsApp</Link>
