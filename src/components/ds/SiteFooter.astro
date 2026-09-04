@@ -16,6 +16,8 @@ interface Props {
   lines?: readonly string[];
   /** Contact links, rendered as a row above the legal lines. */
   links?: readonly { label: string; href: string }[];
+  /** Policy links, rendered beside the legal lines in the same faint mono. */
+  legal?: readonly { label: string; href: string }[];
   showMark?: boolean;
   brand?: boolean;
   class?: string;
@@ -25,6 +27,7 @@ interface Props {
 const {
   lines = [],
   links = [],
+  legal = [],
   showMark = true,
   brand = false,
   class: className,
@@ -52,6 +55,21 @@ const {
           <a
             href={l.href}
             style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-soft);border-bottom:1px solid var(--hair-rev-strong);padding:var(--space-4) 0;display:inline-block"
+          >{l.label}</a>
+        ))}
+      </div>
+    )}
+    {legal.length > 0 && (
+      /* The policy row. Both documents were reachable only from the enquiry
+         form's small print before 4 Sep 2026, which is not where anyone looks
+         for them, and the cookie notice needs its policy findable after it has
+         been answered and dismissed. Its own row, above the legal lines, in the
+         same faint mono so it reads as small print rather than as navigation. */
+      <div style="display:flex;gap:var(--space-9) var(--space-12);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
+        {legal.map((l) => (
+          <a
+            href={l.href}
+            style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-quiet);border-bottom:1px solid transparent;min-height:44px;display:inline-flex;align-items:center"
           >{l.label}</a>
         ))}
       </div>

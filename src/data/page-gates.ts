@@ -77,6 +77,7 @@ export const PAGE_GATES = {
   "/journal/": [],
   "/contact/": [],
   "/privacy/": [],
+  "/cookies/": [],
   "/thanks/": [],
 } as const satisfies Record<string, readonly QuestionKey[]>;
 

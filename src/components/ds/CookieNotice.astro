@@ -1,0 +1,128 @@
+---
+/**
+ * The cookie notice.
+ *
+ * Analytics cookies are not strictly necessary, so PECR wants a yes before they
+ * are set. Until 4 Sep 2026 gtag.js loaded on first paint and the word "cookie"
+ * did not appear anywhere on this site. The gate itself is in Base.astro; this
+ * is the control that opens it.
+ *
+ * FIVE THINGS IT DELIBERATELY DOES NOT DO.
+ *
+ * It does not cover the page. A cookie wall makes consent conditional on
+ * reading the site, which is not freely given. It sits at the bottom, the page
+ * works behind it, and a visitor can ignore it forever: no answer leaves
+ * analytics denied, which is the default the head script already set.
+ *
+ * It does not pre-tick anything, and there is nothing to tick. Two buttons, one
+ * click each, same size, side by side. Rejecting must be as easy as accepting.
+ *
+ * It does not render for a visitor who has already answered. The markup ships
+ * on every page carrying `hidden`, and the script below removes that only when
+ * there is no stored answer. So it never flashes on a repeat visit, and with
+ * JavaScript off it stays hidden, which is correct: nothing loads Google
+ * without JavaScript either, so there is nothing to consent to.
+ *
+ * It does not trap focus. This is a notice, not a dialog: role="region" with a
+ * label, in the tab order after the page rather than in front of it. A modal
+ * would demand the visitor deal with it before reading, which is the wall
+ * again in another form.
+ *
+ * It does not animate in. The reveal machinery is for content arriving as you
+ * scroll. A consent control that fades has a window where it can be clicked
+ * before it is legible.
+ */
+import MonoLabel from "./MonoLabel.astro";
+import Link from "./Link.astro";
+---
+
+<div
+  id="cookie-notice"
+  hidden
+  role="region"
+  aria-label="Cookies"
+  style="position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface-page);border-top:var(--rule-structure);box-shadow:0 -8px 24px rgba(34,29,24,.06)"
+>
+  <div
+    style="max-width:var(--page-max);margin:0 auto;padding:var(--space-10) var(--gutter);display:flex;gap:var(--space-10) var(--space-14);align-items:flex-start;justify-content:space-between;flex-wrap:wrap"
+  >
+    <div style="max-width:var(--measure-tight)">
+      <MonoLabel as="p" tone="soft">Cookies</MonoLabel>
+      <p style="margin-top:var(--space-5);font-size:var(--type-body-sm)">
+        We use Google Analytics to see how people find this site and which pages they read. It
+        stores cookies in your browser, so it stays off until you say yes. Nothing here is used for
+        advertising, and the <Link href="/cookies/">cookies page</Link> lists what is stored.
+      </p>
+    </div>
+
+    <div style="display:flex;gap:var(--space-6);flex-wrap:wrap">
+      <button type="button" data-cookie-accept class="cookie-btn cookie-btn-yes">Accept</button>
+      <button type="button" data-cookie-decline class="cookie-btn">Decline</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Both buttons are the same size and sit side by side, because the effort of
+     saying no has to match the effort of saying yes. 44px of height is the
+     touch target the rest of the site's controls were measured against. */
+  .cookie-btn {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    min-height: 44px;
+    min-width: 116px;
+    padding: 0 var(--space-10);
+    border: var(--rule-structure);
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+    transition: var(--transition-hover);
+  }
+  .cookie-btn:hover {
+    background: var(--wash-char);
+  }
+  .cookie-btn-yes {
+    background: var(--surface-accent);
+    border-color: var(--surface-accent);
+    color: var(--text-on-accent);
+  }
+  .cookie-btn-yes:hover {
+    background: var(--char);
+    border-color: var(--char);
+  }
+  @media (max-width: 520px) {
+    .cookie-btn {
+      flex: 1 1 auto;
+    }
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const notice = document.getElementById("cookie-notice");
+    const api = window.ssCookieConsent;
+    if (!notice || !api) return;
+
+    const show = () => { notice.hidden = false; };
+    const hide = () => { notice.hidden = true; };
+
+    if (!api.current()) show();
+
+    notice.querySelector("[data-cookie-accept]").addEventListener("click", () => {
+      api.grant();
+      hide();
+    });
+    notice.querySelector("[data-cookie-decline]").addEventListener("click", () => {
+      api.deny();
+      hide();
+    });
+
+    // The cookie policy's "change your mind" control clears the stored answer
+    // and the notice comes straight back, on whatever page the visitor is on.
+    document.addEventListener("ss:consent", (e) => {
+      if (e.detail === "reset") show();
+    });
+  })();
+</script>

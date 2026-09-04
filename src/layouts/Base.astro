@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import CookieNotice from "../components/ds/CookieNotice.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import { SITE_URL, BUSINESS, GA4_ID } from "../data/site";
@@ -114,15 +115,89 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 
+    {/*
+      ANALYTICS IS GATED ON CONSENT, from 4 Sep 2026.
+
+      Until then gtag.js loaded on first paint on every page and Google
+      Analytics set its cookies before the visitor had done anything. Analytics
+      cookies are not strictly necessary, so PECR wants consent before they are
+      set, and the site said nothing about cookies anywhere. That is now the
+      cookie notice, /cookies/, and this gate.
+
+      The gate is the script tag, not just Consent Mode: nothing from Google is
+      fetched at all until the visitor accepts. Consent Mode's denied defaults
+      are set anyway, before anything else, so a later grant is an update rather
+      than a first word.
+
+      The three link listeners are registered whatever the answer, because they
+      push to dataLayer rather than to Google. Declined, those pushes sit in an
+      array nobody reads and go nowhere. Accepted later in the visit, gtag.js
+      processes the queue on load, so an enquiry made before the banner was
+      answered is not lost.
+
+      With JavaScript off nothing here runs, so nothing is set and nothing needs
+      consenting to.
+    */}
     {
       GA4_ID && (
         <>
-          <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`} />
           <script is:inline define:vars={{ GA4_ID }}>
             window.dataLayer = window.dataLayer || [];
             function gtag() { dataLayer.push(arguments); }
-            gtag("js", new Date());
-            gtag("config", GA4_ID);
+
+            gtag("consent", "default", {
+              analytics_storage: "denied",
+              ad_storage: "denied",
+              ad_user_data: "denied",
+              ad_personalization: "denied",
+            });
+
+            var SS_CONSENT_KEY = "ss_cookie_consent";
+            var ssAnalyticsLoaded = false;
+
+            function ssLoadAnalytics() {
+              if (ssAnalyticsLoaded) return;
+              ssAnalyticsLoaded = true;
+              gtag("consent", "update", { analytics_storage: "granted" });
+              var s = document.createElement("script");
+              s.async = true;
+              s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA4_ID;
+              document.head.appendChild(s);
+              gtag("js", new Date());
+              gtag("config", GA4_ID);
+            }
+
+            function ssReadConsent() {
+              try { return localStorage.getItem(SS_CONSENT_KEY); } catch (err) { return null; }
+            }
+            function ssWriteConsent(value) {
+              try { localStorage.setItem(SS_CONSENT_KEY, value); } catch (err) {}
+            }
+
+            // The one interface the notice and the cookie policy both call.
+            window.ssCookieConsent = {
+              current: ssReadConsent,
+              grant: function () {
+                ssWriteConsent("granted");
+                ssLoadAnalytics();
+                document.dispatchEvent(new CustomEvent("ss:consent", { detail: "granted" }));
+              },
+              deny: function () {
+                ssWriteConsent("denied");
+                gtag("consent", "update", { analytics_storage: "denied" });
+                document.dispatchEvent(new CustomEvent("ss:consent", { detail: "denied" }));
+              },
+              /* Reopens the choice: used by the "change your mind" control on
+                 /cookies/. Analytics already loaded this page stays loaded
+                 until the next navigation, which is why deny also updates
+                 Consent Mode above rather than relying on the reload. */
+              reset: function () {
+                try { localStorage.removeItem(SS_CONSENT_KEY); } catch (err) {}
+                document.dispatchEvent(new CustomEvent("ss:consent", { detail: "reset" }));
+              },
+            };
+
+            if (ssReadConsent() === "granted") ssLoadAnalytics();
 
             // Enhanced measurement catches the WhatsApp link, because wa.me is a
             // different host and counts as an outbound click. It does not catch
@@ -156,6 +231,11 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       <slot />
     </main>
     <Footer />
+
+    {/* After the footer, so it is last in the tab order rather than in front of
+        the page. It ships hidden and shows itself only when there is no stored
+        answer. */}
+    <CookieNotice />
 
     {/*
       The enquiry modal. A link to /contact/ inside the page opens this instead

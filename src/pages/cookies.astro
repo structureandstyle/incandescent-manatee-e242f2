@@ -1,0 +1,177 @@
+---
+/**
+ * The cookie notice's companion document, 4 Sep 2026.
+ *
+ * Written to be checkable rather than reassuring: every item below names what
+ * is stored, who stores it, why, and how long it lasts. The cookie names were
+ * read out of a browser after accepting on this site, not copied from a
+ * template, which is why there are two of them and not the usual list of six.
+ *
+ * A legal document like the privacy notice, so the tone protocol's sentence
+ * length rules do not govern it (protocol section 7, scope note of 2 Sep 2026).
+ * It is exempt in copy-gate.py by page name for the same reason.
+ *
+ * Deliberately NOT claimed here: anything about what Netlify sets. The site is
+ * hosted there and Netlify sets its own cookies for features this site does not
+ * use, and a claim about somebody else's infrastructure needs verifying against
+ * the live production site rather than a dev server. When the site is live,
+ * read document.cookie on a first visit and either add what is there or leave
+ * this note alone.
+ */
+import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import Kicker from "../components/ds/Kicker.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Link from "../components/ds/Link.astro";
+import { BUSINESS } from "../data/site";
+
+const updated = "September 2026";
+---
+
+<Base
+  title="Cookies"
+  description="What this website stores in your browser, who stores it, why, and how long it lasts. Analytics stays off until you accept it, and you can change your answer at any time."
+>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <Kicker scribe>Cookies</Kicker>
+    <Display level={2} as="h1" style="margin:var(--space-12) 0 var(--space-10)">
+      What this site stores
+    </Display>
+    <MonoLabel as="p">Last updated {updated}</MonoLabel>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <div style="max-width:var(--measure);display:grid;gap:var(--space-15)">
+      <section>
+        <SectionHead level={5}>The short version</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          Nothing is stored for analytics until you accept it. If you decline, or if you ignore the
+          notice at the bottom of the page, Google Analytics is never loaded and sets nothing. Two
+          small items are stored either way, described below, and neither identifies you or leaves
+          your browser.
+        </p>
+      </section>
+
+      <section>
+        <SectionHead level={5}>If you accept</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          Google Analytics loads and stores two cookies. <strong>_ga</strong> holds a random
+          identifier so that several visits from the same browser count as one visitor rather than
+          several, and lasts two years. <strong>_ga_FSGVTJXMMP</strong> holds the state of your
+          current visit and lasts two years. Both are set by Google Analytics on our behalf.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          We use what they tell us to see how people find this site, which pages they read, roughly
+          where they are and what device they use. Google shortens IP addresses before storing them
+          and we cannot identify you from any of it. We do not use analytics for advertising and
+          none of it is shared with advertisers.
+        </p>
+      </section>
+
+      <section>
+        <SectionHead level={5}>Stored either way</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          Your answer to the cookie notice is kept in your browser's local storage under
+          <strong>ss_cookie_consent</strong>, so you are not asked again on every page. It stays
+          until you clear it, or until you change your answer below.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          When you send the enquiry form, a timestamp is written to your browser's session storage
+          under <strong>ss_enquiry_submitted</strong> so that the thank-you page can tell a real
+          submission from a page refresh. It is read once, deleted immediately, and it is gone when
+          you close the tab in any case.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          Neither is a tracking item, neither is sent anywhere, and neither is readable by any other
+          site.
+        </p>
+      </section>
+
+      <section>
+        <SectionHead level={5}>Changing your answer</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          Use the button below and the notice comes back, whichever way you answered before. If you
+          withdraw consent, analytics stops recording immediately and the cookies it has already set
+          are cleared by your browser when they expire, or by you at any time through your browser's
+          settings.
+        </p>
+        <p style="margin-top:var(--space-10)">
+          <button type="button" id="cookie-reset" class="cookie-reset">Change my answer</button>
+        </p>
+        <p data-cookie-state style="margin-top:var(--space-8);color:var(--text-quiet)" hidden></p>
+      </section>
+
+      <section>
+        <SectionHead level={5}>Blocking cookies yourself</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          Every browser can block or delete cookies without asking us, usually under Settings and
+          then Privacy. Blocking them will not stop this site working: nothing here needs a cookie
+          to load a page, show a photograph or send an enquiry.
+        </p>
+      </section>
+
+      <section>
+        <SectionHead level={5}>Questions</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          Our <Link href="/privacy/">privacy notice</Link> covers what happens to an enquiry once
+          you send it: what we collect, who sees it, how long we keep it and your rights. Anything
+          about either document, email{" "}
+          <Link href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</Link> or call{" "}
+          {BUSINESS.phoneDisplay}.
+        </p>
+      </section>
+    </div>
+  </Wrap>
+</Base>
+
+<style>
+  .cookie-reset {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    min-height: 44px;
+    padding: 0 var(--space-10);
+    border: var(--rule-structure);
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+    transition: var(--transition-hover);
+  }
+  .cookie-reset:hover {
+    background: var(--wash-char);
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const btn = document.getElementById("cookie-reset");
+    const state = document.querySelector("[data-cookie-state]");
+    const api = window.ssCookieConsent;
+    if (!btn || !api) return;
+
+    /* Says what the browser actually holds, rather than what the page assumes.
+       Written by script because it is per visitor: a static page cannot know
+       the answer, and a wrong answer here is worse than none. */
+    const report = () => {
+      const current = api.current();
+      if (!state) return;
+      state.hidden = false;
+      state.textContent =
+        current === "granted"
+          ? "Analytics is on for this browser."
+          : current === "denied"
+            ? "Analytics is off for this browser."
+            : "You have not answered yet, so analytics is off.";
+    };
+
+    report();
+    btn.addEventListener("click", () => {
+      api.reset();
+      report();
+    });
+    document.addEventListener("ss:consent", report);
+  })();
+</script>

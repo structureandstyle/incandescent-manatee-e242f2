@@ -67,11 +67,20 @@ const updated = "August 2026";
 
       <section>
         <SectionHead level={5}>Analytics</SectionHead>
+        {/* Rewritten 4 Sep 2026, when analytics went behind consent. The old
+            wording described what Google Analytics does and said nothing about
+            when it runs, which was on every page from first paint. */}
         <p style="margin-top:var(--space-8)">
           We use Google Analytics to understand how people find and use this site: pages viewed,
           roughly where visitors are, what device they use, and which links they tap. IP addresses
           are shortened by Google before storage and we cannot identify you from any of it. We do not
           use analytics for advertising.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          It runs only if you accept it. The notice at the bottom of the page asks once, analytics
+          stays off until you say yes, and ignoring the notice leaves it off. The lawful basis is
+          your consent, and you can withdraw it at any time on our{" "}
+          <Link href="/cookies/">cookies page</Link>, which lists exactly what is stored.
         </p>
       </section>
 
