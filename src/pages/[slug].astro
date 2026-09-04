@@ -172,7 +172,23 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
         text:
           "Where the project needs design work, one week is set aside for it, and drawings follow at the end of that week. Straightforward projects can go straight to quotation.",
       },
-      { label: "Days on site", q: "q30" },
+      /* Q30's figure is "a straightforward wardrobe wall", which is the right
+         fact on a wardrobe page and the wrong product everywhere else: an
+         alcove unit is not a wardrobe wall and a walk-in is a room. The prior
+         audit flagged this for alcove units, media walls and kitchens; the
+         4 Sep read found it on walk-in wardrobes too.
+
+         The honest fix is not to generalise Q30, because widening "a
+         straightforward wardrobe wall" into "any piece" invents a duration the
+         client never gave, which is the same fault the process page was
+         corrected for on 2 Sep. So the wardrobe pages keep Q30 and every other
+         service falls back to Q32, which is sourced and true for all of them.
+
+         WHAT THIS NEEDS: per-service durations from Kaspar. He has only ever
+         been asked about a wardrobe wall. */
+      service.slug === "fitted-wardrobes" || service.slug === "fitted-wardrobe-cost"
+        ? { label: "Days on site", q: "q30" }
+        : { label: "On site", q: "q32" },
     ],
   },
   {
@@ -243,7 +259,16 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
 
     <!-- The work itself, before any of the words -->
     <Wrap style="padding-bottom:var(--section-y)">
-      <SectionHead meta={photos.length ? `${photos.length} of this work` : undefined} scribe>
+      {/* "8 of this work" was not a phrase. It sat under the H1 beside the
+          photographs, the first thing a visitor reads after the hero, on every
+          service page, and read as a dropped word. Two independent readers in
+          the 4 Sep review flagged it and every other count label on this site
+          is a complete noun phrase: "4 stages", "7 categories", "12 published".
+          This one was the only outlier. */}
+      <SectionHead
+        meta={photos.length ? `${photos.length} photograph${photos.length === 1 ? "" : "s"}` : undefined}
+        scribe
+      >
         The work
       </SectionHead>
 
