@@ -18,6 +18,8 @@ interface Props {
   links?: readonly { label: string; href: string }[];
   /** Policy links, rendered beside the legal lines in the same faint mono. */
   legal?: readonly { label: string; href: string }[];
+  /** Page navigation, grouped into columns above the contact row. */
+  nav?: readonly { heading: string; links: readonly { label: string; href: string }[] }[];
   showMark?: boolean;
   brand?: boolean;
   class?: string;
@@ -28,6 +30,7 @@ const {
   lines = [],
   links = [],
   legal = [],
+  nav = [],
   showMark = true,
   brand = false,
   class: className,
@@ -48,6 +51,44 @@ const {
         </span>
       )}
     </div>
+
+    {nav.length > 0 && (
+      /* Page navigation, added 4 Sep 2026. The footer linked to two policy
+         documents and nothing else, on a site with twelve indexable pages, so
+         every route lived in the header alone: five items, and fewer than that
+         on a phone. A visitor who reaches the bottom of a service page had
+         nowhere to go but back up.
+
+         The lists are DERIVED from the page gates rather than typed out, so a
+         page that is noindexed cannot be linked from here by accident and
+         appears on its own the day its gate clears. That is why Work is absent
+         while it waits on Q44 to Q49, and why media walls and bespoke kitchens
+         are absent while they wait on wave-two copy. */
+      /* Flex rather than a grid, and deliberately. An auto-fit grid stretched
+         the two groups to 513px each at 1200px wide, holding four short mono
+         labels apiece, which reads as two lists marooned in a lot of dark. The
+         contact row and the legal row above and below are both wrapping flex
+         rows sitting at their natural width, so this matches them. Measured,
+         not eyeballed: the Browser pane was hidden and a screenshot of a hidden
+         pane is blank paper. */
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-16);border-top:var(--rule-hair-rev);padding-top:var(--space-11)">
+        {nav.map((group) => (
+          <div style="min-width:180px">
+            <p style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint);margin-bottom:var(--space-8)">{group.heading}</p>
+            <ul style="list-style:none;margin:0;padding:0;display:grid;gap:var(--space-6)">
+              {group.links.map((l) => (
+                <li>
+                  <a
+                    href={l.href}
+                    style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-soft);border-bottom:1px solid transparent;min-height:44px;display:inline-flex;align-items:center"
+                  >{l.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    )}
 
     {links.length > 0 && (
       <div style="display:flex;gap:var(--space-9) var(--space-14);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">

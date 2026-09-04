@@ -9,9 +9,37 @@
  * Companies House 16822866, incorporated 31 October 2025.
  */
 import SiteFooter from "./ds/SiteFooter.astro";
-import { BUSINESS } from "../data/site";
+import { BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
+import { indexable } from "../data/page-gates";
+import { SERVICE_COPY } from "../data/service-copy";
+import { NAV } from "../data/site-content";
 
 const year = 2026;
+
+/* Both lists are filtered through the page gates, so the footer can only ever
+   link to a page that is actually indexable. Nothing here needs editing when a
+   gate clears: the link appears by itself.
+
+   THE SERVICE LIST NEEDS BOTH GATES, not one. A service page is indexable only
+   where its questions are answered AND it has an entry in SERVICE_COPY, which
+   is the pair src/pages/[slug].astro itself uses to decide its own noindex. The
+   first version of this footer filtered on the question gate alone and linked
+   media walls and bespoke kitchens, both of which send noindex. That is the
+   same fault the 3 Sep audit found in the sitemap, reproduced here within days
+   of it being fixed there, which makes this the third place that has to know
+   about the copy gate. Worth collapsing into one shared predicate the next time
+   any of the three is touched. */
+const serviceLinks = SERVICES.filter(
+  (s) => indexable(servicePath(s)) && Boolean(SERVICE_COPY[s.slug])
+).map((s) => ({
+  label: serviceLabel(s),
+  href: servicePath(s),
+}));
+
+const pageLinks = [
+  ...NAV.filter((item) => indexable(item.href)),
+  { label: "Enquire", href: "/contact/" },
+];
 
 /* The contact routes, on every page. The address lives here by Denis's 1 Sep
    2026 ruling (off the enquiry band, kept on the contact page, in the footer
@@ -25,6 +53,14 @@ const links = [
 
 <SiteFooter
   brand
+  nav={[
+    /* "What we make" was the first heading and the verify gate refused the
+       build: "we make" is a Section 5 provenance ban, because the site never
+       claims the making. It caught it on all twelve pages at once, which is
+       the argument for the gate in one line. */
+    { heading: "Services", links: serviceLinks },
+    { heading: "The company", links: pageLinks },
+  ]}
   links={links}
   legal={[
     { label: "Privacy notice", href: "/privacy/" },
