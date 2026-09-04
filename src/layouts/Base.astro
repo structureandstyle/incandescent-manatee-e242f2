@@ -158,10 +158,16 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     <Footer />
 
     {/*
-      The enquiry modal. Every link to /contact/ opens this instead of
-      navigating (except on the contact page itself), so the visitor enquires
+      The enquiry modal. A link to /contact/ inside the page opens this instead
+      of navigating (except on the contact page itself), so the visitor enquires
       from where they are rather than losing their place: the pattern Denis
-      asked for on 31 Aug 2026 after seeing it in the wild. Native <dialog>:
+      asked for on 31 Aug 2026 after seeing it in the wild.
+
+      The header is the exception, from 3 Sep 2026, on Denis's instruction: the
+      Enquire button top right goes to /contact/ like the four nav links beside
+      it. A navigation control navigates. The in-page calls to action, which are
+      read at the end of an argument for the work, still open in place, which is
+      what the 31 Aug pattern was for. Native <dialog>:
       Escape and the backdrop close it for free, and without JavaScript the
       links simply navigate to /contact/, which stays fully functional.
     */}
@@ -200,6 +206,9 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         document.addEventListener("click", (e) => {
           const a = (e.target as Element | null)?.closest?.('a[href^="/contact"]');
           if (!a) return;
+          // The header's Enquire button is navigation, not an in-page call to
+          // action, so it is left to do what its href says.
+          if (a.closest("[data-site-header]")) return;
           e.preventDefault();
           modal.showModal();
         });
@@ -218,6 +227,14 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       //
       // Elements already in view at load are revealed by the observer's first
       // synchronous callback, so above-the-fold content does not wait.
+      //
+      // The trigger sits BELOW the fold, not inside it (3 Sep 2026). It used to
+      // be threshold .12 with the root shortened 5% at the bottom, so a section
+      // had to be properly on screen before a 780ms fade started. Scroll a phone
+      // quickly and you landed on a viewport of empty paper and waited for it,
+      // which reads as a broken page rather than as motion. Starting 20% of a
+      // screen early means the fade is already running by the time the section
+      // arrives, and a normal scroll still sees it move.
       const revealable = document.querySelectorAll("[data-motion], [data-glyph]");
       if (revealable.length) {
         const io = new IntersectionObserver(
@@ -228,7 +245,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
               io.unobserve(entry.target);
             }
           },
-          { threshold: 0.12, rootMargin: "0px 0px -5% 0px" }
+          { threshold: 0, rootMargin: "0px 0px 20% 0px" }
         );
         revealable.forEach((el) => io.observe(el));
 
