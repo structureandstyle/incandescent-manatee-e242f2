@@ -110,7 +110,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
     ],
     leads: {
       "cost": "A whole room's fit-out sits behind a single itemised quotation for the agreed scope.",
-      "how-long": "A design week sets the whole room out on paper before anything is ordered.",
+      "how-long": "Where the room needs designing first, that week sets it out on paper before anything is ordered.",
       "made-from": "In a walk-in the inside is on show, so interior finishes matter as much as fronts.",
       "fitting": "A flat, square wall is the exception in these rooms rather than the rule.",
       "after": "Rails, runners and hinges carry the daily traffic, and each carries its manufacturer's warranty.",
@@ -159,7 +159,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
     ],
     leads: {
       "cost": "A smaller piece follows the same pricing logic, and the table below is the honest version of it.",
-      "how-long": "Design and drawings for alcove work run through the same week set aside for every project.",
+      "how-long": "Alcove work follows the same two clocks as any commission, and a design week runs only where the project needs one.",
       "made-from": "Painted finishes are chosen for alcove work when the unit should match the room's existing woodwork.",
       "fitting": "Chimney breasts lean and alcove walls bow, so the unit is cut to the wall it actually meets.",
       "after": "Shelves carry real weight for years, and the 10-year cover on structure and joinery is the line that matters.",

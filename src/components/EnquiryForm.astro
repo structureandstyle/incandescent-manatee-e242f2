@@ -408,3 +408,33 @@ const SOURCES = [
     }
   }
 </style>
+
+{/*
+  Arms the enquiry_form GA4 event. /thanks/ fires the event, but only if this
+  flag is set, and its own comment says "the flag is set in EnquiryForm.astro".
+  It was: the listener shipped in 5400d81 and was deleted in 8969a3f, the 2 Sep
+  polish pass, leaving thanks.astro reading a key nothing wrote. Every real
+  submission has landed on /thanks/ with an empty sessionStorage since, so the
+  event has never fired, while enquiry-log.md recorded all four events as
+  verified. Netlify Forms kept every lead; what was lost is GA4's count of the
+  one channel the agreement lists first. Restored 3 Sep 2026.
+
+  Document level and armed once: the form renders twice on most pages (the page
+  form and the site-wide modal), and one listener covers both. Inline rather
+  than a module so it is live before a fast submitter can beat the hydration.
+*/}
+<script is:inline>
+  (() => {
+    if (window.__ssEnquiryArmed) return;
+    window.__ssEnquiryArmed = true;
+    document.addEventListener("submit", (e) => {
+      const form = e.target;
+      if (!form || form.getAttribute("name") !== "enquiry") return;
+      try {
+        sessionStorage.setItem("ss_enquiry_submitted", String(Date.now()));
+      } catch (err) {
+        /* Private mode or storage disabled: the lead still reaches Netlify. */
+      }
+    });
+  })();
+</script>

@@ -157,7 +157,21 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
     lead: "Two different clocks: how far ahead the work is booked, and how long the work itself runs.",
     rows: [
       { label: "Booked ahead", q: "q07" },
-      { label: "Survey to drawings", q: "q18" },
+      /* Q18 rendered bare stated the design week as automatic, on all four
+         service pages, in a stats row read as flat fact beside "Booked ahead"
+         and "Days on site". Q13 says straightforward jobs go straight to
+         quotation, so a design week is conditional and this was undertaking
+         work we do not owe. The process page caught the same promise in its
+         own prose on 2 Sep 2026 (site-content.ts stage 02) and the fix never
+         reached this template. Q18's own week survives; what is added is the
+         condition Q13 puts on it. Text rather than a Value for the same
+         reason the Guide price row above is text: the fact is derived from
+         two answers, not quoted from one. Q18 stays in the page gate. */
+      {
+        label: "Survey to drawings",
+        text:
+          "Where the project needs design work, one week is set aside for it, and drawings follow at the end of that week. Straightforward projects can go straight to quotation.",
+      },
       { label: "Days on site", q: "q30" },
     ],
   },
