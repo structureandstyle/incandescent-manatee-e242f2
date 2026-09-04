@@ -11,27 +11,33 @@
 import SiteFooter from "./ds/SiteFooter.astro";
 import { BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
-import { SERVICE_COPY } from "../data/service-copy";
 import { NAV } from "../data/site-content";
 
 const year = 2026;
 
-/* Both lists are filtered through the page gates, so the footer can only ever
-   link to a page that is actually indexable. Nothing here needs editing when a
-   gate clears: the link appears by itself.
+/* The lists are derived rather than written out, so a page cannot be linked
+   from here unless its questions are answered, and it appears on its own the
+   day its gate clears.
 
-   THE SERVICE LIST NEEDS BOTH GATES, not one. A service page is indexable only
-   where its questions are answered AND it has an entry in SERVICE_COPY, which
-   is the pair src/pages/[slug].astro itself uses to decide its own noindex. The
-   first version of this footer filtered on the question gate alone and linked
-   media walls and bespoke kitchens, both of which send noindex. That is the
-   same fault the 3 Sep audit found in the sitemap, reproduced here within days
-   of it being fixed there, which makes this the third place that has to know
-   about the copy gate. Worth collapsing into one shared predicate the next time
-   any of the three is touched. */
-const serviceLinks = SERVICES.filter(
-  (s) => indexable(servicePath(s)) && Boolean(SERVICE_COPY[s.slug])
-).map((s) => ({
+   SERVICES ARE THE SERVICES, all five, and that includes the two wave-two
+   pages that currently send noindex. Corrected 4 Sep 2026: the first version
+   filtered them out on the reasoning that the footer should not link a
+   noindexed page, which produced a services list missing built-in TV units and
+   bespoke kitchens and ending on a cost guide. Denis, whose services they are,
+   called it wrong, and he was right. Both pages are real pages of about 1,150
+   words, both are noindexed for copy reasons rather than because they are
+   unfinished, and the home page service strip already links to both
+   deliberately. A footer that misdescribes what the business sells is a worse
+   fault than an internal link to a page Google is not indexing yet.
+
+   The cost guide moves to its own group. It is not a service, and the journal
+   joins it there the day the first article publishes. */
+const serviceLinks = SERVICES.filter((s) => !s.guide && indexable(servicePath(s))).map((s) => ({
+  label: serviceLabel(s),
+  href: servicePath(s),
+}));
+
+const guideLinks = SERVICES.filter((s) => s.guide && indexable(servicePath(s))).map((s) => ({
   label: serviceLabel(s),
   href: servicePath(s),
 }));
@@ -59,6 +65,7 @@ const links = [
        claims the making. It caught it on all twelve pages at once, which is
        the argument for the gate in one line. */
     { heading: "Services", links: serviceLinks },
+    { heading: "Guides", links: guideLinks },
     { heading: "The company", links: pageLinks },
   ]}
   links={links}

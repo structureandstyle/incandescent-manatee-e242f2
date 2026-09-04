@@ -54,6 +54,16 @@ export type Service = {
   /** Nav and card label. */
   title: string;
   /**
+   * True for a page that answers a question rather than sells a service.
+   *
+   * The cost guide lives in SERVICES because it renders from the same template
+   * and shares the same gate, but it is not something the client sells, and a
+   * list headed "Services" that ends with "What fitted wardrobes cost" reads
+   * wrong to the person whose services they are. Flagged in the data rather
+   * than matched on its slug wherever a list needs to tell the two apart.
+   */
+  guide?: boolean;
+  /**
    * What this service is called everywhere OTHER than its own page.
    *
    * It exists for one service. Protocol section 5 bans "media wall" as a
@@ -153,6 +163,7 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "fitted-wardrobe-cost",
+    guide: true,
     metaTitle: "Built-in wardrobe cost in London",
     bandPrice: "Fitted wardrobes from £2,300",
     price:
