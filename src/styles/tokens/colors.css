@@ -28,7 +28,11 @@
   --surface-page:var(--paper);
   --surface-ink:var(--char);
   --surface-accent:var(--green);
-  --surface-sticky:rgba(242,238,227,.92);
+  /* .92 let the page read through the sticky header: over the dark green
+     material swatch and over photography you could see the image, and ghosted
+     text, sitting behind the nav labels. .97 keeps the frosted feel with the
+     6px blur and stops the bleed-through (3 Sep 2026). */
+  --surface-sticky:rgba(242,238,227,.97);
   --text-body:var(--char);
   --text-heading:var(--char);
   --text-quiet:var(--ink-soft);

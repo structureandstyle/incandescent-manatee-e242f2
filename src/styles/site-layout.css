@@ -5,10 +5,47 @@
 /* Visually hidden, still announced. For annotation prefixes and icon-only labels. */
 .vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
 
+/* The skip link, and why it needs a rule of its own.
+
+   It is written with Tailwind utilities (focus:bg-ink focus:text-bone). The
+   background one worked and the colour one did not, so focused it rendered ink
+   text on an ink box: 1:1 contrast, measured on the dev server, on every page.
+   The one control that exists solely for keyboard users was the one control a
+   keyboard user could not read.
+
+   Cause: global.css imports Tailwind first, then imports the token files
+   plainly. Un-layered declarations beat layered ones whatever the specificity,
+   so base.css's a{color:inherit} beat Tailwind's layered .focus\:text-bone
+   utility. Nothing un-layered sets a background on a, which is why only half
+   the pair failed. The rule below is un-layered too and more specific, so it
+   wins. Fixing the import layering properly would move every utility's
+   priority on the site at once, four days before launch. (3 Sep 2026) */
+a[href="#main"]:focus,a[href="#main"]:focus-visible{color:var(--paper)}
+
 /* Stage rows (ProcessStep and the process page's stage blocks) lose their wide
    left column before the prose gets too narrow. The rod goes with them, since a
-   dimension line with nothing to measure against is decoration. */
-@media (max-width:700px){[data-row="stage"]{grid-template-columns:56px minmax(0,1fr)!important}[data-rail],[data-rail-tick]{display:none!important}}
+   dimension line with nothing to measure against is decoration.
+
+   THE THIRD CHILD NEEDS PLACING, and this rule shipped without it until 4 Sep
+   2026. A stage row is three children on a three-column desktop grid: glyph,
+   title, body. Overriding the template to two columns leaves the body with
+   nowhere to sit on its own row, so it wrapped to the next row's FIRST column
+   and rendered the whole stage description in a 56px-wide strip, one and two
+   words a line, on every phone. Spotted on a 443px screenshot, not by the
+   gates: it is valid CSS producing valid HTML, and both mechanical gates read
+   the built markup rather than the rendered box. Below 700px the body now
+   spans the full row under the glyph and title. */
+@media (max-width:700px){
+[data-row="stage"]{grid-template-columns:56px minmax(0,1fr)!important}
+[data-row="stage"]>:nth-child(3){grid-column:1/-1}
+[data-rail],[data-rail-tick]{display:none!important}
+/* The process page's dimension rail goes with them, and for the same reason.
+   It is absolutely positioned at left:76px, measured against the desktop 88px
+   glyph column. Once the body spans the full row it stopped running beside the
+   stages and started running THROUGH the prose, a hairline down the middle of
+   every sentence. Nothing on this page measures it any more, so it goes. */
+[data-motion="scribe"][data-axis="y"]{display:none!important}
+}
 
 /* A review's index column goes once the quote gets too narrow to hold it. */
 @media (max-width:560px){[data-reviews-item]{grid-template-columns:minmax(0,1fr)!important;gap:var(--space-4)!important}}
@@ -31,5 +68,32 @@
 [data-site-header] nav[aria-label="Primary"] a{display:flex;align-items:center;min-height:44px;white-space:nowrap}
 }
 /* Five nav slots do not fit beside the wordmark below about 820px, so the row breaks
-   there rather than at the phone breakpoint. */
-@media (max-width:430px){[data-site-header] nav[aria-label="Primary"]{justify-content:flex-start;gap:0 var(--space-10)!important;flex-wrap:wrap;overflow-x:visible}}
+   there rather than at the phone breakpoint.
+
+   Below 430px the five slots used to WRAP onto two lines, which put three bands
+   in the sticky header and cost 154px of an 812px phone screen, about a fifth of
+   it, permanently. They now hold one line (3 Sep 2026): the mono label steps down
+   to 11px, loses half its tracking, and the row spreads what is left. Header
+   height goes to roughly 104px. Nothing is hidden and nothing is behind a
+   hamburger. If a narrower phone still cannot hold the line, the row scrolls
+   sideways, which is the rule inherited from the 820px block above, rather than
+   wrapping again.
+
+   Raised from 430px to 559px on 4 Sep 2026. Between the two the full-size
+   labels overflowed and the item they clipped was Enquire, the one that
+   matters: a 443px screen offers 399px of row, a 500px screen offers 450, and
+   the labels need about 453. Measured, not guessed, which is how the second
+   number was found after 479px was set on the first. The row is 0.9 of the
+   viewport once the 5vw gutter is taken off both sides, so the crossover sits
+   near 505px and 559 clears it. */
+@media (max-width:559px){
+[data-site-header] nav[aria-label="Primary"]{justify-content:space-between;gap:0 var(--space-3)!important;flex-wrap:nowrap}
+[data-site-header] nav[aria-label="Primary"] a{font-size:11px;letter-spacing:.07em}
+}
+/* One more step for the narrower Android widths. At 375px the five labels hold
+   the line with room to spare; at 360px they were 8px over and Enquire, the one
+   that matters, was the one clipped. Measured, not guessed. Below 320px the row
+   still scrolls, which is the documented fallback. */
+@media (max-width:400px){
+[data-site-header] nav[aria-label="Primary"] a{font-size:10.5px;letter-spacing:.05em}
+}
