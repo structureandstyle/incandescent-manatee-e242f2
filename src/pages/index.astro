@@ -245,8 +245,11 @@ const faqSchema = {
             altBase={`${serviceLabel(service)}, completed installation by ${BUSINESS.legalName}`}
             subject={serviceLabel(service)}
           />
-          <p style="margin-top:var(--space-6)">
-            <Link href={servicePath(service)} variant="nav">{serviceLabel(service)}</Link>
+          {/* Padding and a wider margin: see the same block on /work/. The link
+              was 23px tall and 12px below the carousel arrows, failing target
+              size on both counts (5 Sep 2026). */}
+          <p style="margin-top:var(--space-9)">
+            <Link href={servicePath(service)} variant="nav" style="display:inline-block;padding:var(--space-4) 0">{serviceLabel(service)}</Link>
           </p>
         </div>
       ))}

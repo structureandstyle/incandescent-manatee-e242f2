@@ -88,9 +88,14 @@ const categories = (
       {categories.map((c, i) => (
         <div>
           <PlateCarousel shots={c.shots} altBase={c.alt} subject={c.title} eager={i === 0} />
+          {/* The link under each card is 23px tall and sat 12px under the
+              carousel arrows, which is the last target-size failure Lighthouse
+              had on this site (5 Sep 2026): too small in one dimension and too
+              close to its neighbour above. Padding takes it past 24 and the
+              wider margin gives the arrows room. */}
           {c.href && (
-            <p style="margin-top:var(--space-6)">
-              <Link href={c.href} variant="nav">{c.title}</Link>
+            <p style="margin-top:var(--space-9)">
+              <Link href={c.href} variant="nav" style="display:inline-block;padding:var(--space-4) 0">{c.title}</Link>
             </p>
           )}
         </div>
