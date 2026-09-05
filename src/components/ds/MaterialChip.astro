@@ -93,9 +93,33 @@ const expandable = Boolean(uses || (pros && pros.length) || (cons && cons.length
 
 const popId = `mat-pop-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
+/**
+ * THE SWATCH IS AN <img> ON THE CARD FRONT, 5 September 2026.
+ *
+ * It was a CSS background-image, and a background is fetched the moment the
+ * element enters the render tree whatever the scroll position: loading="lazy"
+ * only governs <img> and <iframe>. So all six swatches, 246KB over six
+ * requests, were downloaded on every load of the home page, where the
+ * materials section sits four screens down, and of /materials/, where they
+ * competed with that page's own critical path.
+ *
+ * The pop keeps the background, because a swatch is genuinely the canvas
+ * there and a <dialog> that is not open is display:none, which means its
+ * background is never fetched until someone opens it.
+ *
+ * The value in site-content.ts is a CSS shorthand, "url(...) center / cover",
+ * so the URL is pulled out of it rather than the data being restructured two
+ * days before launch: one regex here against six call sites and a generator
+ * script in the ops repo.
+ */
+const swatchUrl = swatch?.match(/url\(\s*['"]?([^'")]+)['"]?\s*\)/)?.[1] ?? null;
+
 const frame = [
   "border:var(--rule-structure)",
-  `background:${swatch || "var(--wash-char)"}`,
+  /* A colour or gradient still paints as a background; a photograph does not,
+     because the <img> below carries it. The wash stays underneath either way,
+     so the frame is never bare while the image loads. */
+  `background:${swatchUrl ? "var(--wash-char)" : swatch || "var(--wash-char)"}`,
   `aspect-ratio:${hasMedia ? "auto" : "3 / 2"}`,
   "overflow:hidden",
 ].join(";");
@@ -112,6 +136,15 @@ const frame = [
         aria-controls={popId}
       >
         <span class="ss-mat-frame" style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
+          {swatchUrl && !hasMedia && (
+            <img
+              src={swatchUrl}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              style="width:100%;height:100%;object-fit:cover;display:block"
+            />
+          )}
           <slot />
         </span>
         <span class="ss-mat-head">
@@ -168,6 +201,15 @@ const frame = [
   ) : (
     <div class={className} style={style}>
       <div style={frame} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
+        {swatchUrl && !hasMedia && (
+          <img
+            src={swatchUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            style="width:100%;height:100%;object-fit:cover;display:block"
+          />
+        )}
         <slot />
       </div>
 

@@ -84,6 +84,24 @@ const photos: { file: string; w: number; h: number }[] =
   sel[service.slug] ?? (service.slug === "fitted-wardrobe-cost" ? sel["fitted-wardrobes"] ?? [] : []);
 
 /**
+ * This page's own share image, 5 September 2026.
+ *
+ * Every page on the site sent the same og:image: a real photograph of the
+ * client's work, and a good one, but a kitchen. So a wardrobe page shared into
+ * WhatsApp showed a kitchen, on the pages that carry the ranking floors. The
+ * cards are built by scripts/build-image-variants.mjs from each service's own
+ * first landscape photograph, at 1200 x 630, as JPEG rather than WebP because
+ * a share card is read by a dozen scrapers and the older ones still refuse
+ * WebP. The cost guide borrows the wardrobe card for the same reason it
+ * borrows the wardrobe photography.
+ */
+const ogSlug = sel[service.slug]
+  ? service.slug
+  : service.slug === "fitted-wardrobe-cost"
+    ? "fitted-wardrobes"
+    : null;
+
+/**
  * Alt text. Deliberately minimal and provably true: the service, and that the
  * work is finished, both of which come from the triage. It does not describe
  * the room, the materials or the location, because nobody has yet written a
@@ -256,6 +274,7 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
   title={service.metaTitle ?? service.heading}
   description={service.description}
   schema={schema}
+  image={ogSlug ? `/og/${ogSlug}.jpg` : undefined}
   noindex={!isIndexable}
 >
   <article>
@@ -315,6 +334,7 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
                 width={p.w}
                 height={p.h}
                 ratio={frameRatio(p)}
+                sizes="(max-width: 660px) 92vw, (max-width: 1080px) 45vw, 30vw"
                 subject={`Plate ${String(i + 1).padStart(2, "0")} · ${service.title}`}
                 detail="Completed"
                 eager={i === 0}

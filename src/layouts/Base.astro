@@ -129,19 +129,29 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={description} />
     <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
 
     {/*
-      Two preloads, no more: the display serif paints the H1 and the body sans
+      Three preloads, not two. The display serif paints the H1 and the body sans
       paints everything under it, so both sit on the largest contentful paint.
-      The italic, the mono and the heavier sans weights load on demand through
-      @font-face with font-display: swap (tokens/fonts.css). Both files are in
-      /public/fonts; a preload of a missing file 404s on every page load, which
-      is why the earlier Inter preload stayed commented out until it was gone.
+      The mono joined on 5 Sep 2026: it sets the kicker above every H1 on the
+      site, "Bespoke joinery · London" on the home page, which is the first line
+      of text on the page and was waiting for the stylesheet to be parsed before
+      the browser knew the file existed. font-display: swap meant a flash of
+      fallback rather than a block, which is why this was a small finding rather
+      than a large one, but the flash is on the first thing anyone reads.
+
+      The italic and the heavier sans weights still load on demand through
+      @font-face (tokens/fonts.css): they paint below the fold or not at all.
+      All three files are in /public/fonts; a preload of a missing file 404s on
+      every page load, which is why the earlier Inter preload stayed commented
+      out until it was gone.
     */}
     <link rel="preload" href="/fonts/libre-caslon-display-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/archivo-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/spline-sans-mono-400.woff2" as="font" type="font/woff2" crossorigin />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 

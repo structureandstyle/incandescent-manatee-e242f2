@@ -32,6 +32,7 @@
  * untouched for the signed scope's keyword requirement.
  */
 import MonoLabel from "./MonoLabel.astro";
+import variants from "../../../public/images/_variants.json";
 
 interface Props {
   /** Root-relative path to a real photograph. Omit while none exists. */
@@ -52,6 +53,16 @@ interface Props {
    * LCP element delays the single metric this rebuild exists to fix.
    */
   eager?: boolean;
+  /**
+   * What width this plate will actually be, as a CSS `sizes` list.
+   *
+   * The default suits a plate running the full page measure, which is the hero
+   * and the drawing. A grid of plates must pass its own, or every phone in the
+   * country downloads a desktop-width photograph for a 335px box: `sizes` is
+   * the half of responsive images that people forget, and getting it wrong
+   * silently undoes the srcset beside it.
+   */
+  sizes?: string;
   ratio?: string;
   framed?: boolean;
   as?: string;
@@ -70,6 +81,7 @@ const {
   detail,
   awaiting = "Photograph to place",
   eager = false,
+  sizes = "(max-width: 700px) 92vw, 1240px",
   ratio = "3 / 2",
   framed = true,
   as: Tag = "figure",
@@ -110,6 +122,31 @@ const frameCss = [
 ].join(";");
 
 const hasCaption = Boolean(subject || detail);
+
+/**
+ * The srcset, from the manifest scripts/build-image-variants.mjs writes.
+ *
+ * Until 5 September 2026 every photograph on this site went out at one
+ * resolution to every device: a 390px phone downloaded the same 1400 to 1636px
+ * file a desktop did, photography was about two thirds of the build's weight,
+ * and mobile LCP sat between 3.4 and 3.9 seconds on the four heaviest pages.
+ *
+ * The manifest is read rather than the widths being assumed, so a photograph
+ * with no variants yet, which is any that is smaller than 400px or has just
+ * been dropped in, simply renders without a srcset instead of pointing at
+ * files that do not exist. The original stays as the plain `src` and as the
+ * widest candidate, so a browser that ignores srcset gets what it always got.
+ */
+const widths: number[] = photo ? (variants as Record<string, number[]>)[photo] ?? [] : [];
+const srcset =
+  photo && widths.length
+    ? [
+        ...widths.map((w) => `${photo.replace(/\.webp$/, `-${w}w.webp`)} ${w}w`),
+        width ? `${photo} ${width}w` : null,
+      ]
+        .filter(Boolean)
+        .join(", ")
+    : undefined;
 ---
 
 <Tag class={className} style={`margin:0;${style}`} {...rest}>
@@ -117,6 +154,8 @@ const hasCaption = Boolean(subject || detail);
     {photo ? (
       <img
         src={photo}
+        srcset={srcset}
+        sizes={srcset ? sizes : undefined}
         alt={alt}
         width={width}
         height={height}

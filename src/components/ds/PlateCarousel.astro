@@ -13,6 +13,7 @@
  */
 import Plate from "./Plate.astro";
 import MonoLabel from "./MonoLabel.astro";
+import variants from "../../../public/images/_variants.json";
 
 interface Shot {
   file: string;
@@ -28,6 +29,7 @@ interface Props {
   detail?: string;
   ratio?: string;
   eager?: boolean;
+  sizes?: string;
   class?: string;
   style?: string;
 }
@@ -39,6 +41,7 @@ const {
   detail = "Completed",
   ratio = "4 / 3",
   eager = false,
+  sizes = "(max-width: 900px) 92vw, 46vw",
   class: className,
   style = "",
 } = Astro.props;
@@ -59,6 +62,20 @@ const round3 = (n: number) => Math.round(n * 1000) / 1000;
  */
 const [rw, rh] = ratio.split("/").map((n) => Number(n.trim()));
 const frameRatio = Number.isFinite(rw) && Number.isFinite(rh) && rh ? round3(rw / rh) : 1.333;
+
+/**
+ * A srcset per shot, so the responsive variants survive a swap.
+ *
+ * Plate builds one for the first photograph on its own. The rest are swapped
+ * in by the script below, which sets img.src, and an img whose src changes
+ * while its srcset still lists the old candidates loads the wrong file. The
+ * whole set is handed to the script instead, and it sets both together.
+ */
+const srcsets = shots.map((s) => {
+  const widths = (variants as Record<string, number[]>)[s.file] ?? [];
+  if (!widths.length) return "";
+  return [...widths.map((w) => `${s.file.replace(/\.webp$/, `-${w}w.webp`)} ${w}w`), `${s.file} ${s.w}w`].join(", ");
+});
 ---
 
 {/* THE ARROWS, 5 September 2026. They measured 6.6 x 18.1 CSS pixels, against
@@ -73,6 +90,7 @@ const frameRatio = Number.isFinite(rw) && Number.isFinite(rh) && rh ? round3(rw 
   data-carousel
   data-files={JSON.stringify(shots.map((s) => s.file))}
   data-ratios={JSON.stringify(shots.map((s) => round3(s.w / s.h)))}
+  data-srcsets={JSON.stringify(srcsets)}
   data-frame-ratio={String(frameRatio)}
   data-alt-base={altBase}
 >
@@ -85,6 +103,7 @@ const frameRatio = Number.isFinite(rw) && Number.isFinite(rh) && rh ? round3(rw 
     detail={detail}
     ratio={ratio}
     eager={eager}
+    sizes={sizes}
   >
     {many && (
       <Fragment slot="controls">
@@ -126,6 +145,7 @@ const frameRatio = Number.isFinite(rw) && Number.isFinite(rh) && rh ? round3(rw 
     // Two of the kitchen shots are 1126 x 2000 and a 4:3 centre crop of those
     // keeps the ceiling and loses the kitchen (5 Sep 2026).
     const ratios: number[] = JSON.parse(card.dataset.ratios || "[]");
+    const srcsets: string[] = JSON.parse(card.dataset.srcsets || "[]");
     const frameRatio = Number(card.dataset.frameRatio) || 1.333;
     const fitFor = (n: number) => {
       const r = ratios[n];
@@ -136,6 +156,11 @@ const frameRatio = Number.isFinite(rw) && Number.isFinite(rh) && rh ? round3(rw 
     const pad = (n: number) => String(n).padStart(2, "0");
     const show = (next: number) => {
       i = (next + files.length) % files.length;
+      // srcset before src, and always both: an <img> whose src changes while
+      // its srcset still lists the previous photograph's candidates loads the
+      // previous photograph.
+      if (srcsets[i]) img.srcset = srcsets[i];
+      else img.removeAttribute("srcset");
       img.src = files[i];
       img.alt = `${card.dataset.altBase}, photograph ${i + 1}`;
       img.style.objectFit = fitFor(i);
