@@ -499,8 +499,16 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
               not happen: a visitor arriving at /media-walls/ and using the form
               on it got the same nothing-ticked state as someone with no context
               at all, losing the one piece of self-attribution the in-page form
-              exists to supply (open since 3 Sep 2026). */}
-          <EnquiryForm compact service={serviceLabel(service)} />
+              exists to supply (open since 3 Sep 2026).
+
+              NOTHING IS PASSED ON THE COST GUIDE, and that is not an oversight.
+              It renders from this template and shares the gate, but it is a
+              guide rather than something anyone orders, so its own label is not
+              in the checkbox list and passing it would offer "What fitted
+              wardrobes cost" as a thing to tick. A reader of a price guide has
+              not chosen a service yet, so they get the full list, which is the
+              same thing /contact/ gives them. */}
+          <EnquiryForm compact service={service.guide ? undefined : serviceLabel(service)} />
         </div>
       </Wrap>
     </section>

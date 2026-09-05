@@ -46,6 +46,29 @@ const CHOICES = [
 ];
 
 /**
+ * WHAT A SERVICE PAGE SHOWS INSTEAD, 5 September 2026, Denis's call.
+ *
+ * The full list is right where there is no page context: on /contact/, and in
+ * the modal, which opens from anywhere. It was wrong on a service page. Under
+ * the heading "What do you need?", a reader who had just spent a page on
+ * alcove units was shown a menu of seven other services with theirs ticked,
+ * at the exact moment they were about to write. That reads as "while you are
+ * here, anything else?", which is the one thing this site's voice is not.
+ *
+ * So a page that already knows the answer shows the answer, plus the escape
+ * hatch. Eight checkboxes become two, the enquiry section stops looking like a
+ * lead-capture block, and nothing the shared enquiry log records is lost:
+ * whatever is ticked still arrives under `service`, in the log's own
+ * vocabulary, and anything else a visitor wants goes in the job box below,
+ * which is where they would describe it properly anyway.
+ *
+ * The multi-select itself is not being reversed. Denis's 2 September reasoning
+ * stands, that a room being fitted out rarely needs one thing, and the full
+ * list is one click away in the modal on every page including this one.
+ */
+const choices = service ? [service, "Something else"] : CHOICES;
+
+/**
  * What to write in the job box, shown as a placeholder, 2 Sep 2026 on Denis's
  * ask: give someone a shape to copy so they start typing instead of composing.
  *
@@ -54,7 +77,13 @@ const CHOICES = [
  * piece has to hold. Nobody writes that unprompted, and an enquiry without it
  * costs a round trip before anything useful can be said back.
  *
- * Keyed by service title so a service page shows an example of its own work.
+ * KEYED BY serviceLabel, NOT BY TITLE, corrected 5 September 2026. A service
+ * page passes the label, because that is the vocabulary the checkboxes and the
+ * enquiry log are built from, and one service's label and title differ: media
+ * walls keeps the search term in its own page title and is called "Built-in TV
+ * units" everywhere else. Keyed by title, that page silently fell through to
+ * the wardrobe example. One vocabulary, one lookup.
+ *
  * The contact page and the modal have no service, so they get the wardrobe
  * example: it is the commonest job and it models the same shape.
  *
@@ -70,7 +99,7 @@ const JOB_EXAMPLES: Record<string, string> = {
     "Box room about 2m by 2.5m. Hanging on two walls, shoe shelves and a bank of drawers.",
   "Alcove units and shelving":
     "Two alcoves either side of the chimney breast, about 1m wide. Cupboards below, open shelves above.",
-  "Media walls and TV units":
+  "Built-in TV units":
     "Living room chimney wall, 65 inch TV. Cables and a console to hide, sockets already there.",
   "Bespoke kitchens":
     "Galley kitchen about 4m long. One wall of units and a tall run for the oven and fridge.",
@@ -177,9 +206,11 @@ const SOURCES = [
 
   <fieldset class="choices-field">
     <legend>What do you need?</legend>
-    <p class="help">Tick everything that applies.</p>
+    <p class="help">
+      {service ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
+    </p>
     <div class="choices">
-      {CHOICES.map((label, i) => (
+      {choices.map((label, i) => (
         <label class="choice" for={`${idPrefix}service-${i}`}>
           <input
             id={`${idPrefix}service-${i}`}
