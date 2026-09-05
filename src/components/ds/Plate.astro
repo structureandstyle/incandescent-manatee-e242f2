@@ -91,9 +91,19 @@ if (photo && !alt) {
   );
 }
 
+/**
+ * The frame carries a wash rather than paper when it holds a photograph
+ * (5 Sep 2026). An image that has not painted used to leave a bordered
+ * rectangle the exact colour of the page, which reads as a broken plate rather
+ * than as one still loading, and Chromium makes that state both reachable and
+ * permanent: it abandons a native lazy fetch when the viewport passes an image
+ * and reverses, and never retries. Base.astro re-arms those. This is what the
+ * visitor sees in the meantime, and it is also the mount behind a photograph
+ * the frame does not crop.
+ */
 const frameCss = [
   framed ? "border:var(--rule-structure)" : "border:none",
-  "background:var(--paper)",
+  photo ? "background:var(--wash-char)" : "background:var(--paper)",
   `aspect-ratio:${ratio}`,
   "overflow:hidden",
   "display:grid",

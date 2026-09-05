@@ -45,13 +45,35 @@ const {
 
 const many = shots.length > 1;
 const pad = (n: number) => String(n).padStart(2, "0");
+const round3 = (n: number) => Math.round(n * 1000) / 1000;
+
+/**
+ * The frame's own ratio as a number, so the script can tell when the shot it
+ * is about to show is a different shape from the frame holding it.
+ *
+ * A carousel cannot resize between shots without the card jumping, so the
+ * frame is fixed and a portrait photograph in it would be centre-cropped to a
+ * landscape band. On the kitchens set that band is ceiling and downlights.
+ * Rather than crop, the script switches that shot to object-fit:contain and
+ * the frame's wash becomes its mount.
+ */
+const [rw, rh] = ratio.split("/").map((n) => Number(n.trim()));
+const frameRatio = Number.isFinite(rw) && Number.isFinite(rh) && rh ? round3(rw / rh) : 1.333;
 ---
 
+{/* THE ARROWS, 5 September 2026. They measured 6.6 x 18.1 CSS pixels, against
+    the 24 x 24 minimum, and the glyph itself was a hairline in --ink-soft on
+    cream: on a phone the control was hard to see at all, let alone hit. The
+    padding takes the hit area past 44px and the negative margin cancels it in
+    layout, so the caption row keeps the height it had. The glyph is full ink
+    at a size that reads. The lightbox's own arrows already did this. */}
 <div
   class={className}
   style={style}
   data-carousel
   data-files={JSON.stringify(shots.map((s) => s.file))}
+  data-ratios={JSON.stringify(shots.map((s) => round3(s.w / s.h)))}
+  data-frame-ratio={String(frameRatio)}
   data-alt-base={altBase}
 >
   <Plate
@@ -66,12 +88,12 @@ const pad = (n: number) => String(n).padStart(2, "0");
   >
     {many && (
       <Fragment slot="controls">
-        <span style="display:flex;align-items:baseline;gap:var(--space-6)">
+        <span style="display:flex;align-items:center;gap:var(--space-6)">
           <button
             type="button"
             data-car-prev
             aria-label={`Previous ${subject.toLowerCase()} photograph`}
-            style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
+            style="background:none;border:none;padding:13px 14px;margin:-13px -8px;cursor:pointer;font-family:var(--font-mono);font-size:17px;line-height:1;color:var(--char)"
           >&larr;</button>
           <MonoLabel tone="soft" style="letter-spacing:var(--ls-mono-table)">
             <span data-car-count>{`01 / ${pad(shots.length)}`}</span>
@@ -80,7 +102,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
             type="button"
             data-car-next
             aria-label={`Next ${subject.toLowerCase()} photograph`}
-            style="background:none;border:none;padding:0;cursor:pointer;font-family:var(--font-mono);font-size:var(--type-mono);color:var(--ink-soft)"
+            style="background:none;border:none;padding:13px 14px;margin:-13px -8px;cursor:pointer;font-family:var(--font-mono);font-size:17px;line-height:1;color:var(--char)"
           >&rarr;</button>
         </span>
       </Fragment>
@@ -98,14 +120,28 @@ const pad = (n: number) => String(n).padStart(2, "0");
     const img = card.querySelector("img");
     const count = card.querySelector("[data-car-count]");
     if (!img) return;
+    // A carousel's frame cannot change shape between shots without the card
+    // jumping, so a photograph that is a different shape from the frame is
+    // shown whole against the frame's wash rather than cropped to fit it.
+    // Two of the kitchen shots are 1126 x 2000 and a 4:3 centre crop of those
+    // keeps the ceiling and loses the kitchen (5 Sep 2026).
+    const ratios: number[] = JSON.parse(card.dataset.ratios || "[]");
+    const frameRatio = Number(card.dataset.frameRatio) || 1.333;
+    const fitFor = (n: number) => {
+      const r = ratios[n];
+      if (!r) return "cover";
+      return Math.abs(Math.log(r / frameRatio)) > 0.25 ? "contain" : "cover";
+    };
     let i = 0;
     const pad = (n: number) => String(n).padStart(2, "0");
     const show = (next: number) => {
       i = (next + files.length) % files.length;
       img.src = files[i];
       img.alt = `${card.dataset.altBase}, photograph ${i + 1}`;
+      img.style.objectFit = fitFor(i);
       if (count) count.textContent = `${pad(i + 1)} / ${pad(files.length)}`;
     };
+    img.style.objectFit = fitFor(0);
     card.querySelector("[data-car-prev]")?.addEventListener("click", () => show(i - 1));
     card.querySelector("[data-car-next]")?.addEventListener("click", () => show(i + 1));
   });

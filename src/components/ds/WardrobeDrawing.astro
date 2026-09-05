@@ -42,7 +42,22 @@
  */
 
 interface Props {
-  /** Seconds for the whole build. The system's only loop, and it runs once. */
+  /**
+   * Seconds for the whole build. The system's only loop, and it runs once.
+   *
+   * SEVEN UNTIL 5 SEPTEMBER 2026, and seven was too long in the one place it
+   * matters most. On /process/ this drawing is the only visual on the page and
+   * it sits directly under the H1: the carcass and its dividers land at about
+   * 12% of the cycle and the shelves not until 18%, so for the first second
+   * and a quarter a visitor was looking at an empty grid of rectangles under a
+   * heading that says "Method is the product". It read as a broken layout
+   * rather than as a drawing being drawn.
+   *
+   * Four keeps every stage and every proportion of the build, which are
+   * written as percentages of this one clock, and shortens the illegible
+   * opening to about half a second. The whole elevation, contents included, is
+   * complete by 3.2 seconds instead of 5.7.
+   */
   cycle?: number;
   labels?: boolean;
   title?: string;
@@ -51,7 +66,7 @@ interface Props {
 }
 
 const {
-  cycle = 7,
+  cycle = 4,
   labels = true,
   title = "Wardrobe wall, front elevation",
   class: className,

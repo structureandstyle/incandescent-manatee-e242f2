@@ -93,6 +93,30 @@ const photos: { file: string; w: number; h: number }[] =
 const altFor = (n: number) =>
   `${service.title}, completed installation by ${BUSINESS.legalName}, photograph ${n}`;
 
+/**
+ * The shape of each plate's frame, 5 September 2026.
+ *
+ * Every frame in this gallery was a fixed 3 / 2 with object-fit:cover,
+ * whatever shape the photograph was. Nine of the library's selections are
+ * portrait and two of the kitchen shots are 1126 x 2000: a centre crop of
+ * those to 3 / 2 kept the ceiling and the downlights and cut the kitchen out
+ * of the frame. Four fitted-wardrobe portraits lost half their height the same
+ * way, which is part of why that gallery read as a row of near-identical
+ * cavities.
+ *
+ * So the frame follows the photograph, WITHIN A BAND. The band is the part
+ * that matters: an unclamped 1126 x 2000 plate renders three and a half times
+ * taller than the landscape ones beside it and no column layout can balance
+ * around it. Held between 3 / 4 and 3 / 2, the tallest plate is twice the
+ * shortest, the columns fill evenly, and the crop that remains on the two
+ * extreme portraits takes a quarter of their height off a ceiling rather than
+ * two thirds off a kitchen.
+ */
+const RATIO_MIN = 3 / 4;
+const RATIO_MAX = 3 / 2;
+const frameRatio = (p: { w: number; h: number }) =>
+  String(Math.round(Math.min(RATIO_MAX, Math.max(RATIO_MIN, p.w / p.h)) * 1000) / 1000);
+
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -272,7 +296,12 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
         The work
       </SectionHead>
 
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-md)">
+      {/* Frames follow their photographs now, within a band: see frameRatio
+          above. Plates of different heights cannot sit in a row grid, where a
+          portrait beside two landscapes leaves half a row of empty paper, so
+          the gallery is columns rather than rows. Three columns, two on a
+          tablet, one on a phone, where the question never arises. */}
+      <div class="work-gallery">
         {photos.length > 0
           ? photos.map((p, i) => (
               <Plate
@@ -280,6 +309,7 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
                 alt={altFor(i + 1)}
                 width={p.w}
                 height={p.h}
+                ratio={frameRatio(p)}
                 subject={`Plate ${String(i + 1).padStart(2, "0")} · ${service.title}`}
                 detail="Completed"
                 eager={i === 0}
@@ -339,30 +369,49 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
                 <p style="max-width:var(--measure);margin-top:var(--space-5);font-size:var(--type-body-sm);color:var(--text-quiet)">
                   {t.note}
                 </p>
-                <div style="overflow-x:auto;margin-top:var(--space-9)">
-                  <table style="width:100%;border-collapse:collapse;min-width:520px">
-                    <thead>
-                      <tr>
-                        {t.columns.map((c) => (
-                          <th style="text-align:left;padding:var(--space-4) var(--space-8) var(--space-4) 0;border-bottom:var(--rule-structure);text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);font-weight:var(--weight-regular);color:var(--ink-soft)">
-                            {c}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {t.rows.map((r) => (
+                {/* THE PRICE TABLES ON A PHONE, 5 September 2026. The wrapper
+                    scrolled and nothing said so. At 375 and at 443 the widest
+                    two columns, which carry the highest prices, sat off the
+                    right edge; headless Chrome draws a scrollbar and iOS
+                    Safari does not, so the only clue was a column heading cut
+                    off mid-word. This is the page that exists to answer what
+                    the work costs.
+
+                    Three changes, all inside the scroller. The finish column
+                    sticks to the left edge so a price is never read without
+                    knowing which finish it belongs to. A fade on the right
+                    shows there is more, and clears when the table is scrolled
+                    to its end. And a mono line under the table says so in
+                    words, shown only when the table actually overflows. */}
+                <div class="price-scroll" data-price-scroll style="margin-top:var(--space-9)">
+                  <div class="price-scroll-viewport" data-price-viewport>
+                    <table class="price-table">
+                      <thead>
                         <tr>
-                          {r.map((cell, i) => (
-                            <td style={`padding:var(--space-5) var(--space-8) var(--space-5) 0;border-bottom:var(--rule-hair);vertical-align:top${i === 0 ? "" : ";font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table)"}`}>
-                              {cell}
-                            </td>
+                          {t.columns.map((c) => (
+                            <th style="text-align:left;padding:var(--space-4) var(--space-8) var(--space-4) 0;border-bottom:var(--rule-structure);text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);font-weight:var(--weight-regular);color:var(--ink-soft)">
+                              {c}
+                            </th>
                           ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {t.rows.map((r) => (
+                          <tr>
+                            {r.map((cell, i) => (
+                              <td style={`padding:var(--space-5) var(--space-8) var(--space-5) 0;border-bottom:var(--rule-hair);vertical-align:top${i === 0 ? "" : ";font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table)"}`}>
+                                {cell}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
+                <p class="price-scroll-hint" data-price-hint hidden>
+                  <MonoLabel as="span" tone="soft">Scroll the table for the wider sizes</MonoLabel>
+                </p>
               </div>
             ))}
             {copy.priceNotes?.map((n) => (
@@ -439,3 +488,93 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
     </Wrap>
   </article>
 </Base>
+
+<style>
+  /* The photography, laid out in columns rather than rows: see the note beside
+     the markup. `break-inside: avoid` is what keeps a plate and its caption
+     together, and the plate is a block in its own column so the frame's own
+     aspect-ratio decides its height. */
+  .work-gallery {
+    columns: 3;
+    column-gap: var(--gap-md);
+  }
+  .work-gallery > * {
+    break-inside: avoid;
+    margin-bottom: var(--gap-md);
+  }
+  @media (max-width: 1080px) {
+    .work-gallery { columns: 2; }
+  }
+  @media (max-width: 660px) {
+    .work-gallery { columns: 1; }
+  }
+
+  .price-scroll {
+    position: relative;
+  }
+  .price-scroll-viewport {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .price-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+  }
+  /* The finish column stays put, so a figure is never read without knowing
+     which finish it prices. Paper behind it, or the scrolling columns show
+     through. */
+  .price-table th:first-child,
+  .price-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--paper);
+  }
+  /* The separating hairline arrives only once something has scrolled under
+     the column, and it is a shadow rather than a border so it never moves the
+     cell it sits on. */
+  .price-scroll[data-scrolled] .price-table th:first-child,
+  .price-scroll[data-scrolled] .price-table td:first-child {
+    box-shadow: 1px 0 0 var(--hair);
+  }
+  .price-scroll::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 56px;
+    pointer-events: none;
+    background: linear-gradient(to right, rgba(242, 238, 227, 0), var(--paper));
+    opacity: 0;
+    transition: opacity var(--t-fast) var(--ease-out);
+  }
+  .price-scroll[data-overflow]:not([data-end])::after {
+    opacity: 1;
+  }
+  .price-scroll-hint {
+    margin-top: var(--space-6);
+  }
+</style>
+
+<script>
+  // The scroll state each price table reports about itself: whether it
+  // overflows at all, whether it is at its right-hand end, and whether
+  // anything has scrolled under the sticky first column. The CSS above reads
+  // all three. Without JavaScript the table still scrolls, the sticky column
+  // still sticks, and only the fade and the written hint are missing.
+  document.querySelectorAll<HTMLElement>("[data-price-scroll]").forEach((wrap) => {
+    const vp = wrap.querySelector<HTMLElement>("[data-price-viewport]");
+    if (!vp) return;
+    const next = wrap.nextElementSibling;
+    const hint = next instanceof HTMLElement && next.matches("[data-price-hint]") ? next : null;
+    const update = () => {
+      const overflows = vp.scrollWidth - vp.clientWidth > 4;
+      wrap.toggleAttribute("data-overflow", overflows);
+      wrap.toggleAttribute("data-end", overflows && vp.scrollLeft + vp.clientWidth >= vp.scrollWidth - 4);
+      wrap.toggleAttribute("data-scrolled", vp.scrollLeft > 2);
+      if (hint) hint.hidden = !overflows;
+    };
+    update();
+    vp.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+  });
+</script>

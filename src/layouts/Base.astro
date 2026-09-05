@@ -255,13 +255,18 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       id="enquiry-modal"
       style="width:min(660px,94vw);max-height:92vh;overflow-y:auto;border:var(--rule-structure);background:var(--paper);color:var(--ink);padding:clamp(20px,4vw,40px);margin:auto"
     >
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-8)">
+      {/* The header row sticks to the top of the dialog's own scroller, 5 Sep
+          2026. The form is longer than the dialog at 1440 x 900, so scrolling
+          to the submit button used to carry the only close control off the top
+          with it. The button also carries 44px of hit area rather than the
+          glyph's own 16 x 26. */}
+      <div style="position:sticky;top:calc(clamp(20px,4vw,40px) * -1);z-index:1;background:var(--paper);padding-top:clamp(20px,4vw,40px);margin-top:calc(clamp(20px,4vw,40px) * -1);display:flex;justify-content:space-between;align-items:center;gap:var(--space-8)">
         <MonoLabel as="p" tone="soft">Enquiries</MonoLabel>
         <button
           type="button"
           id="enquiry-modal-close"
           aria-label="Close"
-          style="background:none;border:none;font-size:26px;line-height:1;cursor:pointer;color:var(--ink-soft)"
+          style="background:none;border:none;font-size:26px;line-height:1;cursor:pointer;color:var(--ink-soft);padding:9px 12px;min-width:44px;min-height:44px;margin-right:-12px"
         >&times;</button>
       </div>
       <h2 style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-lg);margin:var(--space-6) 0 var(--space-4)">
@@ -343,6 +348,54 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     </script>
 
     <script>
+      /**
+       * LAZY IMAGES THAT NEVER PAINT, 5 September 2026.
+       *
+       * Chromium abandons a native loading="lazy" fetch when the viewport
+       * passes an image and then reverses, and it does not retry: the frame
+       * stays empty for the rest of the visit. A flick down the page and back
+       * up is enough to trigger it, and the render pass caught it on the home
+       * page's Selected work cards, on /work/ and on /bespoke-kitchens/, in two
+       * independent capture runs and again live. It reads as a broken site,
+       * because a bordered empty frame is exactly what this design uses for a
+       * photograph that does not exist.
+       *
+       * One observer per page re-arms any lazy image that has reached the
+       * viewport without painting: first by promoting it to eager, which the
+       * spec says resumes a deferred load, then by re-assigning its source if
+       * it is still blank a second and a half later. Images that load normally
+       * are unobserved on sight and cost nothing.
+       */
+      const lazyPhotos = document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]');
+      if (lazyPhotos.length && "IntersectionObserver" in window) {
+        const painted = (img: HTMLImageElement) => img.complete && img.naturalWidth > 0;
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              const img = entry.target as HTMLImageElement;
+              io.unobserve(img);
+              if (painted(img)) continue;
+              img.loading = "eager";
+              setTimeout(() => {
+                if (painted(img)) return;
+                const src = img.getAttribute("src");
+                const srcset = img.getAttribute("srcset");
+                if (!src) return;
+                img.removeAttribute("src");
+                if (srcset) img.removeAttribute("srcset");
+                if (srcset) img.setAttribute("srcset", srcset);
+                img.setAttribute("src", src);
+              }, 1500);
+            }
+          },
+          { rootMargin: "400px 0px" }
+        );
+        lazyPhotos.forEach((img) => io.observe(img));
+      }
+    </script>
+
+    <script>
       // The lightbox. Any Plate photograph opens full-screen on click, so the
       // work can be looked at properly rather than judged at grid size.
       // Progressive enhancement over the same <img>: no library, one overlay
@@ -360,9 +413,27 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       let set: { src: string; alt: string }[] = [];
       let idx = 0;
 
+      /**
+       * aria-modal="true" promises assistive technology that everything behind
+       * the overlay is inert, and until 5 Sep 2026 only the Tab key honoured
+       * it: a screen reader browsing by virtual cursor still walked the header
+       * and the page underneath. The enquiry modal and the material pop get
+       * this free from native <dialog>.showModal(); this overlay is the one
+       * that builds itself, so it says so explicitly. Everything in <body>
+       * except the overlay goes inert while it is open.
+       */
+      function setBackgroundInert(on: boolean) {
+        for (const el of Array.from(document.body.children)) {
+          if (el === box) continue;
+          if (on) (el as HTMLElement).inert = true;
+          else (el as HTMLElement).inert = false;
+        }
+      }
+
       function closeBox() {
         if (!box) return;
         box.style.display = "none";
+        setBackgroundInert(false);
         document.documentElement.style.overflow = "";
         if (lastFocus instanceof HTMLElement) lastFocus.focus();
       }
@@ -407,9 +478,15 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
           box.setAttribute("role", "dialog");
           box.setAttribute("aria-modal", "true");
           box.setAttribute("aria-label", "Photograph, enlarged");
+          // The scrim was .94 until 5 Sep 2026, which let the gallery grid and
+          // its plate captions read straight through it: two blocks of similar
+          // mono text, the page's and the lightbox's own, landing on top of
+          // each other at 375 and again at 1440. Opaque now, with a blur for
+          // the browsers that support one.
           box.style.cssText =
             "position:fixed;inset:0;z-index:200;display:none;place-items:center;" +
-            "background:rgba(24,21,17,.94);padding:clamp(16px,4vw,48px);cursor:zoom-out";
+            "background:rgba(24,21,17,.985);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);" +
+            "padding:clamp(16px,4vw,48px);cursor:zoom-out";
           const navBtn =
             "position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;" +
             "color:rgba(242,238,227,.9);font-family:var(--font-mono);font-size:30px;line-height:1;" +
@@ -417,7 +494,9 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
           box.innerHTML =
             '<img style="max-width:100%;max-height:82vh;object-fit:contain;display:block;border:1px solid rgba(242,238,227,.25)" alt="">' +
             '<p style="margin-top:12px;font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:.08em;text-transform:uppercase;color:rgba(242,238,227,.75);text-align:center"></p>' +
-            '<button type="button" aria-label="Close" style="position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(242,238,227,.9);font-size:28px;line-height:1;cursor:pointer">&times;</button>' +
+            // 44px of hit area rather than the glyph's own 18 x 28: the close
+            // control on a full-screen overlay is the one a phone reaches for.
+            '<button type="button" aria-label="Close" style="position:absolute;top:8px;right:10px;background:none;border:none;color:rgba(242,238,227,.9);font-size:28px;line-height:1;cursor:pointer;padding:10px 14px;min-width:44px;min-height:44px">&times;</button>' +
             `<button type="button" data-box-prev aria-label="Previous photograph" style="${navBtn};left:6px">&larr;</button>` +
             `<button type="button" data-box-next aria-label="Next photograph" style="${navBtn};right:6px">&rarr;</button>`;
           box.addEventListener("click", closeBox);
@@ -484,6 +563,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         box.style.display = "grid";
         document.documentElement.style.overflow = "hidden";
         lastFocus = document.activeElement;
+        setBackgroundInert(true);
         (box.querySelector("button") as HTMLElement).focus();
       }
 
