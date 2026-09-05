@@ -16,7 +16,13 @@ import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
 import { BUSINESS } from "../data/site";
 
-const updated = "August 2026";
+/* September, not August (5 Sep 2026). The notice was revised substantively
+   twice in the week before launch: 52f57d9 rewrote the analytics section for
+   the consent gate, and 5fb925d changed who it discloses can see enquiry data,
+   which is a UK GDPR Article 13(1)(e) disclosure. A revision date is itself a
+   factual claim and this one was checkable against the file's own history.
+   Bump it with any edit to this page, as cookies.astro already does. */
+const updated = "September 2026";
 ---
 
 <Base

@@ -33,8 +33,60 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    # Added 5 Sep 2026. A year of HTTPS-only, without includeSubDomains: the
+    # apex and www are both on Netlify and both HTTPS, and leaving subdomains
+    # out means nothing anyone puts on one later can be broken by a header set
+    # here. Raise it and add preload once the site has been live a while.
+    Strict-Transport-Security = "max-age=31536000"
+    # This site asks for none of these, so it says so.
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+    X-Frame-Options = "DENY"
+    # DELIBERATELY NOT A FULL CSP. A script-src directive here would need
+    # 'unsafe-inline' to allow the consent gate, the reveal observer and the
+    # lightbox, and 'unsafe-inline' in script-src is most of the protection
+    # given away. These four directives govern nothing that is inline, so they
+    # cost nothing and cannot break a page: no framing, no <base> injection, no
+    # plugins, and a form can only post back to this origin, which is what
+    # Netlify Forms does. A real script-src belongs after launch, written
+    # against nonces and verified on the live deploy rather than guessed at
+    # here, where nothing can test it.
+    Content-Security-Policy = "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'"
+
+# CACHING, 5 Sep 2026. Only /fonts/* had a rule, so the two hashed stylesheets
+# and 2.7MB of photography were left to Netlify's default revalidation on every
+# view. Astro puts a content hash in each /_astro/ filename, which is exactly
+# the condition immutable is for: the URL changes when the bytes do.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/fonts/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# The photographs are NOT hashed, so they cannot be immutable: replacing one
+# keeps its name. A month with revalidation means a second view of the same
+# photograph, and the fitted-wardrobe set is shared by two pages, comes from
+# the browser rather than the network, and a replacement is still picked up on
+# the next revalidation rather than a year later.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, must-revalidate"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/*.ico"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"

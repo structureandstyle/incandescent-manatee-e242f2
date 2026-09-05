@@ -56,7 +56,14 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
   "fitted-wardrobes": {
     intro: [
       "A fitted wardrobe is measured against your walls, floor and ceiling, then designed around what you keep. The run uses the top of the room and both corners rather than losing them.",
+      /* "north London" appeared nowhere on this site until 5 Sep 2026, and
+         "fitted wardrobes north london" is the target sheet's standout term:
+         difficulty 7, the highest CPC on the sheet, and a top-three floor at
+         month 12. The sentence states which of the service areas are north
+         London rather than claiming where most of the work happens, which is a
+         separate claim with no source behind it. */
       "The inside is planned first: hanging heights, shelving, drawers and anything that needs a home. You do not need to arrive knowing any of that. Asking the right questions at the first visit is our job, not yours.",
+      "Wardrobes are fitted across London, including Hampstead, Belsize Park, Kentish Town and Camden in north London.",
     ],
     leads: {
       "cost": "The honest answer is a range until the room is measured, and one visit turns it into a firm number.",
@@ -155,7 +162,12 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
   "alcove-units": {
     intro: [
       "No two alcoves in a period house are the same width, and most walls are not straight either. Each unit is measured to its own alcove, then scribed: cut to follow the wall, so doors sit flush and lines run true.",
-      "A unit can run to sill height with shelving above, or floor to ceiling across the chimney breast wall. The proportions follow the room, and the inside is planned around what will actually live there.",
+      /* "Alcove cupboards" is the phrase this page was missing, 5 Sep 2026. The
+         target sheet calls it the page's real engine at 2,400 a month against
+         the primary's 90, and it appeared nowhere a reader could see it: only
+         in the meta description, which is the one place a body-content ranking
+         signal does not come from. The sentence is otherwise unchanged. */
+      "Alcove cupboards can run to sill height with shelving above, or floor to ceiling across the chimney breast wall. The proportions follow the room, and the inside is planned around what will actually live there.",
     ],
     leads: {
       "cost": "A smaller piece follows the same pricing logic, and the table below is the honest version of it.",
@@ -167,9 +179,11 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
     sections: [
       {
         meta: "The work",
-        heading: "Cupboards, shelving and full-height runs",
+        /* The heading carries the phrase too, so it reaches an H2 rather than
+           sitting in prose alone. Same edit as the intro, 5 Sep 2026. */
+        heading: "Alcove cupboards, shelving and full-height runs",
         body: [
-          "Base cupboards with shelving over is the classic arrangement, and it is right for most rooms. Full-height cupboards, open bookshelves and display shelving with integrated lighting all follow the same rule: the alcove is measured first, and the design follows it.",
+          "Base cupboards with shelving over is the classic arrangement, and it is right for most rooms. Full-height built-in cupboards, open bookshelves and display shelving with integrated lighting all follow the same rule: the alcove is measured first, and the design follows it.",
           "Painted finishes suit alcove work, because the joinery reads as part of the room. Veneers and decorative boards are there where a different look is wanted, and grain is matched across adjoining doors.",
         ],
       },
@@ -226,6 +240,11 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
     priceNotes: [
       "Drawers, integrated lighting, mirrors, shoe storage, pull-out accessories and extra shelving are priced separately to the specification. So are premium hardware, decorative door details, cornices, specialist backing panels, TV and media integration and other bespoke options.",
       "These are guide starting prices rather than fixed quotations. The final figure depends on exact dimensions, internal layout, materials and finish, design details, access and site conditions. A detailed, itemised quotation follows the measured survey.",
+      /* Added 5 Sep 2026. The page offers walk-in wardrobes twice and never
+         said whether these tables price them, which the 4 Sep read flagged and
+         left. It also puts "walk-in wardrobe cost" on the page that targets
+         it, where the phrase did not appear at all. */
+      "These tables cover fitted wardrobes and alcove units. Walk-in wardrobe cost is worked out per room instead, because a dressing room is priced by what goes into it rather than by door count, and projects generally start at £2,000 of value.",
     ],
     leads: {
       "cost": "This page is the whole answer: the range, what moves it, and what the number includes.",

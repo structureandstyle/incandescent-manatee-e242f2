@@ -6,6 +6,7 @@ import CookieNotice from "../components/ds/CookieNotice.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import { SITE_URL, BUSINESS, GA4_ID } from "../data/site";
+import { REVIEWS } from "../data/site-content";
 
 interface Props {
   title: string;
@@ -45,7 +46,18 @@ const localBusiness = {
   "@id": `${SITE_URL}/#business`,
   name: BUSINESS.name,
   legalName: BUSINESS.legalName,
-  url: SITE_URL,
+  /* WITH THE TRAILING SLASH, 5 Sep 2026. SITE_URL carries none, so this one
+     field disagreed with the canonical link and the og:url on the same page,
+     on all eighteen of them. The NAP record is explicit that citations are
+     checked character by character and that an inconsistency is a negative
+     signal rather than a missing one, and this was the only NAP-adjacent field
+     on the site contradicting itself. */
+  url: `${SITE_URL}/`,
+  /* The Business Profile this entity actually is. The rating below is read
+     off that profile, and until now nothing in the markup said where it came
+     from: sameAs is what ties the two together, and it is the same URL the
+     reviews block already links to on the home page. */
+  sameAs: [REVIEWS.profileUrl],
   telephone: BUSINESS.phoneDisplay,
   email: BUSINESS.email,
   image: ogImage,
@@ -84,7 +96,25 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {!noCanonical && <link rel="canonical" href={canonical} />}
+
+    {/*
+      THE ICON SET, 5 September 2026. Until now this was one line: an SVG
+      favicon. favicon.ico sat in the build unreferenced, there was no
+      apple-touch-icon, no manifest and no theme-color, so a visitor who saved
+      the site to a phone home screen got a screenshot of the page or a blank
+      tile rather than the mark. That is the one place a small joinery firm's
+      site is looked at next to established ones.
+
+      Four lines, in the order a browser wants them: the SVG for anything that
+      supports it, the ICO for anything that does not, the 180px PNG iOS
+      requires, and the manifest Android reads. theme-color is the door green,
+      which is the browser chrome on a phone and the tile colour on Android.
+    */}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#2C4A3A" />
     {
       /* Draft copy is never indexable. `noindex` is driven by the page's gate in
          src/data/page-gates.ts, and lifts on its own once the questions that page

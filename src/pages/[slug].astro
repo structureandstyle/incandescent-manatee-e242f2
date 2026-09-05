@@ -164,10 +164,15 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
     id: "cost",
     /* The cost guide's own title is already the cost question, so interpolating
        it produced "What do what fitted wardrobes cost cost?". */
+    /* toLowerCase() lowercased the acronym too, so the media walls page asked
+       "What do media walls and tv units cost?", the only place on the site
+       where TV is not capitalised (5 Sep 2026). The acronym is put back rather
+       than the whole title being special-cased, because the next service with
+       one in its name would hit this again. */
     heading:
       service.slug === "fitted-wardrobe-cost"
         ? "The guide prices, by size and finish"
-        : `What do ${service.title.toLowerCase()} cost?`,
+        : `What do ${service.title.toLowerCase().replace(/\btv\b/g, "TV")} cost?`,
     lead: "The honest answer is a range, because the room decides it.",
     rows: [
       { label: "Guide price", text: service.price },
@@ -469,7 +474,13 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
 
       <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
         <div style="max-width:var(--measure-tight)">
-          <EnquiryForm compact service={service.title} />
+          {/* serviceLabel, not title. The checkbox list is built from labels,
+              and on the one page where the two diverge the tick silently did
+              not happen: a visitor arriving at /media-walls/ and using the form
+              on it got the same nothing-ticked state as someone with no context
+              at all, losing the one piece of self-attribution the in-page form
+              exists to supply (open since 3 Sep 2026). */}
+          <EnquiryForm compact service={serviceLabel(service)} />
         </div>
       </Wrap>
     </section>

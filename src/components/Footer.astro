@@ -13,7 +13,10 @@ import { BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
 import { NAV } from "../data/site-content";
 
-const year = 2026;
+/* Derived, not typed (5 Sep 2026). A literal 2026 on a static site with no
+   scheduled rebuild goes silently wrong on 1 January, on every page at once,
+   with nobody needing to touch the content for it to happen. */
+const year = new Date().getFullYear();
 
 /* The lists are derived rather than written out, so a page cannot be linked
    from here unless its questions are answered, and it appears on its own the

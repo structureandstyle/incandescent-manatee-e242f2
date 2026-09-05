@@ -102,8 +102,23 @@ const faqSchema = {
     sentence, and a search snippet is read with no page around it, so the
     definition the Process section carries never reaches the person reading
     this. Plain words instead. */}
+{/* THE TITLE LEADS WITH THE CATEGORY, NOT THE FLAGSHIP TERM, 5 Sep 2026.
+    It read "Fitted wardrobes and joinery, London", opening on the same two
+    words as /fitted-wardrobes/'s own title, "Fitted wardrobes London, made to
+    measure". The target sheet gives "fitted wardrobes london" to that page
+    alone and sets its month 3, 6 and 12 ranking floors on it, so the home page
+    was competing for a term whose floors carry the engagement. The home page's
+    job is the category and the company; the flagship phrase belongs to the
+    flagship page. Every internal link labelled "Fitted wardrobes" already
+    points there, and the description below still lists the services, so
+    nothing else changes.
+
+    "Bespoke" came out of the first version of this title, which measured 68
+    characters once Base.astro appends the company name. 55 fits what a result
+    page shows; the word is in the H1 kicker, the description and the footer
+    strapline anyway. */}
 <Base
-  title="Fitted wardrobes and joinery, London"
+  title="Fitted furniture and joinery, London"
   description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across London, measured on site and cut to follow your walls and ceiling."
   schema={faqSchema}
   noindex={!isIndexable}

@@ -8,8 +8,15 @@
  * than on Netlify's default.
  *
  * No question gate: it states no fact that the content questionnaire owns, so
- * it is publishable the day it is written. Netlify serves it on a 404 status,
- * which is what keeps it out of the index without a robots tag.
+ * it is publishable the day it is written.
+ *
+ * IT CARRIES noindex FROM 5 Sep 2026, and the reasoning it replaces is worth
+ * keeping because it was half right. Netlify serves this template on a 404
+ * status for a route that does not exist, and a 404 status keeps a page out of
+ * the index on its own. What that misses is that /404.html is itself a real
+ * static file at a real address: fetch it directly and it returns 200, with no
+ * canonical and nothing telling a crawler to leave it alone. The tag costs
+ * nothing on the status-404 path and closes the direct one.
  *
  * Ported to the design system 2 Sep 2026.
  */
@@ -25,6 +32,7 @@ import { BUSINESS } from "../data/site";
   title="Page not found"
   description="That page is not here. The site was rebuilt recently, so an address you saved may have moved. Head back to the home page, or tell us about your project."
   noCanonical
+  noindex
 >
   <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
     <Kicker scribe>404</Kicker>
