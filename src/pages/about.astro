@@ -90,56 +90,50 @@ const CONDUCT = [
         it says. It was the only page under review making the full set of
         claims and the only one with nothing to look at.
 
-        A fitted wardrobe run, because it is the flagship service and the one
-        the homepage does NOT lead on, so the two pages do not open with the
-        same picture.
+        IT SILENTLY BECAME A DIFFERENT PHOTOGRAPH ONCE, 4 Sep 2026, caught
+        5 Sep, and the mechanism is worth keeping even though the picture has
+        since changed again. This page used to hold a filename rather than a
+        photograph: fitted-wardrobes-02.webp, a slot in the gallery's own
+        numbered set. When commit c594719 rebuilt that set from four frames to
+        eight, the numbering shifted, slot 02 became a different room, and this
+        page swapped its picture without a line of it being edited. The caption
+        went on saying "loft room" about a photograph that was not one.
 
-        The shot changed on 2 Sep 2026. It was fitted-wardrobes-04, and Denis
-        said it did not look great in this spot. He was right: that frame is an
-        estate agent's bedroom, the bed taking the lower half and the joinery
-        pushed to the left edge and cropped, with a mirror, a smoke alarm and a
-        chest of drawers competing for the eye. On the page that argues the
-        standard of the work, the work was about a third of the picture.
+        Two lessons. A shared numbered set is not a stable address, so a page
+        outside that set must never point into it by index. And a comment
+        describing a photograph is a test: when the words beside the code stop
+        matching what the code renders, something moved.
 
-        This one is frontal and fills the frame, and the sloped loft ceiling
-        does an argument no sentence here can: the run is cut to a ceiling that
-        is not level, which is the whole business. The lit open shelving at the
-        end shows the hardware and lighting the materials page describes.
+        THE PHOTOGRAPH, chosen by Denis on 5 Sep 2026. A whole room rather than
+        a single piece, and that is the argument the lede above makes: lit
+        alcove shelving and built-in cupboards down the left, a second run of
+        shelving and cupboards past the fireplace, and the kitchen through the
+        opening, all in one room. A page that says one commission runs from the
+        first visit to aftercare and does not change hands should show the
+        several things one commission covers, not one wardrobe.
 
-        AND THEN IT SILENTLY BECAME A DIFFERENT PHOTOGRAPH, 4 Sep 2026, caught
-        5 Sep. The paragraph above describes the navy loft run. This page did
-        not hold that photograph, it held a filename: fitted-wardrobes-02.webp,
-        a slot in the gallery's own numbered set. When commit c594719 rebuilt
-        that set from four frames to eight, the numbering shifted, slot 02
-        became a white shaker run in a bright bedroom, and this page swapped its
-        picture without a line of it changing. The caption still said "loft
-        room", which by then was simply untrue, and Denis saw a washed-out phone
-        snap of a white wardrobe on a white wall with a television cropped into
-        the right edge.
+        It also happens to be the best-lit frame in the library, from the
+        professional set in the 31 August drop that Denis confirmed as Kaspar's
+        work. It renders elsewhere as bespoke-kitchens-08, which is a duplicate
+        across two pages, and it is a deliberate one: that page is noindexed
+        wave two and carries eight other frames.
 
-        Two lessons, and the second is the one worth keeping. A shared numbered
-        set is not a stable address, so a page outside that set must never point
-        into it by index. And a comment describing a photograph is a test: when
-        the words next to the code stop matching what the code renders,
-        something moved.
-
-        SO THE PHOTOGRAPH IS ITS OWN ASSET NOW, at
-        /images/about/wardrobe-run-loft.webp, cut from the 4000 x 3000 original
-        rather than from the gallery's 1400px copy. Nothing in the gallery can
-        move it again. The wider source also bought a better frame: the
-        customer's named storage box and the clothing at the left edge are
-        outside the crop, so is the duvet at the bottom, and what is left is the
-        run, the skylight and the lit shelving. Its own 1.56, so the plate
-        crops nothing. */}
+        Its own asset at /images/about/, not a gallery slot, so the renumbering
+        above cannot happen to it. Cut from the 1643 x 1095 export: the blank
+        wall and door frame come off the right edge, a little ceiling off the
+        top, and the band lands at 1.70 with the armchairs framing the bottom
+        rather than filling it. No upscaling, so 1552 is what the source
+        actually holds, and the plate declares that ratio so nothing is cropped
+        twice. */}
     <div style="margin-top:var(--plate-y)">
       <Plate
-        photo="/images/about/wardrobe-run-loft.webp"
-        alt={`A run of fitted wardrobes cut to a sloping loft ceiling, with lit open shelving at the end, completed installation by ${BUSINESS.legalName}`}
-        width={1600}
-        height={1025}
-        subject="Plate 01 · Fitted wardrobes, loft room"
+        photo="/images/about/living-room-alcoves-kitchen.webp"
+        alt={`Lit alcove shelving and built-in cupboards either side of a fireplace, opening through to a bespoke kitchen, completed installation by ${BUSINESS.legalName}`}
+        width={1552}
+        height={912}
+        subject="Plate 01 · Alcove shelving and bespoke kitchen"
         detail="Completed"
-        ratio="1600 / 1025"
+        ratio="1552 / 912"
         eager
         plane="left"
       />
