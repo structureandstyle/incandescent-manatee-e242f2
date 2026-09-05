@@ -86,12 +86,29 @@ const updated = "August 2026";
 
       <section>
         <SectionHead level={5}>Who else sees your information</SectionHead>
+        {/* The named Flow to Form sentence came out on 5 Sep 2026, on Denis's
+            instruction. It read: "Flowtoform Limited, trading as Flow to Form,
+            maintains this website for us and may see enquiry data in the course
+            of that work, under a written agreement."
+
+            Two reasons it was right to go, beyond the instruction. It named the
+            agency on the client's own privacy notice, which is the client's
+            document and not a place for a supplier credit. And it asserted a
+            written agreement that does not exist: the DPA is still unwritten,
+            so on launch day that clause would have been untrue.
+
+            WHAT THIS COSTS, stated so nobody has to rediscover it. UK GDPR
+            Article 13(1)(e) requires the recipients or categories of recipients
+            of personal data. Netlify and Google are still named below, so the
+            notice is not silent, but the agency that can see enquiry data is no
+            longer disclosed at all. The compliant middle is one nameless
+            clause, "the agency that maintains this website for us can see
+            enquiry data in the course of that work", and it should go back in
+            the day the DPA is signed, when it will also be true. */}
         <p style="margin-top:var(--space-8)">
           Our website is hosted by Netlify, and enquiries submitted through the form are processed by
-          them on our behalf. Analytics data is processed by Google. Flowtoform Limited, trading as
-          Flow to Form, maintains this website for us and may see enquiry data in the course of that
-          work, under a written agreement. We do not sell your information to anyone and we do not
-          use it for marketing lists.
+          them on our behalf. Analytics data is processed by Google. We do not sell your information
+          to anyone and we do not use it for marketing lists.
         </p>
       </section>
 
