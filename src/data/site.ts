@@ -49,6 +49,32 @@ export const BUSINESS = {
 /** GA4 measurement ID, live in Kaspar's own Analytics account. */
 export const GA4_ID = "G-FSGVTJXMMP";
 
+/**
+ * The agency credit in the footer.
+ *
+ * OFF, AND IT STAYS OFF UNTIL KASPAR AGREES TO IT. Built 5 September 2026 so
+ * that agreeing is a one-word change rather than a job, not because it is
+ * going live. This is his website: the executed agreement gives Flow to Form a
+ * named case study, a testimonial once the results deserve one, and two
+ * introductions where reasonably possible. A credit on his pages is not among
+ * them, so it is a thing to ask for and not a thing to ship.
+ *
+ * THE WORDING IS THE PART THAT WAS THOUGHT ABOUT. The first suggestion was
+ * "Flow to Form 2026" beside the copyright line, and in a single wrapping row
+ * the © reads as governing whatever sits next to it: that would have put our
+ * name where the site's ownership goes, on a site we do not own. This says
+ * what was done instead, which is also the better advertisement, and
+ * SiteFooter renders it after a gap rather than as another legal line.
+ *
+ * The link is nofollow. See the note at the render site for why that is a
+ * convention rather than caution about this one link.
+ */
+export const AGENCY_CREDIT = {
+  enabled: false,
+  label: "Site and search by Flow to Form",
+  href: "https://flowtoform.co.uk/",
+} as const;
+
 export type Service = {
   slug: string;
   /** Nav and card label. */

@@ -14,6 +14,17 @@ import Logo from "./Logo.astro";
 
 interface Props {
   lines?: readonly string[];
+  /**
+   * An agency credit, rendered at the end of the legal row.
+   *
+   * SEPARATE FROM `lines` ON PURPOSE, and that is the whole reason this prop
+   * exists rather than the credit being a fourth string. `lines` ends on the
+   * copyright, and in one wrapping row the © governs everything a reader sees
+   * near it: a name dropped in beside it reads as a claim on the site, which
+   * would not be true. The copyright here is the client's. This renders after
+   * a gap, as a sentence saying what somebody did rather than who owns what.
+   */
+  credit?: { label: string; href: string } | null;
   /** Contact links, rendered as a row above the legal lines. */
   links?: readonly { label: string; href: string }[];
   /** Policy links, rendered beside the legal lines in the same faint mono. */
@@ -28,6 +39,7 @@ interface Props {
 
 const {
   lines = [],
+  credit = null,
   links = [],
   legal = [],
   nav = [],
@@ -128,6 +140,20 @@ const {
       {lines.map((l) => (
         <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint)">{l}</span>
       ))}
+      {credit && (
+        /* nofollow, deliberately. One followed footer link from one client site
+           is unremarkable. The same link, placed by the same agency, on every
+           client whose search work it also runs, is the pattern Google's link
+           spam policy names, and that convention is far cheaper to set on the
+           first site than to unpick on the fifth. Nothing is given up: nofollow
+           does not stop anyone clicking, and the click is the point. */
+        <a
+          href={credit.href}
+          target="_blank"
+          rel="noopener nofollow"
+          style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint);border-bottom:1px solid transparent;min-height:44px;display:inline-flex;align-items:center"
+        >{credit.label}</a>
+      )}
     </div>
   </div>
 </footer>

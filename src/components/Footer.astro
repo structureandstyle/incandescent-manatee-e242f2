@@ -9,7 +9,7 @@
  * Companies House 16822866, incorporated 31 October 2025.
  */
 import SiteFooter from "./ds/SiteFooter.astro";
-import { BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
+import { AGENCY_CREDIT, BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
 import { NAV } from "../data/site-content";
 
@@ -81,4 +81,7 @@ const links = [
     `Bespoke joinery and fitted furniture · London`,
     `© ${year}`,
   ]}
+  {/* Off until Kaspar agrees to it: see AGENCY_CREDIT in src/data/site.ts.
+      One boolean there is the whole change. */}
+  credit={AGENCY_CREDIT.enabled ? { label: AGENCY_CREDIT.label, href: AGENCY_CREDIT.href } : null}
 />
