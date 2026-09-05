@@ -8,6 +8,17 @@ a.accent,a[data-accent]{color:var(--link-accent)}
 [data-on-dark] a,.on-dark a{color:var(--ink-rev)}
 a:hover{border-bottom-color:currentColor}
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:var(--focus-width) solid var(--focus-ring);outline-offset:var(--focus-offset)}
+/* THE RING ON A DARK SURFACE, 5 Sep 2026. --focus-ring is door green, which is
+   also --surface-accent: on the enquiry band the outline was drawn in the exact
+   colour of the ground behind it, so a keyboard user lost the ring entirely on
+   the one section built to turn them into an enquiry. Failed 1.4.11 at 1:1. The
+   ink tokens already have reversed variants for this situation; the ring did
+   not. Redefining the property rather than the outline rule means every control
+   inside a dark surface inherits it, including ones written later. */
+[data-on-dark],.on-dark{--focus-ring:var(--ink-rev)}
+/* The header is sticky, so an in-page jump used to land its target underneath
+   it. Every element that can be a jump target keeps the header's height clear. */
+[id]{scroll-margin-top:calc(var(--header-h,72px) + var(--space-8))}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 em{font-family:var(--font-serif-italic);font-style:italic}
 table{border-collapse:collapse}

@@ -40,6 +40,7 @@ const {
 
 <footer
   class={className}
+  data-on-dark
   style={`background:var(--surface-ink);color:var(--ink-rev);${style}`}
 >
   <div style="max-width:var(--page-max);margin:0 auto;padding:var(--footer-y) var(--gutter) var(--space-15);display:flex;flex-direction:column;gap:var(--space-16)">
@@ -92,9 +93,17 @@ const {
 
     {links.length > 0 && (
       <div style="display:flex;gap:var(--space-9) var(--space-14);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
+        {/* An http href here is WhatsApp, which leaves the site, so it opens in
+            its own tab and carries the rel that only means something once it
+            does. tel: and mailto: hand off to an app and take neither. Until
+            5 Sep 2026 the four wa.me links across the site disagreed with each
+            other: two carried rel="noopener" with no target, which does
+            nothing, and this one carried neither. */}
         {links.map((l) => (
           <a
             href={l.href}
+            target={l.href.startsWith("http") ? "_blank" : undefined}
+            rel={l.href.startsWith("http") ? "noopener" : undefined}
             style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-soft);border-bottom:1px solid var(--hair-rev-strong);padding:var(--space-4) 0;display:inline-block"
           >{l.label}</a>
         ))}

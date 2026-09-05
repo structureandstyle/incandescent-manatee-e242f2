@@ -58,20 +58,28 @@ const wordW = Math.round(logoHeight * 10.093);
     data-nav-row
     style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-12);padding:var(--space-9) var(--gutter);max-width:var(--page-max);margin:0 auto"
   >
+    {/* The anchor was the artwork's own box, 202 x 20, which fails WCAG 2.5.8's
+        24px floor in one dimension on every page (5 Sep 2026). The lockup keeps
+        its exact size and position: the anchor is now a flex box 44px tall with
+        the artwork centred in it, so the target grows and nothing moves. The
+        two lockup spans stay absolutely positioned against the inner span,
+        which is the element that carries the original dimensions. */}
     <a
       href={homeHref}
       aria-label="Structure & Style, home"
-      style={`display:block;border:0;position:relative;height:${logoHeight}px;width:${wordW}px`}
+      style="display:flex;align-items:center;border:0;min-height:44px"
     >
-      <span data-lockup="word" style="position:absolute;left:0;top:0">
-        <Logo lockup="wordmark" height={logoHeight} title="" />
-      </span>
-      <span
-        data-lockup="mark"
-        aria-hidden="true"
-        style={`position:absolute;left:0;top:${Math.round((logoHeight - markH) / 2)}px;pointer-events:none`}
-      >
-        <Logo lockup="mark" height={markH} title="" />
+      <span style={`display:block;position:relative;height:${logoHeight}px;width:${wordW}px`}>
+        <span data-lockup="word" style="position:absolute;left:0;top:0">
+          <Logo lockup="wordmark" height={logoHeight} title="" />
+        </span>
+        <span
+          data-lockup="mark"
+          aria-hidden="true"
+          style={`position:absolute;left:0;top:${Math.round((logoHeight - markH) / 2)}px;pointer-events:none`}
+        >
+          <Logo lockup="mark" height={markH} title="" />
+        </span>
       </span>
     </a>
 

@@ -62,8 +62,13 @@ const {
 const hasFacts = Astro.slots.has("facts");
 ---
 
+{/* data-on-dark, 5 Sep 2026. It is what switches the focus ring to paper: the
+    ring's own colour is door green and so is this band, so a focused control
+    here had an outline the same colour as the ground behind it. The attribute
+    already carried the reversed link colour; now it carries the ring too. */}
 <section
   class={className}
+  data-on-dark
   style={`background:var(--surface-accent);color:var(--text-on-accent);${style}`}
 >
   <div style="max-width:var(--page-max);margin:0 auto;padding:var(--band-y) var(--gutter)">
@@ -99,7 +104,11 @@ const hasFacts = Astro.slots.has("facts");
             <Link variant="nav" tone="paper" chamfer href={CONTACT.phoneHref}>
               Call {CONTACT.phoneDisplay}
             </Link>
-            <Link variant="nav" tone="paper" chamfer href={CONTACT.whatsapp} rel="noopener">
+            {/* rel="noopener" with no target does nothing at all: it only bites
+                when a link opens a new browsing context. Every external link on
+                this site now opens in a new tab and carries the rel, which is
+                what the Maps and reviews links already did (5 Sep 2026). */}
+            <Link variant="nav" tone="paper" chamfer href={CONTACT.whatsapp} target="_blank" rel="noopener">
               WhatsApp
             </Link>
           </p>

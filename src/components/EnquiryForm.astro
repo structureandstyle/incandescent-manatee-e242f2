@@ -289,10 +289,15 @@ const SOURCES = [
     resize: vertical;
     min-height: 5.5em;
   }
-  /* Lighter than the help text, so an example never reads as something already
-     typed, and dark enough to be worth reading. */
+  /* Lighter than a typed value, so an example never reads as something already
+     entered, and dark enough to be worth reading.
+     0.45 until 5 Sep 2026, which measured 2.74:1 on paper against WCAG 1.4.3's
+     4.5:1 floor, on the area field and the job-description box of every form on
+     this site. --ink-soft is the value this palette has already proved at
+     5.06:1, and a field's own value renders in full ink, so a placeholder is
+     still visibly not an answer. */
   .enquiry-form ::placeholder {
-    color: rgba(34, 29, 24, 0.45);
+    color: var(--ink-soft);
     opacity: 1;
   }
   .enquiry-form input[type="file"] {

@@ -127,13 +127,21 @@ const hasQuotes = quotes.length > 0;
           >
             {/* The whole quote is the link when the profile URL is given, so a
                 reader lands on the source rather than on our transcription. */}
+            {/* NO aria-label HERE, and that is the fix rather than an omission
+                (5 Sep 2026). It carried aria-label="Read this review and all N
+                others on Google", which replaces the accessible name outright:
+                the quote a sighted visitor reads was not in the name at all, so
+                a screen reader heard the instruction and never the review.
+                WCAG 2.5.3 wants the visible text inside the name. The link's
+                own content is the name now, with the destination appended for
+                screen readers only. Lighthouse failed this on every page
+                carrying the reviews block. */}
             {href ? (
               <a
                 class="ss-review-link"
                 href={href}
                 target="_blank"
                 rel="noopener"
-                aria-label={`Read this review and all ${count} others on Google`}
                 style="display:grid;grid-template-columns:66px minmax(0,1fr);gap:var(--space-6);padding:var(--space-12) 0;text-decoration:none;color:inherit"
               >
                 <MonoLabel as="span" tone="soft" style="padding-top:4px">
@@ -154,6 +162,7 @@ const hasQuotes = quotes.length > 0;
                   {q.meta && (
                     <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
                   )}
+                  <span class="sr-only">Read this review and all {count} others on Google</span>
                 </div>
               </a>
             ) : (
