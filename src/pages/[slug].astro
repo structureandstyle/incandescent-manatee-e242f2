@@ -53,7 +53,46 @@ const open = unanswered(gateFor(path));
  * after Q10 lands.
  */
 const isIndexable = indexable(path) && Boolean(SERVICE_COPY[service.slug]);
-const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
+
+/**
+ * "Also worth a look", rebuilt 5 September 2026.
+ *
+ * It was `SERVICES.filter(not me).slice(0, 3)`, which is not a related-pages
+ * block at all: it takes the first three entries in array order. Two things
+ * followed, and neither was anybody's decision.
+ *
+ * The cost guide is fourth in SERVICES, so it surfaced on any page that was
+ * itself one of the first three, sitting in a list that reads as services. The
+ * footer was corrected for exactly this on 4 September, which is why Service
+ * carries a `guide` flag: a list of what the business does should not end on a
+ * price guide. This block predates the flag and never used it.
+ *
+ * And media walls and bespoke kitchens are fifth and sixth, so they appeared on
+ * no service page at all. Counted before the change: fitted wardrobes, walk-in
+ * and alcove units had five inbound links each from this block, the cost guide
+ * three, and the two wave-two pages zero.
+ *
+ * Rotating from the current page's own position fixes both. Every service is
+ * linked from two or three others, nothing links to itself, and the guide is
+ * handled separately below.
+ */
+const SERVICE_ONLY = SERVICES.filter((s) => !s.guide);
+const at = SERVICE_ONLY.findIndex((s) => s.slug === service.slug);
+const others = Array.from(
+  { length: Math.min(3, SERVICE_ONLY.length) },
+  (_, i) => SERVICE_ONLY[(Math.max(at, -1) + 1 + i) % SERVICE_ONLY.length]
+).filter((s) => s.slug !== service.slug);
+
+/**
+ * The cost guide, offered as a guide rather than as a fourth service, and only
+ * where it prices what the page sells. Its tables cover fitted wardrobes and
+ * alcove units, and it carries the walk-in answer in prose, so it belongs on
+ * those three. On media walls and kitchens it prices nothing, and pointing a
+ * reader at a wardrobe price list is worse than pointing them nowhere.
+ */
+const guide = SERVICES.find((s) => s.guide);
+const GUIDE_APPLIES = ["fitted-wardrobes", "walk-in-wardrobes", "alcove-units"];
+const showGuide = Boolean(guide) && GUIDE_APPLIES.includes(service.slug);
 
 /**
  * Wave-one body copy and FAQs, where written (src/data/service-copy.ts).
@@ -524,6 +563,13 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
           </li>
         ))}
       </ul>
+
+      {showGuide && guide && (
+        <p style="margin-top:var(--space-14);display:flex;flex-wrap:wrap;gap:var(--space-4) var(--space-8);align-items:baseline">
+          <MonoLabel as="span" tone="soft">Guide</MonoLabel>
+          <Link href={servicePath(guide)} variant="nav" chamfer>{guide.title}</Link>
+        </p>
+      )}
     </Wrap>
   </article>
 </Base>

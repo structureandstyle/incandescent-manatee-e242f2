@@ -244,10 +244,41 @@ const SOURCES = [
     ></textarea>
   </div>
 
+  {/*
+    THE ATTACHMENT, widened and corrected 5 September 2026, Denis's ask: people
+    have drawings, not only photographs, so the field has to take a document.
+
+    accept now carries PDF and Word alongside images. The extensions are listed
+    as well as the MIME types on purpose: iOS and some Android pickers match on
+    extension, and a bare image/* on a phone opens the camera roll with no way
+    to reach a file at all, which is exactly what a plan arrives as.
+
+    `multiple` IS GONE, and that is a bug fix rather than a reduction. Netlify's
+    own documentation is explicit that only one file upload per field is
+    supported and that multiple files need multiple fields, so a visitor who
+    attached three photographs was silently sending one. The help text invited
+    that: it said "a couple of pictures". Worse than losing them, nobody would
+    have known: the submission succeeds and looks complete.
+
+    The 8MB ceiling is the whole form request, not the file, and it is Netlify's
+    hard limit with a 30 second upload timeout behind it. Two photographs
+    straight off a modern phone exceed it on their own, so one file is close to
+    the honest maximum anyway. The copy says so, and says what to do instead,
+    because an enquiry that fails silently on a 12MP photograph is a lost lead.
+  */}
   <div>
-    <label for={`${idPrefix}photos`}>Photos of the space (optional)</label>
-    <p class="help">A couple of pictures of the room saves a visit and gets you a closer price.</p>
-    <input id={`${idPrefix}photos`} name="photos" type="file" accept="image/*" multiple />
+    <label for={`${idPrefix}attachment`}>A photo or drawing (optional)</label>
+    <p class="help">
+      One file, up to 8MB. A picture of the room saves a visit and gets you a closer price, and
+      plans or drawings are just as useful. PDF, Word and photographs all work. Send anything else
+      when we reply.
+    </p>
+    <input
+      id={`${idPrefix}attachment`}
+      name="attachment"
+      type="file"
+      accept="image/*,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,.pdf,.doc,.docx"
+    />
   </div>
 
   <div>
