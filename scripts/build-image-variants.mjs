@@ -20,9 +20,9 @@
  * the largest candidate and the plain `src`, so a browser that ignores srcset
  * gets exactly what it got before.
  *
- * IT DOES NOT TOUCH public/images/materials. Those six are CSS background
- * images on the material chips, and background-image has no srcset. They are
- * handled in MaterialChip.astro instead.
+ * The material swatches are included from 5 September too, because they stopped
+ * being CSS backgrounds that day and became lazy <img> elements on the chip
+ * fronts. A background-image has no srcset; an img does.
  *
  * IT ALSO WRITES public/og/<slug>.jpg, 1200 x 630, one per service, from that
  * service's own first landscape photograph. Every page shared one share image
@@ -55,8 +55,7 @@ const IMAGES = join(ROOT, "public/images");
  */
 const WIDTHS = [400, 640, 900, 1280];
 
-/** Directories of photographs. Material swatches are backgrounds, not <img>. */
-const SKIP_DIRS = new Set(["materials"]);
+const SKIP_DIRS = new Set();
 const VARIANT = /-\d+w\.webp$/;
 
 async function* walk(dir) {

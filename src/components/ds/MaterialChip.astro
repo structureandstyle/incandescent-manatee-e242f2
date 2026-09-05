@@ -40,6 +40,7 @@
  * tone, plywood as its striped edge), and none is a photograph.
  */
 import MonoLabel from "./MonoLabel.astro";
+import variants from "../../../public/images/_variants.json";
 
 interface Props {
   name: string;
@@ -114,6 +115,21 @@ const popId = `mat-pop-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
  */
 const swatchUrl = swatch?.match(/url\(\s*['"]?([^'")]+)['"]?\s*\)/)?.[1] ?? null;
 
+/**
+ * Being an img rather than a background is also what makes a srcset possible.
+ *
+ * The sizes list is measured rather than guessed, which is the whole trick: a
+ * first pass declared 46vw and 30vw, the browser dutifully fetched the file for
+ * a 172px box, and the render pass caught six visibly soft swatches at 375, 443
+ * and 768. A chip actually renders at 333px on a 375 phone (89vw), 326 at 768
+ * (42vw) and about 301 from 1280 up. Declared honestly, nothing is soft and
+ * nothing over-fetches.
+ */
+const swatchWidths: number[] = swatchUrl ? (variants as Record<string, number[]>)[swatchUrl] ?? [] : [];
+const swatchSrcset = swatchWidths.length
+  ? swatchWidths.map((w) => `${swatchUrl!.replace(/\.webp$/, `-${w}w.webp`)} ${w}w`).join(", ")
+  : undefined;
+
 const frame = [
   "border:var(--rule-structure)",
   /* A colour or gradient still paints as a background; a photograph does not,
@@ -139,6 +155,8 @@ const frame = [
           {swatchUrl && !hasMedia && (
             <img
               src={swatchUrl}
+              srcset={swatchSrcset}
+              sizes={swatchSrcset ? "(max-width: 700px) 92vw, (max-width: 1080px) 44vw, 320px" : undefined}
               alt=""
               loading="lazy"
               decoding="async"
@@ -204,6 +222,8 @@ const frame = [
         {swatchUrl && !hasMedia && (
           <img
             src={swatchUrl}
+            srcset={swatchSrcset}
+            sizes={swatchSrcset ? "(max-width: 700px) 92vw, (max-width: 1080px) 44vw, 320px" : undefined}
             alt=""
             loading="lazy"
             decoding="async"
