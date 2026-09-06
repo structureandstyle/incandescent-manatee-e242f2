@@ -9,7 +9,9 @@
  * is a reply, a visit, and a fixed itemised quotation (Q13, Q17, Q20). The
  * form stays first because it is the one enquiry channel that attributes
  * itself end to end, and because dimensions and photographs genuinely make
- * the first answer better. Never framed as call deflection.
+ * the first answer better. Never framed as call deflection, and since 6 Sep
+ * 2026 not framed at all: the line under the phone number that made the case
+ * for the form came off on Kaspar's instruction.
  *
  * Hours render from BUSINESS.openingHours, which mirrors the Business Profile
  * (Mon to Fri 08:00 to 18:00, Sat 09:00 to 14:00), so the two cannot drift.
@@ -62,10 +64,14 @@ const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry v
           <dd style="margin:var(--space-4) 0 0">
             <Link href={BUSINESS.phoneHref} variant="nav" chamfer>Call {BUSINESS.phoneDisplay}</Link>
           </dd>
-          <dd style="margin:var(--space-5) 0 0;font-size:var(--type-body-sm);color:var(--text-quiet);max-width:var(--measure-short)">
-            A call works too. The form gets you a firmer first answer, because that answer
-            needs the dimensions and the photographs either way.
-          </dd>
+          {/* A line used to follow the number: "A call works too. The form gets
+              you a firmer first answer, because that answer needs the
+              dimensions and the photographs either way." Kaspar asked for it to
+              go, 6 September 2026, on the contact details block of the
+              preview. It was the one sentence on this page that argued with
+              the reader about which channel to use, and the header note above
+              already says the form is never framed as call deflection. The
+              number now stands on its own, like the other four entries. */}
         </div>
         <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
           <dt><MonoLabel as="span">WhatsApp</MonoLabel></dt>
