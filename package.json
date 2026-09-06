@@ -12,7 +12,8 @@
     "astro": "astro",
     "verify": "node scripts/verify-build.mjs",
     "build:production": "astro build && node scripts/verify-build.mjs",
-    "build:preview": "astro build && node scripts/verify-build.mjs && node scripts/build-preview.mjs"
+    "build:preview": "astro build && node scripts/verify-build.mjs && node scripts/build-preview.mjs && python scripts/zip-preview.py",
+    "zip:preview": "python scripts/zip-preview.py"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

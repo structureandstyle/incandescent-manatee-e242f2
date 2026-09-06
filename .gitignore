@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# The preview upload bundle, built by scripts/zip-preview.py. Disposable.
+*.zip

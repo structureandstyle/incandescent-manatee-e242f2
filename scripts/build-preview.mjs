@@ -152,6 +152,7 @@ console.log(`    - robots noindex meta in every head (${robotsAdded} added, rest
 console.log(`    - analytics cannot load (${analyticsNeutralised} pages rewritten)`);
 console.log("    - the enquiry form completes to /thanks/ and records nothing");
 console.log("");
-console.log("  Upload dist/ to Cloudflare Pages as a direct upload.");
+console.log("  Now zipped by scripts/zip-preview.py, which runs next.");
+console.log("  NEVER hand-zip this directory: see the note at the top of that file.");
 console.log("  DO NOT deploy this directory to production.");
 console.log("");
