@@ -21,7 +21,6 @@ import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import ProcessStep from "../components/ds/ProcessStep.astro";
-import WardrobeDrawing from "../components/ds/WardrobeDrawing.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Value from "../components/Value.astro";
@@ -56,16 +55,15 @@ const ICONS = ["tape", "pencil", "plane", "square"] as const;
   </Wrap>
 
   {/*
-    The drawing. This is the page the design system put it on, and the reason
-    holds: it is the answer to a section that needs an image and has none, and
-    this page has no photography at all. It must not go on the service pages,
-    where real plates now exist: the design system is explicit that once the
-    commissions are shot, the plate wins and the drawing moves to a page of its
-    own. Its eight stages map to the four stages listed below it.
+    THE DRAWING CAME OFF ON 6 SEPTEMBER 2026, Kaspar's instruction, here and on
+    the homepage, to be replaced later with a genuine project drawing. It was a
+    drawn wardrobe wall nobody had ordered, on the page that describes what
+    actually happens.
+
+    The component stays at src/components/ds/WardrobeDrawing.astro, and its
+    eight stages were drawn to map onto the four stages below, so a real
+    drawing belongs in exactly this slot.
   */}
-  <Wrap style="padding-bottom:var(--section-y)">
-    <WardrobeDrawing />
-  </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Four stages" scribe>The commission</SectionHead>

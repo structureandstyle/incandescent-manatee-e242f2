@@ -373,7 +373,17 @@ export const HOMEPAGE_FAQS = [
 export const PROCESS = [
   {
     number: "01",
-    title: "Visit",
+    /* "Visit" until 6 September 2026, when Kaspar named the four stages he
+       wants a visitor to see: Visit & Survey, Quotation & Drawings,
+       Preparation, Fitting. Three and four already matched his wording.
+
+       The rename MOVED A SENTENCE RATHER THAN ADDING ONE. Stage 02 carried the
+       survey, the quotation and the drawings, which is three promises in one
+       stage, while the visit stood alone with none of the measuring in it. The
+       survey sentence below is stage 02's own, verbatim apart from its length
+       qualifier being merged with the visit's, and Q17 moves with it. No new
+       copy was written for either stage. */
+    title: "Visit & Survey",
     /** Length is Q14. The old "no charge, samples brought along" line carried
         a "Confirmed" note from the design era with no source anywhere: not in
         the questionnaire, the ops docs, or his own old site. Stripped 30 Aug
@@ -395,14 +405,14 @@ export const PROCESS = [
         section 5 lists first, since "space" is the kind of word an estate
         agent reaches for. It is not on them. */
     confirmed:
-      "We visit your home to see the space, usually for 45 to 60 minutes. It runs longer for a larger or more complex project. You do not need to have every answer ready: asking the right questions is our job.",
-    questions: ["q13", "q14", "q15", "q16"] as QuestionKey[],
+      "We visit your home to see the space, usually for 45 to 60 minutes. You do not need to have every answer ready: asking the right questions is our job. The measured survey takes about an hour on site, and both run longer for a larger or more complex project.",
+    questions: ["q13", "q14", "q15", "q16", "q17"] as QuestionKey[],
     /** Stamped mono facts on the process page, all from confirmed answers. */
-    details: ["Usually 45 to 60 minutes", "In your home"],
+    details: ["Usually 45 to 60 minutes", "Survey about an hour", "In your home"],
   },
   {
     number: "02",
-    title: "Survey and drawings",
+    title: "Quotation & Drawings",
     /** Order per Q13 and Q21: quotation first, drawings once it is accepted.
 
         The design week is CONDITIONAL and was being stated as automatic.
@@ -410,9 +420,9 @@ export const PROCESS = [
         projects needing design development get the week. Read as a promise,
         the old wording committed us to a design week on every job. */
     confirmed:
-      "The measured survey takes about an hour on site, longer for larger or more complex projects. A fixed, itemised quotation follows, and design costs sit inside it where your project needs design work. Where a design week runs, drawings are issued for review with up to two rounds of revisions included.",
-    questions: ["q17", "q18", "q19", "q20", "q21"] as QuestionKey[],
-    details: ["Survey about an hour", "Drawings within the design week", "Two revision rounds included"],
+      "A fixed, itemised quotation follows the survey, and design costs sit inside it where your project needs design work. Where a design week runs, drawings are issued for review with up to two rounds of revisions included.",
+    questions: ["q18", "q19", "q20", "q21"] as QuestionKey[],
+    details: ["Drawings within the design week", "Two revision rounds included"],
   },
   {
     number: "03",

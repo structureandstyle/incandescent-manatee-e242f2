@@ -133,6 +133,40 @@ export type Service = {
    * per tone protocol section 12: never "price on application" alone.
    */
   price: string;
+  /**
+   * Per-service answers, added 6 September 2026 from Kaspar's review of the
+   * preview build.
+   *
+   * Until now every service page shared one answer to what moves the price,
+   * one to the smallest job taken, one to survey-to-drawings and one to how
+   * long the work runs, because the questionnaire had only ever asked those
+   * questions once, about a wardrobe. The template said so in as many words:
+   * WHAT THIS NEEDS IS PER-SERVICE DURATIONS FROM KASPAR. These are those, in
+   * his own wording, for the services he gave them for.
+   *
+   * Every field is optional and every one falls back to the shared answer, so
+   * a service he has not spoken about is left as it was rather than guessed
+   * at.
+   */
+  /** Replaces the shared Q11 in the "What moves it" row. */
+  priceMovers?: string;
+  /**
+   * The sentence above the cost table. SERVICE_COPY carries this for wave-one
+   * pages; a wave-two page has no SERVICE_COPY entry at all, deliberately, and
+   * adding one would lift its noindex. This puts his line on the page without
+   * touching that gate.
+   */
+  costLead?: string;
+  /**
+   * Drops the "Smallest job taken" row. Asked for on walk-in wardrobes and on
+   * media walls: a £2,000 minimum sitting under a £5,000 guide price answers a
+   * question nobody asked and argues with the figure above it.
+   */
+  noMinimum?: boolean;
+  /** Replaces the shared "Survey to drawings" row. */
+  surveyToDrawings?: string;
+  /** Replaces Q30 or Q32 in the days-on-site row. */
+  onSite?: string;
   wave: 1 | 2;
 };
 
@@ -160,9 +194,20 @@ export const SERVICES: Service[] = [
   {
     slug: "walk-in-wardrobes",
     metaTitle: "Bespoke walk-in wardrobes, London",
-    bandPrice: "Projects generally from £2,000",
+    /* £5,000, Kaspar, 6 September 2026, replacing the generic "projects
+       generally from £2,000" that stood on every page the 31 Aug pricing
+       document did not price. A walk-in is a room rather than a run, and the
+       old line was pricing it as though it were neither. */
+    bandPrice: "Walk-in wardrobes from £5,000",
     price:
-      "Priced per room. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
+      "Walk-in wardrobes typically start from around £5,000. Larger dressing rooms and more detailed specifications can increase considerably from there.",
+    priceMovers:
+      "The size of the room, number of fitted runs, internal layout, drawers and specialist storage, materials and finishes, integrated lighting and the complexity of the space.",
+    noMinimum: true,
+    surveyToDrawings:
+      "Where design drawings are required, these are prepared for review before the project moves into production.",
+    onSite:
+      "Installation typically takes around 3 to 5 days, with larger or more complex dressing rooms taking longer.",
     title: "Walk-in wardrobes",
     heading: "Bespoke walk-in wardrobes and dressing rooms",
     primary: "bespoke walk in wardrobe",
@@ -206,9 +251,14 @@ export const SERVICES: Service[] = [
   {
     slug: "media-walls",
     metaTitle: "Media walls and TV units, London",
-    bandPrice: "Projects generally from £2,000",
+    bandPrice: "Built-in TV units from £3,500",
+    costLead:
+      "Media walls vary considerably depending on their size, storage, finish and level of integration. The guide price below is for a complete bespoke media wall or built-in TV unit.",
     price:
-      "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
+      "Bespoke media walls and built-in TV units start from £3,500, with the final price depending on the size, design, finish and specification.",
+    priceMovers:
+      "Overall size, cabinetry and storage, open shelving, integrated lighting, cable management, ventilation, specialist finishes and additional detailing.",
+    noMinimum: true,
     title: "Media walls and TV units",
     label: "Built-in TV units",
     heading: "Media walls and built-in TV units",
@@ -222,9 +272,17 @@ export const SERVICES: Service[] = [
   {
     slug: "bespoke-kitchens",
     metaTitle: "Bespoke kitchens in London",
-    bandPrice: "Projects generally from £2,000",
+    bandPrice: "Bespoke kitchens from £10,000",
     price:
-      "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
+      "Bespoke kitchens typically start from £10,000, with each project individually priced following a measured survey. Larger kitchens, islands and more complex designs are quoted accordingly.",
+    priceMovers:
+      "Kitchen size and layout, cabinetry and internal storage, worktops, appliances, materials and finishes, integrated lighting and any associated electrical, plumbing or finishing works.",
+    /* The "Smallest job taken" row stays here. He asked for it to come off
+       walk-in wardrobes and media walls and said nothing about kitchens, and a
+       £2,000 minimum under a £10,000 guide price is a different claim from the
+       same row under £3,500: it says the smallest thing taken on is a long way
+       below a whole kitchen, which is true and useful. Flagged to Denis rather
+       than decided silently either way. */
     title: "Bespoke kitchens",
     heading: "Bespoke kitchens, made to measure",
     primary: "bespoke kitchens london",

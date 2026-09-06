@@ -117,7 +117,17 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
     ],
     leads: {
       "cost": "A whole room's fit-out sits behind a single itemised quotation for the agreed scope.",
-      "how-long": "Where the room needs designing first, that week sets it out on paper before anything is ordered.",
+      /* Kaspar's own line, 6 September 2026, in place of ours about the design
+         week. His says what a reader of this page is actually asking: a
+         walk-in is a bigger job than a wardrobe run and the time follows the
+         room. The design week is still on the page, in the row below.
+
+         He read the materials and fitting sections on the same pass and wrote
+         "same as for wardrobes" against both. Read as what it says, that the
+         answers there are the wardrobe answers, which they already are: those
+         rows are the shared Q22, Q24, Q28, Q43, Q31 and Q33, identical on
+         every service page. Nothing was changed on the strength of it. */
+      "how-long": "Walk-in wardrobes are larger projects, so installation time depends on the size of the room and the specification.",
       "made-from": "In a walk-in the inside is on show, so interior finishes matter as much as fronts.",
       "fitting": "A flat, square wall is the exception in these rooms rather than the rule.",
       "after": "Rails, runners and hinges carry the daily traffic, and each carries its manufacturer's warranty.",
@@ -160,14 +170,19 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
   },
 
   "alcove-units": {
+    /* Kaspar's own two paragraphs, 6 September 2026, replacing ours.
+       ONE WORD IS NOT HIS: he wrote "the client's requirements" and this page
+       says "you" and "your" throughout, so it reads "your own requirements".
+       Told rather than asked, and easy to put back.
+
+       What went with the old intro, and where it still lives: the scribing
+       sentence is the fitting section and the first FAQ, and "alcove
+       cupboards", the 2,400-a-month phrase this page was missing until 5 Sep,
+       is the H2 below. Losing it from the prose is survivable; losing it from
+       the heading is not, so check both before editing either. */
     intro: [
-      "No two alcoves in a period house are the same width, and most walls are not straight either. Each unit is measured to its own alcove, then scribed: cut to follow the wall, so doors sit flush and lines run true.",
-      /* "Alcove cupboards" is the phrase this page was missing, 5 Sep 2026. The
-         target sheet calls it the page's real engine at 2,400 a month against
-         the primary's 90, and it appeared nowhere a reader could see it: only
-         in the meta description, which is the one place a body-content ranking
-         signal does not come from. The sentence is otherwise unchanged. */
-      "Alcove cupboards can run to sill height with shelving above, or floor to ceiling across the chimney breast wall. The proportions follow the room, and the inside is planned around what will actually live there.",
+      "Alcove furniture is designed around the space and how it will be used. It can include fitted cupboards, floating or fitted shelving, full-height cabinetry, display storage, media units or a combination of these.",
+      "The layout, proportions and internal storage are developed around the room and your own requirements, with a choice of painted, veneered and decorative finishes to suit the design.",
     ],
     leads: {
       "cost": "A smaller piece follows the same pricing logic, and the table below is the honest version of it.",

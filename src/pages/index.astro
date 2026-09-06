@@ -39,7 +39,6 @@ import Plate from "../components/ds/Plate.astro";
 import PlateCarousel from "../components/ds/PlateCarousel.astro";
 import MaterialChip from "../components/ds/MaterialChip.astro";
 import ProcessStep from "../components/ds/ProcessStep.astro";
-import WardrobeDrawing from "../components/ds/WardrobeDrawing.astro";
 import Reviews from "../components/ds/Reviews.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import Link from "../components/ds/Link.astro";
@@ -126,14 +125,21 @@ const faqSchema = {
   <Wrap style="padding-top:var(--hero-y)">
     <Kicker scribe>Bespoke joinery · London</Kicker>
 
+    {/* Kaspar's own headline and opening paragraph, 6 September 2026, in place
+        of "made once, for one room". His is the plainer sentence and it is the
+        one he wants read first.
+
+        The italic falls on "your room", which is where his line turns: the
+        emphasis is ours because he sent plain text, and it is the same
+        treatment the old headline had on its last clause. */}
     <Display level={1} style="margin:var(--space-12) 0 var(--space-13)">
-      Fitted furniture,<br />made once, <Italic>for one room.</Italic>
+      Fitted furniture,<br />made to fit <Italic>your room.</Italic>
     </Display>
 
     <p style="max-width:var(--measure);font-size:var(--type-lede)">
-      Alcove units, wardrobe walls, walk-in wardrobes and built-in TV units, for homes across
-      London. Every piece is measured in your room and cut to follow the line of the wall. It
-      meets the floor and the ceiling without gaps or filler strips.
+      Bespoke fitted furniture for homes across London, including fitted wardrobes, walk-in
+      wardrobes, alcove units and built-in TV units. Each piece is measured, designed and fitted
+      around the space it belongs in.
     </p>
 
     {/* The services, by name. This was slice(0, 5), which silently picked up
@@ -282,27 +288,22 @@ const faqSchema = {
     </p>
   </Wrap>
 
-  <!-- Process, with the drawing -->
+  <!-- Process -->
   <Wrap style="padding-top:var(--section-y)">
     <SectionHead meta={`${PROCESS.length} stages`} scribe>Process</SectionHead>
 
     {/*
-      The drawing assembles in the order the work happens. Its eight stages map
-      to the four steps below it. It sits here because this section has no
-      photography of its own, which is exactly the case the design system built
-      it for.
+      THE WARDROBE ELEVATION CAME OFF ON 6 SEPTEMBER 2026, Kaspar's
+      instruction: remove it here and on /process/, and replace it later with a
+      genuine project drawing. It was a drawn generic wardrobe wall captioned
+      "3400 × 2350 · 1:20", a specification for a job that does not exist, and
+      he is right that a real drawing of a real project is worth more than an
+      illustration of none.
+
+      The component is not deleted, because the replacement is the same slot:
+      src/components/ds/WardrobeDrawing.astro, mounted in a Plate with
+      ratio="auto". Put a real drawing there when he sends one.
     */}
-    <Plate
-      as="div"
-      subject="Fig. 01 · Wardrobe wall, elevation"
-      detail="3400 × 2350 · 1:20"
-      ratio="auto"
-      style="margin-bottom:var(--gap-lg)"
-    >
-      <div style="padding:clamp(18px,3vw,44px) clamp(22px,4vw,64px);display:grid">
-        <WardrobeDrawing />
-      </div>
-    </Plate>
 
     {PROCESS.map((stage, i) => (
       <ProcessStep number={stage.number} icon={ICONS[i]} title={stage.title ?? "Stage still to be titled"}>

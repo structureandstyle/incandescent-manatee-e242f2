@@ -8,25 +8,35 @@
  * None of it was sourced. Q44 exists precisely because nobody knows which jobs
  * are real, so COMMISSIONS is empty and stays empty.
  *
- * SHAPE SETTLED 1 September 2026, Denis's direction, third iteration that day:
- * six collapsed categories, one carousel card each, the same pattern as the
- * homepage's Selected work. The full-gallery version (every photograph laid
- * out) ran to 29 plates and scrolled forever; the carousels keep every
- * photograph reachable, with the lightbox swiping through a category's own
- * set. Five categories are the services with photography; the sixth, doors
- * and panelling, is real reviewed work with no service page of its own.
+ * SHAPE SETTLED AGAIN 6 September 2026, Kaspar's instruction after reviewing
+ * the preview, and it reverses the 1 September shape rather than adjusting it.
+ * That version was six collapsed categories, one carousel each, every
+ * photograph reachable. His reading: there is not yet enough strong
+ * photography in every category for categories to work, and six thin sets
+ * advertise the thinness. So the grouping comes off, the strongest work goes
+ * into one continuous gallery with the duplicates cut, and each frame carries
+ * a plain description of the type of work. Filtering can return when the
+ * library supports it.
  *
- * The "jobs behind them" block (the Q44 to Q49 asks, rendered) came off the
- * same day on Denis's instruction. The questions are NOT answered and the
- * page's gate in page-gates.ts still holds it out of the index until they
- * are; only the on-page rendering of the wait went.
+ * WHICH PHOTOGRAPHS, AND WHY THOSE, is src/data/work-gallery.ts. It is an
+ * editorial list and it is meant to be edited by hand: this file only lays out
+ * what that one names.
+ *
+ * The service pages lost their own galleries on the same instruction, so this
+ * is now the only place the work is shown. The links below the gallery are
+ * what carries a reader from a photograph to the page that explains it.
+ *
+ * The "jobs behind them" block (the Q44 to Q49 asks, rendered) came off on
+ * 1 September on Denis's instruction. The questions are NOT answered and the
+ * page's gate in page-gates.ts still holds it out of the index until they are;
+ * only the on-page rendering of the wait went.
  */
 import Base from "../layouts/Base.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
-import PlateCarousel from "../components/ds/PlateCarousel.astro";
+import Plate from "../components/ds/Plate.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
@@ -34,35 +44,62 @@ import Value from "../components/Value.astro";
 
 import { BAND } from "../data/site-content";
 import { BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
+import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/work/");
 
+/* Dimensions come from the selection rather than from the gallery list, so
+   there is one place a photograph's real size is recorded. A file named in the
+   gallery that is not in the selection fails the build here rather than
+   shipping a frame with no width and height, which is a layout shift on the
+   page whose whole content is photographs. */
 const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
-
-/* The six categories: every service with photography, in SERVICES order, then
-   doors and panelling from the 31 Aug drop. Each carries its full selection;
-   the card cycles it. */
-const categories = (
-  SERVICES.map((s) => {
-    const shots = sel[s.slug] ?? [];
-    return shots.length
-      ? { title: serviceLabel(s), shots, href: servicePath(s), alt: `${serviceLabel(s)}, completed installation by ${BUSINESS.legalName}` }
-      : null;
-  }).filter(Boolean) as { title: string; shots: { file: string; w: number; h: number }[]; href?: string; alt: string }[]
-).concat(
-  (sel["doors-panelling"] ?? []).length
-    ? [
-        {
-          title: "Doors and panelling",
-          shots: sel["doors-panelling"],
-          href: undefined,
-          alt: `Doors and panelling, completed installation by ${BUSINESS.legalName}`,
-        },
-      ]
-    : []
+const sizeOf = new Map(
+  Object.values(sel)
+    .flat()
+    .map((p) => [p.file, p])
 );
+
+const shots = WORK_GALLERY.map((s) => {
+  const found = sizeOf.get(s.file);
+  if (!found) {
+    throw new Error(
+      `work-gallery.ts names ${s.file}, which is not in public/images/_selection.json. ` +
+        "Add it to the selection, or correct the path."
+    );
+  }
+  return { ...s, w: found.w, h: found.h };
+});
+
+/**
+ * The frame follows its photograph, within a band, exactly as the service
+ * galleries did until today. The band is the point: the two portrait kitchen
+ * frames are 1126 x 2000 and unclamped they render three and a half times
+ * taller than the landscape ones beside them, which no column layout can
+ * balance around. Held between 3 / 4 and 3 / 2 the tallest is twice the
+ * shortest and the columns fill evenly.
+ */
+const RATIO_MIN = 3 / 4;
+const RATIO_MAX = 3 / 2;
+const frameRatio = (p: { w: number; h: number }) =>
+  String(Math.round(Math.min(RATIO_MAX, Math.max(RATIO_MIN, p.w / p.h)) * 1000) / 1000);
+
+/**
+ * Alt text: the type of work, that it is finished, and whose it is. All three
+ * come from the triage. It does not describe the room, the materials or the
+ * address, because nobody has written a per-image description and inventing
+ * one is the failure the journal draft was blocked on. Q44 to Q49 are what
+ * make real captions possible.
+ */
+const altFor = (type: string, n: number) =>
+  `${type}, completed installation by ${BUSINESS.legalName}, photograph ${n}`;
+
+/* The services with a page of their own, for the row under the gallery. The
+   cost guide is excluded by its flag: it is a guide, not something a visitor
+   looking at photographs has just seen one of. */
+const services = SERVICES.filter((s) => !s.guide);
 ---
 
 <Base
@@ -82,25 +119,53 @@ const categories = (
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead meta={`${categories.length} categories`} scribe>Finished work</SectionHead>
+    <SectionHead meta={`${shots.length} photographs`} scribe>Finished work</SectionHead>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
-      {categories.map((c, i) => (
-        <div>
-          <PlateCarousel shots={c.shots} altBase={c.alt} subject={c.title} eager={i === 0} />
-          {/* The link under each card is 23px tall and sat 12px under the
-              carousel arrows, which is the last target-size failure Lighthouse
-              had on this site (5 Sep 2026): too small in one dimension and too
-              close to its neighbour above. Padding takes it past 24 and the
-              wider margin gives the arrows room. */}
-          {c.href && (
-            <p style="margin-top:var(--space-9)">
-              <Link href={c.href} variant="nav" style="display:inline-block;padding:var(--space-4) 0">{c.title}</Link>
-            </p>
-          )}
-        </div>
+    {/* Columns rather than rows. Plates of different heights cannot sit in a
+        row grid: a portrait beside two landscapes leaves half a row of empty
+        paper. Three columns, two on a tablet, one on a phone, where the
+        question does not arise.
+
+        Every frame is a plain Plate with no [data-carousel] around it, and
+        that is what makes the gallery browsable: the lightbox in Base.astro
+        builds its set from the nearest carousel, or, finding none, from every
+        plate photograph on the page. So clicking any frame opens the whole
+        gallery at that photograph and arrows through all of them. */}
+    <div class="work-gallery">
+      {shots.map((s, i) => (
+        <Plate
+          photo={s.file}
+          alt={altFor(s.type, i + 1)}
+          width={s.w}
+          height={s.h}
+          ratio={frameRatio(s)}
+          sizes="(max-width: 660px) 92vw, (max-width: 1080px) 45vw, 30vw"
+          {/* The type, and nothing beside it. Every plate elsewhere on the
+              site carries a second half to its caption; here that was
+              "Completed" under all twenty-one frames, on a page headed
+              Finished work. The fact survives in the alt text, where it is
+              read once per image by the people who need it. */}
+          subject={s.type}
+          eager={i < 2}
+          plane={i === 0 ? "left" : false}
+        />
       ))}
     </div>
+  </Wrap>
+
+  {/* The way back from a photograph to the page that explains the work. It
+      matters more than it did: these pages no longer carry photography of
+      their own, so this row is the only route between the two halves. */}
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead level={5}>What each of these is</SectionHead>
+    <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md)">
+      {services.map((s) => (
+        <li style="border-top:var(--rule-structure);padding-top:var(--space-9)">
+          <Link href={servicePath(s)} variant="nav" chamfer>{serviceLabel(s)}</Link>
+          <p style="margin-top:var(--space-6);font-size:var(--type-body-sm);color:var(--text-quiet)">{s.summary}</p>
+        </li>
+      ))}
+    </ul>
   </Wrap>
 
   <EnquireBand heading="If you have a room in mind, start here." chamfer>
@@ -114,3 +179,23 @@ const categories = (
     </Fragment>
   </EnquireBand>
 </Base>
+
+<style>
+  /* `break-inside: avoid` keeps a plate and its caption together, and the
+     plate is a block in its own column so the frame's own aspect-ratio decides
+     its height. */
+  .work-gallery {
+    columns: 3;
+    column-gap: var(--gap-md);
+  }
+  .work-gallery > * {
+    break-inside: avoid;
+    margin-bottom: var(--gap-md);
+  }
+  @media (max-width: 1080px) {
+    .work-gallery { columns: 2; }
+  }
+  @media (max-width: 660px) {
+    .work-gallery { columns: 1; }
+  }
+</style>

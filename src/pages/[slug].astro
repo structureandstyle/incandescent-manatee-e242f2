@@ -4,8 +4,10 @@
  *
  * Structure comes from the SEO runbook and the local playbook, not from taste:
  * a clear H1 carrying the primary keyword, question-shaped H2s, a concise
- * answer before the detail, real numbers, named area coverage, three or more
- * photographs of completed work, and one obvious enquiry action.
+ * answer before the detail, real numbers, named area coverage and one obvious
+ * enquiry action. The runbook's third item, three or more photographs of
+ * completed work, is the one thing here the client has overruled: the
+ * portfolio is one gallery on /work/ from 6 September 2026, see below.
  *
  * Every number on the page is a <Value>. None of them is written here. When an
  * answer lands in src/data/answers.ts the sentence completes itself, and when
@@ -21,7 +23,6 @@ import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
-import Plate from "../components/ds/Plate.astro";
 import SpecTable from "../components/ds/SpecTable.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import Faq from "../components/ds/Faq.astro";
@@ -103,24 +104,11 @@ const showGuide = Boolean(guide) && GUIDE_APPLIES.includes(service.slug);
 const copy = SERVICE_COPY[service.slug];
 
 /**
- * Photographs, selected from the client's own library: finished work only, at
- * quality 4 or 5, spread across different shoot dates so a page is not three
- * angles of one room. Any file whose name carries "(1)" is excluded as a matter
- * of rule rather than by list: those are AI-edited duplicates and carry Google's
- * AI-generated label in the frame. Twelve of them exist; the written denylist
- * named only five.
- *
- * home-office-understairs-storage has no entry, and that is accurate rather
- * than an oversight: the library holds nothing finished above quality 3 for
- * home office and nothing at all for under-stair storage. Plate renders an
- * honest empty frame instead.
+ * The photograph selection is still read here, for one thing only: which share
+ * card this page sends. The gallery it used to build came off on 6 September
+ * 2026, see the note in the markup below.
  */
 const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
-/* The cost guide is the wardrobe product priced, so it shows the wardrobe
-   photography. Without this it rendered the empty-frame state ("none in the
-   library, requested from the client") on an indexable page (2 Sep 2026). */
-const photos: { file: string; w: number; h: number }[] =
-  sel[service.slug] ?? (service.slug === "fitted-wardrobe-cost" ? sel["fitted-wardrobes"] ?? [] : []);
 
 /**
  * This page's own share image, 5 September 2026.
@@ -139,40 +127,6 @@ const ogSlug = sel[service.slug]
   : service.slug === "fitted-wardrobe-cost"
     ? "fitted-wardrobes"
     : null;
-
-/**
- * Alt text. Deliberately minimal and provably true: the service, and that the
- * work is finished, both of which come from the triage. It does not describe
- * the room, the materials or the location, because nobody has yet written a
- * per-image description and inventing one is the failure the journal draft was
- * blocked on. Q44 to Q49 are what make real captions possible.
- */
-const altFor = (n: number) =>
-  `${service.title}, completed installation by ${BUSINESS.legalName}, photograph ${n}`;
-
-/**
- * The shape of each plate's frame, 5 September 2026.
- *
- * Every frame in this gallery was a fixed 3 / 2 with object-fit:cover,
- * whatever shape the photograph was. Nine of the library's selections are
- * portrait and two of the kitchen shots are 1126 x 2000: a centre crop of
- * those to 3 / 2 kept the ceiling and the downlights and cut the kitchen out
- * of the frame. Four fitted-wardrobe portraits lost half their height the same
- * way, which is part of why that gallery read as a row of near-identical
- * cavities.
- *
- * So the frame follows the photograph, WITHIN A BAND. The band is the part
- * that matters: an unclamped 1126 x 2000 plate renders three and a half times
- * taller than the landscape ones beside it and no column layout can balance
- * around it. Held between 3 / 4 and 3 / 2, the tallest plate is twice the
- * shortest, the columns fill evenly, and the crop that remains on the two
- * extreme portraits takes a quarter of their height off a ceiling rather than
- * two thirds off a kitchen.
- */
-const RATIO_MIN = 3 / 4;
-const RATIO_MAX = 3 / 2;
-const frameRatio = (p: { w: number; h: number }) =>
-  String(Math.round(Math.min(RATIO_MAX, Math.max(RATIO_MIN, p.w / p.h)) * 1000) / 1000);
 
 const serviceSchema = {
   "@context": "https://schema.org",
@@ -230,11 +184,15 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
       service.slug === "fitted-wardrobe-cost"
         ? "The guide prices, by size and finish"
         : `What do ${service.title.toLowerCase().replace(/\btv\b/g, "TV")} cost?`,
-    lead: "The honest answer is a range, because the room decides it.",
+    lead: service.costLead ?? "The honest answer is a range, because the room decides it.",
     rows: [
       { label: "Guide price", text: service.price },
-      { label: "What moves it", q: "q11" },
-      { label: "Smallest job taken", q: "q12" },
+      service.priceMovers
+        ? { label: "What moves it", text: service.priceMovers }
+        : { label: "What moves it", q: "q11" },
+      /* Off where the service carries its own guide price: see noMinimum in
+         site.ts. Q12 is still the answer everywhere it stays. */
+      ...(service.noMinimum ? [] : [{ label: "Smallest job taken", q: "q12" } as Row]),
     ],
   },
   {
@@ -256,6 +214,7 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
       {
         label: "Survey to drawings",
         text:
+          service.surveyToDrawings ??
           "Where the project needs design work, one week is set aside for it, and drawings follow at the end of that week. Straightforward projects can go straight to quotation.",
       },
       /* Q30's figure is "a straightforward wardrobe wall", which is the right
@@ -270,11 +229,17 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
          corrected for on 2 Sep. So the wardrobe pages keep Q30 and every other
          service falls back to Q32, which is sourced and true for all of them.
 
-         WHAT THIS NEEDS: per-service durations from Kaspar. He has only ever
-         been asked about a wardrobe wall. */
-      service.slug === "fitted-wardrobes" || service.slug === "fitted-wardrobe-cost"
-        ? { label: "Days on site", q: "q30" }
-        : { label: "On site", q: "q32" },
+         ASKED FOR AND ANSWERED, 6 September 2026, for walk-in wardrobes:
+         3 to 5 days, longer for a larger or more complex dressing room. It
+         arrives as service.onSite rather than as a new answer key because it
+         prices one service rather than the business. Media walls, kitchens and
+         the rest still fall back to Q32, which is sourced and true for all of
+         them, and the ask stands for those. */
+      service.onSite
+        ? { label: "On site", text: service.onSite }
+        : service.slug === "fitted-wardrobes" || service.slug === "fitted-wardrobe-cost"
+          ? { label: "Days on site", q: "q30" }
+          : { label: "On site", q: "q32" },
     ],
   },
   {
@@ -344,50 +309,19 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
       </div>
     </Wrap>
 
-    <!-- The work itself, before any of the words -->
-    <Wrap style="padding-bottom:var(--section-y)">
-      {/* "8 of this work" was not a phrase. It sat under the H1 beside the
-          photographs, the first thing a visitor reads after the hero, on every
-          service page, and read as a dropped word. Two independent readers in
-          the 4 Sep review flagged it and every other count label on this site
-          is a complete noun phrase: "4 stages", "7 categories", "12 published".
-          This one was the only outlier. */}
-      <SectionHead
-        meta={photos.length ? `${photos.length} photograph${photos.length === 1 ? "" : "s"}` : undefined}
-        scribe
-      >
-        The work
-      </SectionHead>
+    {/*
+      THE PER-SERVICE GALLERY CAME OFF ON 6 SEPTEMBER 2026, Kaspar's
+      instruction after reviewing the preview: keep the service pages, keep
+      what they explain, but they do not need their own project galleries for
+      now. The portfolio moves to /work/ as one gallery, because there is not
+      yet enough strong photography to fill six categories and splitting it
+      six ways showed that rather than hid it.
 
-      {/* Frames follow their photographs now, within a band: see frameRatio
-          above. Plates of different heights cannot sit in a row grid, where a
-          portrait beside two landscapes leaves half a row of empty paper, so
-          the gallery is columns rather than rows. Three columns, two on a
-          tablet, one on a phone, where the question never arises. */}
-      <div class="work-gallery">
-        {photos.length > 0
-          ? photos.map((p, i) => (
-              <Plate
-                photo={p.file}
-                alt={altFor(i + 1)}
-                width={p.w}
-                height={p.h}
-                ratio={frameRatio(p)}
-                sizes="(max-width: 660px) 92vw, (max-width: 1080px) 45vw, 30vw"
-                subject={`Plate ${String(i + 1).padStart(2, "0")} · ${service.title}`}
-                detail="Completed"
-                eager={i === 0}
-                plane={i === 0 ? "left" : false}
-              />
-            ))
-          : (
-            <>
-              <Plate subject="Plate 01" detail="None in the library" awaiting="No finished photograph exists for this service yet" />
-              <Plate subject="Plate 02" detail="None in the library" awaiting="Requested from the client" />
-            </>
-          )}
-      </div>
-    </Wrap>
+      This is a deliberate departure from tone protocol section 11, which puts
+      photography before any claim. The protocol governs our writing; the
+      photography is his. Restoring it is this block back, the photos const
+      above, and Plate imported: nothing else here depended on it.
+    */}
 
     {copy && (
       <Wrap style="padding-bottom:var(--section-y)">
@@ -575,25 +509,6 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
 </Base>
 
 <style>
-  /* The photography, laid out in columns rather than rows: see the note beside
-     the markup. `break-inside: avoid` is what keeps a plate and its caption
-     together, and the plate is a block in its own column so the frame's own
-     aspect-ratio decides its height. */
-  .work-gallery {
-    columns: 3;
-    column-gap: var(--gap-md);
-  }
-  .work-gallery > * {
-    break-inside: avoid;
-    margin-bottom: var(--gap-md);
-  }
-  @media (max-width: 1080px) {
-    .work-gallery { columns: 2; }
-  }
-  @media (max-width: 660px) {
-    .work-gallery { columns: 1; }
-  }
-
   .price-scroll {
     position: relative;
   }
