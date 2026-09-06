@@ -151,6 +151,20 @@ export type Service = {
   /** Replaces the shared Q11 in the "What moves it" row. */
   priceMovers?: string;
   /**
+   * A "What's included" row above it, where he has said what the guide price
+   * buys. Fitted wardrobes only so far (6 September 2026): the starting
+   * specification from his pricing document, in his own sentence.
+   */
+  included?: string;
+  /**
+   * The one-sentence materials summary that replaced the four-row materials
+   * table on every service page, 6 September 2026, on his instruction: "i
+   * dont think we need to go into detail again because we are explaining
+   * everything of the materials section". He wrote the wardrobe sentence;
+   * the template builds the same shape for the others from the title.
+   */
+  madeFrom?: string;
+  /**
    * The sentence above the cost table. SERVICE_COPY carries this for wave-one
    * pages; a wave-two page has no SERVICE_COPY entry at all, deliberately, and
    * adding one would lift its noindex. This puts his line on the page without
@@ -182,13 +196,27 @@ export const SERVICES: Service[] = [
     bandPrice: "Fitted wardrobes from £2,300",
     price:
       "From £2,300 for a 2-door run up to 1.2m in melamine. Width and finish move it: from £4,000 at 4 doors, and painted, sprayed and oak veneer finishes step up from there. Internal drawers and integrated lighting add to any of them.",
+    /* The five lines below are Kaspar's, 6 September 2026, from his review of
+       the preview: the hero sentence, what the guide price includes, what
+       moves it, and both timing rows. They replaced the shared answers that
+       had stood in for them since the pricing document arrived. */
+    included:
+      "Made-to-measure fitted wardrobe with a straightforward internal layout, standard shelving and hanging space, soft-close hinges, delivery and professional installation.",
+    priceMovers:
+      "Drawers, integrated lighting, mirrors, shoe storage, pull-out accessories, specialist hardware, decorative details and more complex designs are priced according to the specification.",
+    surveyToDrawings:
+      "After the survey, the quotation and any required drawings are prepared for review. More detailed or complex projects may require additional design time.",
+    onSite:
+      "Typically 2 to 3 days for a straightforward fitted wardrobe. Larger or more complex projects, and wardrobes requiring hand-painting on site, may take longer.",
+    madeFrom:
+      "Fitted wardrobes are available in painted MR MDF, melamine and decorative boards, or natural wood veneer, with a wide choice of colours and finishes.",
     title: "Fitted wardrobes",
     heading: "Fitted wardrobes in London, made to measure",
     primary: "fitted wardrobes london",
     description:
       "Built-in and fitted wardrobes made to measure for your room, designed around what you store and fitted wall to wall, across Hampstead, Camden and London.",
     summary:
-      "Built-in wardrobes cut to follow your walls, ceiling and floor, with the hanging, shelving and drawer split worked out around what you actually keep.",
+      "Made-to-measure wardrobes designed around your room and how you use it, with hanging space, shelving, drawers and internal storage planned around what you need.",
     wave: 1,
   },
   {
@@ -214,7 +242,7 @@ export const SERVICES: Service[] = [
     description:
       "Bespoke walk-in wardrobes and dressing room fit-outs for London homes, including loft rooms, box rooms and eaves where standard storage will not fit.",
     summary:
-      "Dressing rooms planned as a whole, so rails, drawer banks, shoe racks and shelving line through instead of being fitted wall by wall.",
+      "Walk-in wardrobes and dressing rooms designed around the space and how you use it, with hanging, shelving, drawers, shoe storage and lighting planned together from the start.",
     wave: 1,
   },
   {
@@ -266,7 +294,7 @@ export const SERVICES: Service[] = [
     description:
       "Media walls and built-in TV units for London homes, with cable routing, ventilation and electrics planned from the start, so the finished wall sits flush.",
     summary:
-      "Cable routing, ventilation and console space planned from the start, with electrics and plastering coordinated as part of the job.",
+      "Bespoke media walls and built-in TV units designed around the room, with storage, shelving, integrated lighting, cable management and ventilation planned into the design from the start.",
     wave: 2,
   },
   {
@@ -289,7 +317,7 @@ export const SERVICES: Service[] = [
     description:
       "Bespoke kitchen design, build and installation for London homes, including the awkward runs around chimney breasts, boilers, boxing and sloping ceilings.",
     summary:
-      "Cabinets, tall units and islands built to the room, including the runs standard units cannot cover.",
+      "Bespoke kitchens designed around the room and how it is used, with cabinetry, tall units, islands and storage made to measure as part of one considered design.",
     wave: 2,
   },
 ];

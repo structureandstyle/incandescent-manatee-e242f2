@@ -40,32 +40,21 @@ import { indexable } from "../data/page-gates";
 const isIndexable = indexable("/about/");
 
 /**
- * The conduct practices, VERBATIM from tone protocol v1.4 section 11.
+ * EVERY SECTION OF THIS PAGE IS KASPAR'S OWN COPY from 6 September 2026. He
+ * went down the page in the preview, screenshotted each section and typed its
+ * replacement underneath, between 15:09 and 15:18. What follows in the markup
+ * is that text, with his em dashes written as commas and nothing else changed.
  *
- * Verbatim is the point, and it was not true here until 2 Sep 2026. Five of
- * the seven had been quietly reworded: "moved to one side" became "moved
- * aside", "Cutting happens outside" lost its verb, "The lift is booked" and
- * "The room is vacuumed" both lost theirs and read as fragments, and "stair
- * protection goes down on every day material comes in" narrowed to "on
- * delivery days", which is a smaller promise than the one approved.
- *
- * None of that was deliberate and that is exactly the risk: paraphrase drifts
- * one comma at a time until the site promises something the business has not
- * agreed to. Section 11 gives these facts in publishable forms so the copy
- * stage has no discretion. Nothing is added here without confirmation, and
- * nothing is smoothed.
- *
- * The eighth fact, the accountability one, has its own section above.
+ * Three things went with the rewrite, and each is recorded where it stood:
+ * the Q06, Q29 and Q35 values this page rendered, replaced by his later
+ * sentences on the same facts; the accountability line ("the person who
+ * measures your room is the person who draws it and fits it"), replaced by
+ * the company framing he asked for on 30 Aug and wrote out himself here; and
+ * the seven conduct practices from tone protocol section 11, which were
+ * rendered verbatim as a list and are now three paragraphs of his own prose
+ * covering the same ground. The seven stay in the protocol; the page carries
+ * his version of them.
  */
-const CONDUCT = [
-  "Floors covered in taped-down protective board. Furniture wrapped and moved to one side. Doorways sealed with zipped dust screens.",
-  "Dust extraction connected to every cutting tool, with an air scrubber running in the room.",
-  "Cutting happens outside where access allows, otherwise in one sealed room. Never in a hallway. Never in a communal area.",
-  "8am to 5pm on weekdays in houses. In a managed block, whatever hours the building sets.",
-  "Insurance and the safety paperwork go to the managing agent before the start date, and the building's sign-off is in place before anything begins.",
-  "The lift is booked and protected before any delivery. Stair protection goes down on every day material comes in.",
-  "The room is vacuumed and the tools stacked at the end of every day. Usable overnight.",
-];
 ---
 
 <Base
@@ -79,8 +68,9 @@ const CONDUCT = [
       The standard we work to
     </Display>
     <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
-      We design, measure, fit and finish bespoke furniture for London homes. One commission runs
-      from the first visit through to aftercare, and it does not change hands on the way.
+      We design, measure and deliver bespoke fitted furniture for London homes. From the first
+      survey through to installation and aftercare, each project is carefully planned and managed
+      from start to finish.
     </p>
 
     {/* Added 2 Sep 2026. This page carried the standard, the guarantee and the
@@ -142,49 +132,52 @@ const CONDUCT = [
 
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Our approach" level={4}>How a commission runs</SectionHead>
-    <p style="max-width:var(--measure)"><Value q="q06" /></p>
+    <p style="max-width:var(--measure)">
+      Each project follows a clear process, from the initial consultation and survey through to
+      design, preparation, installation and aftercare.
+    </p>
+    {/* The four names are the ones he fixed the same day for the homepage and
+        /process/. This line said "visit, survey and drawings" until then. */}
     <p style="max-width:var(--measure);margin-top:var(--space-8);color:var(--text-quiet)">
-      Four stages, the same four every time: visit, survey and drawings, preparation, fitting.
+      Four stages, the same four every time: visit and survey, quotation and drawings, preparation,
+      fitting.
       <Link href="/process/" variant="nav" style="margin-left:var(--space-5)">The full process, stage by stage</Link>
     </p>
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="In plain terms" level={4}>The standard</SectionHead>
-      <p style="max-width:var(--measure)"><Value q="q29" /></p>
+      <p style="max-width:var(--measure)">
+        Every project carries our name. It is set out, levelled, plumb, fitted and finished with the
+        same care in the details you see and the ones you don't. It should look right, feel right
+        and be built to last.
+      </p>
     </div>
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="Accountability" level={4}>Who does the work</SectionHead>
-      {/* The trades-coordination sentence that used to follow here was cut by
-          the Truth gate 31 Aug 2026: it traced only to q06's PROVISIONAL note,
-          never to a confirmed answer. It returns if Kaspar confirms it. */}
-      {/* "Nobody is sent in their place" was missing here and present in the
-          home page FAQ, under a heading literally called "Who does the work".
-          The two sentences are one trust asset and the ops record carries them
-          as one line; the second half is the half that answers the question the
-          heading asks. Restored 3 Sep 2026. */}
       <p style="max-width:var(--measure)">
-        The person who measures your room is the person who draws it and the person who fits it.
-        Nobody is sent in their place.
+        Structure &amp; Style manages each project from initial survey and design through to
+        installation and aftercare, taking responsibility for the work and the finished result
+        throughout.
       </p>
     </div>
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="Design" level={4}>Before anything is ordered</SectionHead>
       <p style="max-width:var(--measure)">
-        Every project gets a measured survey and a fixed, itemised quotation. Where the design
-        needs developing, a design week follows the quotation being accepted and the deposit paid.
-        Scaled drawings and elevations go out for review, with up to two rounds of revisions and
-        no separate design fee.
+        Every project begins with a measured survey and a clear, itemised quotation. Once the
+        project is agreed, the design is developed as required, with drawings and elevations
+        provided for review before anything is ordered or put into production. Up to two rounds of
+        revisions are included.
       </p>
     </div>
 
     <div style="margin-top:var(--space-16)">
-      <SectionHead meta="Materials" level={4}>Engineered board, on purpose</SectionHead>
+      <SectionHead meta="Materials" level={4}>Materials, chosen for the project</SectionHead>
       <p style="max-width:var(--measure)">
-        Engineered board over solid timber is a considered choice rather than a compromise: more
-        stable and more consistent. Real wood veneer carries the timber look where one is wanted.
-        It also keeps large amounts of solid hardwood out of furniture that does not need them.
+        Materials and finishes are selected around the design, how the furniture will be used and
+        the look you want to achieve. From painted and decorative boards to natural wood veneers,
+        each specification is chosen for the project rather than applied as a standard formula.
       </p>
       <p style="margin-top:var(--space-8)">
         <Link href="/materials/" variant="nav" chamfer>The range, the finishes and the reasoning</Link>
@@ -194,24 +187,33 @@ const CONDUCT = [
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="In your home" level={4}>What to expect while we work</SectionHead>
       <p style="max-width:var(--measure)">
-        The work happens inside a home that stays lived in. These are the working practices on
-        every job.
+        We understand that most of our work takes place in occupied homes, so protecting the
+        property and keeping disruption to a minimum is part of every project.
       </p>
-      <ul style="list-style:none;margin:var(--space-10) 0 0;padding:0;max-width:var(--measure);display:grid;gap:var(--space-7)">
-        {CONDUCT.map((line) => (
-          <li style="border-top:var(--rule-hair);padding-top:var(--space-6)">{line}</li>
-        ))}
-      </ul>
+      <p style="max-width:var(--measure);margin-top:var(--space-8)">
+        Floors and surrounding areas are protected before work begins, with dust extraction used
+        throughout cutting and installation. Where possible, cutting is carried out outside or in a
+        designated work area.
+      </p>
+      <p style="max-width:var(--measure);margin-top:var(--space-8)">
+        The workspace is kept organised and tidied at the end of each day, with waste and off-cuts
+        removed on completion. Where a property is managed, we coordinate access, working hours,
+        deliveries and any required documentation with the building or managing agent before work
+        begins.
+      </p>
     </div>
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="Afterwards" level={4}>Once the work is finished</SectionHead>
-      <p style="max-width:var(--measure)"><Value q="q35" /></p>
+      <p style="max-width:var(--measure)">
+        Our work is covered for 2 years on installation and workmanship and 10 years on the
+        structure and joinery, with manufacturer warranties applying to hinges, runners and other
+        moving hardware.
+      </p>
       <p style="max-width:var(--measure);margin-top:var(--space-8)">
-        If doors or other moving parts settle within the 2-year aftercare period, we come back and
-        adjust them. Care advice for the specific material and finish comes with the piece.
-        Drawings and specifications stay on file, so a matching piece later starts from the record
-        rather than from scratch.
+        If doors or other moving parts require adjustment within the 2-year aftercare period, we
+        come back and take care of them. Care guidance for the materials and finishes used is
+        provided on completion.
       </p>
     </div>
 

@@ -45,22 +45,19 @@ const isIndexable = indexable("/materials/");
     <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
       What it is made from
     </Display>
-    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
-      Fitted furniture asks something different of a material than a freestanding piece does. It has
-      to hold a line against a wall that moves, and hold a finish for years.
-    </p>
-    {/* Kaspar's own paragraph, 6 September 2026, under the heading "Materials
-        & finishes". It is kept as a second paragraph rather than as a
-        replacement because the two do different jobs: ours says why the choice
-        matters for fitted work, his says what the range actually is, and until
-        now a reader had to scan six cards to find that out.
+    {/* Both paragraphs are Kaspar's, 6 September 2026: the first under a
+        screenshot of this heading (13:40), the second under "Materials &
+        finishes" three minutes later. Ours, about a material having to hold a
+        line against a wall that moves, went with the first.
 
-        GROOVED AND SLATTED FEATURE PANELS ARE NEW HERE. They are in no
-        questionnaire answer and appear nowhere else on the site, so a later
-        read will find them unsourced and be right to challenge them. The
-        source is Kaspar, in writing, 6 September 2026, which is the same
-        authority every answer in answers.ts carries. Fold them into Q22 when
-        the answers file is next touched. */}
+        GROOVED AND SLATTED FEATURE PANELS were new to the site on this date.
+        They are now the Decorative and feature panels card below, in his own
+        words, so the paragraph and the card agree. */}
+    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+      Material choice affects how fitted furniture looks, feels and performs over time. We specify
+      each material for its stability, durability and finish, choosing what is best suited to the
+      design and how the furniture will be used.
+    </p>
     <p style="max-width:var(--measure);margin-top:var(--space-10);font-size:var(--type-lede);color:var(--text-quiet)">
       Our material range includes moisture-resistant MDF, natural wood veneer, melamine and
       decorative boards, as well as grooved, slatted and other feature panels. These can be
@@ -101,59 +98,66 @@ const isIndexable = indexable("/materials/");
       ))}
     </div>
 
-    {/* "board range", not "range": Q22 is his list of boards, and the grid
-        above now also carries the hardware. His answer is untouched; the words
-        around it say what it covers. */}
-    {/* The lead-in is a label, not the first half of his sentence. Welded on,
-        it pushed his own list past the 25-word ceiling in section 7; lifted
-        out, his answer stands as it is and the label does its own job. Same
-        treatment as the home page. */}
-    <MonoLabel as="p" tone="soft" style="margin-top:var(--space-15)">The full board range</MonoLabel>
-    <p style="max-width:var(--measure);margin-top:var(--space-5);color:var(--text-quiet)">
-      <Value q="q22" join=", " suffix="." /> Each is chosen for the design, the use, the finish
-      and the budget of the project.
-    </p>
+    {/* "The full board range", Q22 rendered as a list, came off here on
+        6 September 2026. His range paragraph in the hero now says what the
+        range is, and the Q22 list named plywood, which he took out of the
+        range the same afternoon. Q22 stays in this page's gate. */}
   </Wrap>
 
+  {/* THE THREE SECTIONS BELOW ARE HIS, 6 September 2026, each typed under a
+      screenshot of the section it replaces (13:45, 13:47, 13:50). They stood
+      on Q24, Q28, Q43 and Q40 until then; those answers are unchanged in
+      answers.ts and still gate the page, and his later sentences on the same
+      facts are what a visitor reads. Em dashes written as commas. */}
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Finishes" level={4}>How it is finished</SectionHead>
-    <p style="max-width:var(--measure)"><Value q="q24" /></p>
-  </Wrap>
-
-  {/* Named brands allowed here by Denis's ruling, 30 Aug 2026: Blum and Hafele
-      are what he actually specifies (Q28), and buyers recognise them. The
-      protocol's supplier ban now reads as amended for hardware; the cutting
-      arrangement stays unnamed, which is the client's own Q22 ruling.
-
-      Text only since 2 Sep 2026, and correctly so: the hardware card moved up
-      into the range grid, where it also fills the sixth slot five boards left
-      empty. This section carries what a swatch cannot, which is how the moving
-      parts behave and what stands behind them.
-
-      Soft-close is a fact rather than a flourish. It is named in the client's
-      own pricing document as part of the starting specification for a fitted
-      wardrobe, so it is what a quoted job includes rather than an upgrade sold
-      on top. See the price-table note in src/data/service-copy.ts. */}
-  <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead meta="Hardware" level={4}>What the moving parts are</SectionHead>
-    <p style="max-width:var(--measure)"><Value q="q28" /></p>
-    <p style="max-width:var(--measure);margin-top:var(--space-10)">
-      Soft-close is in the starting specification rather than sold as an upgrade. A door slows at
-      the end of its travel and lands quietly, and a loaded drawer runs out straight and pulls
-      back without a shove. That is the part of a piece you touch every day, so it is the wrong
-      place to save.
+    <p style="max-width:var(--measure)">
+      Painted furniture can be hand-painted or spray-finished in a wide range of colours. Natural
+      wood veneer can be left in its natural tone or stained to achieve the colour and character
+      desired, from light and subtle to rich, dark finishes. Factory-finished decorative boards
+      offer a further range of colours, wood effects and textures.
     </p>
     <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
-      Hinges, drawer runners and other moving hardware also carry their manufacturer's warranty,
-      on top of our own guarantee.
+      The right finish depends on the design, how the furniture will be used and the overall look
+      you want to achieve.
+    </p>
+  </Wrap>
+
+  {/* Named brands allowed here by Denis's ruling, 30 Aug 2026: Blum and Häfele
+      are what he actually specifies (Q28), and buyers recognise them. The
+      cutting arrangement stays unnamed, which is the client's own Q22 ruling.
+      His heading for this section was "The parts you use every day". */}
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Hardware" level={4}>The parts you use every day</SectionHead>
+    <p style="max-width:var(--measure)">
+      We specify quality hardware from established manufacturers such as Blum and Häfele,
+      alongside other specialist systems where the project requires them. Soft-close hinges and
+      drawer systems are included as standard where appropriate.
+    </p>
+    <p style="max-width:var(--measure);margin-top:var(--space-10)">
+      Good hardware affects how furniture feels in everyday use: doors close smoothly, drawers run
+      properly and components can be precisely adjusted to stay aligned. It costs more than basic
+      alternatives, but provides better operation and greater durability over the life of the
+      furniture.
+    </p>
+    <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
+      Hinges, drawer runners and other moving hardware are also covered by their respective
+      manufacturer warranties, alongside our own workmanship guarantee.
     </p>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="The one worth asking about" level={4}>Why not solid timber</SectionHead>
-    <p style="max-width:var(--measure)"><Value q="q43" /></p>
+    <p style="max-width:var(--measure)">
+      Solid timber has its place, but for most fitted furniture engineered boards offer greater
+      stability and consistency. MR MDF is ideal for painted furniture, while natural wood veneer
+      gives the character of real timber with far less solid hardwood.
+    </p>
+    {/* New to the site, and in no questionnaire answer: the source is him,
+        in writing, 6 September 2026. */}
     <p style="max-width:var(--measure);margin-top:var(--space-10);color:var(--text-quiet)">
-      The one we reach for first: <Value q="q40" />
+      We consider sustainability in the materials we specify, aiming to use them efficiently,
+      minimise waste and choose responsibly sourced products wherever possible.
     </p>
   </Wrap>
 

@@ -36,7 +36,6 @@ import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import Plate from "../components/ds/Plate.astro";
-import PlateCarousel from "../components/ds/PlateCarousel.astro";
 import MaterialChip from "../components/ds/MaterialChip.astro";
 import ProcessStep from "../components/ds/ProcessStep.astro";
 import Reviews from "../components/ds/Reviews.astro";
@@ -48,6 +47,7 @@ import Ask from "../components/Ask.astro";
 import { SERVICES, BUSINESS, servicePath, serviceLabel } from "../data/site";
 import Faq from "../components/ds/Faq.astro";
 import { HOMEPAGE_FAQS, MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
+import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import { questionLabel } from "../data/answers";
 import selection from "../../public/images/_selection.json";
@@ -66,18 +66,26 @@ const sel = selection as Record<string, { file: string; w: number; h: number }[]
  */
 const hero = { file: "/images/bespoke-kitchens/green-kitchen.webp", w: 1636, h: 1091 };
 /**
- * Selected work: four carousels, each cycling its service's own selection.
- * Bespoke kitchens joined 31 Aug 2026 on Denis's instruction. The images open
- * the lightbox; navigation to the service page moved to a named link under
- * each card, because a photograph that navigates when you expected it to
- * enlarge reads as a bug.
+ * Selected work, POOLED, 6 September 2026. Kaspar, on the same message that
+ * took the galleries off the service pages: "For the Selected Work section on
+ * the homepage, I'd do the opposite. Put all the strongest completed work
+ * together regardless of category, ideally one image per project rather than
+ * several similar photos of the same thing."
+ *
+ * Until then this was four carousels, one per service, each cycling its own
+ * selection. Now it is the first six frames of the curated work gallery,
+ * which is already one image per project and already ordered so that no two
+ * neighbours are the same type of work. Six, because the grid is three across
+ * and two rows is a section rather than a page; the page is /work/.
  */
-const previews = SERVICES.map((s) => {
-  const shots = sel[s.slug] ?? [];
-  return shots.length ? { service: s, shots } : null;
-})
-  .filter(Boolean)
-  .slice(1, 5) as { service: (typeof SERVICES)[number]; shots: { file: string; w: number; h: number }[] }[];
+const sizeOf = new Map(
+  Object.values(sel)
+    .flat()
+    .map((p) => [p.file, p])
+);
+const selected = WORK_GALLERY.filter((s) => sizeOf.has(s.file))
+  .slice(0, 6)
+  .map((s) => ({ ...s, ...(sizeOf.get(s.file) as { w: number; h: number }) }));
 
 /* The plane joined stage 03 on 30 Aug 2026, once the stage-04 answer confirmed
    finishing work is real: machining, edging and finishing to the drawings, and
@@ -222,17 +230,23 @@ const faqSchema = {
           Q31's own word for what a wall is not, and Q29 runs three lines below
           this one with "set out, levelled, plumb" in his own wording, which
           this was echoing. */}
+      {/* BOTH PARAGRAPHS ARE HIS, 6 September 2026 (10:43), typed under a
+          screenshot of this section. The first replaces the frame-behind-the-
+          doors paragraph above this note; the second replaces Q29, which it
+          restates with a different middle clause, and it renders as his text
+          rather than as the Value because his later sentence is the one he
+          chose. Q29 is unchanged in answers.ts and still gates the page. */}
       <p>
-        Behind the doors sits a frame you never see. It goes in straight, even though the wall
-        behind it almost never is. Doing that first is what keeps the doors in line once everything
-        is fitted.
+        What you don't see matters just as much as what you do. Every installation starts with
+        getting the structure level, plumb and properly set out, even when the room itself isn't.
+        That's what allows the finished furniture to sit straight and the doors and details to line
+        up as they should.
       </p>
-      {/* Q29, his words. He refused any framing against other firms, so the
-          paragraph states the standard rather than a comparison. The lead-in
-          moved out of the sentence for the same reason as the one above. */}
       <MonoLabel as="p" tone="soft" style="margin-top:var(--space-12)">The standard it is held to</MonoLabel>
       <p style="margin-top:var(--space-5)">
-        <Value q="q29" />
+        Every piece carries our name. The same care goes into the details you see and the ones you
+        don't, from the way materials meet to how doors close and drawers run. It should look right,
+        feel right and be built to last.
       </p>
     </div>
   </Wrap>
@@ -240,24 +254,23 @@ const faqSchema = {
   <!-- Work -->
   <Wrap style="padding-top:var(--section-y)">
     <SectionHead meta="Recent commissions" scribe>Selected work</SectionHead>
-    {/* Two by two, filling the width: the 420px floor means at most two
-        columns inside the page measure, so four cards sit as two even rows
-        instead of three plus an orphan. Collapses to one column on mobile. */}
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:var(--gap-lg)">
-      {previews.map(({ service, shots }) => (
-        <div>
-          <PlateCarousel
-            shots={shots}
-            altBase={`${serviceLabel(service)}, completed installation by ${BUSINESS.legalName}`}
-            subject={serviceLabel(service)}
-          />
-          {/* Padding and a wider margin: see the same block on /work/. The link
-              was 23px tall and 12px below the carousel arrows, failing target
-              size on both counts (5 Sep 2026). */}
-          <p style="margin-top:var(--space-9)">
-            <Link href={servicePath(service)} variant="nav" style="display:inline-block;padding:var(--space-4) 0">{serviceLabel(service)}</Link>
-          </p>
-        </div>
+    {/* Three across, two rows, one frame shape. The six are all landscape and
+        close to 4:3, so a fixed 4 / 3 frame crops nothing that matters and
+        the rows sit level, which a row grid needs and a masonry does not.
+        Every frame opens the lightbox, and with no carousel around them the
+        lightbox set is all six. */}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-md)">
+      {selected.map((s, i) => (
+        <Plate
+          photo={s.file}
+          alt={`${s.type}, completed installation by ${BUSINESS.legalName}`}
+          width={s.w}
+          height={s.h}
+          ratio="4 / 3"
+          sizes="(max-width: 660px) 92vw, (max-width: 1080px) 45vw, 30vw"
+          subject={s.type}
+          plane={i === 0 ? "left" : false}
+        />
       ))}
     </div>
     <p style="margin-top:var(--space-14)"><Link href="/work/" variant="nav" chamfer>All work</Link></p>
@@ -395,17 +408,28 @@ const faqSchema = {
           `docs/engagement-status.md`, added 31 Aug, and it went in on Denis's
           instruction rather than on Kaspar's yes. Q38's records line came out
           to make room; /about/ carries it in full. */}
+      {/* HIS PARAGRAPH, 6 September 2026 (11:12), under a screenshot of this
+          section. The district list and the trades sentence above went with
+          it: the districts are on the wardrobe page in his own words now, and
+          the trades coordination is on the waiting-on-Kaspar list and he did
+          not write it back in.
+
+          THE BUDGET SENTENCE IS GONE ON HIS INSTRUCTION. Under this section he
+          also wrote: "where the budget and brief don't meet... leave wording
+          for the pricing/quotation section", quoting the sentence that used to
+          end the paragraph below. Read as: that is a pricing conversation,
+          not an About one. The cost sections on every service page already
+          say what moves the price, so nothing is lost. */}
       <p>
-        We are a joinery company based in Camden Town, working across London. Most commissions
-        are in the north: Hampstead, Belsize Park, Kentish Town, Highgate, Islington and Maida
-        Vale. Where a job needs plumbing, electrics or plastering, we bring those trades in and
-        coordinate them.
+        We are a joinery company based in Camden Town, working across London. We design, manage
+        and install bespoke fitted furniture, from individual pieces to larger fitted interiors.
+        Each project is developed around the room, the way it will be used and the finish the
+        client wants to achieve.
       </p>
-      <MonoLabel as="p" tone="soft" style="margin-top:var(--space-12)">Design and budget</MonoLabel>
+      <MonoLabel as="p" tone="soft" style="margin-top:var(--space-12)">Design</MonoLabel>
       <p style="margin-top:var(--space-5);color:var(--text-quiet)">
         Cabinetry design is part of the service: internal layouts, materials, finishes, and 3D
-        visuals on more complex projects. Where the budget and the brief do not meet, we say what
-        is driving the cost and adjust the design or the specification.
+        visuals on more complex projects.
       </p>
       <p style="margin-top:var(--space-14)">
         <Link href="/about/" variant="nav" chamfer>More about how we work</Link>

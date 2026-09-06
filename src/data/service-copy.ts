@@ -54,66 +54,66 @@ export type ServiceCopy = {
 
 export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
   "fitted-wardrobes": {
+    /* Kaspar's own opening, 6 September 2026, replacing ours. His em dash
+       became a colon; nothing else in the first paragraph is changed.
+
+       THE SECOND PARAGRAPH IS HIS WITH THREE WORDS ADDED. He wrote "with much
+       of our work in Hampstead, Belsize Park, Kentish Town, Camden and
+       surrounding areas", which is the claim about where most of the work
+       happens that the 5 Sep note below this used to say had no source. It has
+       one now: him, in writing. What his sentence lost is the phrase "north
+       London", which is the target sheet's standout term for this page
+       (difficulty 7, the highest CPC on the sheet, a top-three floor at month
+       12) and appeared nowhere on the site until 5 Sep. So it ends "...and
+       surrounding areas of north London", which is true of all four districts
+       and keeps the term in body copy. Told, not asked. */
     intro: [
-      "A fitted wardrobe is measured against your walls, floor and ceiling, then designed around what you keep. The run uses the top of the room and both corners rather than losing them.",
-      /* "north London" appeared nowhere on this site until 5 Sep 2026, and
-         "fitted wardrobes north london" is the target sheet's standout term:
-         difficulty 7, the highest CPC on the sheet, and a top-three floor at
-         month 12. The sentence states which of the service areas are north
-         London rather than claiming where most of the work happens, which is a
-         separate claim with no source behind it. */
-      "The inside is planned first: hanging heights, shelving, drawers and anything that needs a home. You do not need to arrive knowing any of that. Asking the right questions at the first visit is our job, not yours.",
-      "Wardrobes are fitted across London, including Hampstead, Belsize Park, Kentish Town and Camden in north London.",
+      "A fitted wardrobe is designed and made specifically for your room, taking into account the available space, the proportions of the room and what you need to store. The interior is planned around how you use it, from hanging space and shelving to drawers and other storage. You don't need to have everything worked out before getting in touch: understanding what you need and helping develop the right layout is part of the service.",
+      "We design and fit wardrobes across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.",
     ],
     leads: {
       "cost": "The honest answer is a range until the room is measured, and one visit turns it into a firm number.",
       "how-long": "The lead time runs in weeks, and the fitting itself takes days rather than weeks.",
       "made-from": "Which board suits a wardrobe wall depends on the room, the finish you want and the budget.",
       "fitting": "Ceilings, floors and walls are rarely straight, and a wardrobe wall meets all three at once.",
-      "after": "Doors and hinges do the daily work, so the cover on workmanship and moving parts is listed plainly.",
+      /* His, 6 September 2026. The guarantee and adjustment rows under it
+         are Q35 and Q36, reworded the same day: see answers.ts. */
+      "after": "Our work is covered after installation, and if something needs adjusting during the aftercare period, we'll come back and put it right.",
     },
-    sections: [
-      {
-        meta: "The work",
-        heading: "What a fitted wardrobe run includes",
-        body: [
-          "The work covers wardrobe walls, alcove-to-alcove runs, and wardrobes that follow sloping ceilings and awkward room shapes. Doors are hinged on Blum hardware, in painted, veneered or decorative board finishes.",
-          "Inside, drawer banks run on Blum systems, and integrated lighting is wired in where the design calls for it. Veneer grain is matched across adjoining doors, so a run reads as one piece rather than a row of panels.",
-        ],
-      },
-      {
-        meta: "Fit",
-        heading: "Cut to the wall as it actually is",
-        body: [
-          "Walls, floors and ceilings are rarely straight, so each piece is scribed: cut to follow the line of the room rather than left with gaps.",
-          "Fitting a straightforward wardrobe wall typically takes 2 to 3 days on site. Hand-painting or on-site construction can take it closer to a week, and you get the dates when the project is programmed.",
-        ],
-      },
-    ],
+    /* TWO SECTIONS CAME OFF ON 6 SEPTEMBER 2026: "What a fitted wardrobe run
+       includes" ("id remove this") and "Cut to the wall as it actually is"
+       ("remove please"), each under a screenshot of the section it named.
+       What they carried is now elsewhere on the page in his own words: the
+       starting specification is the "What's included" row of the cost table,
+       the days on site are the "On site" row, and scribing is the fitting
+       section. The page is shorter by two headings and says the same things
+       once. */
+    sections: [],
+    /* Three questions, his answers, 6 September 2026. The fourth, on the
+       guarantee, came off: it repeated the "What happens afterwards" section
+       word for word, and he wrote the new set as three. "Will you come back
+       if a door moves?" is now asked the way he phrased it. */
     faqs: [
       {
         q: "Where is the furniture made?",
-        a: "Components are made to our drawings by specialist suppliers, then cut and fitted in your home by us. Which supplier depends on the job.",
+        a: "Each project is made to the approved drawings and specification. Depending on the design and finish, components may be prepared off-site or made and finished as part of the installation.",
       },
       {
-        q: "What guarantee comes with a fitted wardrobe?",
-        a: "The guarantee covers installation and workmanship for 2 years and the structure and joinery for 10 years. Hinges, runners and other moving hardware carry their manufacturer's warranty.",
-      },
-      {
-        q: "Will you come back if a door moves?",
-        a: "Yes, doors and other moving parts that settle within the 2-year aftercare period are adjusted, and we come back to do it.",
+        q: "What happens if something needs adjusting after installation?",
+        a: "If doors, drawers or other moving parts require adjustment in the 2-year aftercare period, we will come back and put them right.",
       },
       {
         q: "How do I look after the finish?",
-        a: "That depends on the material and finish, so the care advice comes with the finished piece: how to clean it and what to avoid. Natural veneers develop subtly with age and light. Painted and decorative finishes stay more consistent.",
+        a: "Care depends on the material and finish. We provide advice on how to clean and maintain your furniture, including which products to use and what to avoid.",
       },
     ],
   },
 
   "walk-in-wardrobes": {
+    /* Kaspar's own opening, 6 September 2026, replacing ours. */
     intro: [
-      "A walk-in wardrobe is planned as one room rather than a run of units. Rails, drawer banks, shoe storage and shelving are set out together, so the lines carry through from wall to wall.",
-      "Loft rooms, box rooms and eaves take fitted storage well, because the awkward angles are measured and used rather than boxed off. The first visit happens at the room itself and usually takes 45 to 60 minutes.",
+      "A walk-in wardrobe is designed around the room and how the storage will be used. Hanging space, drawers, shoe storage and shelving are planned together to make the best use of the available space.",
+      "Loft rooms, box rooms and spaces under eaves can also work particularly well for fitted storage, with sloping ceilings and awkward angles incorporated into the design rather than simply boxed off.",
     ],
     leads: {
       "cost": "A whole room's fit-out sits behind a single itemised quotation for the agreed scope.",
@@ -156,7 +156,10 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       },
       {
         q: "Do you design it, or do I?",
-        a: "Either route works: straightforward projects can go straight to quotation. Where design development is needed, drawings and visuals follow once the quotation is accepted, with up to two revision rounds included.",
+        /* His answer, 6 September 2026. The screenshot it was read from ends
+           at "the finish you want", which is a complete sentence; if there
+           was a clause after it, it did not survive the crop. */
+        a: "You do not need to arrive with a finished design. If you already have ideas, we can work from them; otherwise, we can develop the layout around the room, your storage requirements and the finish you want.",
       },
       {
         q: "Can it match furniture we already have?",
@@ -197,28 +200,29 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         /* The heading carries the phrase too, so it reaches an H2 rather than
            sitting in prose alone. Same edit as the intro, 5 Sep 2026. */
         heading: "Alcove cupboards, shelving and full-height runs",
+        /* His, 6 September 2026, one paragraph in place of our two. */
         body: [
-          "Base cupboards with shelving over is the classic arrangement, and it is right for most rooms. Full-height built-in cupboards, open bookshelves and display shelving with integrated lighting all follow the same rule: the alcove is measured first, and the design follows it.",
-          "Painted finishes suit alcove work, because the joinery reads as part of the room. Veneers and decorative boards are there where a different look is wanted, and grain is matched across adjoining doors.",
+          "Alcove furniture can be designed in many different ways, from traditional base cupboards with shelving above to full-height cabinetry, open bookcases, display shelving and integrated media storage. Each design is tailored to the room and how the space will be used. Shelving, drawers, lighting and internal storage can all be incorporated, with painted, natural wood veneer and decorative finishes available to achieve anything from a traditional built-in look to a more contemporary design.",
         ],
       },
     ],
+    /* The four questions stay; the four answers are his, 6 September 2026. */
     faqs: [
       {
         q: "How are uneven walls and skirting handled?",
-        a: "Every piece is cut to follow the line of the wall, floor and ceiling rather than left with gaps. Fitted and finished, the unit should look like it belongs to the room.",
+        a: "The furniture is scribed and fitted to follow the existing walls, floors and surrounding joinery, creating a clean, fitted finish without unnecessary gaps.",
       },
       {
         q: "Do you take small jobs?",
-        a: "Yes, down to a general minimum of £2,000 of project value. If you are not sure whether yours fits, ask before ruling it out.",
+        a: "We generally work to a minimum project value of £2,000. If you are unsure whether your project falls within this, please get in touch.",
       },
       {
         q: "Can the units match our existing woodwork?",
-        a: "Yes, the finish is chosen partly around what it needs to match, whether existing furniture or the room's own joinery.",
+        a: "Yes. Finishes can be selected to complement or closely match existing furniture, joinery, flooring or other finishes within the room.",
       },
       {
         q: "How long does it take from survey to fitting?",
-        a: "The overall lead time is typically 4 to 8 weeks, with dates confirmed as the project is programmed. We set aside one week for design and issue drawings for review by the end of it.",
+        a: "Lead time is typically 4 to 8 weeks, depending on the scope of the project, design requirements, chosen materials and our current schedule. Installation dates are confirmed as the project progresses.",
       },
     ],
   },

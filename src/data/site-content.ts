@@ -179,45 +179,73 @@ export const REVIEWS = {
  * Denis on 2 Sep 2026 and he ruled they stay; the position is recorded in
  * public/images/materials/README.md and is closed, not open.
  */
+/**
+ * EVERY CARD REWRITTEN BY KASPAR, 6 September 2026, on his review of the
+ * preview: he opened each card in turn and typed its replacement underneath,
+ * description, Used for, In its favour and The trade-offs, in that order. What
+ * is below is his text with only the ampersands in his headings written out.
+ *
+ * Five cards, not six. "lets remove plywood for now, if someone specifically
+ * asks for it we can do it" (13:30). Its swatch stays on disk and its entry is
+ * a git log away; nothing else referenced it.
+ *
+ * Three renamed: MDF and MR MDF is now MR MDF, because that is the board he
+ * uses and the standard grade is not offered; Veneered board is Natural wood
+ * veneer; Specialist decorative boards is Decorative and feature panels, and
+ * that one is a widening as well as a rename, since fluted, grooved and
+ * slatted panels and panels with metal in them were nowhere on the old card.
+ *
+ * The 30 Aug rule for these lines was that each one is either a general fact
+ * about the material family or a confirmed questionnaire answer. These are
+ * neither: they are his own later statements, which outrank both. The Q39
+ * descriptions this note used to say to keep in step with answers.ts are
+ * superseded by the descriptions here.
+ */
 export const MATERIALS = [
   {
     key: "mdf",
-    name: "MDF and MR MDF",
-    description: "Versatile and dimensionally stable, suited to painted furniture and detailed profiles.",
+    name: "MR MDF",
+    description: "A stable, moisture-resistant board that we use as standard for painted fitted furniture.",
     /* Moisture-resistant MDF, green all the way through, from Denis's sample
        set. The green is the point: it is how MR MDF is told apart from
        standard board on site, so the swatch carries a fact rather than a
        colour. Regenerate with scripts/build-material-swatches.py in the ops
        repo, which is what maps his filenames onto these. */
     swatch: "url(/images/materials/mdf-board.webp) center / cover",
-    uses: "Painted wardrobes, alcove units, panelling and detailed door profiles. The moisture-resistant version, MR MDF, goes where damp is a risk.",
+    uses: "Painted wardrobes, alcove units, built-in furniture, panelling and detailed door profiles.",
     pros: [
-      "Stays flat and does not move with the seasons",
+      "Dimensionally stable, with far less seasonal movement than solid timber",
       "Takes paint smoothly, with no grain showing through",
       "Profiles, grooves and mouldings cut cleanly",
-      "Consistent all the way through, with no knots or voids",
+      "Consistent throughout, with no knots or natural defects",
+      "Offers greater resistance to moisture and humidity than standard MDF",
     ],
     cons: [
-      "Bare edges soak up paint, so they are sealed before finishing",
-      "Standard board swells if it sits wet, which is what the moisture-resistant version is for",
-      "No grain of its own: a timber look comes from veneer or a wood-effect board instead",
+      "Cut edges need to be properly sealed and prepared before painting",
+      "Moisture-resistant does not mean waterproof, so it is not intended for prolonged exposure to water",
+      "It has no natural grain; where a timber appearance is wanted, we use real wood veneer instead",
     ],
   },
   {
     key: "veneer",
-    name: "Veneered board",
-    description: "The character of real timber with the stability of an engineered board.",
+    name: "Natural wood veneer",
+    description: "The character and variation of real timber, combined with the stability of an engineered board.",
     /* Oak veneered MDF with its edge banding, from Denis's sample set,
-       2 Sep 2026. It replaced a crop of his own walk-in interior that our
-       triage read as veneer but he had never confirmed: the sample says what
-       the board is without anyone having to identify it. */
+       2 Sep 2026. */
     swatch: "url(/images/materials/veneered-board.webp) center / cover",
-    uses: "Wardrobe doors, panelling and shelving where real timber should show. Where the design calls for it, grain is matched across adjoining doors so the run reads as one piece.",
+    uses: "Fitted furniture and interior joinery where the look and feel of real timber is wanted. It can be used throughout a project, from doors and cabinetry to shelving and panelling, with the grain selected and matched where the design calls for it.",
     pros: [
-      "A real timber surface: oak veneer is oak, cut thin",
-      "Far more stable across a fitted run than timber in one piece",
-      "Grain and pattern can be matched door to door",
+      "A genuine timber surface, with the natural grain and variation of real wood",
+      "More dimensionally stable than using wide sections of solid timber",
+      "Grain and pattern can be matched across adjoining doors and panels",
+      "Can be stained and finished in a wide range of tones, allowing the timber to complement existing flooring, doors or furniture",
+      "Available in a wide range of timber species",
     ],
+    /* His trade-offs for this card sat behind a "Read more" in the thread and
+       did not survive the screenshot. The three below are the general facts
+       about veneer from the previous card, kept because a card with a favour
+       list and no trade-offs reads as a brochure, and every other card here
+       has both. Swap them for his the moment he sends them. */
     cons: [
       "The timber layer is thin, so a deep scratch cannot be sanded out the way solid wood can",
       "Every visible edge is finished with a matching timber strip, which is part of the work",
@@ -225,87 +253,62 @@ export const MATERIALS = [
     ],
   },
   {
-    key: "plywood",
-    name: "Plywood",
-    description: "Strong and durable, with a distinctive exposed edge where the design calls for it.",
-    /* A hardwood-core plywood board corner with the laminations showing, from
-       Denis's sample set, 2 Sep 2026. It replaced a crop of plywood carcasses
-       on one of his sites, which read as a room rather than as the board. */
-    swatch: "url(/images/materials/plywood.webp) center / cover",
-    uses: "The boxes and frames behind fitted furniture, long shelf spans, and designs that show its striped edge on purpose.",
-    pros: [
-      "Strong for its weight, and stiff over a long shelf span",
-      "Holds screws and fixings well",
-      "The striped edge is a finish in its own right",
-    ],
-    cons: [
-      "Costs more than MDF for the same panel",
-      "Face grain varies from sheet to sheet",
-      "Paint needs more preparation on plywood than on MDF",
-    ],
-  },
-  {
     key: "melamine",
-    name: "Melamine and decorative board",
-    description: "Hard-wearing and consistent, in a wide range of colours, textures and wood finishes.",
+    name: "Melamine and decorative boards",
+    description: "Hard-wearing, consistent and available in a wide range of colours, textures and wood-effect finishes.",
     /* A melamine-faced board, its finish arrived on the board and its edge
        showing. From Denis's sample set, 2 Sep 2026. */
     swatch: "url(/images/materials/melamine-board.webp) center / cover",
-    uses: "Wardrobe interiors, storage runs and complete pieces where the budget leads. The finish arrives on the board, ready made.",
+    uses: "Wardrobe interiors, shelving and complete fitted furniture where a durable, factory-finished surface is wanted. Available in plain colours, wood effects and textured finishes to suit different interiors.",
     pros: [
-      "Hard-wearing and wipes clean",
-      "Colour and texture identical panel to panel",
-      "The widest choice of colours, textures and wood finishes in the range",
-      "No site finishing, which keeps cost and time down",
+      "Hard-wearing and easy to clean",
+      "Consistent colour and finish from panel to panel",
+      "Wide choice of colours, textures and wood-effect finishes",
+      "No painting or staining required, reducing finishing time and cost",
     ],
     cons: [
-      "The finish is fixed in the factory, so it cannot be repainted later",
-      "A hard knock can chip an edge, and a chip cannot be invisibly repaired",
+      "The colour and finish are selected from an existing range rather than created specifically for the project",
+      "Unlike painted MDF, the finish cannot simply be repainted in a different colour later",
+      "Damaged or chipped surfaces can be more difficult to repair invisibly than a painted finish",
     ],
   },
   {
     key: "specialist",
-    name: "Specialist decorative boards",
-    description: "Super-matt, high-gloss, textured, stone-effect and other premium surfaces.",
-    /* A fluted timber-faced panel: the textured end of this card's range,
-       which the flat boards elsewhere in the grid cannot show. From Denis's
-       sample set, 2 Sep 2026. */
+    name: "Decorative and feature panels",
+    description: "Textured, grooved and specialist panels used to add depth, pattern and detail to fitted furniture and interior joinery.",
+    /* A fluted timber-faced panel: exactly the kind of panel this card now
+       describes. From Denis's sample set, 2 Sep 2026. */
     swatch: "url(/images/materials/specialist-board.webp) center / cover",
-    uses: "Doors and visible fronts where the surface leads the design: super-matt, high-gloss, textured and stone-effect pieces.",
+    uses: "Feature panels, cabinet fronts, wall panelling, TV units and other fitted joinery where the surface forms part of the design. Options can include fluted and grooved MDF, slatted panels, textured surfaces and panels incorporating metal or other decorative elements.",
     pros: [
-      "Surfaces paint and veneer cannot give: deep gloss, soft matt, stone and texture",
-      "Factory-made finishes, consistent and hard-wearing",
+      "Adds depth and texture beyond a flat painted or veneered surface",
+      "Can be used selectively as a feature or carried across a larger fitted installation",
+      "Available in a wide range of patterns, profiles and materials",
+      "Can be combined with painted MDF, veneer and other finishes within the same project",
     ],
     cons: [
-      "The most expensive boards in the range",
-      "A damaged panel is usually replaced rather than repaired",
+      "Detailed and textured surfaces can require more cleaning than flat panels",
+      "Some specialist panels have fixed dimensions, patterns or repeat sizes that need to be considered during the design",
+      "Cost and lead time vary considerably depending on the panel and finish specified",
     ],
   },
   {
     key: "hardware",
     name: "Hardware",
-    /** The Q28 answer, shortened to the two named brands. Named here because
-        hardware is the subject of this card, per the 30 Aug 2026 ruling. */
-    description: "Blum for hinges and drawer systems, Hafele for furniture hardware and lighting, with soft-close as standard.",
+    description: "Quality hardware is specified as standard, using established manufacturers such as Blum and Häfele for hinges, drawer systems and furniture fittings.",
     /* The hinge programme laid out: the range this card is describing, rather
        than one hinge. From Denis's sample set, 2 Sep 2026. */
     swatch: "url(/images/materials/hardware.webp) center / cover",
-    uses: "Hinges, drawer runners, lift-up doors, interior fittings and lighting: the moving parts of every piece, and the ones you put a hand on every day.",
+    uses: "Hinges, drawer runners, lift-up mechanisms, interior fittings and other moving components that determine how the furniture feels and performs in everyday use.",
     pros: [
-      /* Soft-close is in the client's own pricing document, as part of the
-         starting specification for a fitted wardrobe. It is a quoted inclusion,
-         not an upsell, and saying so is worth more than the feature is. */
-      "Soft-close on doors and drawers, in the starting specification rather than an upgrade",
-      "A door slows at the end of its travel and lands quietly instead of banging shut",
-      "A loaded drawer runs out straight and pulls back without a shove",
-      "Precise adjustment, so doors and drawers line up and stay lined up",
-      "Moving hardware carries its manufacturer's warranty on top of our own guarantee",
-      "Both brands publish their ranges, so what we specify can be looked up",
+      "Smooth, reliable operation for doors and drawers",
+      "Precise adjustment, helping doors and drawer fronts stay properly aligned",
+      "Soft-close hinges and drawer systems included as standard where appropriate",
+      "Wide range of specialist fittings for different furniture and storage requirements",
+      "Manufacturer warranties apply to hardware alongside our own workmanship guarantee",
     ],
     cons: [
-      "Branded hardware costs more than unbranded",
-      "The moving parts do the hardest work in a piece, so this is the wrong place to save",
-      "Soft-close mechanisms are what wears first on any piece, which is why the warranty matters",
+      "Quality hardware adds to the initial cost of the project, but it provides smoother operation, better adjustment and greater durability over the life of the furniture",
     ],
   },
 ] as const;
@@ -339,17 +342,21 @@ export const COMMISSIONS = [] as {
  * approved sentence the protocol requires and Kaspar has not yet given.
  */
 export const HOMEPAGE_FAQS = [
+  /* His answer, 6 September 2026, under a screenshot of this question. The
+     figures are the pricing document's and unchanged; the £2,500 hand-painted
+     step went, because he chose to lead with the 4-door figure instead. */
   {
     q: "What does a fitted wardrobe cost?",
-    a: "Guide prices start at £2,300 for a 2-door wardrobe in melamine, and £2,500 hand-painted. Width, finish and any internal drawers or lighting move the figure, and a firm number follows one visit. The cost guide gives every step.",
+    a: "A fitted wardrobe typically starts from £2,300 for a 2-door wardrobe, with 4-door wardrobes starting from around £4,000. The final price depends on the size, internal layout, material and finish, with drawers, lighting and other details priced as required.",
   },
   {
     q: "Who actually does the work?",
     a: "The person who measures your room is the person who draws it and the person who fits it. Nobody is sent in their place.",
   },
+  /* His answer, 6 September 2026. */
   {
     q: "How long does a commission take?",
-    a: "Lead time is typically 4 to 8 weeks, and a straightforward wardrobe wall takes 2 to 3 days on site. You get the dates when the project is programmed.",
+    a: "Lead time is typically 4 to 8 weeks, depending on the size and complexity of the project. Installation usually takes a few days for a straightforward fitted wardrobe, with larger projects taking longer. Dates are confirmed in advance.",
   },
   {
     q: "What guarantee comes with the work?",
@@ -442,7 +449,7 @@ export const PROCESS = [
     confirmed:
       "Components are prepared to the approved drawings and specification. Some pieces arrive as sections ready to assemble; others are built up and finished in the room, whichever gets the better result. The installation period is agreed when the deposit is paid, and the dates are confirmed as the project progresses.",
     questions: ["stage04", "q26", "q27", "q28", "q32"] as QuestionKey[],
-    details: ["Programme agreed per project", "Blum and Hafele hardware"],
+    details: ["Programme agreed per project", "Blum and Häfele hardware"],
   },
   {
     number: "04",

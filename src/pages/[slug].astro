@@ -170,7 +170,17 @@ const schema = [serviceSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [
    price became per-service literal copy when the pricing document arrived on
    31 Aug 2026, because one site-wide q10 value cannot price seven services. */
 type Row = { label: string; q?: Parameters<typeof unanswered>[0][number]; text?: string };
-const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
+/* A section is a table of rows, or, since 6 September 2026, one paragraph and
+   a link: see "made-from" below for the one that is. */
+type Section = {
+  id: string;
+  heading: string;
+  lead: string;
+  rows: Row[];
+  prose?: string;
+  link?: { href: string; label: string };
+};
+const SECTIONS: Section[] = [
   {
     id: "cost",
     /* The cost guide's own title is already the cost question, so interpolating
@@ -187,6 +197,9 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
     lead: service.costLead ?? "The honest answer is a range, because the room decides it.",
     rows: [
       { label: "Guide price", text: service.price },
+      /* What the guide price buys, where he has said so: fitted wardrobes,
+         6 September 2026. */
+      ...(service.included ? [{ label: "What's included", text: service.included } as Row] : []),
       service.priceMovers
         ? { label: "What moves it", text: service.priceMovers }
         : { label: "What moves it", q: "q11" },
@@ -242,16 +255,26 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
           : { label: "On site", q: "q32" },
     ],
   },
+  /* FOUR ROWS BECAME ONE SENTENCE AND A LINK, 6 September 2026. This section
+     carried Q22, Q24, Q28 and Q43 in full on every service page, and the
+     materials page carries the same four answers with the cards around them.
+     Kaspar, under a screenshot of this table on the wardrobe page: "i dont
+     think we need to go into detail again because we are explaining
+     everything of the materials section". He wrote the wardrobe sentence; the
+     other pages get the same sentence with their own subject, because the
+     range is the range whatever it is made into.
+
+     The four answers stay in this page's gate. They are answered, so it costs
+     nothing, and they still hold the materials page. */
   {
     id: "made-from",
     heading: "What is it made from?",
     lead: "Engineered board rather than solid timber, and that is a decision rather than a compromise.",
-    rows: [
-      { label: "Materials", q: "q22" },
-      { label: "Finishes", q: "q24" },
-      { label: "Hardware", q: "q28" },
-      { label: "Why not solid timber", q: "q43" },
-    ],
+    rows: [],
+    prose:
+      service.madeFrom ??
+      `${service.guide ? "Fitted wardrobes" : service.title} are available in painted MR MDF, melamine and decorative boards, or natural wood veneer, with a wide choice of colours and finishes.`,
+    link: { href: "/materials/", label: "Explore materials and finishes" },
   },
   {
     id: "fitting",
@@ -340,22 +363,33 @@ const SECTIONS: { id: string; heading: string; lead: string; rows: Row[] }[] = [
           <SectionHead id={section.id} level={4}>{section.heading}</SectionHead>
           <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
             <p style="max-width:var(--measure-short);color:var(--text-quiet)">{copy?.leads?.[section.id] ?? section.lead}</p>
-            <SpecTable
-              stamp
-              rows={[]}
-              labelWidth="34%"
-            >
-              {section.rows.map((row) => (
-                <tr>
-                  <td style="width:34%;padding:var(--space-4) 0;padding-right:var(--space-8);border-bottom:var(--rule-hair);vertical-align:top;text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);color:var(--ink-soft)">
-                    {row.label}
-                  </td>
-                  <td style="padding:var(--space-4) 0;border-bottom:var(--rule-hair);vertical-align:top">
-                    {row.q ? <Value q={row.q} /> : row.text}
-                  </td>
-                </tr>
-              ))}
-            </SpecTable>
+            {section.prose ? (
+              <div style="max-width:var(--measure)">
+                <p>{section.prose}</p>
+                {section.link && (
+                  <p style="margin-top:var(--space-8)">
+                    <Link href={section.link.href} variant="nav" chamfer>{section.link.label}</Link>
+                  </p>
+                )}
+              </div>
+            ) : (
+              <SpecTable
+                stamp
+                rows={[]}
+                labelWidth="34%"
+              >
+                {section.rows.map((row) => (
+                  <tr>
+                    <td style="width:34%;padding:var(--space-4) 0;padding-right:var(--space-8);border-bottom:var(--rule-hair);vertical-align:top;text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);color:var(--ink-soft)">
+                      {row.label}
+                    </td>
+                    <td style="padding:var(--space-4) 0;border-bottom:var(--rule-hair);vertical-align:top">
+                      {row.q ? <Value q={row.q} /> : row.text}
+                    </td>
+                  </tr>
+                ))}
+              </SpecTable>
+            )}
           </div>
         </Wrap>
 
