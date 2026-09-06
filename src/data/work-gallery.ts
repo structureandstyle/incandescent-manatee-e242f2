@@ -22,7 +22,37 @@
  * looks up its real dimensions there and fails the build if one is missing.
  *
  * -------------------------------------------------------------------------
- * THE THIRTEEN THAT ARE NOT HERE, and why. Every one is still in
+ * SECOND CUT, later on 6 September 2026, on Denis asking for the duplicates
+ * to come out. Twenty-one became sixteen. The first pass was made from a
+ * contact sheet of thumbnails, and thumbnails hide two things: that two files
+ * are one photograph, and that two photographs are one room. A perceptual
+ * hash across every pair caught the first (2 bits apart in 256, the next
+ * closest pair 88); the same frames laid out at a size the eye can judge
+ * caught the rest, by the rug, the lamp, the chair and the floor.
+ *
+ *   bespoke-kitchens-04             the same photograph as
+ *                                   kitchen-shaker-showpiece, under a second
+ *                                   name. Both were in the gallery.
+ *   alcove-units-04, media-walls-04 the same living room as alcove-units-05,
+ *                                   from the bay and from the door: same
+ *                                   herringbone floor, same diamond rug, same
+ *                                   coffee table, same white units.
+ *                                   alcove-units-05 is the best composed of
+ *                                   the three and stays.
+ *   alcove-units-06                 the same fireplace as alcove-units-07,
+ *                                   wide: same black surround, same yellow
+ *                                   lamp, same blue-cushioned chair. -07 is
+ *                                   the tighter, better-lit shot of the
+ *                                   joinery and stays.
+ *   walk-in-wardrobes-03            the other side of the room in
+ *                                   walk-in-wardrobes-01, two minutes later.
+ *                                   Kaspar's rule is the strongest frame per
+ *                                   project, and this is his thinnest set, so
+ *                                   it is the first to put back when he
+ *                                   photographs another walk-in.
+ *
+ * -------------------------------------------------------------------------
+ * THE THIRTEEN FROM THE FIRST CUT, and why. Every one is still in
  * `_selection.json`, so putting one back is a line in this array.
  *
  *   fitted-wardrobes-01, -04, -05,  four empty oak-lined cavities, two of them
@@ -75,19 +105,14 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp", type: "Bespoke kitchens" },
   { file: "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp", type: "Walk-in wardrobes" },
   { file: "/images/doors-panelling/doors-panelling-02.webp", type: "Panelling and doors" },
-  { file: "/images/alcove-units/alcove-units-06.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp", type: "Bespoke kitchens" },
   { file: "/images/media-walls/media-walls-02.webp", type: "Built-in TV units" },
   { file: "/images/alcove-units/alcove-units-03.webp", type: "Alcove units" },
-  { file: "/images/walk-in-wardrobes/walk-in-wardrobes-03.webp", type: "Walk-in wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-05.webp", type: "Alcove units" },
   { file: "/images/media-walls/media-walls-03.webp", type: "Built-in TV units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-08.webp", type: "Fitted wardrobes" },
   { file: "/images/alcove-units/alcove-units-07.webp", type: "Alcove units" },
-  { file: "/images/bespoke-kitchens/bespoke-kitchens-04.webp", type: "Bespoke kitchens" },
   { file: "/images/doors-panelling/doors-panelling-01.webp", type: "Panelling and doors" },
-  { file: "/images/alcove-units/alcove-units-04.webp", type: "Alcove units" },
-  { file: "/images/media-walls/media-walls-04.webp", type: "Built-in TV units" },
 ];
