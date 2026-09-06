@@ -177,6 +177,13 @@ export type Service = {
    * question nobody asked and argues with the figure above it.
    */
   noMinimum?: boolean;
+  /**
+   * Replaces the shared Q07 in the "Booked ahead" row. Fitted wardrobes only:
+   * his walk-in version was the bare Q07 sentence, his wardrobe version adds
+   * what the lead time depends on. Missed on the first pass and caught by the
+   * verification run against the built page, 6 September 2026.
+   */
+  leadTime?: string;
   /** Replaces the shared "Survey to drawings" row. */
   surveyToDrawings?: string;
   /** Replaces Q30 or Q32 in the days-on-site row. */
@@ -204,6 +211,8 @@ export const SERVICES: Service[] = [
       "Made-to-measure fitted wardrobe with a straightforward internal layout, standard shelving and hanging space, soft-close hinges, delivery and professional installation.",
     priceMovers:
       "Drawers, integrated lighting, mirrors, shoe storage, pull-out accessories, specialist hardware, decorative details and more complex designs are priced according to the specification.",
+    leadTime:
+      "Typically 4 to 8 weeks, depending on the project, specification and current schedule.",
     surveyToDrawings:
       "After the survey, the quotation and any required drawings are prepared for review. More detailed or complex projects may require additional design time.",
     onSite:

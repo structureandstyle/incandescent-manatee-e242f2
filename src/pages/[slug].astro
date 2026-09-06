@@ -213,7 +213,7 @@ const SECTIONS: Section[] = [
     heading: "How long does it take?",
     lead: "Two different clocks: how far ahead the work is booked, and how long the work itself runs.",
     rows: [
-      { label: "Booked ahead", q: "q07" },
+      service.leadTime ? { label: "Booked ahead", text: service.leadTime } : { label: "Booked ahead", q: "q07" },
       /* Q18 rendered bare stated the design week as automatic, on all four
          service pages, in a stats row read as flat fact beside "Booked ahead"
          and "Days on site". Q13 says straightforward jobs go straight to
