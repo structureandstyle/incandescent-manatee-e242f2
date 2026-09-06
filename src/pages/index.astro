@@ -281,8 +281,15 @@ const faqSchema = {
        as the sixth card so the grid sits even. Copy rules in site-content.ts. -->
   <Wrap style="padding-top:var(--section-y)">
     <SectionHead meta="Boards, finishes and hardware" scribe>Materials</SectionHead>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:var(--gap-md);align-items:start">
-      {MATERIALS.map((m) => (
+    {/* THREE OVER TWO, 6 September 2026. Plywood came off the range on
+        Kaspar's instruction, which left five cards in a three-column grid and
+        the empty slot that hardware was added on 1 Sep to fill. Denis's call:
+        stretch the last two across. They span the row and keep the height of
+        the three above them by being wider rather than taller, so the section
+        reads as one set. The rule is "the last two", not two named cards, so
+        a sixth card puts the grid back to three and three on its own. */}
+    <div class="mat-grid">
+      {MATERIALS.map((m, i) => (
         <MaterialChip
           name={m.name}
           swatch={m.swatch}
@@ -293,6 +300,8 @@ const faqSchema = {
           uses={m.uses}
           pros={m.pros}
           cons={m.cons}
+          class={i >= MATERIALS.length - 2 ? "wide" : undefined}
+          sizes={i >= MATERIALS.length - 2 ? "(max-width: 700px) 92vw, (max-width: 1080px) 92vw, 480px" : undefined}
         />
       ))}
     </div>
@@ -469,3 +478,46 @@ const faqSchema = {
     </Fragment>
   </EnquireBand>
 </Base>
+
+<style>
+  /* The materials grid, three over two: see the note beside the markup. Six
+     tracks so a card can take two thirds of a row without a fraction; an
+     ordinary card takes two, a stretched one three. The stretched card's
+     swatch goes to 9 / 4 so it keeps the height of a 3 / 2 swatch two thirds
+     as wide, give or take the gap. */
+  .mat-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--gap-md);
+    align-items: start;
+  }
+  .mat-grid > :global(*) {
+    grid-column: span 2;
+  }
+  .mat-grid > :global(.wide) {
+    grid-column: span 3;
+    --mat-ratio: 9 / 4;
+  }
+  /* Two across on a tablet: the fourth card is an ordinary card again and
+     the fifth has a row to itself, so it takes the row. */
+  @media (max-width: 1080px) {
+    .mat-grid > :global(*),
+    .mat-grid > :global(.wide) {
+      grid-column: span 3;
+      --mat-ratio: 3 / 2;
+    }
+    .mat-grid > :global(.wide):last-child {
+      grid-column: span 6;
+      --mat-ratio: 9 / 4;
+    }
+  }
+  /* One column on a phone, every card the same shape. */
+  @media (max-width: 660px) {
+    .mat-grid > :global(*),
+    .mat-grid > :global(.wide),
+    .mat-grid > :global(.wide):last-child {
+      grid-column: span 6;
+      --mat-ratio: 3 / 2;
+    }
+  }
+</style>

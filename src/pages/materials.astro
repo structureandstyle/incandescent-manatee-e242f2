@@ -82,8 +82,11 @@ const isIndexable = indexable("/materials/");
       The range
     </SectionHead>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:var(--gap-lg);align-items:start">
-      {MATERIALS.map((m) => (
+    {/* Three over two, the last two cards spanning the row at the same
+        height as the three above: see the note on the same grid in
+        index.astro. */}
+    <div class="mat-grid">
+      {MATERIALS.map((m, i) => (
         <MaterialChip
           name={m.name}
           swatch={m.swatch}
@@ -94,6 +97,8 @@ const isIndexable = indexable("/materials/");
           uses={m.uses}
           pros={m.pros}
           cons={m.cons}
+          class={i >= MATERIALS.length - 2 ? "wide" : undefined}
+          sizes={i >= MATERIALS.length - 2 ? "(max-width: 700px) 92vw, (max-width: 1080px) 92vw, 480px" : undefined}
         />
       ))}
     </div>
@@ -172,3 +177,40 @@ const isIndexable = indexable("/materials/");
     </Fragment>
   </EnquireBand>
 </Base>
+
+<style>
+  /* Three over two, the same rules as the homepage grid with this page's
+     wider gap: see index.astro for the reasoning. */
+  .mat-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--gap-lg);
+    align-items: start;
+  }
+  .mat-grid > :global(*) {
+    grid-column: span 2;
+  }
+  .mat-grid > :global(.wide) {
+    grid-column: span 3;
+    --mat-ratio: 9 / 4;
+  }
+  @media (max-width: 1080px) {
+    .mat-grid > :global(*),
+    .mat-grid > :global(.wide) {
+      grid-column: span 3;
+      --mat-ratio: 3 / 2;
+    }
+    .mat-grid > :global(.wide):last-child {
+      grid-column: span 6;
+      --mat-ratio: 9 / 4;
+    }
+  }
+  @media (max-width: 660px) {
+    .mat-grid > :global(*),
+    .mat-grid > :global(.wide),
+    .mat-grid > :global(.wide):last-child {
+      grid-column: span 6;
+      --mat-ratio: 3 / 2;
+    }
+  }
+</style>

@@ -69,6 +69,12 @@ interface Props {
    */
   band?: boolean;
   plane?: boolean | "left" | "top";
+  /**
+   * The swatch's rendered width, as a CSS sizes list. The default is the
+   * measured one for a card in a three-column grid; a card that spans wider
+   * passes its own, or the browser fetches a file for a box it is not in.
+   */
+  sizes?: string;
   class?: string;
   style?: string;
 }
@@ -83,6 +89,7 @@ const {
   swatch,
   band = true,
   plane = false,
+  sizes = "(max-width: 700px) 92vw, (max-width: 1080px) 44vw, 320px",
   class: className,
   style = "",
 } = Astro.props;
@@ -136,7 +143,13 @@ const frame = [
      because the <img> below carries it. The wash stays underneath either way,
      so the frame is never bare while the image loads. */
   `background:${swatchUrl ? "var(--wash-char)" : swatch || "var(--wash-char)"}`,
-  `aspect-ratio:${hasMedia ? "auto" : "3 / 2"}`,
+  /* The shape is a variable so a grid can vary it by breakpoint, 6 Sep 2026.
+     Five cards in three columns leave a hole; the last two now span the row
+     and keep the height of the three above them by being wider rather than
+     taller, which is a different aspect at desktop and the normal one on a
+     phone. A page sets --mat-ratio on the cards it stretches; everything else
+     gets 3 / 2 as before. */
+  `aspect-ratio:${hasMedia ? "auto" : "var(--mat-ratio, 3 / 2)"}`,
   "overflow:hidden",
 ].join(";");
 ---
@@ -156,7 +169,7 @@ const frame = [
             <img
               src={swatchUrl}
               srcset={swatchSrcset}
-              sizes={swatchSrcset ? "(max-width: 700px) 92vw, (max-width: 1080px) 44vw, 320px" : undefined}
+              sizes={swatchSrcset ? sizes : undefined}
               alt=""
               loading="lazy"
               decoding="async"
