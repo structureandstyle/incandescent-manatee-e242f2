@@ -490,6 +490,9 @@ const faqSchema = {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: var(--gap-md);
     align-items: start;
+    /* A size container, so the frames below can take their height from the
+       grid's own width in cqw. */
+    container-type: inline-size;
   }
   .mat-grid > :global(*) {
     grid-column: span 2;
@@ -498,8 +501,22 @@ const faqSchema = {
     grid-column: span 3;
     --mat-ratio: 9 / 4;
   }
+  /* EVERY FRAME IS THE HEIGHT OF A NARROW CARD'S FRAME, by construction.
+     The 9 / 4 ratio above was the first attempt and it is only a fallback
+     now: the render measured the stretched tiles 8px taller than the row
+     above on this page and 14px on /materials/, because a fixed ratio can
+     be right for one gap width only and the two grids have different gaps.
+     So the height is derived instead: a narrow card is two of six tracks and
+     one gap, (100cqw - 5g) / 6 * 2 + g, which simplifies to (100cqw - 2g) / 3,
+     and its 3 / 2 frame is that over 1.5. Set on all five frames, the wide
+     ones come out wider and never taller, whatever the viewport. A browser
+     without cqw ignores the height and keeps the ratio. */
+  .mat-grid :global(.ss-mat-frame) {
+    height: calc((100cqw - 2 * var(--gap-md)) / 4.5);
+  }
   /* Two across on a tablet: the fourth card is an ordinary card again and
-     the fifth has a row to itself, so it takes the row. */
+     the fifth has a row to itself, so it takes the row. A narrow card is now
+     half the grid less half a gap. */
   @media (max-width: 1080px) {
     .mat-grid > :global(*),
     .mat-grid > :global(.wide) {
@@ -510,6 +527,9 @@ const faqSchema = {
       grid-column: span 6;
       --mat-ratio: 9 / 4;
     }
+    .mat-grid :global(.ss-mat-frame) {
+      height: calc((100cqw - var(--gap-md)) / 3);
+    }
   }
   /* One column on a phone, every card the same shape. */
   @media (max-width: 660px) {
@@ -518,6 +538,9 @@ const faqSchema = {
     .mat-grid > :global(.wide):last-child {
       grid-column: span 6;
       --mat-ratio: 3 / 2;
+    }
+    .mat-grid :global(.ss-mat-frame) {
+      height: calc(100cqw / 1.5);
     }
   }
 </style>

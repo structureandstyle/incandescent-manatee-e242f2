@@ -219,8 +219,13 @@ const isIndexable = indexable("/about/");
 
     <div style="margin-top:var(--space-16)">
       <SectionHead meta="Where we work" level={4}>Service area</SectionHead>
+      {/* His sentence, 6 September 2026: "We work across London, including
+          ...". It rendered Q03 ("Serving homes across London") until the
+          verification run read the two side by side. Q03 stays as it is for
+          the enquiry band, where a sentence in the first person would read
+          wrong in mono caps; here the district list is still the one source. */}
       <p style="max-width:var(--measure)">
-        <Value q="q03" />, including {BUSINESS.areaServed.slice(0, -1).join(", ")} and{" "}
+        We work across London, including {BUSINESS.areaServed.slice(0, -1).join(", ")} and{" "}
         {BUSINESS.areaServed.slice(-1)}.
       </p>
     </div>

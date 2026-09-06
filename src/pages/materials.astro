@@ -186,6 +186,7 @@ const isIndexable = indexable("/materials/");
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: var(--gap-lg);
     align-items: start;
+    container-type: inline-size;
   }
   .mat-grid > :global(*) {
     grid-column: span 2;
@@ -193,6 +194,12 @@ const isIndexable = indexable("/materials/");
   .mat-grid > :global(.wide) {
     grid-column: span 3;
     --mat-ratio: 9 / 4;
+  }
+  /* Frame height derived from the grid width, so the stretched tiles are
+     wider and never taller: the reasoning is beside the same rule in
+     index.astro. This page's gap is --gap-lg. */
+  .mat-grid :global(.ss-mat-frame) {
+    height: calc((100cqw - 2 * var(--gap-lg)) / 4.5);
   }
   @media (max-width: 1080px) {
     .mat-grid > :global(*),
@@ -204,6 +211,9 @@ const isIndexable = indexable("/materials/");
       grid-column: span 6;
       --mat-ratio: 9 / 4;
     }
+    .mat-grid :global(.ss-mat-frame) {
+      height: calc((100cqw - var(--gap-lg)) / 3);
+    }
   }
   @media (max-width: 660px) {
     .mat-grid > :global(*),
@@ -211,6 +221,9 @@ const isIndexable = indexable("/materials/");
     .mat-grid > :global(.wide):last-child {
       grid-column: span 6;
       --mat-ratio: 3 / 2;
+    }
+    .mat-grid :global(.ss-mat-frame) {
+      height: calc(100cqw / 1.5);
     }
   }
 </style>
