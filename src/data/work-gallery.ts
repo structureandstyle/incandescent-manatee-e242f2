@@ -22,6 +22,52 @@
  * looks up its real dimensions there and fails the build if one is missing.
  *
  * -------------------------------------------------------------------------
+ * THIRD PASS, 7 September 2026, on Denis asking for the gallery to be enriched
+ * "with no duplicates, just original photos". Sixteen became twenty, and the
+ * way to get there was to go past the site's 34-frame selection into the
+ * library itself: 60 finished frames at quality 4 or better were not on the
+ * site, and the file timestamps sorted them into rooms. Almost all were more
+ * angles of rooms already here (the grey marble kitchen eight times, the one
+ * walk-in twelve times, the green-walled house's wardrobes eleven times). Five
+ * were rooms the gallery did not have:
+ *
+ *   fitted-wardrobes-09   DSC_6584, the professional frame of a white built-in
+ *                         wardrobe run in a bedroom, from the 31 Aug drop. The
+ *                         library note of that day says it led the wardrobe
+ *                         page; the 4 Sep renumbering lost it and nobody
+ *                         noticed. Back, as its own file.
+ *   alcove-units-08       IMG-20260216-WA0011, painted alcove cupboards either
+ *                         side of a herringbone-tiled fireplace, TV above.
+ *                         February 2026, the newest finished room in the
+ *                         library.
+ *   alcove-units-09       20251212_152708, a lit white bookcase wall in an
+ *                         empty room. The same room as alcove-units-02, which
+ *                         the first cut left out as unstyled; this frame is
+ *                         lit and front-on and reads as the piece it is.
+ *   walk-in-wardrobes-02  back from the first cut: a dark-timber corner
+ *                         walk-in, a different project from -01.
+ *   bespoke-kitchens-05   back from the first cut: the grey gloss kitchen,
+ *                         DSC_9770, a different project from every other
+ *                         kitchen here.
+ *
+ * TWO FILES ARE REPLACED BY THEIR ORIGINALS. fitted-wardrobes-03 and -08 were
+ * built from "(1)" exports, which the library rules exclude as AI-edited
+ * copies. No label was visible on either at full size, but the originals
+ * exist and there is no reason to carry the risk: -03 is now
+ * 20250522_171826.jpg, the same navy loft wardrobe, and -08 is now
+ * 20260527_125257.jpg, the corner view of the same white run, which is the
+ * better frame of that room in any case.
+ *
+ * AND ONE MORE DUPLICATE CAME OUT. media-walls-02 and -03 are one house, six
+ * days apart: the fireplace in -03's furnished room is the fireplace beyond
+ * the corner unit in -02's empty one. The lit corner unit stays, at quality 5.
+ *
+ * What is still in the library and not here, and why: the green door
+ * (exterior, and the page says interior joinery); the whole-room frames of the
+ * green-kitchen flat (that flat is here three times already); every other
+ * angle of a room above.
+ *
+ * -------------------------------------------------------------------------
  * SECOND CUT, later on 6 September 2026, on Denis asking for the duplicates
  * to come out. Twenty-one became sixteen. The first pass was made from a
  * contact sheet of thumbnails, and thumbnails hide two things: that two files
@@ -105,14 +151,18 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp", type: "Bespoke kitchens" },
   { file: "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp", type: "Walk-in wardrobes" },
   { file: "/images/doors-panelling/doors-panelling-02.webp", type: "Panelling and doors" },
+  { file: "/images/alcove-units/alcove-units-08.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp", type: "Bespoke kitchens" },
-  { file: "/images/media-walls/media-walls-02.webp", type: "Built-in TV units" },
   { file: "/images/alcove-units/alcove-units-03.webp", type: "Alcove units" },
-  { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
+  { file: "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp", type: "Walk-in wardrobes" },
+  { file: "/images/media-walls/media-walls-02.webp", type: "Built-in TV units" },
   { file: "/images/alcove-units/alcove-units-05.webp", type: "Alcove units" },
-  { file: "/images/media-walls/media-walls-03.webp", type: "Built-in TV units" },
+  { file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp", type: "Fitted wardrobes" },
+  { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
+  { file: "/images/alcove-units/alcove-units-09.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-08.webp", type: "Fitted wardrobes" },
+  { file: "/images/bespoke-kitchens/bespoke-kitchens-05.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-07.webp", type: "Alcove units" },
   { file: "/images/doors-panelling/doors-panelling-01.webp", type: "Panelling and doors" },
 ];

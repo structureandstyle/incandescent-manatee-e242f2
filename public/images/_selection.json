@@ -1,286 +1,313 @@
 {
- "fitted-wardrobes": [
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-01.webp",
-   "w": 1400,
-   "h": 1867,
-   "source": "20260518_111918_001.jpg",
-   "date": "20260518",
-   "quality": "4",
-   "bytes": 143790
-  },
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-02.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20240827_160509.jpg",
-   "date": "20240827",
-   "quality": "4",
-   "bytes": 44050
-  },
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-03.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20250522_171826(1).jpg",
-   "date": "20250522",
-   "quality": "4",
-   "bytes": 75130
-  },
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-04.webp",
-   "w": 1400,
-   "h": 1867,
-   "source": "20260518_111905.jpg",
-   "date": "20260518",
-   "quality": "4",
-   "bytes": 129126
-  },
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-05.webp",
-   "w": 1400,
-   "h": 1867,
-   "source": "20260518_112945.jpg",
-   "date": "20260518",
-   "quality": "4",
-   "bytes": 103742
-  },
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-06.webp",
-   "w": 1400,
-   "h": 1867,
-   "source": "20260528_104655.jpg",
-   "date": "20260528",
-   "quality": "4",
-   "bytes": 97834
-  },
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-07.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20240827_160517.jpg",
-   "date": "20240827",
-   "quality": "4",
-   "bytes": 40948
-  },
-  {
-   "file": "/images/fitted-wardrobes/fitted-wardrobes-08.webp",
-   "w": 1400,
-   "h": 1580,
-   "source": "20260527_125228(1).jpg",
-   "date": "20260527",
-   "quality": "4",
-   "bytes": 109792
-  }
- ],
- "walk-in-wardrobes": [
-  {
-   "file": "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20250628_123449.jpg",
-   "date": "20250628",
-   "quality": "5",
-   "bytes": 53152
-  },
-  {
-   "file": "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp",
-   "w": 1400,
-   "h": 1867,
-   "source": "20260125_153923.jpg",
-   "date": "20260125",
-   "quality": "4",
-   "bytes": 220090
-  },
-  {
-   "file": "/images/walk-in-wardrobes/walk-in-wardrobes-03.webp",
-   "w": 1400,
-   "h": 1867,
-   "source": "20250628_123626.jpg",
-   "date": "20250628",
-   "quality": "5",
-   "bytes": 87964
-  }
- ],
- "alcove-units": [
-  {
-   "file": "/images/alcove-units/alcove-units-05.webp",
-   "w": 1600,
-   "h": 1068
-  },
-  {
-   "file": "/images/alcove-units/alcove-units-04.webp",
-   "w": 1600,
-   "h": 1068
-  },
-  {
-   "file": "/images/alcove-units/alcove-units-06.webp",
-   "w": 1600,
-   "h": 1068,
-   "source": "Windows office tv finished.png",
-   "date": "20260831",
-   "quality": "5",
-   "bytes": 81002
-  },
-  {
-   "file": "/images/alcove-units/alcove-units-07.webp",
-   "w": 1600,
-   "h": 1069,
-   "source": "Fireplace finished.png",
-   "date": "20260831",
-   "quality": "5",
-   "bytes": 71468
-  },
-  {
-   "file": "/images/alcove-units/alcove-units-01.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20240827_160434.jpg",
-   "date": "20240827",
-   "quality": "5",
-   "bytes": 84022
-  },
-  {
-   "file": "/images/alcove-units/alcove-units-02.webp",
-   "w": 1400,
-   "h": 1867,
-   "source": "20251212_152700.jpg",
-   "date": "20251212",
-   "quality": "5",
-   "bytes": 99808
-  },
-  {
-   "file": "/images/alcove-units/alcove-units-03.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20240905_170404.jpg",
-   "date": "20240905",
-   "quality": "4",
-   "bytes": 78038
-  }
- ],
- "media-walls": [
-  {
-   "file": "/images/media-walls/media-walls-01.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20240905_170357.jpg",
-   "date": "20240905",
-   "quality": "5",
-   "bytes": 90902
-  },
-  {
-   "file": "/images/media-walls/media-walls-04.webp",
-   "w": 1600,
-   "h": 1068
-  },
-  {
-   "file": "/images/media-walls/media-walls-02.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20251110_161725.jpg",
-   "date": "20251110",
-   "quality": "5",
-   "bytes": 47490
-  },
-  {
-   "file": "/images/media-walls/media-walls-03.webp",
-   "w": 1400,
-   "h": 1050,
-   "source": "20251104_142618.jpg",
-   "date": "20251104",
-   "quality": "4",
-   "bytes": 66798
-  }
- ],
- "bespoke-kitchens": [
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-06.webp",
-   "w": 1600,
-   "h": 1064
-  },
-  {
-   "file": "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp",
-   "w": 1600,
-   "h": 1068
-  },
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-07.webp",
-   "w": 1636,
-   "h": 1091
-  },
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-08.webp",
-   "w": 1600,
-   "h": 1066,
-   "source": "Living fireplace kitchen finished.png",
-   "date": "20260831",
-   "quality": "5",
-   "bytes": 68066
-  },
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-04.webp",
-   "w": 1600,
-   "h": 1068
-  },
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-05.webp",
-   "w": 1600,
-   "h": 1068
-  },
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-01.webp",
-   "w": 1400,
-   "h": 788,
-   "source": "IMG-20250505-WA0016.jpg",
-   "date": "20250505",
-   "quality": "4",
-   "bytes": 46250
-  },
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-02.webp",
-   "w": 1126,
-   "h": 2000,
-   "source": "IMG-20250505-WA0017.jpg",
-   "date": "20250505",
-   "quality": "4",
-   "bytes": 62366
-  },
-  {
-   "file": "/images/bespoke-kitchens/bespoke-kitchens-03.webp",
-   "w": 1126,
-   "h": 2000,
-   "source": "IMG-20250505-WA0019.jpg",
-   "date": "20250505",
-   "quality": "4",
-   "bytes": 63252
-  }
- ],
- "doors-panelling": [
-  {
-   "file": "/images/doors-panelling/doors-panelling-03.webp",
-   "w": 1411,
-   "h": 1114,
-   "source": "Green door outside.png",
-   "date": "20260902"
-  },
-  {
-   "file": "/images/doors-panelling/doors-panelling-01.webp",
-   "w": 1600,
-   "h": 1064,
-   "source": "hallway main door finished.png",
-   "date": "20260831",
-   "quality": "5",
-   "bytes": 50154
-  },
-  {
-   "file": "/images/doors-panelling/doors-panelling-02.webp",
-   "w": 1600,
-   "h": 1066,
-   "source": "Future wall finished.png",
-   "date": "20260831",
-   "quality": "5",
-   "bytes": 59288
-  }
- ]
+  "fitted-wardrobes": [
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-01.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20260518_111918_001.jpg",
+      "date": "20260518",
+      "quality": "4",
+      "bytes": 143790
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-02.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240827_160509.jpg",
+      "date": "20240827",
+      "quality": "4",
+      "bytes": 44050
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-03.webp",
+      "w": 1400,
+      "h": 777,
+      "source": "20250522_171826.jpg",
+      "date": "20250522",
+      "quality": "4",
+      "bytes": 45976
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-04.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20260518_111905.jpg",
+      "date": "20260518",
+      "quality": "4",
+      "bytes": 129126
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-05.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20260518_112945.jpg",
+      "date": "20260518",
+      "quality": "4",
+      "bytes": 103742
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-06.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20260528_104655.jpg",
+      "date": "20260528",
+      "quality": "4",
+      "bytes": 97834
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-07.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240827_160517.jpg",
+      "date": "20240827",
+      "quality": "4",
+      "bytes": 40948
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-08.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20260527_125257.jpg",
+      "date": "20260527",
+      "quality": "4",
+      "bytes": 73118
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-09.webp",
+      "w": 1600,
+      "h": 1068,
+      "source": "DSC_6584.jpg",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 58396
+    }
+  ],
+  "walk-in-wardrobes": [
+    {
+      "file": "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20250628_123449.jpg",
+      "date": "20250628",
+      "quality": "5",
+      "bytes": 53152
+    },
+    {
+      "file": "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20260125_153923.jpg",
+      "date": "20260125",
+      "quality": "4",
+      "bytes": 220090
+    },
+    {
+      "file": "/images/walk-in-wardrobes/walk-in-wardrobes-03.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20250628_123626.jpg",
+      "date": "20250628",
+      "quality": "5",
+      "bytes": 87964
+    }
+  ],
+  "alcove-units": [
+    {
+      "file": "/images/alcove-units/alcove-units-05.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-04.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-06.webp",
+      "w": 1600,
+      "h": 1068,
+      "source": "Windows office tv finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 81002
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-07.webp",
+      "w": 1600,
+      "h": 1069,
+      "source": "Fireplace finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 71468
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-01.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240827_160434.jpg",
+      "date": "20240827",
+      "quality": "5",
+      "bytes": 84022
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-02.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20251212_152700.jpg",
+      "date": "20251212",
+      "quality": "5",
+      "bytes": 99808
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-03.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240905_170404.jpg",
+      "date": "20240905",
+      "quality": "4",
+      "bytes": 78038
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-08.webp",
+      "w": 1236,
+      "h": 819,
+      "source": "IMG-20260216-WA0011.jpg",
+      "date": "20260216",
+      "quality": "4",
+      "bytes": 63068
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-09.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20251212_152708.jpg",
+      "date": "20251212",
+      "quality": "4",
+      "bytes": 121704
+    }
+  ],
+  "media-walls": [
+    {
+      "file": "/images/media-walls/media-walls-01.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20240905_170357.jpg",
+      "date": "20240905",
+      "quality": "5",
+      "bytes": 90902
+    },
+    {
+      "file": "/images/media-walls/media-walls-04.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/media-walls/media-walls-02.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20251110_161725.jpg",
+      "date": "20251110",
+      "quality": "5",
+      "bytes": 47490
+    },
+    {
+      "file": "/images/media-walls/media-walls-03.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20251104_142618.jpg",
+      "date": "20251104",
+      "quality": "4",
+      "bytes": 66798
+    }
+  ],
+  "bespoke-kitchens": [
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-06.webp",
+      "w": 1600,
+      "h": 1064
+    },
+    {
+      "file": "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-07.webp",
+      "w": 1636,
+      "h": 1091
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-08.webp",
+      "w": 1600,
+      "h": 1066,
+      "source": "Living fireplace kitchen finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 68066
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-04.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-05.webp",
+      "w": 1600,
+      "h": 1068
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-01.webp",
+      "w": 1400,
+      "h": 788,
+      "source": "IMG-20250505-WA0016.jpg",
+      "date": "20250505",
+      "quality": "4",
+      "bytes": 46250
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-02.webp",
+      "w": 1126,
+      "h": 2000,
+      "source": "IMG-20250505-WA0017.jpg",
+      "date": "20250505",
+      "quality": "4",
+      "bytes": 62366
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-03.webp",
+      "w": 1126,
+      "h": 2000,
+      "source": "IMG-20250505-WA0019.jpg",
+      "date": "20250505",
+      "quality": "4",
+      "bytes": 63252
+    }
+  ],
+  "doors-panelling": [
+    {
+      "file": "/images/doors-panelling/doors-panelling-03.webp",
+      "w": 1411,
+      "h": 1114,
+      "source": "Green door outside.png",
+      "date": "20260902"
+    },
+    {
+      "file": "/images/doors-panelling/doors-panelling-01.webp",
+      "w": 1600,
+      "h": 1064,
+      "source": "hallway main door finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 50154
+    },
+    {
+      "file": "/images/doors-panelling/doors-panelling-02.webp",
+      "w": 1600,
+      "h": 1066,
+      "source": "Future wall finished.png",
+      "date": "20260831",
+      "quality": "5",
+      "bytes": 59288
+    }
+  ]
 }
