@@ -90,3 +90,11 @@
   for = "/*.svg"
   [headers.values]
     Cache-Control = "public, max-age=2592000"
+
+# The share cards, /og/*.jpg and /og-default.jpg, 7 Sep 2026: unhashed like
+# the photographs and fetched by every scraper that unfurls a link, and until
+# now the one asset class with no rule at all.
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, must-revalidate"

@@ -89,7 +89,9 @@ const {
     font-size: var(--type-label);
     letter-spacing: var(--ls-label);
     text-transform: uppercase;
-    padding: var(--space-2) 0;
+    /* One pixel more each side, 7 Sep 2026: at 390px a nav link measured 23px
+       tall, one under the 24px tap-target floor, on ten of seventeen routes. */
+    padding: calc(var(--space-2) + 1px) 0;
   }
 
   .v-cta {

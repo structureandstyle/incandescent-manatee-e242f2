@@ -268,7 +268,10 @@ const SOURCES = [
   */}
   <div>
     <label for={`${idPrefix}attachment`}>A photo or drawing (optional)</label>
-    <p class="help">
+    {/* Wired to the input with aria-describedby, 7 Sep 2026: the one-file and
+        8MB limits decide whether an upload succeeds, and a screen reader was
+        hearing only the label. */}
+    <p class="help" id={`${idPrefix}attachment-help`}>
       One file, up to 8MB. A picture of the room saves a visit and gets you a closer price, and
       plans or drawings are just as useful. PDF, Word and photographs all work. Send anything else
       when we reply.
@@ -277,6 +280,7 @@ const SOURCES = [
       id={`${idPrefix}attachment`}
       name="attachment"
       type="file"
+      aria-describedby={`${idPrefix}attachment-help`}
       accept="image/*,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,.pdf,.doc,.docx"
     />
   </div>
@@ -432,9 +436,13 @@ const SOURCES = [
       padding: var(--space-5) 0;
     }
   }
+  /* 20px, was 16 (7 Sep 2026). The tap target is the whole .choice label,
+     which clears 30px on desktop and 44px on a phone, so the box itself is
+     drawn for the eye rather than the thumb; 20 sits better against the
+     label text than 16 did. */
   .enquiry-form .choice input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     flex: none;
     padding: 0;
     border: var(--rule-structure);

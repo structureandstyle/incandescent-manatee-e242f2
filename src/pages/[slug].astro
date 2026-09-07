@@ -416,7 +416,11 @@ const SECTIONS: Section[] = [
                     to its end. And a mono line under the table says so in
                     words, shown only when the table actually overflows. */}
                 <div class="price-scroll" data-price-scroll style="margin-top:var(--space-9)">
-                  <div class="price-scroll-viewport" data-price-viewport>
+                  {/* Focusable and named, 7 Sep 2026: at phone width the table
+                      scrolls sideways, and a scroll region a keyboard cannot
+                      reach hides the widest sizes from anyone not on a
+                      pointer. axe: scrollable-region-focusable. */}
+                  <div class="price-scroll-viewport" data-price-viewport tabindex="0" role="region" aria-label={`${t.title}, scrolls sideways`}>
                     <table class="price-table">
                       <thead>
                         <tr>

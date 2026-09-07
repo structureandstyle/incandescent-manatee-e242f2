@@ -59,6 +59,14 @@ const localBusiness = {
      reviews block already links to on the home page. */
   sameAs: [REVIEWS.profileUrl],
   telephone: BUSINESS.phoneDisplay,
+  /* An address, 7 September 2026, on the audit finding the block had none.
+     Google's LocalBusiness guidance wants one, and a service-area business
+     can give the locality without a street. The registered office is a
+     Companies House service address in Covent Garden that the ops repo rules
+     is never published, and Camden Town is the operating base (Denis, 2 Sep
+     2026), so this is the borough and the country and nothing finer: true,
+     and the same shape as the Business Profile, which hides its address. */
+  address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
   email: BUSINESS.email,
   image: ogImage,
   priceRange: "££",
@@ -71,7 +79,9 @@ const localBusiness = {
   })),
   aggregateRating: {
     "@type": "AggregateRating",
-    ratingValue: BUSINESS.ratingValue,
+    /* A number, not the string it was serialised as (audit, 7 Sep 2026):
+       the site stores it as "5.0" so the page prints one decimal. */
+    ratingValue: Number(BUSINESS.ratingValue),
     reviewCount: BUSINESS.reviewCount,
   },
 };
@@ -152,6 +162,12 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
     <link rel="preload" href="/fonts/libre-caslon-display-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/archivo-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/spline-sans-mono-400.woff2" as="font" type="font/woff2" crossorigin />
+    {/* Two more, 7 September 2026: the italic is in the homepage H1 and the
+        500 weight is every nav link and mono label, so both are above the
+        fold on every page. Lighthouse traced them behind the stylesheet on
+        all twelve routes; preloaded, they fetch alongside it. */}
+    <link rel="preload" href="/fonts/libre-caslon-text-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/archivo-500.woff2" as="font" type="font/woff2" crossorigin />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
 
