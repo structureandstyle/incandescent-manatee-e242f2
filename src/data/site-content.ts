@@ -362,9 +362,21 @@ export const HOMEPAGE_FAQS = [
     q: "What guarantee comes with the work?",
     a: "The guarantee covers installation and workmanship for 2 years and the structure and joinery for 10 years. Hinges, runners and other moving hardware carry their manufacturer's warranty.",
   },
+  /* Rewritten 7 September 2026 on the research note in the ops repo,
+     docs/value-to-a-house-research-2026-09-07.md: fifteen sources fetched and
+     checked at their URLs. No independent UK figure exists, and every number
+     in circulation ("adds £100k", "2 to 5%", "56% recovery") is a wardrobe
+     vendor's or nobody's, so none of them is here and none may be. What the
+     answer carries is the three things the independent sources support:
+     buyers ask about storage (Rightmove, 600,000 listings, 2023, storage
+     fourth among what buyers enquire about), a valuer prices floor area and
+     holds refits at "supports the asking price" (RICS Registered Valuer,
+     June 2026), and fitted wardrobes are fixtures that go with the house
+     (HomeOwners Alliance, TA10). Denis chose the plain version over the two
+     that name the sources; the sources stay in the note. */
   {
     q: "Do fitted wardrobes add value to a house?",
-    a: "Nobody can give you an honest figure for that. What is checkable is the space: a run built to the room uses the full height and the corners. Whether it shows in a valuation depends on the house and the buyer.",
+    a: "Not in a way anyone can honestly put a figure on, and we would rather say so than invent one. Buyers do ask about storage, and a fitted room is one of the things they notice at a viewing. Valuers price floor area, condition and location, so a fitted room supports the asking price rather than adding a line to it. Have them made for the years you live with them.",
   },
 ] as const;
 
