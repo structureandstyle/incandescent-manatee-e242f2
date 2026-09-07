@@ -259,7 +259,7 @@ const faqSchema = {
         the rows sit level, which a row grid needs and a masonry does not.
         Every frame opens the lightbox, and with no carousel around them the
         lightbox set is all six. */}
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-md)">
+    <div data-plate-set style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-md)">
       {selected.map((s, i) => (
         <Plate
           photo={s.file}

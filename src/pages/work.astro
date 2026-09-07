@@ -136,7 +136,7 @@ const services = SERVICES.filter((s) => !s.guide);
         builds its set from the nearest carousel, or, finding none, from every
         plate photograph on the page. So clicking any frame opens the whole
         gallery at that photograph and arrows through all of them. */}
-    <div class="work-gallery">
+    <div class="work-gallery" data-plate-set>
       {shots.map((s, i) => (
         <Plate
           photo={s.file}

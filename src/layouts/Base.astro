@@ -514,17 +514,30 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       }
 
       // The set a photograph belongs to: its carousel's files if it sits in
-      // one, otherwise every plate photograph on the page.
-      function setFor(img: HTMLImageElement): { src: string; alt: string }[] {
+      // one; otherwise every plate photograph inside the nearest
+      // [data-plate-set], or on the whole page if there is none.
+      //
+      // THE FULL FILE, NOT THE ONE THE GRID LOADED (7 Sep 2026). This read
+      // el.currentSrc, which is whichever srcset candidate the browser chose
+      // for the plate's own slot. Once the grids declared their real 320px
+      // width that candidate became the 400px file, and the lightbox showed a
+      // 400px picture in the middle of a 1500px screen. The src attribute is
+      // the original at full size and is what an enlargement is for; the
+      // variants exist so the grid does not pay for it until someone asks.
+      function setFor(img: HTMLImageElement): { src: string; alt: string; el?: HTMLImageElement }[] {
         const car = img.closest<HTMLElement>("[data-carousel]");
         if (car && car.dataset.files) {
           const files: string[] = JSON.parse(car.dataset.files);
           const altBase = car.dataset.altBase || img.alt;
           return files.map((f, n) => ({ src: f, alt: `${altBase}, photograph ${n + 1}` }));
         }
-        return [...document.querySelectorAll<HTMLImageElement>("img[data-plate-photo]")].map((el) => ({
-          src: el.currentSrc || el.src,
+        // Scoped, so the homepage's six do not count the hero as a seventh
+        // and the counter reads 06 rather than 07.
+        const scope = img.closest<HTMLElement>("[data-plate-set]") ?? document;
+        return [...scope.querySelectorAll<HTMLImageElement>("img[data-plate-photo]")].map((el) => ({
+          src: el.getAttribute("src") || el.src,
           alt: el.alt,
+          el,
         }));
       }
 
@@ -609,8 +622,10 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
           document.body.appendChild(box);
         }
         set = setFor(img);
+        // Found by identity where the set was built from elements, and by
+        // filename for a carousel's file list.
         const seen = img.currentSrc || img.src;
-        const found = set.findIndex((s) => seen.endsWith(s.src) || s.src.endsWith(seen));
+        const found = set.findIndex((s) => s.el === img || seen.endsWith(s.src) || s.src.endsWith(seen));
         showAt(found >= 0 ? found : 0);
         const many = set.length > 1;
         box.querySelectorAll<HTMLElement>("[data-box-prev],[data-box-next]").forEach((b) => {
