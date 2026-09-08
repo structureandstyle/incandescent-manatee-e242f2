@@ -125,8 +125,16 @@ const faqSchema = {
     page shows; the word is in the H1 kicker, the description and the footer
     strapline anyway. */}
 <Base
-  title="Fitted furniture and joinery, London"
-  description="Fitted wardrobes, walk-in wardrobes, alcove units and bespoke joinery for homes across London, measured on site and cut to follow your walls and ceiling."
+  {/* "carpentry" returned to the title and description on 8 September 2026,
+      launch day. Search Console's first twenty days showed every impression
+      the domain had was a carpentry query (carpentry hampstead, carpenter
+      chalk farm, bespoke carpentry), the Business Profile is named Bespoke
+      Carpentry & Interiors and categorised Carpenter, and the rebuilt site
+      had dropped the word entirely. The title stays off "fitted wardrobes"
+      so it does not compete with /fitted-wardrobes/ (5 Sep). Ours, not his:
+      his sentences on the page are untouched. */}
+  title="Fitted furniture and carpentry, London"
+  description="Bespoke carpentry and fitted furniture for London homes: fitted wardrobes, walk-in wardrobes and alcove units, measured on site and cut to your walls."
   schema={faqSchema}
   noindex={!isIndexable}
 >
@@ -314,7 +322,7 @@ const faqSchema = {
 
   <!-- Process -->
   <Wrap style="padding-top:var(--section-y)">
-    <SectionHead meta={`${PROCESS.length} stages`} scribe>Process</SectionHead>
+    <SectionHead meta="Four stages" scribe>Process</SectionHead>
 
     {/*
       THE WARDROBE ELEVATION CAME OFF ON 6 SEPTEMBER 2026, Kaspar's

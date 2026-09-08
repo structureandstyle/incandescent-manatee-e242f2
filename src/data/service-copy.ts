@@ -272,7 +272,11 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
          said whether these tables price them, which the 4 Sep read flagged and
          left. It also puts "walk-in wardrobe cost" on the page that targets
          it, where the phrase did not appear at all. */
-      "These tables cover fitted wardrobes and alcove units. Walk-in wardrobe cost is worked out per room instead, because a dressing room is priced by what goes into it rather than by door count, and projects generally start at £2,000 of value.",
+      /* 8 Sep 2026, launch-day check: this sentence ended "and projects
+         generally start at £2,000 of value", which put a £2,000 start beside a
+         service whose own page says £5,000 (Kaspar, 6 Sep). Now the walk-in
+         page's own figure. */
+      "These tables cover fitted wardrobes and alcove units. Walk-in wardrobe cost is worked out per room instead, because a dressing room is priced by what goes into it rather than by door count; walk-in wardrobes typically start from around £5,000.",
     ],
     leads: {
       "cost": "This page is the whole answer: the range, what moves it, and what the number includes.",
@@ -297,7 +301,9 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         body: [
           "The first visit usually takes 45 to 60 minutes, and a measured survey takes about an hour. The quotation that follows is fixed and itemised for the agreed scope.",
           "There is no separate design fee: design costs sit inside the quotation. Drawings start once the quotation is accepted and the deposit paid, with up to two rounds of revisions included.",
-          "Projects generally start at £2,000 of value.",
+          /* "Projects generally start at £2,000 of value." stood here as a third
+             statement of the minimum on one page. Removed 8 Sep 2026; the FAQ
+             below still answers the question once. */
         ],
       },
       {
@@ -324,7 +330,10 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       },
       {
         q: "Do fitted wardrobes add value to a house?",
-        a: "Nobody can give you an honest figure for that, and a number quoted without a source is a guess. What is checkable is the space: a run built to the room uses the full height and the corners, which freestanding furniture cannot. Whether that shows up in a valuation depends on the house and the buyer.",
+        /* The homepage's answer, chosen by Denis on 7 Sep 2026 from the
+           value-to-a-house research; this page carried an older draft of the
+           same answer until 8 Sep. One question, one answer, both pages. */
+        a: "Not in a way anyone can honestly put a figure on, and we would rather say so than invent one. Buyers do ask about storage, and a fitted room is one of the things they notice at a viewing. Valuers price floor area, condition and location, so a fitted room supports the asking price rather than adding a line to it. Have them made for the years you live with them.",
       },
     ],
   },

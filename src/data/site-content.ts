@@ -124,7 +124,7 @@ export const REVIEWS = {
       meta: "Rafael C · Panelling, doors and skirting",
     },
     {
-      text: "I’m very happy with the finish, everything looks as we explained and wanted. Definitely recommend",
+      text: "I'm very happy with the finish, everything looks as we explained and wanted. Definitely recommend",
       meta: "Vasily S · August 2026",
     },
     {
