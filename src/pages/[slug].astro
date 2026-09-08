@@ -203,8 +203,9 @@ const SECTIONS: Section[] = [
       service.priceMovers
         ? { label: "What moves it", text: service.priceMovers }
         : { label: "What moves it", q: "q11" },
-      /* Off where the service carries its own guide price: see noMinimum in
-         site.ts. Q12 is still the answer everywhere it stays. */
+      /* Off everywhere since 7 September 2026, on his instruction: see
+         noMinimum in site.ts. The row and Q12 stay in the code so that a page
+         added without the flag would show it again, deliberately. */
       ...(service.noMinimum ? [] : [{ label: "Smallest job taken", q: "q12" } as Row]),
     ],
   },
@@ -362,7 +363,7 @@ const SECTIONS: Section[] = [
         <Wrap style="padding-bottom:var(--section-y)">
           <SectionHead id={section.id} level={4}>{section.heading}</SectionHead>
           <div style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap-xl);align-items:start">
-            <p style="max-width:var(--measure-short);color:var(--text-quiet)">{copy?.leads?.[section.id] ?? section.lead}</p>
+            <p style="max-width:var(--measure-short);color:var(--text-quiet)">{copy?.leads?.[section.id] ?? service.leads?.[section.id] ?? section.lead}</p>
             {section.prose ? (
               <div style="max-width:var(--measure)">
                 <p>{section.prose}</p>

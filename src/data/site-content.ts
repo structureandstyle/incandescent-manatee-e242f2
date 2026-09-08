@@ -349,9 +349,15 @@ export const HOMEPAGE_FAQS = [
     q: "What does a fitted wardrobe cost?",
     a: "A fitted wardrobe typically starts from £2,300 for a 2-door wardrobe, with 4-door wardrobes starting from around £4,000. The final price depends on the size, internal layout, material and finish, with drawers, lighting and other details priced as required.",
   },
+  /* His answer, 7 September 2026, under a screenshot of this question. The
+     same screenshot came on 6 September with nothing typed beneath it. It
+     replaces "The person who measures your room is the person who draws it
+     and the person who fits it. Nobody is sent in their place", which was the
+     one-person line and its only place on the site. Removed on his
+     instruction: do not put it back without his word. */
   {
     q: "Who actually does the work?",
-    a: "The person who measures your room is the person who draws it and the person who fits it. Nobody is sent in their place.",
+    a: "Each project is managed by Structure & Style from the initial survey through to installation and aftercare. We remain responsible for the work and the finished result throughout.",
   },
   /* His answer, 6 September 2026. */
   {
@@ -396,13 +402,23 @@ export const PROCESS = [
        wants a visitor to see: Visit & Survey, Quotation & Drawings,
        Preparation, Fitting. Three and four already matched his wording.
 
+       Renamed again on 7 September 2026, from his rewrite of the About page's
+       four-stage sentence: Survey & Planning, Quotation & Design. Applied
+       here, so the homepage and /process/ follow, because on 6 September he
+       asked for one set of names across the site. Told, not asked.
+
+       Renamed again on 7 September 2026, from his rewrite of the About page's
+       four-stage sentence: Survey & Planning, Quotation & Design. Applied
+       here, so the homepage and /process/ follow, because on 6 September he
+       asked for one set of names across the site. Told, not asked.
+
        The rename MOVED A SENTENCE RATHER THAN ADDING ONE. Stage 02 carried the
        survey, the quotation and the drawings, which is three promises in one
        stage, while the visit stood alone with none of the measuring in it. The
        survey sentence below is stage 02's own, verbatim apart from its length
        qualifier being merged with the visit's, and Q17 moves with it. No new
        copy was written for either stage. */
-    title: "Visit & Survey",
+    title: "Survey & Planning",
     /** Length is Q14. The old "no charge, samples brought along" line carried
         a "Confirmed" note from the design era with no source anywhere: not in
         the questionnaire, the ops docs, or his own old site. Stripped 30 Aug
@@ -431,7 +447,7 @@ export const PROCESS = [
   },
   {
     number: "02",
-    title: "Quotation & Drawings",
+    title: "Quotation & Design",
     /** Order per Q13 and Q21: quotation first, drawings once it is accepted.
 
         The design week is CONDITIONAL and was being stated as automatic.

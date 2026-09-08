@@ -172,9 +172,22 @@ export type Service = {
    */
   costLead?: string;
   /**
+   * Per-section lead lines for the shared spec sections, keyed by section id
+   * (made-from, fitting, after), for a wave-two page that has no SERVICE_COPY
+   * entry: the same reason as costLead, since an entry there would lift the
+   * noindex. SERVICE_COPY.leads wins where both exist; a missing key falls
+   * back to the template's generic lead. Kitchens and media walls, 7 September
+   * 2026, in his words.
+   */
+  leads?: Record<string, string>;
+  /**
    * Drops the "Smallest job taken" row. Asked for on walk-in wardrobes and on
-   * media walls: a £2,000 minimum sitting under a £5,000 guide price answers a
-   * question nobody asked and argues with the figure above it.
+   * media walls on 6 September 2026 (a £2,000 minimum sitting under a £5,000
+   * guide price answers a question nobody asked and argues with the figure
+   * above it), then on 7 September for every service pricing page: "The
+   * service-specific guide prices already communicate the relevant starting
+   * price." So it is set everywhere and the row renders nowhere. Q12 is
+   * unchanged, and the alcove FAQ still states the £2,000 minimum in his words.
    */
   noMinimum?: boolean;
   /**
@@ -200,6 +213,7 @@ export const SERVICES: Service[] = [
   {
     slug: "fitted-wardrobes",
     metaTitle: "Fitted wardrobes London, made to measure",
+    noMinimum: true,
     bandPrice: "Fitted wardrobes from £2,300",
     price:
       "From £2,300 for a 2-door run up to 1.2m in melamine. Width and finish move it: from £4,000 at 4 doors, and painted, sprayed and oak veneer finishes step up from there. Internal drawers and integrated lighting add to any of them.",
@@ -257,6 +271,7 @@ export const SERVICES: Service[] = [
   {
     slug: "alcove-units",
     metaTitle: "Alcove units and shelving in London",
+    noMinimum: true,
     bandPrice: "Alcove units from £3,300 a pair",
     price:
       "From £3,300 for a pair of alcove units in melamine, from £3,600 hand-painted, and from £6,000 in oak veneer. Based on base cupboards with shelving over, up to about 1m per alcove. Shelving detail, drawers and lighting move it further.",
@@ -272,6 +287,7 @@ export const SERVICES: Service[] = [
   {
     slug: "fitted-wardrobe-cost",
     guide: true,
+    noMinimum: true,
     metaTitle: "Built-in wardrobe cost in London",
     bandPrice: "Fitted wardrobes from £2,300",
     price:
@@ -296,6 +312,18 @@ export const SERVICES: Service[] = [
     priceMovers:
       "Overall size, cabinetry and storage, open shelving, integrated lighting, cable management, ventilation, specialist finishes and additional detailing.",
     noMinimum: true,
+    /* His line, 7 September 2026, typed under a screenshot of the section.
+       Two versions arrived three minutes apart on a page the crop did not
+       name. The generic lead rendered only here and on kitchens, kitchens got
+       its own sentence that evening, and the second version names doors,
+       drawers and integrated components, so it is this page's, and the later
+       one stands. The first read: "Fitted furniture can require minor
+       adjustments as it settles into the room. What matters is knowing we'll
+       come back and put it right." */
+    leads: {
+      "after":
+        "Doors, drawers and integrated components may need occasional adjustment over time. Our aftercare covers the details that keep everything working as it should.",
+    },
     title: "Media walls and TV units",
     label: "Built-in TV units",
     heading: "Media walls and built-in TV units",
@@ -314,12 +342,20 @@ export const SERVICES: Service[] = [
       "Bespoke kitchens typically start from £10,000, with each project individually priced following a measured survey. Larger kitchens, islands and more complex designs are quoted accordingly.",
     priceMovers:
       "Kitchen size and layout, cabinetry and internal storage, worktops, appliances, materials and finishes, integrated lighting and any associated electrical, plumbing or finishing works.",
-    /* The "Smallest job taken" row stays here. He asked for it to come off
-       walk-in wardrobes and media walls and said nothing about kitchens, and a
-       £2,000 minimum under a £10,000 guide price is a different claim from the
-       same row under £3,500: it says the smallest thing taken on is a long way
-       below a whole kitchen, which is true and useful. Flagged to Denis rather
-       than decided silently either way. */
+    /* The "Smallest job taken" row came off here on 7 September 2026, when he
+       asked for it off every service pricing page; on 6 September he had named
+       only walk-in and media walls, and the row stayed here, flagged for
+       Denis. The three leads below are his, from the same evening, each typed
+       under a screenshot of the kitchens page. */
+    noMinimum: true,
+    leads: {
+      "made-from":
+        "Materials and finishes are selected around the design, how the kitchen will be used and the look you want to achieve.",
+      "fitting":
+        "Kitchen cabinetry is fitted and adjusted on site so that units, worktops, panels and finishes come together cleanly within the room.",
+      "after":
+        "A fitted kitchen is used every day, so reliable aftercare matters. If anything needs adjusting after installation, we will come back and put it right.",
+    },
     title: "Bespoke kitchens",
     heading: "Bespoke kitchens, made to measure",
     primary: "bespoke kitchens london",

@@ -22,6 +22,20 @@
  * looks up its real dimensions there and fails the build if one is missing.
  *
  * -------------------------------------------------------------------------
+ * THE WARDROBE TILE, 7 September 2026, evening. Kaspar, under a screenshot of
+ * the homepage's Selected work grid: "here at fitted wardrobes i would put one
+ * of the latest pics". The grid is the first six frames of this array, so the
+ * second slot changed hands: fitted-wardrobes-08 (20260527_125257, the
+ * green-walled house's white handleless run, 27 May 2026, the newest wardrobe
+ * job the library holds) moved up from slot 17, and fitted-wardrobes-03 (the
+ * navy loft wardrobe, May 2025) moved down to where -08 was. A swap rather
+ * than an addition, so the gallery stays at twenty with one frame per room,
+ * and both slots keep the no-two-neighbours-alike rule because the type is
+ * the same at either end. "Latest" was read as the most recent job by
+ * capture date; the professional frame, -09 (DSC_6584), was shot in October
+ * 2024 and stays at slot 14.
+ *
+ * -------------------------------------------------------------------------
  * THIRD PASS, 7 September 2026, on Denis asking for the gallery to be enriched
  * "with no duplicates, just original photos". Sixteen became twenty, and the
  * way to get there was to go past the site's 34-frame selection into the
@@ -146,7 +160,7 @@ export type WorkShot = {
 
 export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/alcove-units/alcove-units-01.webp", type: "Alcove units" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp", type: "Fitted wardrobes" },
+  { file: "/images/fitted-wardrobes/fitted-wardrobes-08.webp", type: "Fitted wardrobes" },
   { file: "/images/media-walls/media-walls-01.webp", type: "Built-in TV units" },
   { file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp", type: "Bespoke kitchens" },
   { file: "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp", type: "Walk-in wardrobes" },
@@ -161,7 +175,7 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-09.webp", type: "Alcove units" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-08.webp", type: "Fitted wardrobes" },
+  { file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-05.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-07.webp", type: "Alcove units" },
   { file: "/images/doors-panelling/doors-panelling-01.webp", type: "Panelling and doors" },

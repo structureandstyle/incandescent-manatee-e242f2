@@ -161,9 +161,12 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
            was a clause after it, it did not survive the crop. */
         a: "You do not need to arrive with a finished design. If you already have ideas, we can work from them; otherwise, we can develop the layout around the room, your storage requirements and the finish you want.",
       },
+      /* His answer, 7 September 2026, under a screenshot of ours. The alcove
+         page's sibling question got his answer on 6 September; this one he
+         reached the following evening. */
       {
         q: "Can it match furniture we already have?",
-        a: "Yes, matching existing furniture and finishes within the property is one of the things the finish is chosen for.",
+        a: "Yes. We can select materials, colours and finishes to complement existing furniture, flooring and other finishes within your home.",
       },
       {
         q: "What do you need from us before fitting?",
@@ -188,11 +191,14 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "The layout, proportions and internal storage are developed around the room and your own requirements, with a choice of painted, veneered and decorative finishes to suit the design.",
     ],
     leads: {
-      "cost": "A smaller piece follows the same pricing logic, and the table below is the honest version of it.",
+      /* Three of the five are his, 7 September 2026, each typed under a
+         screenshot of its section: cost, made-from and after. How-long and
+         fitting he did not raise, and they stay ours. */
+      "cost": "Alcove units vary considerably depending on their size, finish and specification. The guide prices below are based on a typical pair of alcoves.",
       "how-long": "Alcove work follows the same two clocks as any commission, and a design week runs only where the project needs one.",
-      "made-from": "Painted finishes are chosen for alcove work when the unit should match the room's existing woodwork.",
+      "made-from": "The material is selected according to the design, finish, use and budget of the project.",
       "fitting": "Chimney breasts lean and alcove walls bow, so the unit is cut to the wall it actually meets.",
-      "after": "Shelves carry real weight for years, and the 10-year cover on structure and joinery is the line that matters.",
+      "after": "Alcove furniture is built for everyday use, with the structure and joinery covered for 10 years.",
     },
     sections: [
       {
