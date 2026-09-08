@@ -65,7 +65,20 @@ export const PAGE_GATES = {
     "q30", "q31", "q32", "q33", "q34",              // 04 Fitting
   ],
   "/materials/": [...BAND_QUESTIONS, "q22", "q24", "q28", "q39", "q40", "q43"],
-  "/work/": [...BAND_QUESTIONS, "q44", "q45", "q46", "q47", "q48", "q49"],
+  /* Q44 to Q49 left this gate on 8 September 2026, after launch, Denis's
+     decision. They are the case-study questions: which projects may be named,
+     where, what was built, what the client said. The page they gated no longer
+     exists. On 6 September Kaspar replaced the case-study portfolio with one
+     continuous gallery of his own photographs, each carrying a plain type
+     label and no claim about any project, and nothing on the page now waits on
+     an answer from him. It is linked from every page and was the only finished
+     page Google was told to ignore.
+
+     Publishing the photographs treats his supplying them as permission to
+     publish them; they are already on the live home page, and he reviewed this
+     gallery twice. If real case studies are ever written, they need those six
+     answers and this gate comes back with them. */
+  "/work/": [...BAND_QUESTIONS],
   /* Was "/maker/" gated on Q50 to Q53. The client changed direction 30 Aug
      2026: no personal profile, so the page became About Structure & Style and
      depends only on the company answers it shows. Expanded 31 Aug 2026 to the
