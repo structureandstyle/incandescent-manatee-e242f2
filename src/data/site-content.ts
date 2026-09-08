@@ -407,11 +407,6 @@ export const PROCESS = [
        here, so the homepage and /process/ follow, because on 6 September he
        asked for one set of names across the site. Told, not asked.
 
-       Renamed again on 7 September 2026, from his rewrite of the About page's
-       four-stage sentence: Survey & Planning, Quotation & Design. Applied
-       here, so the homepage and /process/ follow, because on 6 September he
-       asked for one set of names across the site. Told, not asked.
-
        The rename MOVED A SENTENCE RATHER THAN ADDING ONE. Stage 02 carried the
        survey, the quotation and the drawings, which is three promises in one
        stage, while the visit stood alone with none of the measuring in it. The
