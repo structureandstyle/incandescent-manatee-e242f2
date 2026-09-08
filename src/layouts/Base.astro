@@ -46,6 +46,33 @@ const localBusiness = {
   "@id": `${SITE_URL}/#business`,
   name: BUSINESS.name,
   legalName: BUSINESS.legalName,
+  /* WHAT THE BUSINESS ACTUALLY IS, 8 September 2026. Until this the entity
+     block carried a name, a type and contact details and never said what the
+     trade was, which is the one thing a machine reads it for. Search Console's
+     first twenty days showed every impression the domain had was a carpentry
+     or carpenter query, and the Business Profile this block points at with
+     sameAs is named "Structure & Style, Bespoke Carpentry & Interiors" and
+     categorised Carpenter. The site said joinery and fitted furniture and
+     never carpentry, so the two descriptions of one business disagreed.
+
+     description and knowsAbout are ours, not Kaspar's copy: nothing visible on
+     any page changes. knowsAbout is the plain list of what he does, in the
+     words a homeowner searches, and every entry is a service the site sells or
+     the Profile lists. Nothing here claims a workshop, a team or a credential
+     (protocol section 5). */
+  description:
+    "Bespoke carpentry and joinery for London homes. Structure & Style designs, measures and installs fitted furniture: fitted wardrobes, walk-in wardrobes, alcove units and shelving, built-in TV units and bespoke kitchens.",
+  knowsAbout: [
+    "Bespoke carpentry",
+    "Carpentry and joinery",
+    "Fitted furniture",
+    "Fitted wardrobes",
+    "Walk-in wardrobes",
+    "Alcove units and shelving",
+    "Built-in TV units",
+    "Bespoke kitchens",
+    "Panelling and doors",
+  ],
   /* WITH THE TRAILING SLASH, 5 Sep 2026. SITE_URL carries none, so this one
      field disagreed with the canonical link and the og:url on the same page,
      on all eighteen of them. The NAP record is explicit that citations are
