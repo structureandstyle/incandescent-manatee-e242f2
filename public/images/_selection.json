@@ -1,6 +1,15 @@
 {
   "fitted-wardrobes": [
     {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-09.webp",
+      "w": 1400,
+      "h": 1866,
+      "source": "modern-handleless-kitchen-hackney-london.jpg (the old site's portfolio image; EXIF stripped, capture date unknown)",
+      "date": "",
+      "quality": "4",
+      "bytes": 73326
+    },
+    {
       "file": "/images/fitted-wardrobes/fitted-wardrobes-01.webp",
       "w": 1400,
       "h": 1867,
@@ -80,6 +89,15 @@
       "date": "20260831",
       "quality": "5",
       "bytes": 58396
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-10.webp",
+      "w": 1400,
+      "h": 1050,
+      "source": "20250522_085815.jpg",
+      "date": "20250522",
+      "quality": "4",
+      "bytes": 95566
     }
   ],
   "walk-in-wardrobes": [

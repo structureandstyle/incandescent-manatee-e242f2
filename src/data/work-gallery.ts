@@ -22,6 +22,43 @@
  * looks up its real dimensions there and fails the build if one is missing.
  *
  * -------------------------------------------------------------------------
+ * FOUR MORE FRAMES, 8 September 2026, afternoon. Denis sent eight photographs
+ * and asked for any not on this page to be added. Twenty became twenty-four.
+ * Each of the eight, against what was here:
+ *
+ *   the white handleless kitchen with the marble worktop and herringbone
+ *   floor: NOT HERE, and not in the library either. It is the old site's own
+ *   portfolio image (modern-handleless-kitchen-hackney-london.jpg, 1600 wide,
+ *   EXIF stripped), so it is his work and his photograph; it is now
+ *   bespoke-kitchens-09, registered in _selection.json by hand with the
+ *   capture date left blank because nothing records it.
+ *   the lit bookcase wall, front-on: the room is here as alcove-units-09 (the
+ *   angled frame); this front-on view is alcove-units-02, cut in the first
+ *   pass. Not added: a second angle of a room already on the page.
+ *   the lit bookcase wall, angled: alcove-units-09, already here.
+ *   the walk-in with the black drawer handles: the room is here as
+ *   walk-in-wardrobes-01; this is a third angle. Not added, same reason.
+ *   the corner library mid-install, doors laid out for painting: NOT ADDED.
+ *   Work in progress is not publishable (tone protocol section 15,
+ *   photography), whatever the instruction.
+ *   the navy loft wardrobe with its doors open: NOT HERE. Library file
+ *   20250522_085815.jpg, the same room as fitted-wardrobes-03 (slot 17), the
+ *   morning of the same day, doors open on the lit interior. Now
+ *   fitted-wardrobes-10, two slots after its closed-door pair. The carpet is
+ *   still under protective sheeting in this frame.
+ *   the oak interior with the seven-drawer stack: fitted-wardrobes-05, cut in
+ *   the first pass as an empty carcass. Back on Denis's instruction.
+ *   the oak interior with four drawers and the green room beyond:
+ *   fitted-wardrobes-04, cut for the same reason. Back likewise.
+ *
+ * So two of the eight were already here, two are second angles of rooms
+ * already here, one cannot go up, and three came in plus one from the old
+ * site. The no-two-neighbours rule holds through the new tail. The first-cut
+ * judgment about empty oak cavities below still stands as a judgment; these
+ * two are on the page because the client's side asked for them, which is a
+ * different reason, and the record should say which.
+ *
+ * -------------------------------------------------------------------------
  * THE WARDROBE TILE, 7 September 2026, evening. Kaspar, under a screenshot of
  * the homepage's Selected work grid: "here at fitted wardrobes i would put one
  * of the latest pics". The grid is the first six frames of this array, so the
@@ -177,6 +214,10 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/alcove-units/alcove-units-09.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-05.webp", type: "Bespoke kitchens" },
+  { file: "/images/fitted-wardrobes/fitted-wardrobes-10.webp", type: "Fitted wardrobes" },
   { file: "/images/alcove-units/alcove-units-07.webp", type: "Alcove units" },
   { file: "/images/doors-panelling/doors-panelling-01.webp", type: "Panelling and doors" },
+  { file: "/images/fitted-wardrobes/fitted-wardrobes-05.webp", type: "Fitted wardrobes" },
+  { file: "/images/bespoke-kitchens/bespoke-kitchens-09.webp", type: "Bespoke kitchens" },
+  { file: "/images/fitted-wardrobes/fitted-wardrobes-04.webp", type: "Fitted wardrobes" },
 ];
