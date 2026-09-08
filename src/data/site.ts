@@ -312,14 +312,11 @@ export const SERVICES: Service[] = [
     priceMovers:
       "Overall size, cabinetry and storage, open shelving, integrated lighting, cable management, ventilation, specialist finishes and additional detailing.",
     noMinimum: true,
-    /* His line, 7 September 2026, typed under a screenshot of the section.
-       Two versions arrived three minutes apart on a page the crop did not
-       name. The generic lead rendered only here and on kitchens, kitchens got
-       its own sentence that evening, and the second version names doors,
-       drawers and integrated components, so it is this page's, and the later
-       one stands. The first read: "Fitted furniture can require minor
-       adjustments as it settles into the room. What matters is knowing we'll
-       come back and put it right." */
+    /* His line, 7 September 2026 at 21:25, typed under a screenshot of the
+       section. A sibling sentence three minutes earlier ("Fitted furniture
+       can require minor adjustments as it settles into the room...") is the
+       fitted wardrobes page's, on Denis's placement of 8 September; this one
+       names doors, drawers and integrated components and is this page's. */
     leads: {
       "after":
         "Doors, drawers and integrated components may need occasional adjustment over time. Our aftercare covers the details that keep everything working as it should.",

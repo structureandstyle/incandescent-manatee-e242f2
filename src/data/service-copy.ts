@@ -78,7 +78,10 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "fitting": "Ceilings, floors and walls are rarely straight, and a wardrobe wall meets all three at once.",
       /* His, 6 September 2026. The guarantee and adjustment rows under it
          are Q35 and Q36, reworded the same day: see answers.ts. */
-      "after": "Our work is covered after installation, and if something needs adjusting during the aftercare period, we'll come back and put it right.",
+      /* His sentence, 7 September 2026 at 21:22, placed here by Denis on
+         8 September: the screenshot showed the heading and a generic lead with
+         no page in the crop. It replaces ours. */
+      "after": "Fitted furniture can require minor adjustments as it settles into the room. What matters is knowing we'll come back and put it right.",
     },
     /* TWO SECTIONS CAME OFF ON 6 SEPTEMBER 2026: "What a fitted wardrobe run
        includes" ("id remove this") and "Cut to the wall as it actually is"
