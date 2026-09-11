@@ -421,8 +421,8 @@ const SECTIONS: Section[] = [
                       scrolls sideways, and a scroll region a keyboard cannot
                       reach hides the widest sizes from anyone not on a
                       pointer. axe: scrollable-region-focusable. */}
-                  <div class="price-scroll-viewport" data-price-viewport tabindex="0" role="region" aria-label={`${t.title}, scrolls sideways`}>
-                    <table class="price-table">
+                  <div class="price-scroll-viewport" data-price-viewport tabindex="0" role="region" aria-label={`${t.title}${t.columns.length > 2 ? ", scrolls sideways" : ""}`}>
+                    <table class:list={["price-table", t.columns.length === 2 && "price-table--compact"]}>
                       <thead>
                         <tr>
                           {t.columns.map((c) => (
@@ -558,7 +558,24 @@ const SECTIONS: Section[] = [
   .price-table {
     width: 100%;
     border-collapse: collapse;
+  }
+  /* Only the size comparison needs a sideways viewport. The alcove guide has
+     two columns, so forcing it to the same 520px minimum hid the full price
+     behind the scroll fade on a phone. Give that table a stable two-column
+     layout instead; long finish names wrap while the complete price stays on
+     one line. */
+  .price-table:not(.price-table--compact) {
     min-width: 520px;
+  }
+  .price-table--compact {
+    table-layout: fixed;
+  }
+  .price-table--compact th:first-child,
+  .price-table--compact td:first-child {
+    width: 66%;
+  }
+  .price-table--compact td:last-child {
+    white-space: nowrap;
   }
   /* The finish column stays put, so a figure is never read without knowing
      which finish it prices. Paper behind it, or the scrolling columns show

@@ -97,3 +97,12 @@ a[href="#main"]:focus,a[href="#main"]:focus-visible{color:var(--paper)}
 @media (max-width:400px){
 [data-site-header] nav[aria-label="Primary"] a{font-size:10.5px;letter-spacing:.05em}
 }
+/* The 320px Android viewport is still in use. Its five labels were only 30px
+   wider than the available row, which left part of Enquire off-screen behind a
+   deliberately hidden scrollbar. Keep the same type size and touch targets;
+   the full-bleed row simply borrows 12px from each side and tightens tracking
+   enough for all five links to remain immediately visible. */
+@media (max-width:360px){
+[data-site-header] nav[aria-label="Primary"]{padding-inline:var(--space-4)}
+[data-site-header] nav[aria-label="Primary"] a{letter-spacing:.02em}
+}
