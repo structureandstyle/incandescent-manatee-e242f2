@@ -3,13 +3,12 @@
   publish = "dist"
 
 # Pinned 8 Sep 2026, before the first production build on Netlify. Astro 7
-# needs Node 22.12 or later (package.json engines) and every local and
-# clean-clone build of this site has run on 24. Netlify does not read
-# package.json engines, so without this line the build takes whatever the
-# build image defaults to, and a version mismatch would surface only in a
-# deploy log we cannot see.
+# needs Node 22.12 or later (package.json engines). Pin the exact LTS runtime
+# used for the production verification: Node 24.14 currently trips Astro's
+# module runner on CommonJS dependencies before the site itself compiles.
+# Netlify does not read package.json engines, so this is the deployment pin.
 [build.environment]
-  NODE_VERSION = "24"
+  NODE_VERSION = "22.20.0"
 
 # Production refuses to ship anything unfinished. `build:production` runs the
 # build and then scripts/verify-build.mjs, which exits non-zero if an INDEXABLE

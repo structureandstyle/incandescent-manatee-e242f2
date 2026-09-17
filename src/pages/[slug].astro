@@ -304,6 +304,7 @@ const SECTIONS: Section[] = [
   schema={schema}
   image={ogSlug ? `/og/${ogSlug}.jpg` : undefined}
   noindex={!isIndexable}
+  enquiryService={service.guide ? undefined : serviceLabel(service)}
 >
   <article>
     <!-- Hero -->
@@ -327,7 +328,10 @@ const SECTIONS: Section[] = [
       </p>
 
       <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:baseline;margin-top:var(--space-15)">
-        <Link href="#enquire" variant="cta" chamfer>Get a price</Link>
+        {/* All explicit quote actions use the global modal. The real contact
+            URL remains the no-JavaScript fallback, while Base preselects this
+            page's service when the dialog opens. */}
+        <Link href="/contact/" variant="cta" chamfer>Get a quote</Link>
         <Link href={CONTACT.phoneHref} variant="nav" chamfer style="padding:var(--space-6) 0">Call {CONTACT.phoneDisplay}</Link>
         <Link href={CONTACT.whatsapp} variant="nav" chamfer style="padding:var(--space-6) 0">WhatsApp</Link>
       </div>

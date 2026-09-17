@@ -29,9 +29,20 @@ interface Props {
   noindex?: boolean;
   /** The 404 template has no real address to point a canonical at. */
   noCanonical?: boolean;
+  /** Service inferred from the current page and preselected in the global
+      enquiry modal. The contact page and general pages leave this unset. */
+  enquiryService?: string;
 }
 
-const { title, description, schema, image = "/og-default.jpg", noindex = false, noCanonical = false } = Astro.props;
+const {
+  title,
+  description,
+  schema,
+  image = "/og-default.jpg",
+  noindex = false,
+  noCanonical = false,
+  enquiryService,
+} = Astro.props;
 
 // Self-referencing canonical on every template. The old site had one canonical
 // on one page and Google overrode it anyway, because the Business Profile was
@@ -360,10 +371,10 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         If you have a room in mind, start here.
       </h2>
       <p style="font-size:var(--type-body-sm);color:var(--text-quiet);margin-bottom:var(--space-10)">
-        Rough dimensions, a photo or two, and a sense of what the piece needs to do gets you a
+        Rough dimensions, a photo or drawing, and a sense of what the piece needs to do gets you a
         considered reply, not a brochure.
       </p>
-      <EnquiryForm compact idPrefix="modal-" />
+      <EnquiryForm compact idPrefix="modal-" preselectedService={enquiryService} />
     </dialog>
 
     <style is:global>

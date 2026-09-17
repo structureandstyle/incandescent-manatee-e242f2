@@ -10,8 +10,12 @@ interface Props {
       Anywhere else nothing is ticked, rather than silently defaulting to
       fitted wardrobes, which is what every alcove enquiry used to arrive as. */
   service?: string;
+  /** Tick the current service without shortening the choice list. The global
+      modal uses this on service pages: the visitor keeps the ability to add
+      related work while the page they opened it from is already selected. */
+  preselectedService?: string;
 }
-const { compact = false, idPrefix = "", service } = Astro.props;
+const { compact = false, idPrefix = "", service, preselectedService } = Astro.props;
 
 /**
  * What a lead can ask for. Checkboxes rather than a single choice since
@@ -67,6 +71,7 @@ const CHOICES = [
  * list is one click away in the modal on every page including this one.
  */
 const choices = service ? [service, "Something else"] : CHOICES;
+const selectedService = service ?? preselectedService;
 
 /**
  * What to write in the job box, shown as a placeholder, 2 Sep 2026 on Denis's
@@ -107,7 +112,7 @@ const JOB_EXAMPLES: Record<string, string> = {
     "Under the stairs, about 2m along and sloping. Coats, shoes and a bit of shelving.",
 };
 
-const jobExample = (service && JOB_EXAMPLES[service]) || JOB_EXAMPLE_DEFAULT;
+const jobExample = (selectedService && JOB_EXAMPLES[selectedService]) || JOB_EXAMPLE_DEFAULT;
 
 /**
  * "How did you hear about us?" was a free-text box until 2 September 2026.
@@ -207,7 +212,7 @@ const SOURCES = [
   <fieldset class="choices-field">
     <legend>What do you need?</legend>
     <p class="help">
-      {service ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
+      {selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
     </p>
     <div class="choices">
       {choices.map((label, i) => (
@@ -217,7 +222,7 @@ const SOURCES = [
             type="checkbox"
             name="service"
             value={label}
-            checked={service === label}
+            checked={selectedService === label}
           />
           <span>{label}</span>
         </label>
