@@ -36,8 +36,8 @@ export type ServiceCopy = {
    * to the template's generic lead.
    */
   leads?: Record<string, string>;
-  /** Extra sections rendered after the spec sections. */
-  sections: { meta: string; heading: string; body: string[] }[];
+  /** Extra sections. Set `after` to place one after a named shared section. */
+  sections: { meta: string; heading: string; body: string[]; after?: string }[];
   /**
    * Guide-price tables, rendered directly after the cost section. Source:
    * the client's pricing document, 31 Aug 2026 (ops repo,
@@ -232,6 +232,58 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       {
         q: "How long does it take from survey to fitting?",
         a: "Lead time is typically 4 to 8 weeks, depending on the scope of the project, design requirements, chosen materials and our current schedule. Installation dates are confirmed as the project progresses.",
+      },
+    ],
+  },
+
+  "media-walls": {
+    intro: [
+      "A media wall works best when the furniture and the equipment are planned together. The position of the television, closed storage, open shelves and everyday access all affect the proportions of the finished unit.",
+      "Lighting, cable routes, ventilation and access around the equipment are considered before the design is approved. The itemised quotation states exactly what is included.",
+    ],
+    leads: {
+      "cost": "Media walls vary considerably with their size, storage, finish and level of integration. A measured survey and agreed specification produce the final itemised quotation.",
+      "how-long": "The programme depends on the design, materials, finish and current schedule. Dates are confirmed as the project moves from survey and quotation into production and fitting.",
+      "made-from": "Materials are selected around the design, the finish required and how the storage will be used.",
+      "fitting": "Built-in furniture meets real walls, floors and ceilings. The installation is adjusted on site so the unit follows the room rather than relying on it being perfectly square.",
+      "after": "Doors, drawers and integrated components may need occasional adjustment over time. Our aftercare covers the details that keep everything working as it should.",
+    },
+    sections: [
+      {
+        meta: "Planning",
+        heading: "What is planned into a media wall?",
+        after: "cost",
+        body: [
+          "The television position and the proportions of the wall are considered together. Open shelves, display space and closed cupboards are arranged around what should remain visible, what should be stored away and what needs to stay accessible.",
+          "Cable routes and ventilation are considered around the equipment before the furniture design is approved. The itemised quotation states exactly what is included, so work outside the cabinetry is not left to assumption.",
+          "Integrated lighting can be included where specified. Painted MR MDF, melamine and decorative boards, or natural wood veneer can be selected to suit the room and the finish required.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "How much does a bespoke media wall cost?",
+        a: "Bespoke media walls and built-in TV units start from £3,500. The final figure depends on size, cabinetry, storage, shelving, lighting, cable management, ventilation, finish and detailing.",
+      },
+      {
+        q: "Can it include cupboards, shelving and lighting?",
+        a: "Yes. Closed cupboards, open shelving and integrated lighting can be included where they form part of the agreed design and specification.",
+      },
+      {
+        q: "How are cables and ventilation considered?",
+        a: "The equipment and access it needs are discussed during planning. Cable routes and ventilation can then be allowed for within the furniture design, with the itemised quotation stating exactly what is included.",
+      },
+      {
+        q: "What materials and finishes are available?",
+        a: "Options include painted MR MDF, melamine and decorative boards, and natural wood veneer. The choice depends on the design, use and finish wanted for the room.",
+      },
+      {
+        q: "How long does a media wall project take?",
+        a: "Lead time is typically 4 to 8 weeks, depending on the specification and current schedule. Installation dates are confirmed as the project progresses.",
+      },
+      {
+        q: "What aftercare is included?",
+        a: "Aftercare includes 2 years on installation and workmanship, 10 years on the structural integrity of the joinery, and the applicable manufacturer warranties for specified hardware.",
       },
     ],
   },

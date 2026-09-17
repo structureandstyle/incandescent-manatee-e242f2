@@ -316,7 +316,7 @@ const SECTIONS: Section[] = [
         </MonoLabel>
       </nav>
 
-      <Kicker scribe>{service.primary}</Kicker>
+      <Kicker scribe>{service.kicker ?? service.primary}</Kicker>
 
       <Display level={1} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
         {service.heading}
@@ -456,10 +456,21 @@ const SECTIONS: Section[] = [
             ))}
           </Wrap>
         )}
+
+        {copy?.sections.filter((sec) => sec.after === section.id).map((sec) => (
+          <Wrap style="padding-bottom:var(--section-y)">
+            <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
+            <div style="max-width:var(--measure)">
+              {sec.body.map((p, i) => (
+                <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
+              ))}
+            </div>
+          </Wrap>
+        ))}
       </>
     ))}
 
-    {copy && copy.sections.map((sec) => (
+    {copy && copy.sections.filter((sec) => !sec.after).map((sec) => (
       <Wrap style="padding-bottom:var(--section-y)">
         <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
         <div style="max-width:var(--measure)">
@@ -469,6 +480,18 @@ const SECTIONS: Section[] = [
         </div>
       </Wrap>
     ))}
+
+    <Wrap style="padding-bottom:var(--section-y)">
+      <SectionHead meta="Portfolio" level={5}>Selected work</SectionHead>
+      <div style="max-width:var(--measure)">
+        <p style="color:var(--text-quiet)">
+          See selected fitted furniture, cabinetry and interiors in the main project gallery.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          <Link href="/work/" variant="nav" chamfer>See selected work</Link>
+        </p>
+      </div>
+    </Wrap>
 
     <!-- Where we work. Confirmed, so it carries no open question. -->
     <Wrap style="padding-bottom:var(--section-y)">
