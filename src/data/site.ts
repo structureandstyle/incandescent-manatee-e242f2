@@ -357,12 +357,13 @@ export const SERVICES: Service[] = [
         "A fitted kitchen is used every day, so reliable aftercare matters. If anything needs adjusting after installation, we will come back and put it right.",
     },
     title: "Bespoke kitchens",
-    heading: "Bespoke kitchens, made to measure",
+    heading: "Bespoke kitchens in London, made to measure",
+    kicker: "Bespoke kitchens, London",
     primary: "bespoke kitchens london",
     description:
-      "Bespoke kitchen design, build and installation for London homes, including the awkward runs around chimney breasts, boilers, boxing and sloping ceilings.",
+      "Bespoke kitchens for London homes, with made-to-measure cabinetry, islands and storage planned alongside appliances, worktops and finishes.",
     summary:
-      "Bespoke kitchens designed around the room and how it is used, with cabinetry, tall units, islands and storage made to measure as part of one considered design.",
+      "Made-to-measure kitchen cabinetry with tall units, islands, internal storage and surrounding finishes resolved around the room.",
     wave: 2,
   },
 ];

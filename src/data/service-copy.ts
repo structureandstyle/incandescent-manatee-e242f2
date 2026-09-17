@@ -21,8 +21,9 @@
  * wardrobes page, in the protocol's fixed wording. Do not repeat it anywhere
  * (protocol section 10: one FAQ entry is the whole allocation).
  *
- * Wave-two pages (media walls, kitchens, home office) have no entry yet and
- * the template renders nothing extra for them.
+ * Service-specific entries are added only after their copy has been reviewed.
+ * A missing entry keeps that service noindexed rather than publishing a thin
+ * version of the shared template.
  */
 
 export type ServiceCopy = {
@@ -268,6 +269,52 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       {
         q: "Does the quotation include electrical and AV work?",
         a: "Electrical and AV work is not automatically part of the cabinetry. If either is required, it needs to be agreed and listed in the scope before work begins.",
+      },
+    ],
+  },
+
+  "bespoke-kitchens": {
+    intro: [
+      "A bespoke kitchen has to work as fitted furniture and as part of the room. The proportions of the cabinetry, the routes through the space and the storage needed every day all shape the layout.",
+      "Cabinet runs, tall housings, islands and internal storage are resolved together, so the proportions remain consistent across the whole room.",
+    ],
+    leads: {
+      "cost": "A kitchen quotation separates the cabinetry from the surfaces, appliances and related work agreed for that project.",
+      "how-long": "A kitchen moves through design, specification, production and fitting. The programme is agreed once those decisions are clear.",
+      "made-from": "Kitchen materials have to suit everyday use as well as the finish wanted for the room.",
+      "fitting": "The final installation brings the cabinetry, panels and specified surrounding elements together in the room.",
+      "after": "The handover starts the guarantee and adjustment periods set out below.",
+    },
+    sections: [
+      {
+        meta: "Planning",
+        heading: "What is planned into a bespoke kitchen?",
+        after: "cost",
+        body: [
+          "The layout is resolved before the cabinet sizes are fixed. Doorways, windows and routes through the room, together with the positions of sinks and appliances, affect where cabinet runs, tall units and islands can sit.",
+          "Internal storage is planned around what is used and where it is needed. The balance of drawers, shelves and cupboards is considered alongside clear worktop space rather than added after the main layout is settled.",
+          "Appliance models, dimensions and service requirements need to be confirmed before the final design is agreed. That keeps housings, door fronts and adjoining cabinetry aligned with the equipment they surround.",
+        ],
+      },
+      {
+        meta: "Surfaces and scope",
+        heading: "Worktops, splashbacks and appliances",
+        after: "made-from",
+        body: [
+          "A worktop decision affects more than colour. Material, thickness, edge detail, upstands and the cut-outs for a sink or hob all meet the cabinetry, so they are considered before the final drawings are approved.",
+          "The splashback is planned at the same stage, whether the design uses an upstand, a full-height surface or a separate finish. Its junctions with the worktop, wall units and end panels should read as part of the same scheme.",
+          "Appliances, worktops, splashbacks, plumbing and electrical work can be supplied or coordinated by Structure & Style, or arranged by the client. The itemised quotation assigns responsibility for each part, so nothing is assumed simply because it touches the kitchen.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Do I need a finished kitchen plan before enquiring?",
+        a: "No. Rough dimensions, a photograph or drawing, and a sense of what is not working are enough to start. The consultation and measured survey establish the detail needed for the quotation and any drawings.",
+      },
+      {
+        q: "How many design revisions are included?",
+        a: "Up to two rounds of design revisions are included. Further rounds, or substantial changes to the agreed brief, may be chargeable.",
       },
     ],
   },
