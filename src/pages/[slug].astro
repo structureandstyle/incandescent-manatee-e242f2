@@ -327,11 +327,11 @@ const SECTIONS: Section[] = [
         {service.summary}
       </p>
 
-      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:baseline;margin-top:var(--space-15)">
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:center;margin-top:var(--space-15)">
         {/* All explicit quote actions use the global modal. The real contact
             URL remains the no-JavaScript fallback, while Base preselects this
             page's service when the dialog opens. */}
-        <Link href="/contact/" variant="cta" chamfer>Get a quote</Link>
+        <Link href="/contact/" variant="button">Get a quote</Link>
         <Link href={CONTACT.phoneHref} variant="nav" chamfer style="padding:var(--space-6) 0">Call {CONTACT.phoneDisplay}</Link>
         <Link href={CONTACT.whatsapp} variant="nav" chamfer style="padding:var(--space-6) 0">WhatsApp</Link>
       </div>
@@ -517,8 +517,10 @@ const SECTIONS: Section[] = [
 
     <!-- Enquiry -->
     <section id="enquire">
-      {/* cta suppressed: the form itself sits directly below this band. */}
-      <EnquireBand heading="If you have a room in mind, start here." cta={null} chamfer>
+      {/* Keep the action explicit even though the inline form follows. The
+          heading explains the invitation; the button tells the visitor what
+          to do and opens the same service-aware modal as the hero action. */}
+      <EnquireBand heading="If you have a room in mind, start here." chamfer>
         {BAND.body}
         <Fragment slot="facts">
           {/* This page's own price line, then the shared lead time and area. */}
