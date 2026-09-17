@@ -331,7 +331,7 @@ export const SERVICES: Service[] = [
     description:
       "Bespoke media walls and built-in TV units for London homes, planned around the room, storage, lighting, cable routes and ventilation.",
     summary:
-      "Made-to-measure media walls and built-in TV units designed around the room, the screen, the storage you need and the equipment that must remain accessible.",
+      "Designed to make the television belong in the room, with each line and proportion resolved before the piece is made.",
     wave: 2,
   },
   {

@@ -238,15 +238,15 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
 
   "media-walls": {
     intro: [
-      "A media wall works best when the furniture and the equipment are planned together. The position of the television, closed storage, open shelves and everyday access all affect the proportions of the finished unit.",
-      "Lighting, cable routes, ventilation and access around the equipment are considered before the design is approved. The itemised quotation states exactly what is included.",
+      "A media wall brings the screen, storage and surrounding furniture into one composition. The aim is a fitted piece that feels proportionate to the room rather than a collection of separate elements.",
+      "Before a quotation is prepared, we establish what needs to be displayed, stored and kept within reach. That gives the design a clear brief without assuming every wall needs the same arrangement.",
     ],
     leads: {
-      "cost": "Media walls vary considerably with their size, storage, finish and level of integration. A measured survey and agreed specification produce the final itemised quotation.",
-      "how-long": "The programme depends on the design, materials, finish and current schedule. Dates are confirmed as the project moves from survey and quotation into production and fitting.",
-      "made-from": "Materials are selected around the design, the finish required and how the storage will be used.",
-      "fitting": "Built-in furniture meets real walls, floors and ceilings. The installation is adjusted on site so the unit follows the room rather than relying on it being perfectly square.",
-      "after": "Doors, drawers and integrated components may need occasional adjustment over time. Our aftercare covers the details that keep everything working as it should.",
+      "cost": "There is no useful single price for every media wall. The measured room and agreed design turn the starting figure into an itemised quotation.",
+      "how-long": "Lead time and time in the room are two different parts of the programme.",
+      "made-from": "The visible finish is chosen for the room; the construction behind it is chosen for stability.",
+      "fitting": "The final fit matters as much as the design on paper.",
+      "after": "The guarantees and adjustment period begin once the installation is complete.",
     },
     sections: [
       {
@@ -254,36 +254,20 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         heading: "What is planned into a media wall?",
         after: "cost",
         body: [
-          "The television position and the proportions of the wall are considered together. Open shelves, display space and closed cupboards are arranged around what should remain visible, what should be stored away and what needs to stay accessible.",
-          "Cable routes and ventilation are considered around the equipment before the furniture design is approved. The itemised quotation states exactly what is included, so work outside the cabinetry is not left to assumption.",
-          "Integrated lighting can be included where specified. Painted MR MDF, melamine and decorative boards, or natural wood veneer can be selected to suit the room and the finish required.",
+          "The television position establishes the viewing height and the main proportions. Closed cupboards and open sections are then arranged around what should be hidden, displayed or reached often.",
+          "The equipment list matters because consoles, speakers, boxes and routers may need cable routes, air circulation and access. Those requirements are agreed before the furniture design is approved.",
+          "Integrated lighting can be included where specified, with its position agreed as part of the design.",
         ],
       },
     ],
     faqs: [
       {
-        q: "How much does a bespoke media wall cost?",
-        a: "Bespoke media walls and built-in TV units start from £3,500. The final figure depends on size, cabinetry, storage, shelving, lighting, cable management, ventilation, finish and detailing.",
+        q: "Do I need to have chosen the television before enquiring?",
+        a: "Send the television model if it is known. If not, the intended screen size is enough for the first conversation. The exact dimensions need to be settled before the final layout is agreed.",
       },
       {
-        q: "Can it include cupboards, shelving and lighting?",
-        a: "Yes. Closed cupboards, open shelving and integrated lighting can be included where they form part of the agreed design and specification.",
-      },
-      {
-        q: "How are cables and ventilation considered?",
-        a: "The equipment and access it needs are discussed during planning. Cable routes and ventilation can then be allowed for within the furniture design, with the itemised quotation stating exactly what is included.",
-      },
-      {
-        q: "What materials and finishes are available?",
-        a: "Options include painted MR MDF, melamine and decorative boards, and natural wood veneer. The choice depends on the design, use and finish wanted for the room.",
-      },
-      {
-        q: "How long does a media wall project take?",
-        a: "Lead time is typically 4 to 8 weeks, depending on the specification and current schedule. Installation dates are confirmed as the project progresses.",
-      },
-      {
-        q: "What aftercare is included?",
-        a: "Aftercare includes 2 years on installation and workmanship, 10 years on the structural integrity of the joinery, and the applicable manufacturer warranties for specified hardware.",
+        q: "Does the quotation include electrical and AV work?",
+        a: "Electrical and AV work is not automatically part of the cabinetry. If either is required, it needs to be agreed and listed in the scope before work begins.",
       },
     ],
   },
