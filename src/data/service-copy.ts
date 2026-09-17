@@ -36,8 +36,8 @@ export type ServiceCopy = {
    * to the template's generic lead.
    */
   leads?: Record<string, string>;
-  /** Extra sections rendered after the spec sections. */
-  sections: { meta: string; heading: string; body: string[] }[];
+  /** Extra sections. Set `after` to place one after a named shared section. */
+  sections: { meta: string; heading: string; body: string[]; after?: string }[];
   /**
    * Guide-price tables, rendered directly after the cost section. Source:
    * the client's pricing document, 31 Aug 2026 (ops repo,
@@ -232,6 +232,42 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       {
         q: "How long does it take from survey to fitting?",
         a: "Lead time is typically 4 to 8 weeks, depending on the scope of the project, design requirements, chosen materials and our current schedule. Installation dates are confirmed as the project progresses.",
+      },
+    ],
+  },
+
+  "media-walls": {
+    intro: [
+      "A media wall brings the screen, storage and surrounding furniture into one composition. The aim is a fitted piece that feels proportionate to the room rather than a collection of separate elements.",
+      "Before a quotation is prepared, we establish what needs to be displayed, stored and kept within reach. That gives the design a clear brief without assuming every wall needs the same arrangement.",
+    ],
+    leads: {
+      "cost": "There is no useful single price for every media wall. The measured room and agreed design turn the starting figure into an itemised quotation.",
+      "how-long": "Lead time and time in the room are two different parts of the programme.",
+      "made-from": "The visible finish is chosen for the room; the construction behind it is chosen for stability.",
+      "fitting": "The final fit matters as much as the design on paper.",
+      "after": "The guarantees and adjustment period begin once the installation is complete.",
+    },
+    sections: [
+      {
+        meta: "Planning",
+        heading: "What is planned into a media wall?",
+        after: "cost",
+        body: [
+          "The television position establishes the viewing height and the main proportions. Closed cupboards and open sections are then arranged around what should be hidden, displayed or reached often.",
+          "The equipment list matters because consoles, speakers, boxes and routers may need cable routes, air circulation and access. Those requirements are agreed before the furniture design is approved.",
+          "Integrated lighting can be included where specified, with its position agreed as part of the design.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Do I need to have chosen the television before enquiring?",
+        a: "Send the television model if it is known. If not, the intended screen size is enough for the first conversation. The exact dimensions need to be settled before the final layout is agreed.",
+      },
+      {
+        q: "Does the quotation include electrical and AV work?",
+        a: "Electrical and AV work is not automatically part of the cabinetry. If either is required, it needs to be agreed and listed in the scope before work begins.",
       },
     ],
   },

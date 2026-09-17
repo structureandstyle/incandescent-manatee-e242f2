@@ -85,7 +85,7 @@ export const ENQUIRE_HREF = "/contact/";
 export const BAND = {
   heading: "If you have a room in mind, start here.",
   body:
-    "Write with rough dimensions, a photo or two, and a sense of what the piece needs to do. " +
+    "Write with rough dimensions, a photo or drawing, and a sense of what the piece needs to do. " +
     "You will get a considered reply, not a brochure.",
   /** Rendered through <Value>, so each becomes finished copy or an open question. */
   facts: ["q10", "q07", "q03"] as QuestionKey[],

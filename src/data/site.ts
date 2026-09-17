@@ -108,6 +108,8 @@ export type Service = {
   label?: string;
   /** <h1>. Carries the primary keyword without reading like it does. */
   heading: string;
+  /** Optional search-facing eyebrow when the recorded keyword reads unnaturally as visible copy. */
+  kicker?: string;
   /** Primary keyword, for the record rather than for stuffing. */
   primary: string;
   /** Meta description. Aim 140 to 155 characters. */
@@ -323,12 +325,13 @@ export const SERVICES: Service[] = [
     },
     title: "Media walls and TV units",
     label: "Built-in TV units",
-    heading: "Media walls and built-in TV units",
+    heading: "Media walls and built‑in TV units in London",
+    kicker: "Media walls, London",
     primary: "media wall london",
     description:
-      "Media walls and built-in TV units for London homes, with cable routing, ventilation and electrics planned from the start, so the finished wall sits flush.",
+      "Bespoke media walls and built-in TV units for London homes, planned around the room, storage, lighting, cable routes and ventilation.",
     summary:
-      "Bespoke media walls and built-in TV units designed around the room, with storage, shelving, integrated lighting, cable management and ventilation planned into the design from the start.",
+      "Designed to make the television belong in the room, with each line and proportion resolved before the piece is made.",
     wave: 2,
   },
   {
