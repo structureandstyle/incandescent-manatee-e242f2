@@ -61,6 +61,104 @@ const STYLE = [
 
 /** Hand-typed placeholders, the convention the document kit already greps for. */
 const RAW_PLACEHOLDER = /\[[A-Z][A-Z _/]{3,}\]|\bTBC\b|\bTODO\b|\bXXX\b|\bLorem\b/g;
+const SITE_URL = "https://structureandstyle.co.uk";
+const BUSINESS_ID = `${SITE_URL}/#business`;
+const SERVICE_PATHS = new Set([
+  "/fitted-wardrobes/",
+  "/walk-in-wardrobes/",
+  "/alcove-units/",
+  "/media-walls/",
+  "/bespoke-kitchens/",
+]);
+const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
+
+function verifySchema(html, page, errors) {
+  const scripts = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  if (scripts.length !== 1) {
+    errors.push(`${page}  expected one JSON-LD script, found ${scripts.length}`);
+    return;
+  }
+
+  let nodes;
+  try {
+    const parsed = JSON.parse(scripts[0][1]);
+    nodes = Array.isArray(parsed) ? parsed : parsed["@graph"] ?? [parsed];
+    if (!Array.isArray(nodes)) throw new Error("schema graph is not an array");
+  } catch (error) {
+    errors.push(`${page}  invalid JSON-LD: ${error.message}`);
+    return;
+  }
+
+  for (const node of nodes) {
+    if (node?.["@context"] !== "https://schema.org" || !node["@type"]) {
+      errors.push(`${page}  schema node needs schema.org context and a type`);
+    }
+  }
+
+  const ofType = (type) => nodes.filter((node) => node?.["@type"] === type);
+  const business = ofType("HomeAndConstructionBusiness");
+  if (business.length !== 1) {
+    errors.push(`${page}  expected one HomeAndConstructionBusiness node`);
+  } else {
+    const entity = business[0];
+    if (entity["@id"] !== BUSINESS_ID || entity.name !== "Structure & Style" || entity.url !== `${SITE_URL}/`) {
+      errors.push(`${page}  business identity does not match the canonical site`);
+    }
+    if (entity.telephone !== "+447309872555") {
+      errors.push(`${page}  business telephone is not in international format`);
+    }
+    if (entity.logo !== `${SITE_URL}/icon-512.png` || entity.image !== `${SITE_URL}/og-default.jpg`) {
+      errors.push(`${page}  business logo or image is missing or varies by page`);
+    }
+    if ("aggregateRating" in entity || "review" in entity) {
+      errors.push(`${page}  business schema must not mark up its own reviews`);
+    }
+  }
+
+  const websites = ofType("WebSite");
+  if (page === "/") {
+    if (websites.length !== 1 || websites[0].name !== "Structure & Style" || websites[0].url !== `${SITE_URL}/`) {
+      errors.push(`${page}  homepage needs one WebSite node with the preferred site name`);
+    }
+  } else if (websites.length) {
+    errors.push(`${page}  WebSite name markup belongs on the homepage only`);
+  }
+
+  if (ofType("FAQPage").length) {
+    errors.push(`${page}  obsolete FAQPage markup is present`);
+  }
+
+  const services = ofType("Service");
+  if (SERVICE_PATHS.has(page)) {
+    if (services.length !== 1 || services[0].url !== `${SITE_URL}${page}` || services[0].provider?.["@id"] !== BUSINESS_ID) {
+      errors.push(`${page}  service schema is missing or does not match the page`);
+    }
+  } else if (services.length) {
+    errors.push(`${page}  Service schema is present on a non-service page`);
+  }
+
+  const breadcrumbs = ofType("BreadcrumbList");
+  if (BREADCRUMB_PATHS.has(page)) {
+    const items = breadcrumbs[0]?.itemListElement;
+    if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 2 ||
+        items[0]?.position !== 1 || items[0]?.item !== `${SITE_URL}/` ||
+        items[1]?.position !== 2 || items[1]?.item !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  breadcrumb schema is missing or does not match the page`);
+    }
+  } else if (breadcrumbs.length) {
+    errors.push(`${page}  unexpected breadcrumb schema`);
+  }
+
+  if (page.startsWith("/journal/") && page !== "/journal/") {
+    const posts = ofType("BlogPosting");
+    const post = posts[0];
+    if (posts.length !== 1 || !post.headline || !post.datePublished || !post.dateModified ||
+        !post.image || !post.author?.name || !post.author?.url ||
+        post.publisher?.["@id"] !== BUSINESS_ID || post.mainEntityOfPage !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  article schema needs headline, dates, image, author, publisher and page URL`);
+    }
+  }
+}
 
 async function htmlFiles(dir) {
   const out = [];
@@ -108,6 +206,8 @@ for (const file of files) {
   const noindex = /<meta[^>]+name=["']robots["'][^>]*noindex/i.test(html);
   const asks = [...html.matchAll(/data-q="([^"]+)"/g)].map((m) => m[1]);
   const raw = [...text.matchAll(RAW_PLACEHOLDER)].map((m) => m[0]);
+
+  verifySchema(html, page, errors);
 
   asks.forEach((q) => openQuestions.add(q));
 

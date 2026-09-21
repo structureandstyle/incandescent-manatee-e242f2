@@ -91,12 +91,10 @@ const localBusiness = {
      signal rather than a missing one, and this was the only NAP-adjacent field
      on the site contradicting itself. */
   url: `${SITE_URL}/`,
-  /* The Business Profile this entity actually is. The rating below is read
-     off that profile, and until now nothing in the markup said where it came
-     from: sameAs is what ties the two together, and it is the same URL the
-     reviews block already links to on the home page. */
+  /* Link this entity to its Business Profile. Reviews remain visible on the
+     site, but its own rating is not marked up as an aggregate review. */
   sameAs: [REVIEWS.profileUrl],
-  telephone: BUSINESS.phoneDisplay,
+  telephone: BUSINESS.phoneHref.slice("tel:".length),
   /* An address, 7 September 2026, on the audit finding the block had none.
      Google's LocalBusiness guidance wants one, and a service-area business
      can give the locality without a street. The registered office is a
@@ -106,7 +104,8 @@ const localBusiness = {
      and the same shape as the Business Profile, which hides its address. */
   address: { "@type": "PostalAddress", addressLocality: "London", addressCountry: "GB" },
   email: BUSINESS.email,
-  image: ogImage,
+  logo: new URL("/icon-512.png", SITE_URL).href,
+  image: new URL("/og-default.jpg", SITE_URL).href,
   priceRange: "££",
   areaServed: BUSINESS.areaServed.map((a) => ({ "@type": "Place", name: a })),
   openingHoursSpecification: BUSINESS.openingHours.map((h) => ({
@@ -115,13 +114,6 @@ const localBusiness = {
     opens: h.opens,
     closes: h.closes,
   })),
-  aggregateRating: {
-    "@type": "AggregateRating",
-    /* A number, not the string it was serialised as (audit, 7 Sep 2026):
-       the site stores it as "5.0" so the page prints one decimal. */
-    ratingValue: Number(BUSINESS.ratingValue),
-    reviewCount: BUSINESS.reviewCount,
-  },
 };
 
 const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];

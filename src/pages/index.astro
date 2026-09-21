@@ -44,7 +44,7 @@ import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 import Ask from "../components/Ask.astro";
 
-import { SERVICES, BUSINESS, servicePath, serviceLabel } from "../data/site";
+import { SERVICES, BUSINESS, SITE_URL, servicePath, serviceLabel } from "../data/site";
 import Faq from "../components/ds/Faq.astro";
 import { HOMEPAGE_FAQS, MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
 import { WORK_GALLERY } from "../data/work-gallery";
@@ -92,15 +92,13 @@ const selected = WORK_GALLERY.filter((s) => sizeOf.has(s.file))
    pieces built up and finished in the room. See the note in ProcessStep.astro. */
 const ICONS = ["tape", "pencil", "plane", "square"] as const;
 
-/* The homepage questions, as data. */
-const faqSchema = {
+/* The preferred site name belongs on the homepage only. */
+const siteSchema = {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: HOMEPAGE_FAQS.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  name: BUSINESS.name,
+  url: `${SITE_URL}/`,
 };
 ---
 
@@ -135,7 +133,7 @@ const faqSchema = {
       his sentences on the page are untouched. */}
   title="Fitted furniture and carpentry, London"
   description="Bespoke carpentry and fitted furniture for London homes: fitted wardrobes, walk-in wardrobes and alcove units, measured on site and cut to your walls."
-  schema={faqSchema}
+  schema={siteSchema}
   noindex={!isIndexable}
 >
   <Wrap style="padding-top:var(--hero-y)">

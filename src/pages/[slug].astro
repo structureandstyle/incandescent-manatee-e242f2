@@ -149,21 +149,8 @@ const breadcrumbSchema = {
   ],
 };
 
-/* The page's own questions, as data. Only where the copy carries them. */
-const faqSchema =
-  copy && copy.faqs.length > 0
-    ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: copy.faqs.map((f) => ({
-          "@type": "Question",
-          name: f.q,
-          acceptedAnswer: { "@type": "Answer", text: f.a },
-        })),
-      }
-    : null;
-
-const schema = [serviceSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [])];
+/* The cost guide shares the template but is not a service the business sells. */
+const schema = [...(service.guide ? [] : [serviceSchema]), breadcrumbSchema];
 
 /* Question-shaped H2s, each with the questions that answer it. A row carries
    either a questionnaire key (q) or confirmed literal copy (text): the guide

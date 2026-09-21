@@ -22,7 +22,7 @@ export const BUSINESS = {
   phoneHref: "tel:+447309872555",
   whatsapp: "https://wa.me/447309872555",
   email: "info@structureandstyle.co.uk",
-  /** Service-area business: no public address, so no PostalAddress in schema. */
+  /** Service-area business: no public street address. Schema names London only. */
   areaServed: [
     "Hampstead",
     "Belsize Park",
