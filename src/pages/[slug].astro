@@ -94,6 +94,7 @@ const others = Array.from(
 const guide = SERVICES.find((s) => s.guide);
 const GUIDE_APPLIES = ["fitted-wardrobes", "walk-in-wardrobes", "alcove-units"];
 const showGuide = Boolean(guide) && GUIDE_APPLIES.includes(service.slug);
+const showGuideAtPrice = Boolean(guide) && ["fitted-wardrobes", "alcove-units"].includes(service.slug);
 
 /**
  * Wave-one body copy and FAQs, where written (src/data/service-copy.ts).
@@ -365,22 +366,33 @@ const SECTIONS: Section[] = [
                 )}
               </div>
             ) : (
-              <SpecTable
-                stamp
-                rows={[]}
-                labelWidth="34%"
-              >
-                {section.rows.map((row) => (
-                  <tr>
-                    <td style="width:34%;padding:var(--space-4) 0;padding-right:var(--space-8);border-bottom:var(--rule-hair);vertical-align:top;text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);color:var(--ink-soft)">
-                      {row.label}
-                    </td>
-                    <td style="padding:var(--space-4) 0;border-bottom:var(--rule-hair);vertical-align:top">
-                      {row.q ? <Value q={row.q} /> : row.text}
-                    </td>
-                  </tr>
-                ))}
-              </SpecTable>
+              <div>
+                <SpecTable
+                  stamp
+                  rows={[]}
+                  labelWidth="34%"
+                >
+                  {section.rows.map((row) => (
+                    <tr>
+                      <td style="width:34%;padding:var(--space-4) 0;padding-right:var(--space-8);border-bottom:var(--rule-hair);vertical-align:top;text-transform:uppercase;letter-spacing:var(--ls-mono-table);font-size:var(--type-mono);color:var(--ink-soft)">
+                        {row.label}
+                      </td>
+                      <td style="padding:var(--space-4) 0;border-bottom:var(--rule-hair);vertical-align:top">
+                        {row.q ? <Value q={row.q} /> : row.text}
+                      </td>
+                    </tr>
+                  ))}
+                </SpecTable>
+                {section.id === "cost" && showGuideAtPrice && guide && (
+                  <p style="max-width:var(--measure);margin-top:var(--space-8)">
+                    <Link href={servicePath(guide)} variant="nav" chamfer>
+                      {service.slug === "alcove-units"
+                        ? "Compare guide prices for alcove units by finish"
+                        : "Compare fitted wardrobe guide prices by size and finish"}
+                    </Link>
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </Wrap>
@@ -553,7 +565,7 @@ const SECTIONS: Section[] = [
         ))}
       </ul>
 
-      {showGuide && guide && (
+      {showGuide && !showGuideAtPrice && guide && (
         <p style="margin-top:var(--space-14);display:flex;flex-wrap:wrap;gap:var(--space-4) var(--space-8);align-items:baseline">
           <MonoLabel as="span" tone="soft">Guide</MonoLabel>
           <Link href={servicePath(guide)} variant="nav" chamfer>{guide.title}</Link>

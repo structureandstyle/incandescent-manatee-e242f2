@@ -239,7 +239,7 @@ export const SERVICES: Service[] = [
     heading: "Fitted wardrobes in London, made to measure",
     primary: "fitted wardrobes london",
     description:
-      "Built-in and fitted wardrobes made to measure for your room, designed around what you store and fitted wall to wall, across Hampstead, Camden and London.",
+      "Bespoke fitted and built-in wardrobes made to measure for your room, with storage planned around what you need, across Hampstead, Belsize Park and London.",
     summary:
       "Made-to-measure wardrobes designed around your room and how you use it, with hanging space, shelving, drawers and internal storage planned around what you need.",
     wave: 1,
@@ -281,7 +281,7 @@ export const SERVICES: Service[] = [
     heading: "Alcove units, cupboards and shelving in London",
     primary: "alcove units london",
     description:
-      "Alcove cupboards and shelving built into chimney breast recesses across London, measured and scribed individually so doors sit flush and lines run true.",
+      "Built-in alcove units, cupboards and shelving for London homes, measured and fitted to each recess with a choice of layouts and finishes.",
     summary:
       "No two alcoves in a period house are the same width. Each unit is built to its own measurements and cut to follow the wall.",
     wave: 1,
