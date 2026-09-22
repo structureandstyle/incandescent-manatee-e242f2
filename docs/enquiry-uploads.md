@@ -1,6 +1,6 @@
 # SS enquiry uploads
 
-The public form uploads up to 10 files directly to the private Cloudflare R2 bucket `structure-style-enquiry-uploads`. Each file may be up to 25 MB; the batch may be up to 100 MB. Netlify receives the enquiry text and private download links. The links are added to the job description so the current Make CRM notes mapping can carry them without changing the scenario.
+The public form uploads up to 10 files directly to the private Cloudflare R2 bucket `structure-style-enquiry-uploads`. Each file may be up to 15 MB; the batch may be up to 60 MB. Netlify receives the enquiry text and private download links. The links are added to the job description so the current Make CRM notes mapping can carry them without changing the scenario.
 
 ## Production setup
 

@@ -255,7 +255,7 @@ const SOURCES = [
     <fieldset class="attachments-field" data-upload-fieldset hidden>
       <legend>Photos or drawings (optional)</legend>
       <p class="help" id={`${idPrefix}attachments-help`}>
-        Add up to 10 files, up to 25 MB each and 100 MB together. Photos, PDFs and Word documents
+        Add up to 10 files, up to 15 MB each and 60 MB together. Photos, PDFs and Word documents
         work. Your files upload before the enquiry is sent.
       </p>
       <label for={`${idPrefix}attachments`}>Choose files</label>
@@ -537,8 +537,8 @@ const SOURCES = [
     if (window.__ssEnquiryArmed) return;
     window.__ssEnquiryArmed = true;
     const maxFiles = 10;
-    const maxFileBytes = 25_000_000;
-    const maxTotalBytes = 100_000_000;
+    const maxFileBytes = 15_000_000;
+    const maxTotalBytes = 60_000_000;
     const allowedExtensions = new Set(["jpg", "jpeg", "png", "webp", "heic", "heif", "pdf", "doc", "docx"]);
     const uploadStates = new WeakMap();
     let turnstileLoader;
@@ -567,10 +567,10 @@ const SOURCES = [
       for (const file of files) {
         const extension = file.name.split(".").pop()?.toLowerCase();
         if (!allowedExtensions.has(extension)) return `${file.name} is not a supported file format.`;
-        if (file.size < 1 || file.size > maxFileBytes) return `${file.name} must be under 25 MB.`;
+        if (file.size < 1 || file.size > maxFileBytes) return `${file.name} must be under 15 MB.`;
         total += file.size;
       }
-      if (total > maxTotalBytes) return "Files must be under 100 MB together.";
+      if (total > maxTotalBytes) return "Files must be under 60 MB together.";
       return "";
     };
     const loadTurnstile = () => {

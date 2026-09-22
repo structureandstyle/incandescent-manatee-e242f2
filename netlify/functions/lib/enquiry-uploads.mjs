@@ -3,8 +3,8 @@ import { S3Client } from "@aws-sdk/client-s3";
 
 export const BUCKET = "structure-style-enquiry-uploads";
 export const MAX_FILES = 10;
-export const MAX_FILE_BYTES = 25_000_000;
-export const MAX_TOTAL_BYTES = 100_000_000;
+export const MAX_FILE_BYTES = 15_000_000;
+export const MAX_TOTAL_BYTES = 60_000_000;
 
 const contentTypes = {
   jpg: "image/jpeg",
@@ -32,11 +32,11 @@ export function validateFiles(files) {
       throw new Error(`File ${index + 1} has an unsupported format.`);
     }
     if (!Number.isSafeInteger(size) || size < 1 || size > MAX_FILE_BYTES) {
-      throw new Error(`File ${index + 1} must be under 25 MB.`);
+      throw new Error(`File ${index + 1} must be under 15 MB.`);
     }
     total += size;
     if (total > MAX_TOTAL_BYTES) {
-      throw new Error("Files must be under 100 MB combined.");
+      throw new Error("Files must be under 60 MB combined.");
     }
     return { name, extension, size, contentType: contentTypes[extension] };
   });

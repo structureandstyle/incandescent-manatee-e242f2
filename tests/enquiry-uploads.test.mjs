@@ -19,11 +19,11 @@ process.env.SS_TURNSTILE_SECRET_KEY = "test-turnstile-secret";
 
 test("file rules reject unsafe formats and oversize batches", () => {
   assert.throws(() => validateFiles([{ name: "plan.svg", size: 100 }]), /unsupported/);
-  assert.throws(() => validateFiles([{ name: "photo.jpg", size: 25_000_001 }]), /25 MB/);
+  assert.throws(() => validateFiles([{ name: "photo.jpg", size: 15_000_001 }]), /15 MB/);
   assert.throws(() => validateFiles(Array.from({ length: 5 }, (_, i) => ({
-    name: `${i}.jpg`, size: 25_000_000,
-  }))), /100 MB/);
-  assert.equal(validateFiles([{ name: "room.HEIC", size: 20_000_000 }])[0].contentType, "image/heic");
+    name: `${i}.jpg`, size: 15_000_000,
+  }))), /60 MB/);
+  assert.equal(validateFiles([{ name: "room.HEIC", size: 10_000_000 }])[0].contentType, "image/heic");
 });
 
 test("download links reject tampering", () => {
