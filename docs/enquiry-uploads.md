@@ -4,19 +4,19 @@ The public form uploads up to 10 files directly to the private Cloudflare R2 buc
 
 ## Who does what
 
-Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. After authorization, Flow to Form can create the widget and restricted R2 token and save the bucket CORS rule. Kaspar controls the SS Netlify project and must enter the site environment variables there. Do not put credentials in Git, chat, or email. Agree a private credential handoff with Kaspar before creating the one-time R2 secret.
+Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. On 22 September 2026, Flow to Form created the `SS enquiry uploads` Turnstile widget, created the `SS enquiry form uploads` R2 User API token restricted to the enquiry bucket, and saved the site-only CORS rule. Kaspar controls the SS Netlify project and must enter the private site environment variables there. Do not put credentials in Git, chat, or email. The R2 Secret Access Key is shown only on the token creation result screen, so the account holder must store it securely before leaving that screen.
 
-## Cloudflare preparation by Flow to Form
+## Cloudflare setup completed by Flow to Form
 
-1. Create a Turnstile widget for `structureandstyle.co.uk`. Use Managed mode with pre-clearance off. Record its site key and secret key. Add a deploy preview hostname only while testing that preview.
-2. Create a User API token with Object Read & Write permission, applying it only to `structure-style-enquiry-uploads`. Record the Access Key ID and Secret Access Key when they appear. The secret cannot be viewed again. Keep the bucket private. Do not enable a public development URL or public custom domain.
-3. Set this R2 CORS policy on the bucket, adding the exact Netlify preview origin only if testing a preview:
+1. The Turnstile widget is configured for `structureandstyle.co.uk`, in Managed mode with pre-clearance off. The public site key is set for production builds in `netlify.toml`. Add a deploy preview hostname only while testing that preview.
+2. The User API token has Object Read & Write permission only for `structure-style-enquiry-uploads`. The bucket remains private with no public development URL or public custom domain. The Access Key ID and one-time Secret Access Key must be handed to Kaspar privately.
+3. The bucket has this saved CORS policy. Add the exact Netlify preview origin only if testing a preview:
 
    ```json
    [{
      "AllowedOrigins": ["https://structureandstyle.co.uk"],
      "AllowedMethods": ["PUT"],
-     "AllowedHeaders": ["content-type"],
+     "AllowedHeaders": ["Content-Type"],
      "MaxAgeSeconds": 3600
    }]
    ```
@@ -24,18 +24,17 @@ Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. Aft
 ## Netlify setup by Kaspar
 
 1. Open the Netlify project serving `structureandstyle.co.uk` and confirm it is connected to `structureandstyle/incandescent-manatee-e242f2`.
-2. Open **Project configuration > Environment variables**. Add the following as site variables. Use the Production deploy context. If scopes are available, select Functions for the first five and Builds for the last one. Mark private values as secret where Netlify offers that control.
+2. Open **Project configuration > Environment variables > Add a variable > Import from a .env file**. Paste the five-line block supplied through the private handoff. Use the Production deploy context. If scopes are available, select Functions. Mark the values as secret where Netlify offers that control. The public Turnstile site key is already set for production builds in `netlify.toml`, so Kaspar does not need to enter it.
 
    | Variable | Value |
    | --- | --- |
-   | `R2_ACCOUNT_ID` | Cloudflare account ID from R2 Overview |
+   | `R2_ACCOUNT_ID` | `498ba2e45d866087024dedacfabc47d1` |
    | `R2_ACCESS_KEY_ID` | Restricted R2 token Access Key ID |
    | `R2_SECRET_ACCESS_KEY` | Restricted R2 token Secret Access Key |
    | `SS_TURNSTILE_SECRET_KEY` | Turnstile secret key |
    | `SS_UPLOAD_LINK_SECRET` | A new random 32-byte value, for example the output of `openssl rand -hex 32` |
-   | `PUBLIC_SS_TURNSTILE_SITE_KEY` | Turnstile site key |
 
-3. Keep `SS_UPLOAD_LINK_SECRET` stable. Changing it invalidates existing download links. Do not place any of these values in `netlify.toml`; its variables are unavailable to Netlify Functions. Set `PUBLIC_SS_TURNSTILE_SITE_KEY` last. Until this public key is set and the site is rebuilt, the site keeps its original one-file form.
+3. Keep `SS_UPLOAD_LINK_SECRET` stable. Changing it invalidates existing download links. Do not place these five private values in `netlify.toml`; its variables are unavailable to Netlify Functions. The current live site keeps its original one-file form until PR #2 is merged and a production build runs.
 4. Tell Flow to Form when the variable names and scopes are saved. Do not send the values. After PR #2 is merged into the production branch, confirm a new Netlify production deploy succeeds. Trigger a production deploy if one does not start automatically.
 5. Submit a controlled enquiry with two harmless sample files and confirm both links appear in the Netlify `enquiry` submission. Flow to Form can check the private R2 bucket and both downloads. Whoever owns the CRM should confirm both links appear in its notes. Remove the controlled records and R2 objects after the check.
 
