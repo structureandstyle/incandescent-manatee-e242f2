@@ -26,13 +26,15 @@ Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. On 
 1. Open the Netlify project serving `structureandstyle.co.uk` and confirm it is connected to `structureandstyle/incandescent-manatee-e242f2`.
 2. Open **Project configuration > Environment variables > Add a variable > Import from a .env file**. Paste the five-line block supplied through the private handoff. Use the Production deploy context. If scopes are available, select Functions. Mark the values as secret where Netlify offers that control. The public Turnstile site key is already set for production builds in `netlify.toml`, so Kaspar does not need to enter it.
 
-   | Variable | Value |
-   | --- | --- |
-   | `R2_ACCOUNT_ID` | `498ba2e45d866087024dedacfabc47d1` |
-   | `R2_ACCESS_KEY_ID` | Restricted R2 token Access Key ID |
-   | `R2_SECRET_ACCESS_KEY` | Restricted R2 token Secret Access Key |
-   | `SS_TURNSTILE_SECRET_KEY` | Turnstile secret key |
-   | `SS_UPLOAD_LINK_SECRET` | A new random 32-byte value, for example the output of `openssl rand -hex 32` |
+   Flow to Form should prepare the block below in a private note, replacing all four bracketed values before handing it to Kaspar. Generate the last value with a secure random generator, for example `openssl rand -hex 32`. Kaspar should receive the completed block, with no placeholders.
+
+   ```dotenv
+   R2_ACCOUNT_ID=498ba2e45d866087024dedacfabc47d1
+   R2_ACCESS_KEY_ID=<Access Key ID from the open Cloudflare token result>
+   R2_SECRET_ACCESS_KEY=<Secret Access Key from the open Cloudflare token result>
+   SS_TURNSTILE_SECRET_KEY=<secret key from the SS enquiry uploads widget>
+   SS_UPLOAD_LINK_SECRET=<new random 32-byte hex value>
+   ```
 
 3. Keep `SS_UPLOAD_LINK_SECRET` stable. Changing it invalidates existing download links. Do not place these five private values in `netlify.toml`; its variables are unavailable to Netlify Functions. The current live site keeps its original one-file form until PR #2 is merged and a production build runs.
 4. Tell Flow to Form when the variable names and scopes are saved. Do not send the values. After PR #2 is merged into the production branch, confirm a new Netlify production deploy succeeds. Trigger a production deploy if one does not start automatically.
