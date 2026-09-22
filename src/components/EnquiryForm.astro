@@ -16,6 +16,8 @@ interface Props {
   preselectedService?: string;
 }
 const { compact = false, idPrefix = "", service, preselectedService } = Astro.props;
+const turnstileSiteKey = import.meta.env.PUBLIC_SS_TURNSTILE_SITE_KEY;
+const largeUploadsEnabled = Boolean(turnstileSiteKey);
 
 /**
  * What a lead can ask for. Checkboxes rather than a single choice since
@@ -249,31 +251,50 @@ const SOURCES = [
     ></textarea>
   </div>
 
-  {/* Netlify accepts one file per field, so each of the three slots has its own
-      name. The first keeps its existing name for older submission mappings. */}
-  <fieldset class="attachments-field">
-    <legend>Photos or drawings (optional)</legend>
-    <p class="help" id={`${idPrefix}attachments-help`}>
-      Add up to three files, 7MB combined. Photos, PDF and Word files work. If your files are
-      larger, send the extras when we reply.
-    </p>
-    <div class="attachment-slots">
-      {[1, 2, 3].map((slot) => (
-        <div>
-          <label for={`${idPrefix}attachment-${slot}`}>File {slot}</label>
-          <input
-            id={`${idPrefix}attachment-${slot}`}
-            name={slot === 1 ? "attachment" : `attachment_${slot}`}
-            type="file"
-            data-enquiry-attachment
-            aria-describedby={`${idPrefix}attachments-help`}
-            accept="image/*,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,.pdf,.doc,.docx"
-          />
-        </div>
-      ))}
+  {largeUploadsEnabled ? (
+    <fieldset class="attachments-field" data-upload-fieldset hidden>
+      <legend>Photos or drawings (optional)</legend>
+      <p class="help" id={`${idPrefix}attachments-help`}>
+        Add up to 10 files, up to 25 MB each and 100 MB together. Photos, PDFs and Word documents
+        work. Your files upload before the enquiry is sent.
+      </p>
+      <label for={`${idPrefix}attachments`}>Choose files</label>
+      <input
+        id={`${idPrefix}attachments`}
+        type="file"
+        multiple
+        disabled
+        data-enquiry-files
+        aria-describedby={`${idPrefix}attachments-help ${idPrefix}attachments-error`}
+        accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
+      />
+      <div
+        id={`${idPrefix}upload-challenge`}
+        class="upload-challenge"
+        data-upload-challenge
+        data-sitekey={turnstileSiteKey}
+        hidden
+      ></div>
+      <p class="help upload-status" role="status" data-upload-status hidden></p>
+      <p class="help attachment-error" id={`${idPrefix}attachments-error`} role="alert" data-attachment-error hidden></p>
+      <input type="hidden" name="attachment_links" value="" />
+    </fieldset>
+    <noscript><p class="help">Send your enquiry now and share files when we reply.</p></noscript>
+  ) : (
+    <div>
+      <label for={`${idPrefix}attachment`}>A photo or drawing (optional)</label>
+      <p class="help" id={`${idPrefix}attachment-help`}>
+        One file, up to 8 MB. PDF, Word and photographs work. Send anything else when we reply.
+      </p>
+      <input
+        id={`${idPrefix}attachment`}
+        name="attachment"
+        type="file"
+        aria-describedby={`${idPrefix}attachment-help`}
+        accept="image/*,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,.pdf,.doc,.docx"
+      />
     </div>
-    <p class="help attachment-error" role="alert" data-attachment-error hidden></p>
-  </fieldset>
+  )}
 
   <div>
     <label for={`${idPrefix}source`}>How did you hear about us?</label>
@@ -374,10 +395,17 @@ const SOURCES = [
     margin-right: var(--space-6);
     cursor: pointer;
   }
-  .enquiry-form .attachment-slots {
-    display: grid;
-    gap: var(--space-6);
+  .enquiry-form .upload-challenge {
     margin-top: var(--space-6);
+    min-height: 65px;
+  }
+  .enquiry-form .upload-challenge[hidden],
+  .enquiry-form .upload-status[hidden],
+  .enquiry-form .attachment-error[hidden] {
+    display: none;
+  }
+  .enquiry-form .upload-status {
+    margin-top: var(--space-5);
   }
   .enquiry-form .attachment-error {
     color: var(--char);
@@ -508,28 +536,184 @@ const SOURCES = [
   (() => {
     if (window.__ssEnquiryArmed) return;
     window.__ssEnquiryArmed = true;
-    const maxAttachmentBytes = 7 * 1000 * 1000;
+    const maxFiles = 10;
+    const maxFileBytes = 25_000_000;
+    const maxTotalBytes = 100_000_000;
+    const allowedExtensions = new Set(["jpg", "jpeg", "png", "webp", "heic", "heif", "pdf", "doc", "docx"]);
+    const uploadStates = new WeakMap();
+    let turnstileLoader;
+
+    const stateFor = (form) => {
+      if (!uploadStates.has(form)) uploadStates.set(form, { widgetId: null, token: "", busy: false, uploadedLinks: null });
+      return uploadStates.get(form);
+    };
+    const showError = (form, message) => {
+      const error = form.querySelector("[data-attachment-error]");
+      if (error) {
+        error.textContent = message;
+        error.hidden = !message;
+      }
+    };
+    const showStatus = (form, message) => {
+      const status = form.querySelector("[data-upload-status]");
+      if (status) {
+        status.textContent = message;
+        status.hidden = !message;
+      }
+    };
+    const validateFiles = (files) => {
+      if (files.length > maxFiles) return `Choose up to ${maxFiles} files.`;
+      let total = 0;
+      for (const file of files) {
+        const extension = file.name.split(".").pop()?.toLowerCase();
+        if (!allowedExtensions.has(extension)) return `${file.name} is not a supported file format.`;
+        if (file.size < 1 || file.size > maxFileBytes) return `${file.name} must be under 25 MB.`;
+        total += file.size;
+      }
+      if (total > maxTotalBytes) return "Files must be under 100 MB together.";
+      return "";
+    };
+    const loadTurnstile = () => {
+      if (window.turnstile) return Promise.resolve(window.turnstile);
+      if (!turnstileLoader) {
+        turnstileLoader = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+          script.async = true;
+          script.onload = () => window.turnstile ? resolve(window.turnstile) : reject(new Error("Upload check failed to load."));
+          script.onerror = () => reject(new Error("Upload check failed to load."));
+          document.head.appendChild(script);
+        }).catch((error) => { turnstileLoader = null; throw error; });
+      }
+      return turnstileLoader;
+    };
+    const showChallenge = async (form) => {
+      const container = form.querySelector("[data-upload-challenge]");
+      if (!container) return;
+      container.hidden = false;
+      const state = stateFor(form);
+      if (state.widgetId !== null) return;
+      try {
+        const turnstile = await loadTurnstile();
+        state.widgetId = turnstile.render(`#${container.id}`, {
+          sitekey: container.dataset.sitekey,
+          action: "ss_enquiry_upload",
+          theme: "light",
+          callback: (token) => { state.token = token; showError(form, ""); },
+          "expired-callback": () => { state.token = ""; },
+          "error-callback": () => { state.token = ""; showError(form, "Upload check failed. Try again shortly."); },
+        });
+      } catch {
+        showError(form, "Upload check could not load. Try again shortly.");
+      }
+    };
+
+    document.addEventListener("change", (event) => {
+      const input = event.target;
+      if (!input?.matches?.("[data-enquiry-files]")) return;
+      const form = input.form;
+      const state = stateFor(form);
+      state.uploadedLinks = null;
+      const files = Array.from(input.files || []);
+      const error = validateFiles(files);
+      showError(form, error);
+      showStatus(form, "");
+      if (files.length && !error) showChallenge(form);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("[data-upload-fieldset]").forEach((fieldset) => {
+        fieldset.hidden = false;
+        fieldset.querySelector("[data-enquiry-files]").disabled = false;
+      });
+    });
+
     document.addEventListener("submit", (e) => {
       const form = e.target;
       if (!form || form.getAttribute("name") !== "enquiry") return;
-      const files = Array.from(form.querySelectorAll("[data-enquiry-attachment]"))
-        .flatMap((input) => Array.from(input.files || []));
-      const error = form.querySelector("[data-attachment-error]");
-      if (files.reduce((total, file) => total + file.size, 0) > maxAttachmentBytes) {
-        e.preventDefault();
-        if (error) {
-          error.textContent = "These files are over 7MB combined. Choose smaller files, or send the extras when we reply.";
-          error.hidden = false;
-        }
-        form.querySelector("[data-enquiry-attachment]")?.focus();
+      const input = form.querySelector("[data-enquiry-files]");
+      const files = Array.from(input?.files || []);
+      if (!files.length) {
+        try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}
         return;
       }
-      if (error) error.hidden = true;
-      try {
-        sessionStorage.setItem("ss_enquiry_submitted", String(Date.now()));
-      } catch (err) {
-        /* Private mode or storage disabled: the lead still reaches Netlify. */
+      e.preventDefault();
+      const state = stateFor(form);
+      if (state.busy) return;
+      const error = validateFiles(files);
+      if (error) {
+        showError(form, error);
+        input.focus();
+        return;
       }
+      if (!state.uploadedLinks && !state.token) {
+        showChallenge(form);
+        showError(form, "Complete the upload check, then send your enquiry.");
+        return;
+      }
+
+      state.busy = true;
+      const button = form.querySelector('button[type="submit"]');
+      if (button) button.disabled = true;
+      input.disabled = true;
+      showError(form, "");
+
+      (async () => {
+        let links = state.uploadedLinks;
+        if (!links) {
+          showStatus(form, "Preparing your files...");
+          const ticketResponse = await fetch("/api/enquiry-upload-tickets", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              files: files.map((file) => ({ name: file.name, size: file.size })),
+              turnstileToken: state.token,
+            }),
+          });
+          const ticketData = await ticketResponse.json().catch(() => ({}));
+          state.token = "";
+          if (state.widgetId !== null && window.turnstile) window.turnstile.reset(state.widgetId);
+          if (!ticketResponse.ok || ticketData.tickets?.length !== files.length) {
+            throw new Error(ticketData.error || "Could not prepare your files. Try again.");
+          }
+
+          const tickets = ticketData.tickets;
+          let uploaded = 0;
+          for (let start = 0; start < files.length; start += 3) {
+            await Promise.all(files.slice(start, start + 3).map(async (file, offset) => {
+              const ticket = tickets[start + offset];
+              const response = await fetch(ticket.uploadUrl, {
+                method: "PUT",
+                headers: { "Content-Type": ticket.contentType },
+                body: file,
+                credentials: "omit",
+              });
+              if (!response.ok) throw new Error(`${file.name} could not upload. Try again.`);
+              uploaded += 1;
+              showStatus(form, `Uploaded ${uploaded} of ${files.length} files...`);
+            }));
+          }
+          links = tickets.map((ticket, index) => `${files[index].name}: ${ticket.downloadUrl}`).join("\n");
+          state.uploadedLinks = links;
+        }
+
+        showStatus(form, "Sending your enquiry...");
+        const data = new FormData(form);
+        data.delete("cf-turnstile-response");
+        data.set("attachment_links", links);
+        const detail = String(data.get("detail") || "").trimEnd();
+        data.set("detail", `${detail}${detail ? "\n\n" : ""}Attached files:\n${links}`);
+        const response = await fetch("/", { method: "POST", body: data, credentials: "same-origin" });
+        if (!response.ok) throw new Error("Your files uploaded, but the enquiry could not be sent. Try again.");
+        try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}
+        window.location.assign(form.action);
+      })().catch((error) => {
+        showStatus(form, "");
+        showError(form, error.message || "The upload failed. Try again.");
+        if (button) button.disabled = false;
+        input.disabled = false;
+        state.busy = false;
+      });
     });
   })();
 </script>
