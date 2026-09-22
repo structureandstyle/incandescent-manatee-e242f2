@@ -2,11 +2,15 @@
 
 The public form uploads up to 10 files directly to the private Cloudflare R2 bucket `structure-style-enquiry-uploads`. Each file may be up to 15 MB; the batch may be up to 60 MB. Netlify receives the enquiry text and private download links. The links are added to the job description so the current Make CRM notes mapping can carry them without changing the scenario.
 
-## Production setup
+## Who does what
 
-1. In Cloudflare, create a Turnstile widget for `structureandstyle.co.uk`. Use the managed mode and note its site key and secret key. Add a deploy preview hostname only while testing that preview.
-2. Create an R2 token restricted to object read and write for `structure-style-enquiry-uploads`. Keep the bucket private. Do not enable a public development URL or public custom domain.
-3. Set this R2 CORS policy, adding the exact Netlify preview origin temporarily during review:
+Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. After authorization, Flow to Form can create the widget and restricted R2 token and save the bucket CORS rule. Kaspar controls the SS Netlify project and must enter the site environment variables there. Do not put credentials in Git, chat, or email. Agree a private credential handoff with Kaspar before creating the one-time R2 secret.
+
+## Cloudflare preparation by Flow to Form
+
+1. Create a Turnstile widget for `structureandstyle.co.uk`. Use Managed mode with pre-clearance off. Record its site key and secret key. Add a deploy preview hostname only while testing that preview.
+2. Create a User API token with Object Read & Write permission, applying it only to `structure-style-enquiry-uploads`. Record the Access Key ID and Secret Access Key when they appear. The secret cannot be viewed again. Keep the bucket private. Do not enable a public development URL or public custom domain.
+3. Set this R2 CORS policy on the bucket, adding the exact Netlify preview origin only if testing a preview:
 
    ```json
    [{
@@ -17,9 +21,23 @@ The public form uploads up to 10 files directly to the private Cloudflare R2 buc
    }]
    ```
 
-4. In the **SS site** on Netlify, set `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `SS_UPLOAD_LINK_SECRET`, and `SS_TURNSTILE_SECRET_KEY` as site environment variables available to Functions. `SS_UPLOAD_LINK_SECRET` should be a random 32-byte value and should remain stable because changing it invalidates existing download links. Store these values only in Netlify, never in Git or a message.
-5. Set `PUBLIC_SS_TURNSTILE_SITE_KEY` for Builds last, then redeploy. Until this public key is set, the site keeps the original one-file Netlify form.
-6. Submit a controlled enquiry with two harmless sample files. Confirm both files in the private R2 bucket, both links in the Netlify submission and CRM notes, and a successful download from each link. Remove the controlled records and R2 objects after the check.
+## Netlify setup by Kaspar
+
+1. Open the Netlify project serving `structureandstyle.co.uk` and confirm it is connected to `structureandstyle/incandescent-manatee-e242f2`.
+2. Open **Project configuration > Environment variables**. Add the following as site variables. Use the Production deploy context. If scopes are available, select Functions for the first five and Builds for the last one. Mark private values as secret where Netlify offers that control.
+
+   | Variable | Value |
+   | --- | --- |
+   | `R2_ACCOUNT_ID` | Cloudflare account ID from R2 Overview |
+   | `R2_ACCESS_KEY_ID` | Restricted R2 token Access Key ID |
+   | `R2_SECRET_ACCESS_KEY` | Restricted R2 token Secret Access Key |
+   | `SS_TURNSTILE_SECRET_KEY` | Turnstile secret key |
+   | `SS_UPLOAD_LINK_SECRET` | A new random 32-byte value, for example the output of `openssl rand -hex 32` |
+   | `PUBLIC_SS_TURNSTILE_SITE_KEY` | Turnstile site key |
+
+3. Keep `SS_UPLOAD_LINK_SECRET` stable. Changing it invalidates existing download links. Do not place any of these values in `netlify.toml`; its variables are unavailable to Netlify Functions. Set `PUBLIC_SS_TURNSTILE_SITE_KEY` last. Until this public key is set and the site is rebuilt, the site keeps its original one-file form.
+4. Tell Flow to Form when the variable names and scopes are saved. Do not send the values. After PR #2 is merged into the production branch, confirm a new Netlify production deploy succeeds. Trigger a production deploy if one does not start automatically.
+5. Submit a controlled enquiry with two harmless sample files and confirm both links appear in the Netlify `enquiry` submission. Flow to Form can check the private R2 bucket and both downloads. Whoever owns the CRM should confirm both links appear in its notes. Remove the controlled records and R2 objects after the check.
 
 ## Operation
 
