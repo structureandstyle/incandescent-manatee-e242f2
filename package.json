@@ -11,12 +11,15 @@
     "preview": "astro preview",
     "astro": "astro",
     "verify": "node scripts/verify-build.mjs",
+    "test:uploads": "node --test tests/enquiry-uploads.test.mjs",
     "build:production": "astro build && node scripts/verify-build.mjs",
     "build:preview": "astro build && node scripts/verify-build.mjs && node scripts/build-preview.mjs && python scripts/zip-preview.py",
     "zip:preview": "python scripts/zip-preview.py"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
+    "@aws-sdk/client-s3": "^3.1137.0",
+    "@aws-sdk/s3-request-presigner": "^3.1137.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.4",
     "tailwindcss": "^4.3.3"

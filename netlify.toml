@@ -18,6 +18,12 @@
 [context.production]
   command = "npm run build:production"
 
+# The Turnstile site key is public. Keep it in the production build only, so
+# preview deploys retain the original one-file form until their own hostname
+# and R2 CORS origin are explicitly configured.
+[context.production.environment]
+  PUBLIC_SS_TURNSTILE_SITE_KEY = "0x4AAAAAAE_4Ksd9JvaaXUXM"
+
 # Branch deploys and previews deliberately run the plain build, so the site can
 # be built and reviewed while the client's answers are outstanding. That is the
 # whole point of the branch: draft pages are visible to us and noindexed to
