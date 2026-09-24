@@ -255,7 +255,7 @@ const SOURCES = [
     <fieldset class="attachments-field" data-upload-fieldset hidden>
       <legend>Photos or drawings (optional)</legend>
       <p class="help" id={`${idPrefix}attachments-help`}>
-        Add up to 10 files, up to 15 MB each and 60 MB together. Photos, PDFs and Word documents
+        Add up to six files, up to 15 MB each and 60 MB together. Photos, PDFs and Word documents
         work. Your files upload before the enquiry is sent.
       </p>
       <label for={`${idPrefix}attachments`}>Choose files</label>
@@ -536,7 +536,7 @@ const SOURCES = [
   (() => {
     if (window.__ssEnquiryArmed) return;
     window.__ssEnquiryArmed = true;
-    const maxFiles = 10;
+    const maxFiles = 6;
     const maxFileBytes = 15_000_000;
     const maxTotalBytes = 60_000_000;
     const allowedExtensions = new Set(["jpg", "jpeg", "png", "webp", "heic", "heif", "pdf", "doc", "docx"]);
@@ -562,7 +562,7 @@ const SOURCES = [
       }
     };
     const validateFiles = (files) => {
-      if (files.length > maxFiles) return `Choose up to ${maxFiles} files.`;
+      if (files.length > maxFiles) return "Choose up to six files.";
       let total = 0;
       for (const file of files) {
         const extension = file.name.split(".").pop()?.toLowerCase();

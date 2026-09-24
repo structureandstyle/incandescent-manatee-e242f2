@@ -17,7 +17,7 @@ export default async function handler(request) {
 
   try {
     const extension = key.split(".").pop();
-    const number = key.match(/\/(10|[1-9])\./)?.[1] ?? "file";
+    const number = key.match(/\/([1-6])\./)?.[1] ?? "file";
     const s3 = r2Client();
     const signedUrl = await getSignedUrl(s3, new GetObjectCommand({
       Bucket: BUCKET,

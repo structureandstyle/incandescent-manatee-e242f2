@@ -2,7 +2,7 @@ import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { S3Client } from "@aws-sdk/client-s3";
 
 export const BUCKET = "structure-style-enquiry-uploads";
-export const MAX_FILES = 10;
+export const MAX_FILES = 6;
 export const MAX_FILE_BYTES = 15_000_000;
 export const MAX_TOTAL_BYTES = 60_000_000;
 
@@ -60,7 +60,7 @@ export function downloadLink(key, origin) {
 }
 
 export function verifyDownloadLink(key, signature) {
-  if (!/^enquiries\/[0-9a-f-]{36}\/(?:10|[1-9])\.(?:jpg|jpeg|png|webp|heic|heif|pdf|doc|docx)$/.test(key)) {
+  if (!/^enquiries\/[0-9a-f-]{36}\/[1-6]\.(?:jpg|jpeg|png|webp|heic|heif|pdf|doc|docx)$/.test(key)) {
     return false;
   }
   if (typeof signature !== "string" || !/^[0-9a-f]{64}$/.test(signature)) {

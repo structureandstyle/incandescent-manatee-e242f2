@@ -26,11 +26,27 @@ test("file rules reject unsafe formats and oversize batches", () => {
   assert.equal(validateFiles([{ name: "room.HEIC", size: 10_000_000 }])[0].contentType, "image/heic");
 });
 
+test("file rules allow six files and refuse a seventh", () => {
+  const files = (count) => Array.from({ length: count }, (_, i) => ({ name: `${i}.jpg`, size: 1_000_000 }));
+  assert.equal(validateFiles(files(6)).length, 6);
+  assert.throws(() => validateFiles(files(7)), /1 to 6 files/);
+});
+
 test("download links reject tampering", () => {
   const url = new URL(downloadLink(key, site));
   assert.equal(verifyDownloadLink(url.searchParams.get("key"), url.searchParams.get("sig")), true);
   assert.equal(verifyDownloadLink(key.replace("1.jpg", "2.jpg"), url.searchParams.get("sig")), false);
   assert.equal(verifyDownloadLink("enquiries/../../secrets", url.searchParams.get("sig")), false);
+});
+
+test("download links stop at the sixth file", () => {
+  const linkFor = (name) => new URL(downloadLink(key.replace("1.jpg", name), site));
+  const sixth = linkFor("6.jpg");
+  assert.equal(verifyDownloadLink(sixth.searchParams.get("key"), sixth.searchParams.get("sig")), true);
+  for (const name of ["7.jpg", "10.jpg"]) {
+    const link = linkFor(name);
+    assert.equal(verifyDownloadLink(link.searchParams.get("key"), link.searchParams.get("sig")), false);
+  }
 });
 
 test("ticket issue checks challenge and binds file size and type", async (t) => {
