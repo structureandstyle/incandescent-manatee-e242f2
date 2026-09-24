@@ -255,19 +255,31 @@ const SOURCES = [
     <fieldset class="attachments-field" data-upload-fieldset hidden>
       <legend>Photos or drawings (optional)</legend>
       <p class="help" id={`${idPrefix}attachments-help`}>
-        Add up to six files, up to 15 MB each and 60 MB together. Photos, PDFs and Word documents
-        work. Your files upload before the enquiry is sent.
+        Add up to six photos, plans or documents, up to 15 MB each and 60 MB together. Choose
+        several at once or add them one at a time. They upload when you send the enquiry.
       </p>
-      <label for={`${idPrefix}attachments`}>Choose files</label>
-      <input
-        id={`${idPrefix}attachments`}
-        type="file"
-        multiple
-        disabled
-        data-enquiry-files
-        aria-describedby={`${idPrefix}attachments-help ${idPrefix}attachments-error`}
-        accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
-      />
+      {/* 24 Sep 2026. The bare file input replaced its selection on every pick
+          and could only take several files with Ctrl held down, which nobody
+          knows to do. It is now visually hidden behind an Add files button:
+          every pick adds to the list below, and each file can be removed on its
+          own. The list, not the input, is what gets uploaded. */}
+      <div class="attachments-add">
+        <input
+          id={`${idPrefix}attachments`}
+          class="attachments-input"
+          type="file"
+          multiple
+          disabled
+          data-enquiry-files
+          aria-describedby={`${idPrefix}attachments-help ${idPrefix}attachments-count ${idPrefix}attachments-error`}
+          accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
+        />
+        <label for={`${idPrefix}attachments`} class="attachments-button" data-add-files>Add files</label>
+        <p class="help attachments-count" id={`${idPrefix}attachments-count`} aria-live="polite" data-file-count>
+          No files added yet.
+        </p>
+      </div>
+      <ul class="attachments-list" data-file-list hidden></ul>
       <div
         id={`${idPrefix}upload-challenge`}
         class="upload-challenge"
@@ -394,6 +406,113 @@ const SOURCES = [
     padding: var(--space-3) var(--space-6);
     margin-right: var(--space-6);
     cursor: pointer;
+  }
+  /* The picker, 24 Sep 2026: a button that adds to a list, not a bare input.
+     The input stays in the page, visually hidden rather than display:none, so
+     it still takes keyboard focus and the label still opens it. */
+  .enquiry-form .attachments-add {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-6);
+    margin-top: var(--space-6);
+  }
+  .enquiry-form input.attachments-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .enquiry-form label.attachments-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin: 0;
+    padding: var(--space-3) var(--space-6);
+    font-family: var(--font-sans);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--char);
+    background: var(--paper);
+    border: var(--rule-structure);
+    cursor: pointer;
+    transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+  }
+  .enquiry-form label.attachments-button:hover {
+    background: var(--char);
+    color: var(--paper);
+  }
+  .enquiry-form input.attachments-input:focus-visible + .attachments-button {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+  .enquiry-form label.attachments-button[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: var(--paper);
+    color: var(--char);
+  }
+  .enquiry-form .attachments-add .attachments-count {
+    margin: 0;
+  }
+  .enquiry-form .attachments-list {
+    list-style: none;
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    border-top: var(--rule-hair);
+  }
+  .enquiry-form .attachments-list[hidden] {
+    display: none;
+  }
+  .enquiry-form .attachments-list :global(li) {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    min-height: 44px;
+    padding: var(--space-3) 0;
+    border-bottom: var(--rule-hair);
+  }
+  .enquiry-form .attachments-list :global(.file-name) {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--type-body-sm);
+    color: var(--char);
+  }
+  .enquiry-form .attachments-list :global(.file-size) {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    color: var(--ink-soft);
+  }
+  /* The rows are built by the script below, so they carry no Astro scope
+     attribute: :global() lets these rules reach them. Specific enough to beat
+     the token base sheet's button reset, and a class of its own so the Send
+     enquiry styling can never reach it. */
+  form.enquiry-form .attachments-list :global(button.file-remove) {
+    flex: none;
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    font: inherit;
+    font-size: var(--type-body-sm);
+    color: var(--green);
+    background: none;
+    border: 0;
+    text-decoration: underline;
+    text-decoration-color: rgba(44, 74, 58, 0.4);
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  form.enquiry-form .attachments-list :global(button.file-remove:disabled) {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
   .enquiry-form .upload-challenge {
     margin-top: var(--space-6);
@@ -544,8 +663,87 @@ const SOURCES = [
     let turnstileLoader;
 
     const stateFor = (form) => {
-      if (!uploadStates.has(form)) uploadStates.set(form, { widgetId: null, token: "", busy: false, uploadedLinks: null });
+      if (!uploadStates.has(form)) uploadStates.set(form, { widgetId: null, token: "", busy: false, uploadedLinks: null, files: [] });
       return uploadStates.get(form);
+    };
+    const formatSize = (bytes) => bytes >= 100_000
+      ? `${(bytes / 1_000_000).toFixed(1)} MB`
+      : `${Math.max(1, Math.round(bytes / 1000))} KB`;
+    // The list is the source of truth for what uploads. Redrawn whole on every
+    // change: six rows at most, so there is nothing to diff.
+    const renderFiles = (form) => {
+      const state = stateFor(form);
+      const list = form.querySelector("[data-file-list]");
+      const count = form.querySelector("[data-file-count]");
+      const input = form.querySelector("[data-enquiry-files]");
+      const addButton = form.querySelector("[data-add-files]");
+      if (!list || !input) return;
+      list.replaceChildren(...state.files.map((file, index) => {
+        const item = document.createElement("li");
+        const name = document.createElement("span");
+        name.className = "file-name";
+        name.textContent = file.name;
+        name.title = file.name;
+        const size = document.createElement("span");
+        size.className = "file-size";
+        size.textContent = formatSize(file.size);
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "file-remove";
+        remove.dataset.removeFile = String(index);
+        remove.textContent = "Remove";
+        remove.setAttribute("aria-label", `Remove ${file.name}`);
+        remove.disabled = state.busy;
+        item.append(name, size, remove);
+        return item;
+      }));
+      list.hidden = !state.files.length;
+      const full = state.files.length >= maxFiles;
+      if (count) {
+        count.textContent = !state.files.length
+          ? "No files added yet."
+          : full
+            ? "Six files added, the most one enquiry can take. Remove one to add another."
+            : `${state.files.length} of ${maxFiles} files added.`;
+      }
+      input.disabled = full || state.busy;
+      if (addButton) addButton.setAttribute("aria-disabled", String(full || state.busy));
+      const challenge = form.querySelector("[data-upload-challenge]");
+      if (challenge && !state.files.length) challenge.hidden = true;
+      else if (challenge && state.widgetId !== null) challenge.hidden = false;
+    };
+    // Adds a pick to the list rather than replacing it. Each file is checked on
+    // its own, so one wrong file does not throw away the good ones with it.
+    const addFiles = (form, picked) => {
+      const state = stateFor(form);
+      const messages = [];
+      let overflow = 0;
+      let total = state.files.reduce((sum, file) => sum + file.size, 0);
+      for (const file of picked) {
+        if (state.files.some((f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified)) continue;
+        if (state.files.length >= maxFiles) { overflow += 1; continue; }
+        const extension = file.name.split(".").pop()?.toLowerCase();
+        if (!allowedExtensions.has(extension)) { messages.push(`${file.name} is not a photo, PDF or Word document.`); continue; }
+        if (file.size < 1) { messages.push(`${file.name} is empty.`); continue; }
+        if (file.size > maxFileBytes) { messages.push(`${file.name} is over 15 MB.`); continue; }
+        if (total + file.size > maxTotalBytes) { messages.push(`${file.name} would take the files over 60 MB together.`); continue; }
+        state.files.push(file);
+        total += file.size;
+      }
+      if (overflow) {
+        // Small numbers in words, as everywhere else on the site.
+        const words = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+        const howMany = overflow === 1 ? "one was" : `${words[overflow - 1] ?? overflow} were`;
+        messages.push(`You can add up to six files, so ${howMany} not added.`);
+      }
+      state.uploadedLinks = null;
+      showError(form, messages.join(" "));
+      renderFiles(form);
+      if (state.files.length) showChallenge(form);
+    };
+    const setBusy = (form, busy) => {
+      stateFor(form).busy = busy;
+      renderFiles(form);
     };
     const showError = (form, message) => {
       const error = form.querySelector("[data-attachment-error]");
@@ -612,19 +810,34 @@ const SOURCES = [
       const input = event.target;
       if (!input?.matches?.("[data-enquiry-files]")) return;
       const form = input.form;
-      const state = stateFor(form);
-      state.uploadedLinks = null;
-      const files = Array.from(input.files || []);
-      const error = validateFiles(files);
-      showError(form, error);
+      const picked = Array.from(input.files || []);
+      // Cleared so the same file can be picked again after it is removed.
+      input.value = "";
       showStatus(form, "");
-      if (files.length && !error) showChallenge(form);
+      addFiles(form, picked);
+    });
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest?.("[data-remove-file]");
+      if (!button?.form) return;
+      const form = button.form;
+      const state = stateFor(form);
+      if (state.busy) return;
+      const index = Number(button.dataset.removeFile);
+      state.files.splice(index, 1);
+      state.uploadedLinks = null;
+      showError(form, "");
+      renderFiles(form);
+      // Focus goes to the row that took its place, or back to Add files.
+      const remaining = form.querySelectorAll("[data-remove-file]");
+      (remaining[Math.min(index, remaining.length - 1)] || form.querySelector("[data-enquiry-files]"))?.focus();
     });
 
     document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll("[data-upload-fieldset]").forEach((fieldset) => {
         fieldset.hidden = false;
         fieldset.querySelector("[data-enquiry-files]").disabled = false;
+        renderFiles(fieldset.closest("form"));
       });
     });
 
@@ -632,13 +845,13 @@ const SOURCES = [
       const form = e.target;
       if (!form || form.getAttribute("name") !== "enquiry") return;
       const input = form.querySelector("[data-enquiry-files]");
-      const files = Array.from(input?.files || []);
+      const state = stateFor(form);
+      const files = state.files.slice();
       if (!files.length) {
         try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}
         return;
       }
       e.preventDefault();
-      const state = stateFor(form);
       if (state.busy) return;
       const error = validateFiles(files);
       if (error) {
@@ -652,10 +865,9 @@ const SOURCES = [
         return;
       }
 
-      state.busy = true;
+      setBusy(form, true);
       const button = form.querySelector('button[type="submit"]');
       if (button) button.disabled = true;
-      input.disabled = true;
       showError(form, "");
 
       (async () => {
@@ -711,8 +923,7 @@ const SOURCES = [
         showStatus(form, "");
         showError(form, error.message || "The upload failed. Try again.");
         if (button) button.disabled = false;
-        input.disabled = false;
-        state.busy = false;
+        setBusy(form, false);
       });
     });
   })();
