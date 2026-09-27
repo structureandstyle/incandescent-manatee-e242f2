@@ -74,6 +74,32 @@ test("ticket issue checks challenge and binds file size and type", async (t) => 
   assert.match(fileResponse.headers.get("Location"), /r2\.cloudflarestorage\.com/);
 });
 
+test("one enquiry's files share one folder, and the next enquiry gets its own", async (t) => {
+  const originalFetch = globalThis.fetch;
+  t.after(() => { globalThis.fetch = originalFetch; });
+  globalThis.fetch = async () => Response.json({
+    success: true, action: "ss_enquiry_upload", hostname: "structureandstyle.co.uk",
+  });
+
+  const keysFor = async (names) => {
+    const response = await ticketsHandler(new Request(`${site}/api/enquiry-upload-tickets`, {
+      method: "POST",
+      headers: { Origin: site, "Content-Type": "application/json" },
+      body: JSON.stringify({ files: names.map((name) => ({ name, size: 1_000 })), turnstileToken: "test-token" }),
+    }));
+    assert.equal(response.status, 200);
+    const { tickets } = await response.json();
+    return tickets.map((ticket) => new URL(ticket.downloadUrl).searchParams.get("key").split("/"));
+  };
+
+  const first = await keysFor(["room.jpg", "plan.pdf", "wall.png"]);
+  assert.equal(new Set(first.map(([, folder]) => folder)).size, 1);
+  assert.deepEqual(first.map(([, , file]) => file), ["1.jpg", "2.pdf", "3.png"]);
+
+  const second = await keysFor(["hall.jpg"]);
+  assert.notEqual(second[0][1], first[0][1]);
+});
+
 test("ticket issue refuses another origin", async () => {
   const response = await ticketsHandler(new Request(`${site}/api/enquiry-upload-tickets`, {
     method: "POST",

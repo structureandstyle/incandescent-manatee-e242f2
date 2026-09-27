@@ -4,6 +4,7 @@ import {
   BUCKET,
   downloadLink,
   jsonResponse,
+  newEnquiryFolder,
   newObjectKey,
   r2Client,
   validateFiles,
@@ -69,8 +70,9 @@ export default async function handler(request) {
   }
 
   try {
+    const folder = newEnquiryFolder();
     const tickets = await Promise.all(files.map(async (file, index) => {
-      const key = newObjectKey(index, file.extension);
+      const key = newObjectKey(folder, index, file.extension);
       const command = new PutObjectCommand({
         Bucket: BUCKET,
         Key: key,

@@ -42,8 +42,12 @@ export function validateFiles(files) {
   });
 }
 
-export function newObjectKey(index, extension) {
-  return `enquiries/${randomUUID()}/${index + 1}.${extension}`;
+export function newEnquiryFolder() {
+  return randomUUID();
+}
+
+export function newObjectKey(folder, index, extension) {
+  return `enquiries/${folder}/${index + 1}.${extension}`;
 }
 
 function signKey(key) {
