@@ -72,10 +72,17 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "A fitted wardrobe is designed and made specifically for your room, taking into account the available space, the proportions of the room and what you need to store. The interior is planned around how you use it, from hanging space and shelving to drawers and other storage. You don't need to have everything worked out before getting in touch: understanding what you need and helping develop the right layout is part of the service.",
       "We design and fit wardrobes across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.",
     ],
+    /* THE COST AND MADE-FROM LEADS NAME THE WARDROBE THE WAY IT IS SEARCHED,
+       27 September 2026. Search Console, 18 Aug to 25 Sep: 45 wardrobe
+       queries, 411 impressions, average position 45, and the commonest shape
+       is "bespoke wardrobes <area>". Neither "bespoke wardrobe" nor "built-in
+       wardrobe" appeared in any visible text on the site. Protocol section 5
+       allows "bespoke" as the category word ("Bespoke wardrobes" is its own
+       example). Both leads are ours; his lines on this page are untouched. */
     leads: {
-      "cost": "The honest answer is a range until the room is measured, and one visit turns it into a firm number.",
+      "cost": "For a bespoke wardrobe, the honest answer is a range until the room is measured, and one visit turns it into a firm number.",
       "how-long": "The lead time runs in weeks, and the fitting itself takes days rather than weeks.",
-      "made-from": "Which board suits a wardrobe wall depends on the room, the finish you want and the budget.",
+      "made-from": "Which board suits a built-in wardrobe depends on the room, the finish you want and the budget.",
       "fitting": "Ceilings, floors and walls are rarely straight, and a wardrobe wall meets all three at once.",
       /* His, 6 September 2026. The guarantee and adjustment rows under it
          are Q35 and Q36, reworded the same day: see answers.ts. */

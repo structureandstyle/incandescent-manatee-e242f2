@@ -214,7 +214,20 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     slug: "fitted-wardrobes",
-    metaTitle: "Fitted wardrobes London, made to measure",
+    /* "Bespoke" added 27 September 2026; was "Fitted wardrobes London, made to
+       measure". Search Console, 18 Aug to 25 Sep: 45 wardrobe queries, 411
+       impressions, average position 45, most of them "bespoke wardrobes
+       <area>", and the word was nowhere in the title or the visible copy.
+
+       The title still leads with London and still carries the primary,
+       "fitted wardrobes london", which the kicker and the Service schema
+       assert. A draft that day put Hampstead and north London in the title
+       instead; it was withdrawn because it reversed Denis's 30 August ruling
+       (engagement-status, "lead with London"; protocol section 2): site copy
+       leads with London and the named districts do the local work, as
+       Kaspar's own sentence below does for Hampstead. Overturning that is
+       Denis's call, not a build decision. */
+    metaTitle: "Bespoke fitted wardrobes London, made to measure",
     noMinimum: true,
     bandPrice: "Fitted wardrobes from £2,300",
     price:
