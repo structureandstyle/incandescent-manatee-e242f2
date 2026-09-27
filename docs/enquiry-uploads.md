@@ -26,15 +26,17 @@ Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. On 
 1. Open the Netlify project serving `structureandstyle.co.uk` and confirm it is connected to `structureandstyle/incandescent-manatee-e242f2`.
 2. Open **Project configuration > Environment variables > Add a variable > Import from a .env file**. Paste the five-line block supplied through the private handoff. Use the Production deploy context. If scopes are available, select Functions. Mark the values as secret where Netlify offers that control. The public Turnstile site key is already set for production builds in `netlify.toml`, so Kaspar does not need to enter it.
 
-   Flow to Form should prepare the block below in a private note, replacing all four bracketed values before handing it to Kaspar. Generate the last value with a secure random generator, for example `openssl rand -hex 32`. Kaspar should receive the completed block, with no placeholders.
+   Flow to Form should prepare the block below in a private note, replacing all five bracketed values before handing it to Kaspar. Generate the last value with a secure random generator, for example `openssl rand -hex 32`. Kaspar should receive the completed block, with no placeholders.
 
    ```dotenv
-   R2_ACCOUNT_ID=498ba2e45d866087024dedacfabc47d1
+   R2_ACCOUNT_ID=<Account ID from the Cloudflare R2 overview page>
    R2_ACCESS_KEY_ID=<Access Key ID from the open Cloudflare token result>
    R2_SECRET_ACCESS_KEY=<Secret Access Key from the open Cloudflare token result>
    SS_TURNSTILE_SECRET_KEY=<secret key from the SS enquiry uploads widget>
    SS_UPLOAD_LINK_SECRET=<new random 32-byte hex value>
    ```
+
+   Never write a real value from this block into any file in this repo, including the account ID. Netlify's secrets scanning fails the whole build while any value saved as secret in Netlify appears in a repo file. It blocked every build from 24 September 2026 because this block carried the real account ID.
 
 3. Keep `SS_UPLOAD_LINK_SECRET` stable. Changing it invalidates existing download links. Do not place these five private values in `netlify.toml`; its variables are unavailable to Netlify Functions. The current live site keeps its original one-file form until PR #2 is merged and a production build runs.
 4. Tell Flow to Form when the variable names and scopes are saved. Do not send the values. After PR #2 is merged into the production branch, confirm a new Netlify production deploy succeeds. Trigger a production deploy if one does not start automatically.
