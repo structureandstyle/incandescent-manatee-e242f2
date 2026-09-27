@@ -19,12 +19,31 @@
  * the design, and it plays at the exact moment the browser is trying to paint
  * the largest text on the page. It can come back after launch, measured
  * against LCP rather than assumed to be free.
+ *
+ * THE SERVICES MENU, 27 September 2026. Until now the header linked Process,
+ * Materials, Work and About, and the pages the business sells were reachable
+ * only from the footer and from in-page links. Search Console, 18 Aug to
+ * 25 Sep: the home page held position 5 to 8 on its searches and every
+ * service page sat at 47 to 63 with no clicks. The menu is the disclosure
+ * navigation pattern from the WAI-ARIA Authoring Practices ("Example
+ * Disclosure Navigation Menu"): one toggle, a plain list of links, no
+ * role="menu". It is built on <details>, so it opens with JavaScript off;
+ * the script below only adds closing on Escape, on an outside click and when
+ * focus leaves.
+ *
+ * It bends one recorded rule, "nothing hidden": five services sit behind one
+ * toggle. The mobile row is untouched. Below 860px the toggle moves up beside
+ * the wordmark, into space that row never used, so the five measured slots
+ * keep their one line and the header keeps its height. (The two-row header
+ * used to start at 820px; six slots on one line need 860, see site-layout.css.)
  */
 import Logo from "./Logo.astro";
 import Link from "./Link.astro";
 
 interface Props {
   items?: readonly { label: string; href: string }[];
+  /** A disclosure menu rendered first in the nav: the services, by name. */
+  menu?: { label: string; items: readonly { label: string; href: string }[] };
   cta?: { label: string; href: string };
   logoHeight?: number;
   homeHref?: string;
@@ -36,6 +55,7 @@ interface Props {
 
 const {
   items = [],
+  menu,
   cta,
   logoHeight = 20,
   homeHref = "/",
@@ -47,6 +67,7 @@ const {
 
 const markH = Math.round(logoHeight * 0.92);
 const wordW = Math.round(logoHeight * 10.093);
+const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
 ---
 
 <header
@@ -84,6 +105,20 @@ const wordW = Math.round(logoHeight * 10.093);
     </a>
 
     <nav aria-label="Primary" style="display:flex;gap:var(--gap-sm);align-items:baseline">
+      {menu && menu.items.length > 0 && (
+        <details class="nav-menu" data-nav-menu>
+          <summary class:list={["nav-menu-toggle", menuCurrent && "is-current"]}>
+            {menu.label}<span class="nav-menu-caret" aria-hidden="true"></span>
+          </summary>
+          <ul class="nav-menu-list">
+            {menu.items.map((it) => (
+              <li>
+                <Link href={it.href} variant="nav" chamfer current={activeHref === it.href}>{it.label}</Link>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
       {items.map((it) => (
         <Link href={it.href} variant="nav" chamfer current={activeHref === it.href}>{it.label}</Link>
       ))}
@@ -120,6 +155,129 @@ const wordW = Math.round(logoHeight * 10.093);
     [data-lockup] { transition: opacity var(--t-fade) linear; }
     [data-site-header]:not(.is-tight) [data-lockup="mark"] { transform: none; }
   }
+
+  /* The services menu. The toggle is typeset exactly as a nav link (Link.astro,
+     variant nav) and takes the same drawn-in rule, so it reads as one more
+     label in the row, with a small chevron to say it opens. */
+  .nav-menu { position: relative; }
+
+  .nav-menu-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    list-style: none;
+    cursor: pointer;
+    color: var(--char);
+    font-family: var(--font-sans);
+    font-weight: var(--weight-medium);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: calc(var(--space-2) + 1px) 0;
+  }
+  .nav-menu-toggle::-webkit-details-marker { display: none; }
+  .nav-menu-toggle::marker { content: ""; }
+
+  .nav-menu-toggle::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left bottom;
+    transform: scaleX(0);
+    transition: transform var(--t-reveal) var(--ease-out);
+  }
+  .nav-menu-toggle.is-current::after { transform: scaleX(1); }
+  .nav-menu-toggle:hover::after,
+  .nav-menu-toggle:focus-visible::after,
+  .nav-menu[open] > .nav-menu-toggle::after {
+    transform: scaleX(1) scaleY(var(--chamfer-weight));
+  }
+
+  .nav-menu-caret {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-left: 7px;
+    border-right: 1.25px solid currentColor;
+    border-bottom: 1.25px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+  .nav-menu[open] .nav-menu-caret { transform: translateY(1px) rotate(-135deg); }
+
+  .nav-menu-list {
+    position: absolute;
+    top: calc(100% + var(--space-6));
+    left: calc(var(--space-9) * -1);
+    z-index: 1;
+    min-width: 16rem;
+    margin: 0;
+    padding: var(--space-4) var(--space-9);
+    list-style: none;
+    background: var(--surface-page);
+    border: var(--rule-hair);
+    box-shadow: 0 10px 28px rgba(34, 29, 24, 0.1);
+  }
+  .nav-menu-list li { padding: var(--space-3) 0; }
+  .nav-menu-list li + li { border-top: var(--rule-hair); }
+  /* One line per service. "Alcove units and shelving" broke in two at 16rem,
+     and the list is shrink-to-fit, so it widens to the longest name instead. */
+  .nav-menu-list :global(a) { white-space: nowrap; }
+
+  /* Below 860px the nav is its own full-bleed row of five measured slots
+     (site-layout.css, whose breakpoint this one must match). A sixth does not
+     fit it at 320 to 400px, so the toggle lifts out of the row to the right
+     end of the wordmark's row, which is empty at every phone width. Positioned
+     against the sticky header, so the row's sideways overflow does not clip it
+     or its list. */
+  @media (max-width: 860px) {
+    .nav-menu {
+      position: absolute;
+      top: var(--space-9);
+      right: var(--gutter);
+      height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    /* A 44px target, with the rule drawn under the word rather than at the
+       foot of the target, where it floated between the two rows. */
+    .nav-menu-toggle { min-height: 44px; }
+    .nav-menu-toggle::after { bottom: 11px; }
+    /* The list's right edge sits on the page gutter. Each link is already a
+       44px row here (site-layout.css makes every nav link one), so the rows
+       lose their own padding, and the current page's rule moves up under its
+       words for the same reason the toggle's does. */
+    .nav-menu-list {
+      top: 100%;
+      left: auto;
+      right: 0;
+      min-width: min(16rem, calc(100vw - 2 * var(--gutter)));
+    }
+    .nav-menu-list li { padding: 0; }
+    .nav-menu-list :global(a.v-nav)::after { bottom: 11px; }
+  }
+  /* The same steps the row's own labels take (site-layout.css). */
+  @media (max-width: 559px) {
+    .nav-menu-toggle { font-size: 11px; letter-spacing: 0.07em; }
+  }
+  @media (max-width: 400px) {
+    .nav-menu-toggle { font-size: 10.5px; letter-spacing: 0.05em; }
+    .nav-menu-caret { margin-left: 5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-menu-toggle::after { transition: opacity var(--t-fade) linear; transform: none !important; opacity: 0; }
+    .nav-menu-toggle.is-current::after,
+    .nav-menu-toggle:hover::after,
+    .nav-menu-toggle:focus-visible::after,
+    .nav-menu[open] > .nav-menu-toggle::after { opacity: 1; }
+    .nav-menu-caret { transition: none; }
+  }
 </style>
 
 <script>
@@ -134,5 +292,26 @@ const wordW = Math.round(logoHeight * 10.093);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
+  }
+
+  // The services menu opens and closes on its own, because it is <details>.
+  // This only adds the three ways out the disclosure pattern expects: Escape
+  // (focus returns to the toggle), a click anywhere else, and focus leaving.
+  const menu = document.querySelector<HTMLDetailsElement>("[data-nav-menu]");
+  if (menu) {
+    const toggle = menu.querySelector<HTMLElement>("summary");
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || !menu.open) return;
+      const inside = menu.contains(document.activeElement);
+      menu.open = false;
+      if (inside) toggle?.focus();
+    });
+    document.addEventListener("click", (e) => {
+      if (menu.open && !menu.contains(e.target as Node)) menu.open = false;
+    });
+    menu.addEventListener("focusout", (e) => {
+      const next = e.relatedTarget as Node | null;
+      if (menu.open && next && !menu.contains(next)) menu.open = false;
+    });
   }
 </script>

@@ -57,18 +57,25 @@ a[href="#main"]:focus,a[href="#main"]:focus-visible{color:var(--paper)}
 /* Two-column editorial grids (case studies, statements, material chips) fold. */
 @media (max-width:820px){main [style*="7fr"],main [style*="5fr"],main [style*="repeat(3"]{grid-template-columns:minmax(0,1fr)!important}}
 
-/* Below 820px the primary nav drops to its own full-bleed row beneath the
+/* Below 860px the primary nav drops to its own full-bleed row beneath the
    wordmark: every link stays reachable, a hairline above it, the door green call
    to action last in the row, and the row scrolls sideways rather than wrapping.
-   No hamburger, and nothing hidden. */
-@media (max-width:820px){
+   No hamburger. The one thing behind a toggle is the Services menu (27 Sep
+   2026, NavBar.astro), which sits up beside the wordmark at these widths.
+
+   Was 820px. The Services toggle made the one-line row six slots, and at 821px
+   it ran 17px into the right gutter. Measured: with a 15px classic scrollbar
+   the six fit from about 844px, with an overlay scrollbar from about 824px, so
+   860 clears both, and an 834px tablet gets the two-row header rather than a
+   row with 8px to spare. NavBar.astro's own breakpoint moves with this one. */
+@media (max-width:860px){
 [data-site-header] [data-nav-row]{flex-wrap:wrap;padding-bottom:0!important;row-gap:0}
 [data-site-header] nav[aria-label="Primary"]{width:100%;margin:0 calc(var(--gutter) * -1);padding:0 var(--gutter);border-top:var(--rule-hair);align-items:center!important;justify-content:space-between;gap:var(--space-10)!important;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
 [data-site-header] nav[aria-label="Primary"]::-webkit-scrollbar{display:none}
 [data-site-header] nav[aria-label="Primary"] a{display:flex;align-items:center;min-height:44px;white-space:nowrap}
 }
-/* Five nav slots do not fit beside the wordmark below about 820px, so the row breaks
-   there rather than at the phone breakpoint.
+/* The nav slots do not fit beside the wordmark below that width (820px with five,
+   860px with six), so the row breaks there rather than at the phone breakpoint.
 
    Below 430px the five slots used to WRAP onto two lines, which put three bands
    in the sticky header and cost 154px of an 812px phone screen, about a fifth of
@@ -76,7 +83,7 @@ a[href="#main"]:focus,a[href="#main"]:focus-visible{color:var(--paper)}
    to 11px, loses half its tracking, and the row spreads what is left. Header
    height goes to roughly 104px. Nothing is hidden and nothing is behind a
    hamburger. If a narrower phone still cannot hold the line, the row scrolls
-   sideways, which is the rule inherited from the 820px block above, rather than
+   sideways, which is the rule inherited from the 860px block above, rather than
    wrapping again.
 
    Raised from 430px to 559px on 4 Sep 2026. Between the two the full-size

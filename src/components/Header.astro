@@ -7,15 +7,28 @@
  * with the service list, a horizontally scrolling mobile strip and a "Get a
  * quote" pill. It is replaced rather than kept alongside, because two headers
  * is how a site ends up with two navigations that disagree.
+ *
+ * The service list came back on 27 September 2026 as a Services menu (see
+ * NavBar.astro for why and how). Its items are derived by the same rule as the
+ * footer's Services group (Footer.astro): the services, not the cost guide,
+ * each only once its page gate clears. The rule is written in both files, so
+ * a change to one needs the same change in the other.
  */
 import NavBar from "./ds/NavBar.astro";
 import { NAV, ENQUIRE_HREF } from "../data/site-content";
+import { SERVICES, servicePath, serviceLabel } from "../data/site";
+import { indexable } from "../data/page-gates";
 
 const here = Astro.url.pathname;
+const services = SERVICES.filter((s) => !s.guide && indexable(servicePath(s))).map((s) => ({
+  label: serviceLabel(s),
+  href: servicePath(s),
+}));
 ---
 
 <NavBar
   items={NAV}
+  menu={{ label: "Services", items: services }}
   cta={{ label: "Enquire", href: ENQUIRE_HREF }}
   activeHref={here}
   homeHref="/"
