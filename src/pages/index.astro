@@ -309,6 +309,22 @@ const siteSchema = {
     <p style="margin-top:var(--space-14)"><Link href="/work/" variant="nav" chamfer>All work</Link></p>
   </Wrap>
 
+  <!-- Reviews. Real quotes, verbatim from the profile, and the whole block
+       links out to it: see REVIEWS in site-content.ts for the selection rule.
+       Directly under Selected work since 28 September 2026, so what clients
+       said sits beside what was made. It was seventh of eight sections, below
+       Materials, Process and About, a long scroll from the photographs. -->
+  <Wrap style="padding-top:var(--section-y)">
+    <Reviews
+      meta="Left by clients, unedited"
+      average={REVIEWS.average}
+      count={REVIEWS.count}
+      source={REVIEWS.source}
+      href={REVIEWS.profileUrl}
+      quotes={REVIEWS.quotes}
+    />
+  </Wrap>
+
   <!-- Materials. Expandable since 1 Sep 2026: each card opens with where the
        material is used and what weighs for and against it, and hardware joined
        as the sixth card so the grid sits even. Copy rules in site-content.ts. -->
@@ -477,19 +493,6 @@ const siteSchema = {
         <Link href="/about/" variant="nav" chamfer>More about how we work</Link>
       </p>
     </div>
-  </Wrap>
-
-  <!-- Reviews. Real quotes, verbatim from the profile, and the whole block
-       links out to it: see REVIEWS in site-content.ts for the selection rule. -->
-  <Wrap style="padding-top:var(--section-y)">
-    <Reviews
-      meta="Left by clients, unedited"
-      average={REVIEWS.average}
-      count={REVIEWS.count}
-      source={REVIEWS.source}
-      href={REVIEWS.profileUrl}
-      quotes={REVIEWS.quotes}
-    />
   </Wrap>
 
   <!-- Questions. The researched set: see HOMEPAGE_FAQS in site-content.ts. -->

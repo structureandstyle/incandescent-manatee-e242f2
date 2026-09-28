@@ -94,25 +94,33 @@ export const BAND = {
 /* ------------------------------------------------------------ reviews */
 
 /**
- * Read live from the public profile on 1 September 2026: 14 reviews at 5.0.
- * The count moved DOWN from the 22 August baseline of 15, and the review that
- * left the profile is Arthur Kvasnei's. Recorded in the ops repo baseline
- * (A6.1); the site states what the profile shows today.
+ * Read live from the public profile on 28 September 2026: 16 reviews, all five
+ * stars. The count was 15 at the 22 August baseline and 14 on 1 September,
+ * when Arthur Kvasnei's review left the profile (ops repo baseline, A6.1). Two
+ * wardrobe reviews arrived in the week to 23 September. The site states what
+ * the profile shows today.
  *
- * The quotes are real, transcribed verbatim from the profile on 1 September
+ * The quotes are real, transcribed verbatim from the profile on 28 September
  * 2026. Compliance line: genuine past customers only, unedited, no gating, no
  * incentives. Unedited means unedited, and that rule decides the selection:
  * a review is quotable only when its COMPLETE text also passes the site's own
- * gates. Eleven of the fourteen carry text; eight of those eleven are excluded
- * because their verbatim text names a person (the Q1/Q60 ruling keeps every
- * personal name off the site, and two also name Uwe, who left in April 2026),
- * says "the team" (the verify gate's crew-noun ban, and a headcount the
- * business does not have), or carries an em dash (the style gate). What
- * remains is below. Never trim a review around a problem word: pick a
+ * gates. Thirteen of the sixteen carry text; eight of those thirteen are
+ * excluded because their verbatim text names a person (the Q1/Q60 ruling keeps
+ * every personal name off the site, and three also name Uwe, who left in April
+ * 2026), says "the team" (the verify gate's crew-noun ban, and a headcount the
+ * business does not have), carries an em dash (the style gate), or is a line
+ * and a row of emoji. Never trim a review around a problem word: pick a
  * different review.
+ *
+ * Five pass. These three say the most: what was made, where, and how it was
+ * finished (Denis's ask, 28 September 2026, for the best on the homepage).
+ * The two left out, "Very happy with everything. Recommend" and "I'm very
+ * happy with the finish, everything looks as we explained and wanted.
+ * Definitely recommend", were on the site from 1 September; they are genuine
+ * and quotable, only shorter.
  */
 export const REVIEWS = {
-  count: 14,
+  count: 16,
   average: "5.0",
   source: "Google Business Profile",
   /** The public profile, for the click-through. The cid is the listing's
@@ -120,16 +128,16 @@ export const REVIEWS = {
   profileUrl: "https://maps.google.com/?cid=14703132250787863880",
   quotes: [
     {
+      text: "We had bespoke built-in wardrobes made for our home in Hampstead Heath and are very happy with the result. The workmanship is excellent, with great attention to detail and a really high-quality finish. Everything was made to fit the space perfectly and looks clean, elegant and well considered. Professional, reliable and clearly very skilled at bespoke carpentry. Would definitely recommend Structure & Style for fitted wardrobes and custom joinery.",
+      meta: "Ozge B · Built-in wardrobes",
+    },
+    {
       text: "Really pleased with the work. They did our wall panelling, new doors, skirting and architraves and everything looks sharp and properly finished. Turned up when they said they would and left the place tidy. Would happily recommend.",
       meta: "Rafael C · Panelling, doors and skirting",
     },
     {
-      text: "I'm very happy with the finish, everything looks as we explained and wanted. Definitely recommend",
-      meta: "Vasily S · August 2026",
-    },
-    {
-      text: "Very happy with everything. Recommend",
-      meta: "Erald G · May 2026",
+      text: "Really happy with the work from Structure & Style. We had some fitted wardrobes built in our home in Camden and they came out great. Everything was done properly, communication was easy and the place was kept tidy while the work was being done. Would definitely use them again and recommend to anyone looking for a carpenter in the area.",
+      meta: "Lorenzo I · Fitted wardrobes",
     },
   ],
 } as const;
