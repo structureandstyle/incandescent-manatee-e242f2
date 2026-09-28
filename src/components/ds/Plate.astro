@@ -66,6 +66,14 @@ interface Props {
   ratio?: string;
   framed?: boolean;
   as?: string;
+  /**
+   * Makes the whole plate, photograph and caption, one link (28 Sep 2026).
+   * A linked plate is a way to a page rather than a photograph to enlarge, so
+   * its image drops the lightbox's button role: a button inside a link is
+   * invalid, and two actions on one tap is one too many. The alt text then
+   * does the job Google gives it on an image link, which is anchor text.
+   */
+  href?: string;
   /** Animate the reveal as a single plane pass. */
   plane?: boolean | "left" | "top";
   class?: string;
@@ -84,13 +92,15 @@ const {
   sizes = "(max-width: 700px) 92vw, 1240px",
   ratio = "3 / 2",
   framed = true,
-  as: Tag = "figure",
+  as,
+  href,
   plane = false,
   class: className,
   style = "",
   ...rest
 } = Astro.props;
 
+const Tag = href ? "a" : as ?? "figure";
 const Cap = Tag === "figure" ? "figcaption" : "div";
 const planed = plane !== false && plane != null;
 const direction = plane === true ? "left" : plane;
@@ -149,9 +159,27 @@ const srcset =
     : undefined;
 ---
 
-<Tag class={className} style={`margin:0;${style}`} {...rest}>
+<Tag
+  class:list={[className, href && "plate-link"]}
+  href={href}
+  style={`margin:0;${href ? "display:block;color:inherit;text-decoration:none;" : ""}${style}`}
+  {...rest}
+>
   <div style={frameCss} data-motion={planed ? "plane" : undefined} data-from={direction || undefined}>
-    {photo ? (
+    {photo && href ? (
+      <img
+        src={photo}
+        srcset={srcset}
+        sizes={srcset ? sizes : undefined}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={eager ? "eager" : "lazy"}
+        fetchpriority={eager ? "high" : undefined}
+        decoding={eager ? "sync" : "async"}
+        style="width:100%;height:100%;object-fit:cover"
+      />
+    ) : photo ? (
       <img
         src={photo}
         srcset={srcset}
@@ -182,9 +210,30 @@ const srcset =
       style="display:flex;justify-content:space-between;gap:var(--space-8);flex-wrap:wrap;border-top:var(--rule-structure);padding-top:var(--space-5)"
       data-motion={planed ? "stamp-group" : undefined}
     >
-      {subject && <MonoLabel tone="default" style="letter-spacing:var(--ls-mono-table)">{subject}</MonoLabel>}
+      {subject && (
+        <MonoLabel tone="default" style="letter-spacing:var(--ls-mono-table)">
+          {href ? <span class="plate-link-label">{subject}</span> : subject}
+        </MonoLabel>
+      )}
       {detail && <MonoLabel style="letter-spacing:var(--ls-mono-table)">{detail}</MonoLabel>}
       <slot name="controls" />
     </Cap>
   )}
 </Tag>
+
+<style>
+  /* A linked plate says so where the eye goes after the photograph: the
+     caption takes the rule on hover and focus, the same one-pixel line the
+     site's nav links draw. The photograph itself does not move.
+     base.css gives every link a bottom border that shows on hover; on a
+     whole-plate link that drew a second line the width of the frame. */
+  .plate-link { border-bottom: 0; }
+  .plate-link-label {
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-fast) var(--ease-out);
+  }
+  .plate-link:hover .plate-link-label,
+  .plate-link:focus-visible .plate-link-label {
+    border-bottom-color: currentColor;
+  }
+</style>

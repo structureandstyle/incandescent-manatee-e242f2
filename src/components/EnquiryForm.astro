@@ -28,7 +28,15 @@ const largeUploadsEnabled = Boolean(turnstileSiteKey);
  * Netlify Forms records repeated inputs sharing a name, so every ticked box
  * arrives against `service` without changing how the form is wired.
  *
- * Two entries are not live service pages, and both are deliberate:
+ * Three entries are not live service pages, and all three are deliberate:
+ *
+ *   Panelling and doors, added 28 September 2026. Wall panelling, doors,
+ *   skirting and architraves are work he takes: his Business Profile
+ *   description names doors, panelling and skirting, and his reviews describe
+ *   all four (ops repo, docs/baseline-record.md). The work page shows it under this
+ *   same label. There is no page yet because the photographs are one job's
+ *   worth (see the ops repo), and until now these enquiries could only arrive
+ *   as "Something else".
  *
  *   Flooring is work he takes. It is a category on his Business Profile with
  *   two services under it, added on the strength of his own description and
@@ -47,6 +55,7 @@ const CHOICES = [
   // lands in it, and the two stay in step.
   ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map(serviceLabel),
   ...DEFERRED_SERVICES.map(serviceLabel),
+  "Panelling and doors",
   "Flooring",
   "Something else",
 ];

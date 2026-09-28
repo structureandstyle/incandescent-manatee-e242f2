@@ -85,7 +85,25 @@ const sizeOf = new Map(
 );
 const selected = WORK_GALLERY.filter((s) => sizeOf.has(s.file))
   .slice(0, 6)
-  .map((s) => ({ ...s, ...(sizeOf.get(s.file) as { w: number; h: number }) }));
+  .map((s) => ({ ...s, ...(sizeOf.get(s.file) as { w: number; h: number }), href: tileHref(s.file) }));
+
+/**
+ * Where each Selected work frame goes, 28 September 2026. The frames were
+ * photographs to enlarge; they are now the way from the page that takes the
+ * search traffic to the page that explains the work (Search Console, 18 Aug
+ * to 25 Sep: the home page had 60 of the site's 63 clicks, every service page
+ * none). The frames and their order are untouched: Kaspar's 6 September
+ * choice, his strongest work, one image per project.
+ *
+ * A photograph's folder is its service's slug. A frame whose folder has no
+ * live service page (doors and panelling, today) goes to the work page, where
+ * that work is shown in full.
+ */
+function tileHref(file: string): string {
+  const slug = file.split("/")[2];
+  const service = SERVICES.find((s) => s.slug === slug && !s.guide);
+  return service && indexable(servicePath(service)) ? servicePath(service) : "/work/";
+}
 
 /* The plane joined stage 03 on 30 Aug 2026, once the stage-04 answer confirmed
    finishing work is real: machining, edging and finishing to the drawings, and
@@ -269,11 +287,14 @@ const siteSchema = {
     {/* Three across, two rows, one frame shape. The six are all landscape and
         close to 4:3, so a fixed 4 / 3 frame crops nothing that matters and
         the rows sit level, which a row grid needs and a masonry does not.
-        Every frame opens the lightbox, and with no carousel around them the
-        lightbox set is all six. */}
-    <div data-plate-set style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-md)">
+        Every frame, photograph and caption together, links to its service
+        page (see tileHref above). Until 28 September 2026 each opened the
+        lightbox instead; browsing the photographs full size is the work
+        page's job, one link below. */}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:var(--gap-md)">
       {selected.map((s, i) => (
         <Plate
+          href={s.href}
           photo={s.file}
           alt={`${s.type}, completed installation by ${BUSINESS.legalName}`}
           width={s.w}
