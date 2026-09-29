@@ -42,8 +42,9 @@
  *                         bathroom enquiries. Placed near the end, so it
  *                         is not the top of a column on a desktop.
  *
- * Not added: the real front door (doors-panelling-03), which Denis left off
- * the page. Still unseen: five finished frames that exist only in Drive
+ * The real front door (doors-panelling-03) followed the same day, on Denis
+ * asking where the green door was: the unedited SW7 frame, one planter. It
+ * ends the 7 September exclusion of it as the only exterior frame. Still unseen: five finished frames that exist only in Drive
  * (bedroom towards bathroom, couch and lamp, dining fireplace kitchen, vanity
  * and bath, exterior) and six more screenshots in F2F's SW7 folder.
  *
@@ -280,6 +281,7 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-09.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp", type: "Fitted wardrobes" },
+  { file: "/images/doors-panelling/doors-panelling-03.webp", type: "Panelling and doors" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-05.webp", type: "Bespoke kitchens" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-10.webp", type: "Fitted wardrobes" },
   { file: "/images/alcove-units/alcove-units-07.webp", type: "Alcove units" },
