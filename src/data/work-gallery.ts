@@ -22,6 +22,34 @@
  * looks up its real dimensions there and fails the build if one is missing.
  *
  * -------------------------------------------------------------------------
+ * ONE MORE FRAME, AND ONE FILE REPLACED, 29 September 2026. Denis asked for
+ * more photographs. The library had been through three passes and the Drive
+ * folder had nothing new since 1 September, so the search went to every other
+ * copy on file, with a perceptual hash against the site and the library:
+ *
+ *   alcove-units-10       ADDED. A panelled window seat beside a full-height
+ *                         alcove bookcase, herringbone floor. The old site's
+ *                         own portfolio image ("Window Seat with Alcove
+ *                         Shelving"), the same basis as bespoke-kitchens-09,
+ *                         and a room nothing here shows. Soft at full size, as
+ *                         if enlarged from a smaller original; fine at the
+ *                         width the gallery gives it.
+ *   doors-panelling-03    REPLACED, not added. The file was a ChatGPT edit of
+ *                         the SW7 entrance door ("Green door outside.png",
+ *                         pixel-identical to a ChatGPT export of 2 September):
+ *                         a second planter added and the whole frame redrawn.
+ *                         It was on no page, but it sat in this folder and
+ *                         built the doors and panelling share image. Now the
+ *                         unedited original. Denis agreed, 29 September: the
+ *                         photograph shows the work as it is.
+ *
+ * Seen and left out: three whole-room frames from the October 2024 shoot
+ * (furniture, no joinery in frame), internal patio doors mid-install on a
+ * building site, a lit loft wardrobe carcass from a job already here, a 501px
+ * wardrobe frame, a white shaker kitchen from an unsourced screenshot (in only
+ * once Kaspar confirms it is his), and three more ChatGPT images.
+ *
+ * -------------------------------------------------------------------------
  * FOUR MORE FRAMES, 8 September 2026, afternoon. Denis sent eight photographs
  * and asked for any not on this page to be added. Twenty became twenty-four.
  * Each of the eight, against what was here:
@@ -219,5 +247,6 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/doors-panelling/doors-panelling-01.webp", type: "Panelling and doors" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-05.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-09.webp", type: "Bespoke kitchens" },
+  { file: "/images/alcove-units/alcove-units-10.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-04.webp", type: "Fitted wardrobes" },
 ];

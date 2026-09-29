@@ -202,6 +202,15 @@
       "date": "20251212",
       "quality": "4",
       "bytes": 121704
+    },
+    {
+      "file": "/images/alcove-units/alcove-units-10.webp",
+      "w": 1600,
+      "h": 2197,
+      "source": "bespoke-alcove-shelving-window-seat-london.jpg (the old site's portfolio image, 'Window Seat with Alcove Shelving'; EXIF stripped, capture date unknown)",
+      "date": "",
+      "quality": "4",
+      "bytes": 99336
     }
   ],
   "media-walls": [
@@ -304,10 +313,12 @@
   "doors-panelling": [
     {
       "file": "/images/doors-panelling/doors-panelling-03.webp",
-      "w": 1411,
-      "h": 1114,
-      "source": "Green door outside.png",
-      "date": "20260902"
+      "w": 1385,
+      "h": 1089,
+      "source": "Entrance door finished.png (the SW7 shoot, unedited; replaced a ChatGPT-edited copy, Green door outside.png, on 29 Sep 2026)",
+      "date": "20260929",
+      "quality": "4",
+      "bytes": 53638
     },
     {
       "file": "/images/doors-panelling/doors-panelling-01.webp",
