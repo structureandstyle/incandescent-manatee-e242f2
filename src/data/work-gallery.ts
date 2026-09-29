@@ -22,6 +22,32 @@
  * looks up its real dimensions there and fails the build if one is missing.
  *
  * -------------------------------------------------------------------------
+ * THREE MORE FROM SW7, 29 September 2026, later. Denis: "there are still
+ * some pictures missing, from SW7". Of the shoot's fifteen finished frames,
+ * four were on this page (hallway door, panelled wall, fireplace alcoves,
+ * green kitchen). Shown the rest, he chose three, and they go in on his call
+ * rather than under the one-frame-per-room rule, which the first three would
+ * otherwise fail: they are the same open-plan room.
+ *
+ *   alcove-units-06       back from the 6 September cut: the built-in desk
+ *                         and TV wall by the bay, the same living room as
+ *                         alcove-units-07 but a different piece of joinery.
+ *   bespoke-kitchens-10   new: the dining end towards the hallway. The tall
+ *                         sage unit on the left is the end of the green
+ *                         kitchen run (same colour and handleless line, beside
+ *                         the bedroom door in bespoke-kitchens-06), hence the
+ *                         label.
+ *   bathroom-01           new: the bathroom, vanity, radiator and bath. Not a
+ *                         service of his; Denis added it knowing it may bring
+ *                         bathroom enquiries. Placed near the end, so it
+ *                         is not the top of a column on a desktop.
+ *
+ * Not added: the real front door (doors-panelling-03), which Denis left off
+ * the page. Still unseen: five finished frames that exist only in Drive
+ * (bedroom towards bathroom, couch and lamp, dining fireplace kitchen, vanity
+ * and bath, exterior) and six more screenshots in F2F's SW7 folder.
+ *
+ * -------------------------------------------------------------------------
  * TWO MORE FRAMES, AND ONE FILE REPLACED, 29 September 2026. Denis asked for
  * more photographs. The library had been through three passes and the Drive
  * folder had nothing new since 1 September, so the search went to every other
@@ -242,11 +268,13 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/doors-panelling/doors-panelling-02.webp", type: "Panelling and doors" },
   { file: "/images/alcove-units/alcove-units-08.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
+  { file: "/images/alcove-units/alcove-units-06.webp", type: "Alcove units" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-03.webp", type: "Alcove units" },
   { file: "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp", type: "Walk-in wardrobes" },
   { file: "/images/home-office/home-office-01.webp", type: "Home office" },
   { file: "/images/media-walls/media-walls-02.webp", type: "Built-in TV units" },
+  { file: "/images/bespoke-kitchens/bespoke-kitchens-10.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-05.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
@@ -259,5 +287,6 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/fitted-wardrobes/fitted-wardrobes-05.webp", type: "Fitted wardrobes" },
   { file: "/images/bespoke-kitchens/bespoke-kitchens-09.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-10.webp", type: "Alcove units" },
+  { file: "/images/bathroom/bathroom-01.webp", type: "Bathroom" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-04.webp", type: "Fitted wardrobes" },
 ];

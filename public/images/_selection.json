@@ -308,6 +308,15 @@
       "date": "20250505",
       "quality": "4",
       "bytes": 63252
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-10.webp",
+      "w": 1600,
+      "h": 1063,
+      "source": "Dining living office looking hallway finished.png (the SW7 shoot)",
+      "date": "20260929",
+      "quality": "5",
+      "bytes": 82388
     }
   ],
   "doors-panelling": [
@@ -348,6 +357,17 @@
       "date": "20260516",
       "quality": "4",
       "bytes": 115516
+    }
+  ],
+  "bathroom": [
+    {
+      "file": "/images/bathroom/bathroom-01.webp",
+      "w": 1600,
+      "h": 1060,
+      "source": "radiator vanity bath finished.png (the SW7 shoot)",
+      "date": "20260929",
+      "quality": "5",
+      "bytes": 69042
     }
   ]
 }
