@@ -22,7 +22,7 @@
  * looks up its real dimensions there and fails the build if one is missing.
  *
  * -------------------------------------------------------------------------
- * ONE MORE FRAME, AND ONE FILE REPLACED, 29 September 2026. Denis asked for
+ * TWO MORE FRAMES, AND ONE FILE REPLACED, 29 September 2026. Denis asked for
  * more photographs. The library had been through three passes and the Drive
  * folder had nothing new since 1 September, so the search went to every other
  * copy on file, with a perceptual hash against the site and the library:
@@ -42,6 +42,16 @@
  *                         built the doors and panelling share image. Now the
  *                         unedited original. Denis agreed, 29 September: the
  *                         photograph shows the work as it is.
+ *
+ *   home-office-01        ADDED, on Denis's ask the same day. Library file
+ *                         20260516_134710: a built-in office in use, walnut
+ *                         desk run with drawers, a tall cupboard and full
+ *                         shelving. The 22 August triage recorded that no
+ *                         photograph of a finished home office existed; this
+ *                         one does, and was missed among twenty-two tight
+ *                         crops. Its sibling 20260516_134359, the same desk
+ *                         from above with cables on the floor, stays out: one
+ *                         frame per room.
  *
  * Seen and left out: three whole-room frames from the October 2024 shoot
  * (furniture, no joinery in frame), internal patio doors mid-install on a
@@ -235,6 +245,7 @@ export const WORK_GALLERY: WorkShot[] = [
   { file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp", type: "Bespoke kitchens" },
   { file: "/images/alcove-units/alcove-units-03.webp", type: "Alcove units" },
   { file: "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp", type: "Walk-in wardrobes" },
+  { file: "/images/home-office/home-office-01.webp", type: "Home office" },
   { file: "/images/media-walls/media-walls-02.webp", type: "Built-in TV units" },
   { file: "/images/alcove-units/alcove-units-05.webp", type: "Alcove units" },
   { file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp", type: "Fitted wardrobes" },

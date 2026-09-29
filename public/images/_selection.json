@@ -338,5 +338,16 @@
       "quality": "5",
       "bytes": 59288
     }
+  ],
+  "home-office": [
+    {
+      "file": "/images/home-office/home-office-01.webp",
+      "w": 1400,
+      "h": 1867,
+      "source": "20260516_134710.jpg",
+      "date": "20260516",
+      "quality": "4",
+      "bytes": 115516
+    }
   ]
 }
