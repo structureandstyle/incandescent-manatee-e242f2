@@ -1,0 +1,28 @@
+---
+/**
+ * The service area as a sentence: "Hampstead, Belsize Park, ... and Maida
+ * Vale", from BUSINESS.areaServed, the one list the schema also reads.
+ *
+ * A district is a link only when it has an area page AND that page is
+ * indexable. While an area page's gate is closed it renders as plain text, so
+ * the sentence is byte for byte what it was before area pages existed, and no
+ * page links to a draft. The link appears on its own the day the gate clears.
+ *
+ * Text only, no wrapper: the caller supplies the words around it.
+ *   Across London, including <AreaList />.
+ */
+import Link from "./ds/Link.astro";
+import { BUSINESS } from "../data/site";
+import { areaFor, areaPath } from "../data/areas";
+import { indexable } from "../data/page-gates";
+
+const names = BUSINESS.areaServed;
+const items = names.map((name) => {
+  const area = areaFor(name);
+  const href = area && indexable(areaPath(area.slug)) ? areaPath(area.slug) : null;
+  return { name, href };
+});
+const sep = (i: number) => (i === 0 ? "" : i === items.length - 1 ? " and " : ", ");
+---
+
+{items.map((it, i) => <>{sep(i)}{it.href ? <Link href={it.href}>{it.name}</Link> : it.name}</>)}

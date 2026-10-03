@@ -70,6 +70,13 @@ const {
 
 const filled = Math.round(Number(average) || 0);
 const hasQuotes = quotes.length > 0;
+
+/* PARAGRAPH BREAKS, 3 October 2026. A review written in paragraphs is quoted
+   in paragraphs: the bank (src/data/quote-bank.json) keeps a blank line where
+   the reviewer left one, and pre-line shows it. Added only to a quote that
+   has a line break, so a single-paragraph quote renders exactly as before. */
+const QUOTE_CSS = "margin:0;font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty";
+const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-space:pre-line` : QUOTE_CSS);
 ---
 
 <section data-reviews class={className} style={style}>
@@ -158,7 +165,7 @@ const hasQuotes = quotes.length > 0;
                     as="blockquote"
                     tone="default"
                     caps={false}
-                    style="margin:0;font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
+                    style={quoteCss(q.text)}
                   >{q.text}</MonoLabel>
                   {q.meta && (
                     <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
@@ -181,7 +188,7 @@ const hasQuotes = quotes.length > 0;
                     as="blockquote"
                     tone="default"
                     caps={false}
-                    style="margin:0;font-size:var(--type-body-sm);letter-spacing:var(--ls-mono-tight);line-height:1.62;text-wrap:pretty"
+                    style={quoteCss(q.text)}
                   >{q.text}</MonoLabel>
                   {q.meta && (
                     <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>

@@ -24,6 +24,7 @@ import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
+import AreaList from "../components/AreaList.astro";
 import { BUSINESS, hoursLines } from "../data/site";
 import { indexable } from "../data/page-gates";
 
@@ -90,8 +91,7 @@ const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry v
         <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
           <dt><MonoLabel as="span">Where we work</MonoLabel></dt>
           <dd style="margin:var(--space-4) 0 0;color:var(--text-quiet)">
-            Across London, including {BUSINESS.areaServed.slice(0, -1).join(", ")} and{" "}
-            {BUSINESS.areaServed.slice(-1)}.
+            Across London, including <AreaList />.
           </dd>
         </div>
       </dl>

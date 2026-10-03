@@ -46,6 +46,10 @@
  * <Value> names its question, so each one is phrased for its render slots and
  * follows the tone protocol. The client's wording is kept wherever it survives
  * those two constraints.
+ *
+ * The `area*` keys at the end are area-page questions, not questionnaire
+ * numbers: one key per client-dependent claim on an area page, asked in the
+ * page's own question list rather than in the 24 August questionnaire.
  */
 
 export type Answer = {
@@ -202,6 +206,52 @@ export const ANSWERS = {
   q54: { value: null, about: "What he turns down. Declined 30 Aug 2026: covered by the About-page direction change" },
   q55: { value: null, about: "The piece he is proudest of. Declined 30 Aug 2026: covered by the About-page direction change" },
   q56: { value: null, about: "Whether he is happy to be photographed. No portrait at this stage, 30 Aug 2026" },
+
+  /**
+   * Area page: /carpenter-hampstead/, 3 October 2026. NOT QUESTIONNAIRE
+   * NUMBERS. Q57, Q59 and Q60 exist in the questionnaire and are not keyed
+   * here, so these take names rather than the next numbers. One key per claim
+   * on the page that only the client can confirm, each asked in the page's
+   * fact-check list (C1 to C5). All five are in the page's gate in
+   * page-gates.ts: the page stays noindexed, out of the sitemap and unlinked
+   * until every one is answered.
+   *
+   * Each `provisional` is the approved sentence exactly as drafted. Answering
+   * is one edit here: copy the sentence, or his corrected wording, into
+   * `value`. Not `blocking`: they hold one page, not the launch.
+   */
+  areaHampstead1: {
+    value: null,
+    provisional: "We fit both period houses and mansion-block flats.",
+    about: "C1: does he fit both period houses and mansion-block flats in Hampstead, and which Hampstead jobs and photographs may be named",
+  },
+  areaHampstead2: {
+    value: null,
+    provisional: "If yours is listed, tell us at the first visit and ask Camden about consent before any work starts.",
+    about: "C2: should a client with a listed home tell him at the first visit and ask Camden about listed building consent first",
+  },
+  /** Three bullets, in page order: managed block, lift, cutting. An answer
+      keeps three entries in that order; an empty string drops that bullet. */
+  areaHampstead3: {
+    value: null,
+    provisional: [
+      "In a managed block, insurance and the safety paperwork go to the managing agent before the start date. The building's sign-off is in place before anything begins.",
+      "Where the building has a lift, it is booked and protected before any delivery. Stair protection goes down on every day material comes in.",
+      "Cutting happens outside where access allows, otherwise in one sealed room, and never in a hallway or a communal area. Dust extraction is connected to every cutting tool, with an air scrubber running in the room.",
+    ],
+    about: "C3: are the managed-block paperwork, lift and stair protection, and cutting and dust extraction lines true on every job",
+  },
+  areaHampstead4: {
+    value: null,
+    provisional: "We agree where deliveries can stop and how far pieces are carried to your door before installation.",
+    about: "C4: on a Hampstead job, are the delivery stop and the carry to the door agreed before installation, and how is parking handled",
+  },
+  /** The value, once answered, is the byline he approves for the review. */
+  areaHampstead5: {
+    value: null,
+    provisional: "Svetlozar Z · Walk-in wardrobe",
+    about: "C5: consent to quote Svetlozar Z's review of 30 Sep 2026 whole on this page, and the byline it carries",
+  },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;
