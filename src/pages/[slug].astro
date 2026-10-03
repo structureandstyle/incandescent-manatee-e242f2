@@ -27,6 +27,7 @@ import SpecTable from "../components/ds/SpecTable.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import Faq from "../components/ds/Faq.astro";
 import Link from "../components/ds/Link.astro";
+import AreaList from "../components/AreaList.astro";
 
 import { SERVICES, SITE_URL, BUSINESS, servicePath, serviceLabel, type Service } from "../data/site";
 import { BAND, CONTACT } from "../data/site-content";
@@ -500,8 +501,7 @@ const SECTIONS: Section[] = [
     <Wrap style="padding-bottom:var(--section-y)">
       <SectionHead meta="Service area" level={4}>Where we work</SectionHead>
       <p style="max-width:var(--measure)">
-        Across London, including {BUSINESS.areaServed.slice(0, -1).join(", ")} and{" "}
-        {BUSINESS.areaServed.slice(-1)}.
+        Across London, including <AreaList />.
       </p>
     </Wrap>
 

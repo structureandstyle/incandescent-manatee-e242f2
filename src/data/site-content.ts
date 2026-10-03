@@ -52,6 +52,7 @@
  */
 
 import type { QuestionKey } from "./answers";
+import QUOTE_BANK_JSON from "./quote-bank.json";
 
 /* ------------------------------------------------------------------ nav */
 
@@ -94,6 +95,24 @@ export const BAND = {
 /* ------------------------------------------------------------ reviews */
 
 /**
+ * The review bank. Each entry is one Google review, verbatim and whole: `text`
+ * carries a blank line (two newlines) wherever the original has a paragraph
+ * break, and the Reviews component keeps them. `areas` is explicit, never
+ * matched on the text, because a "West Hampstead" review must not land on the
+ * Hampstead page. `gate`, where present, is the answers.ts key holding the
+ * reviewer's consent and byline for the page that quotes it.
+ */
+export type BankQuote = {
+  id: string;
+  text: string;
+  meta: string;
+  areas: readonly string[];
+  home: boolean;
+  gate?: QuestionKey;
+};
+export const QUOTE_BANK = QUOTE_BANK_JSON as readonly BankQuote[];
+
+/**
  * Read live from the public profile on 28 September 2026: 16 reviews, all five
  * stars. The count was 15 at the 22 August baseline and 14 on 1 September,
  * when Arthur Kvasnei's review left the profile (ops repo baseline, A6.1). Two
@@ -129,20 +148,12 @@ export const REVIEWS = {
   /** The public profile, for the click-through. The cid is the listing's
       stable id, taken from the Maps place URL on 1 September 2026. */
   profileUrl: "https://maps.google.com/?cid=14703132250787863880",
-  quotes: [
-    {
-      text: "We had bespoke built-in wardrobes made for our home in Hampstead Heath and are very happy with the result. The workmanship is excellent, with great attention to detail and a really high-quality finish. Everything was made to fit the space perfectly and looks clean, elegant and well considered. Professional, reliable and clearly very skilled at bespoke carpentry. Would definitely recommend Structure & Style for fitted wardrobes and custom joinery.",
-      meta: "Ozge B · Built-in wardrobes",
-    },
-    {
-      text: "Really pleased with the work. They did our wall panelling, new doors, skirting and architraves and everything looks sharp and properly finished. Turned up when they said they would and left the place tidy. Would happily recommend.",
-      meta: "Rafael C · Panelling, doors and skirting",
-    },
-    {
-      text: "Really happy with the work from Structure & Style. We had some fitted wardrobes built in our home in Camden and they came out great. Everything was done properly, communication was easy and the place was kept tidy while the work was being done. Would definitely use them again and recommend to anyone looking for a carpenter in the area.",
-      meta: "Lorenzo I · Fitted wardrobes",
-    },
-  ],
+  /* From the review bank, src/data/quote-bank.json, since 3 October 2026.
+     The bank holds every review the site quotes, verbatim and whole, and
+     scripts/verify-build.mjs reads the same file to fail any blockquote that
+     is not one of its entries. The home page takes the entries flagged
+     `home`, in bank order: these three, unchanged. */
+  quotes: QUOTE_BANK.filter((q) => q.home).map(({ text, meta }) => ({ text, meta })),
 } as const;
 
 /* ---------------------------------------------------------- materials */

@@ -1,0 +1,189 @@
+---
+/**
+ * Hampstead, the first area page, 3 October 2026. Built hidden.
+ *
+ * The copy is the approved text (page brief and copy, revision 2, 3 Oct 2026)
+ * in its order, and the builder does not edit it: a sentence that fails a
+ * gate goes back to the copy author. Every visible string on the page is in
+ * that copy, including the labels, captions and link text.
+ *
+ * FIVE SENTENCES WAIT ON THE CLIENT, one key each in answers.ts
+ * (areaHampstead1 to areaHampstead5, the fact-check list's C1 to C5). Each
+ * renders through <Value> or <Ask>, so while a key is open its sentence shows
+ * in the open-question brackets on a branch deploy and the page carries the
+ * markup verify counts. All five are in the page's gate: until every one is
+ * answered the page is noindexed, out of the sitemap, missing from the
+ * footer's Areas group and linked from nowhere.
+ *
+ * If the client says no to one, the plan's fallback applies: remove that
+ * sentence (or Svetlozar's review from the bank's Hampstead tag, which turns
+ * the Reviews title singular) and its key from the gate. Each removal leaves
+ * a page that still reads correctly.
+ *
+ * Street and building names (Church Row, Keats Grove and the rest) are
+ * Camden's, quoted from its 2001 conservation area statement and attributed
+ * to it, not places we claim to have worked.
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Value from "../components/Value.astro";
+import Ask from "../components/Ask.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Reviews from "../components/ds/Reviews.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+import { QUOTE_BANK, REVIEWS } from "../data/site-content";
+import { ANSWERS, answered, questionLabel } from "../data/answers";
+
+const area = AREAS.find((a) => a.slug === "carpenter-hampstead")!;
+
+/* C3: three conduct bullets held as one key, placed among the two bullets
+   that need no answer. Order: hours, C3 first, C3 second, floors and
+   furniture, C3 third. An answered entry left empty drops that bullet. */
+const c3Open = !answered("areaHampstead3");
+const c3 = (c3Open ? ANSWERS.areaHampstead3.provisional : ANSWERS.areaHampstead3.value) as unknown as readonly string[];
+const c3Label = questionLabel("areaHampstead3");
+
+/* The reviews: every bank entry tagged with this district, in bank order,
+   whole. A gated entry takes its byline from its key once answered. */
+const quotes = QUOTE_BANK.filter((q) => q.areas.includes(area.name)).map((q) => ({
+  text: q.text,
+  meta: q.gate && answered(q.gate) ? String(ANSWERS[q.gate].value) : q.meta,
+}));
+const reviewsTitle =
+  quotes.length === 1 ? "A Google review that mentions Hampstead" : "Google reviews that mention Hampstead";
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
+    </p>
+    <p style={P2}>
+      We also fit <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>, each measured in the room and cut to follow its walls.
+    </p>
+  </Fragment>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Fit" level={4}>Can fitted furniture work in a Hampstead period house or mansion block?</SectionHead>
+    <div style="max-width:var(--measure)">
+      <p>
+        Yes, because each piece is measured in the room and cut to follow its walls. Walls, floors and ceilings are rarely straight, and no two alcoves in a period house are the same width.
+      </p>
+      <p style={P2}>
+        <Link href="https://www.camden.gov.uk/hampstead-conservation-area" target="_blank" rel="noopener">Camden's conservation area statement for Hampstead</Link> describes early 18th century houses in Church Row and Regency villas on Keats Grove. It also describes Victorian terraces off Willoughby Road, many with semi-basements, and mansion blocks such as Northcote Mansions.
+      </p>
+      <p style={P2}><Value q="areaHampstead1" /></p>
+    </div>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="In your building" level={4}>How does the work run in a period house or a managed block?</SectionHead>
+    <div style="max-width:var(--measure)">
+      <p>
+        We work to whatever rules the building sets. Depending on your lease, the freeholder's permission may be needed for alterations, including non-structural ones. Where a property is managed, we coordinate access, working hours, deliveries and any required documentation with the building or managing agent before work begins.
+      </p>
+      <ul style={LIST}>
+        <li style={ITEM}>We work 8am to 5pm on weekdays in houses, and to whatever hours the building sets in a managed block.</li>
+        {c3[0] && <li style={ITEM}>{c3Open ? <Ask q={c3Label}>{c3[0]}</Ask> : c3[0]}</li>}
+        {c3[1] && <li style={ITEM}>{c3Open ? <Ask q={c3Label}>{c3[1]}</Ask> : c3[1]}</li>}
+        <li style={ITEM}>Floors are covered in taped-down protective board, furniture is wrapped and moved to one side, and doorways are sealed with zipped dust screens.</li>
+        {c3[2] && <li style={ITEM}>{c3Open ? <Ask q={c3Label}>{c3[2]}</Ask> : c3[2]}</li>}
+      </ul>
+    </div>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Listing and consent" level={4}>Do conservation areas and listed buildings affect fitted furniture?</SectionHead>
+    <div style="max-width:var(--measure)">
+      <p>
+        In a conservation area, alterations to a property usually need planning permission, but Camden says internal alterations do not. A listed building is different: every part of it is protected, including the interior, and work that affects its character can need listed building consent. There is no fee to apply for that consent, and doing the work without it is a criminal offence.
+      </p>
+      <p style={P2}>
+        Camden's 2001 conservation area statement says most houses in the Keats Grove and Downshire Hill area are listed. On Church Row, between Heath Street and St John's, it says every house except Gardnor House is listed. The Hampstead Neighbourhood Plan counts seven Grade I buildings, more than 20 Grade II* and hundreds of Grade II properties and features in its area.
+      </p>
+      <p style={P2}>
+        <Link href="https://www.camden.gov.uk/listed-buildings" target="_blank" rel="noopener">Camden's listed buildings page</Link> links to a map of listed buildings, so you can check an address. <Value q="areaHampstead2" />
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Access" level={4}>How do parking and access work for a job in Hampstead?</SectionHead>
+    <div style="max-width:var(--measure)">
+      <p>
+        Camden's parking zone for Hampstead is CA-H. Nearby streets fall in other zones with their own days and hours. Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" target="_blank" rel="noopener">controlled parking zones page</Link> lets you search a street or postcode for its zone, and a map shows each area's hours.
+      </p>
+      <p style={P2}>
+        Camden sells trade permits by the day for a vehicle working for a local resident or business, but a permit does not guarantee a space. A parking bay suspension has to be booked ahead through Camden.
+      </p>
+      <p style={P2}>
+        Camden's conservation area statement calls narrow streets and steps characteristic of Hampstead village. Many Victorian terraces off Willoughby Road have steps up to the front door. <Value q="areaHampstead4" />
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Guide prices" level={4}>What does fitted furniture cost?</SectionHead>
+    <div style="max-width:var(--measure)">
+      <p>Guide starting prices run from £2,300 for a fitted wardrobe to £10,000 for a bespoke kitchen.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers, integrated lighting and more complex designs move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.</li>
+        <li style={ITEM}><Link href="/media-walls/">Built-in TV units</Link> start from £3,500. Overall size, cabinetry and storage, integrated lighting, cable management and specialist finishes move the figure.</li>
+        <li style={ITEM}><Link href="/bespoke-kitchens/">Bespoke kitchens</Link> typically start from £10,000. Kitchen size and layout, cabinetry and internal storage, worktops, appliances, and materials and finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        These are guide starting prices, and a fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
+      </p>
+    </div>
+  </Wrap>
+
+  {/* C5. A review is a plain string and cannot carry markup, so while its key
+      is open the open question sits directly above the block. The count and
+      "All N reviews on Google" are the component's, from REVIEWS.count. */}
+  <Wrap style="padding-bottom:var(--section-y)">
+    {!answered("areaHampstead5") && (
+      <p style="margin-bottom:var(--space-10)"><Ask q={questionLabel("areaHampstead5")}>{ANSWERS.areaHampstead5.about}</Ask></p>
+    )}
+    <Reviews
+      title={reviewsTitle}
+      meta="Google"
+      average={REVIEWS.average}
+      count={REVIEWS.count}
+      href={REVIEWS.profileUrl}
+      quotes={quotes}
+    />
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Guarantee" level={4}>What guarantee comes with the work?</SectionHead>
+    <div style="max-width:var(--measure)">
+      <p>
+        The guarantee covers installation and workmanship for 2 years and the structural integrity of the joinery for 10 years. Hinges, runners and other hardware carry their manufacturer's warranty. If doors, drawers or other moving parts require adjustment during the 2-year aftercare period, we will return and adjust them.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="How long does a first visit take?">
+        A first visit usually takes 45 to 60 minutes, and the measured survey takes about an hour on site. Both run longer for a larger or more complex project. <Link href="/process/">How a commission runs</Link> sets out each stage.
+      </Faq>
+      <Faq q="How long does a job take?">
+        Installation typically takes 2 to 3 days for a straightforward fitted wardrobe and around 3 to 5 days for a walk-in wardrobe. Larger or more complex projects take longer. The lead time before work starts is typically 4 to 8 weeks, depending on the project, specification and current schedule.
+      </Faq>
+      <Faq q="What do I need to do before the fitting starts?">
+        Clear personal belongings from the area being fitted and make sure we can reach it. Anything project-specific is agreed before installation.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

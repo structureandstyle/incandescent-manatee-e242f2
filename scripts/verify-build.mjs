@@ -20,8 +20,22 @@
  * Factual and style breaches fail everywhere, indexable or not, because they are
  * errors rather than incompleteness. A draft page carrying a claim the client
  * has told us is false is not a draft, it is wrong.
+ *
+ * Two checks added with the first area page, 3 October 2026, both failing
+ * everywhere because both are errors rather than incompleteness:
+ *
+ *   1. Every <blockquote> on every page must be, whole, one entry of the
+ *      review bank (src/data/quote-bank.json). Reviews are quoted unedited or
+ *      not at all; this is what makes "never trim a review" mechanical rather
+ *      than a matter of someone remembering it.
+ *   2. Every £ figure on an area page must also appear on one of the service
+ *      pages or the cost guide in the same build. An area page types its
+ *      guide prices; this stops them drifting from the pages that own them.
+ *      An area path registered below with no built page fails too, since
+ *      otherwise its rules would silently never run.
  */
 
+import { readFileSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 
@@ -70,7 +84,46 @@ const SERVICE_PATHS = new Set([
   "/media-walls/",
   "/bespoke-kitchens/",
 ]);
-const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
+/* The area pages (src/data/areas.ts). Hard-coded like SERVICE_PATHS: this
+   script is plain Node and reads nothing from src but the review bank. Add a
+   path here in the same commit as its page, or its breadcrumb fails. */
+const AREA_PATHS = new Set(["/carpenter-hampstead/"]);
+const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, ...AREA_PATHS, "/fitted-wardrobe-cost/"]);
+/** The pages that own the guide prices an area page repeats. */
+const PRICE_SOURCE_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
+
+/** Whitespace collapsed to single spaces and trimmed: how quote text is compared. */
+const squash = (s) => s.replace(/\s+/g, " ").trim();
+
+/* The review bank, read from beside this script rather than from the working
+   directory, so the gate checks against the bank whatever it is run from. */
+const QUOTE_BANK = new Set(
+  JSON.parse(readFileSync(new URL("../src/data/quote-bank.json", import.meta.url), "utf8")).map((q) =>
+    squash(q.text)
+  )
+);
+
+/** Entity decoding for the text inside a tag: the five named ones Astro emits, and numeric forms. */
+function decodeEntities(s) {
+  return s
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
+}
+
+/** Every blockquote's text, tags stripped, entities decoded, whitespace squashed. */
+function blockquotes(html) {
+  return [...html.matchAll(/<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>/gi)].map((m) =>
+    squash(decodeEntities(m[1].replace(/<[^>]+>/g, " ")))
+  );
+}
+
+/** £ figures as written: £2,300, £10,000, £5. A trailing comma is punctuation, not the figure. */
+const prices = (text) => [...new Set([...text.matchAll(/£\d{1,3}(?:,\d{3})+|£\d+/g)].map((m) => m[0]))];
 
 function verifySchema(html, page, errors) {
   const scripts = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
@@ -149,6 +202,17 @@ function verifySchema(html, page, errors) {
     errors.push(`${page}  unexpected breadcrumb schema`);
   }
 
+  /* An area page describes itself as a WebPage about the one business. It
+     adds no business node of its own (the single HomeAndConstructionBusiness
+     check above holds for it too), and Service stays banned off the service
+     paths. */
+  if (AREA_PATHS.has(page)) {
+    const pages = ofType("WebPage");
+    if (pages.length !== 1 || pages[0].url !== `${SITE_URL}${page}` || pages[0].about?.["@id"] !== BUSINESS_ID) {
+      errors.push(`${page}  area page needs one WebPage node with this page's url, about the business`);
+    }
+  }
+
   if (page.startsWith("/journal/") && page !== "/journal/") {
     const posts = ofType("BlogPosting");
     const post = posts[0];
@@ -195,6 +259,8 @@ const errors = [];
 const drafts = [];
 const held = [];
 const openQuestions = new Set();
+/** Visible text by page, for the checks that compare one page with another. */
+const texts = new Map();
 
 for (const file of files) {
   const html = await readFile(file, "utf8");
@@ -232,6 +298,31 @@ for (const file of files) {
     const hits = [...new Set([...text.matchAll(re)].map((m) => m[0]))];
     if (hits.length) errors.push(`${page}  ${why}: ${hits.map((h) => JSON.stringify(h)).join(", ")}`);
   }
+
+  // Reviews are quoted whole or not at all, on every page.
+  for (const quote of blockquotes(html)) {
+    if (!QUOTE_BANK.has(quote)) {
+      errors.push(`${page}  blockquote text is not a verbatim bank entry: ${JSON.stringify(quote.slice(0, 60))}...`);
+    }
+  }
+
+  texts.set(page, text);
+}
+
+// An area page's guide prices must each appear on a page that owns them.
+for (const page of AREA_PATHS) {
+  const text = texts.get(page);
+  // A registered area path with no built page means its WebPage and price
+  // rules never ran: a renamed or deleted page must not pass silently.
+  if (text === undefined) {
+    errors.push(`${page}  registered in AREA_PATHS but not in this build`);
+    continue;
+  }
+  const owned = new Set([...PRICE_SOURCE_PATHS].flatMap((p) => prices(texts.get(p) ?? "")));
+  const stray = prices(text).filter((p) => !owned.has(p));
+  if (stray.length) {
+    errors.push(`${page}  price(s) not on any service page or the cost guide in this build: ${stray.join(", ")}`);
+  }
 }
 
 console.log(`Scanned ${files.length} page(s) in ${DIST}/.`);
@@ -239,7 +330,9 @@ console.log(`Scanned ${files.length} page(s) in ${DIST}/.`);
 if (drafts.length) {
   console.log(`\n${drafts.length} page(s) held back as drafts, correctly noindexed:`);
   for (const d of drafts) {
-    const bits = [...d.asks.map(label), ...d.raw];
+    // Sorted as the site-wide line below is, not in markup order.
+    const asks = [...d.asks].sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+    const bits = [...asks.map(label), ...d.raw];
     console.log(`  ${d.page}  waiting on ${bits.join(", ")}`);
   }
 }

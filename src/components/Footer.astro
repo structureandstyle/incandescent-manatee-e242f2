@@ -12,6 +12,7 @@ import SiteFooter from "./ds/SiteFooter.astro";
 import { AGENCY_CREDIT, BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
 import { NAV } from "../data/site-content";
+import { AREAS, areaPath } from "../data/areas";
 
 /* Derived, not typed (5 Sep 2026). A literal 2026 on a static site with no
    scheduled rebuild goes silently wrong on 1 January, on every page at once,
@@ -45,6 +46,14 @@ const guideLinks = SERVICES.filter((s) => s.guide && indexable(servicePath(s))).
   href: servicePath(s),
 }));
 
+/* The area pages, by the same rule: only those whose gate has cleared. The
+   group is left out entirely while it has none, because SiteFooter renders
+   every group it is given, heading included, even when empty (3 Oct 2026). */
+const areaLinks = AREAS.filter((a) => indexable(areaPath(a.slug))).map((a) => ({
+  label: a.name,
+  href: areaPath(a.slug),
+}));
+
 const pageLinks = [
   ...NAV.filter((item) => indexable(item.href)),
   { label: "Enquire", href: "/contact/" },
@@ -69,6 +78,7 @@ const links = [
        the argument for the gate in one line. */
     { heading: "Services", links: serviceLinks },
     { heading: "Guides", links: guideLinks },
+    ...(areaLinks.length ? [{ heading: "Areas", links: areaLinks }] : []),
     { heading: "The company", links: pageLinks },
   ]}
   links={links}
