@@ -120,7 +120,10 @@ export const BAND = {
  * and quotable, only shorter.
  */
 export const REVIEWS = {
-  count: 16,
+  /** Re-read from the live profile on 3 October 2026: 17 at 5.0, the 17th
+      being a walk-in wardrobe review of 30 September. Typed, so it goes stale
+      with every new review: re-read it when replying to one. */
+  count: 17,
   average: "5.0",
   source: "Google Business Profile",
   /** The public profile, for the click-through. The cid is the listing's
