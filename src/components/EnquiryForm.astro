@@ -200,6 +200,15 @@ const SOURCES = [
   class:list={["enquiry-form", compact && "is-compact"]}
 >
   <input type="hidden" name="form-name" value="enquiry" />
+  {/* ONE EMAIL PER ENQUIRY, 8 Oct 2026, Denis's ask. Netlify sent every
+      notification as "Form submission from enquiry form:", so Gmail filed
+      different leads into one thread (two of the 28 Sep enquiries share one)
+      and a new lead could sit unseen inside an old conversation. The submit
+      script below overwrites this value with the enquirer's name, what they
+      ticked and their area. This value is the fallback if the script never
+      runs: Netlify fills in %{submissionId}, which is unique, so no two
+      enquiries share a subject either way. */}
+  <input type="hidden" name="subject" data-remove-prefix value="Website enquiry (%{submissionId})" />
   <p hidden>
     <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
   </p>
@@ -850,9 +859,28 @@ const SOURCES = [
       });
     });
 
+    // The notification email's subject, so each enquiry opens its own thread
+    // and reads at a glance in the inbox: "Website enquiry from Nuno: Alcove
+    // units and shelving, Hendon". Set here, before either way of sending
+    // builds the form data. Line breaks and control characters are taken out,
+    // since this text ends up in an email header.
+    const setSubject = (form) => {
+      const field = form.querySelector('input[name="subject"]');
+      if (!field) return;
+      const clean = (text) => String(text || "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim();
+      const name = clean(form.elements.namedItem("name")?.value);
+      if (!name) return;
+      const services = Array.from(form.querySelectorAll('input[name="service"]:checked'), (box) => clean(box.value)).join(", ");
+      const area = clean(form.elements.namedItem("area")?.value);
+      const about = [services, area].filter(Boolean).join(", ");
+      const subject = `Website enquiry from ${name}${about ? `: ${about}` : ""}`;
+      field.value = subject.length > 150 ? `${subject.slice(0, 147).trimEnd()}...` : subject;
+    };
+
     document.addEventListener("submit", (e) => {
       const form = e.target;
       if (!form || form.getAttribute("name") !== "enquiry") return;
+      setSubject(form);
       const input = form.querySelector("[data-enquiry-files]");
       const state = stateFor(form);
       const files = state.files.slice();
