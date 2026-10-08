@@ -234,6 +234,18 @@ const SOURCES = [
     <p class="help">
       {selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
     </p>
+    {/* THE EMAIL HEADING FOR THIS FIELD, 8 Oct 2026, Denis's ask. Netlify
+        labels a checkbox group with the label of its first box, so every
+        notification read "Fitted wardrobes: Alcove units and shelving", as if
+        wardrobes had been asked for. The legend does not help: Netlify ignores
+        it (a known, unfixed Netlify bug). An unlabelled box first in the group
+        makes Netlify fall back to the field's name, so the line reads
+        "Service: Alcove units and shelving". It is never ticked, so it never
+        sends a value, and `service` stays the name the Make scenario maps.
+        Wrapped in a hidden paragraph like the honeypot, because the input rule
+        below sets display: block, which would beat a hidden attribute on the
+        box itself. */}
+    <p hidden><input type="checkbox" name="service" value="" tabindex="-1" /></p>
     <div class="choices">
       {choices.map((label, i) => (
         <label class="choice" for={`${idPrefix}service-${i}`}>
