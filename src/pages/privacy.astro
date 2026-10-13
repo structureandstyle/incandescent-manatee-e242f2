@@ -22,7 +22,7 @@ import { BUSINESS } from "../data/site";
    which is a UK GDPR Article 13(1)(e) disclosure. A revision date is itself a
    factual claim and this one was checkable against the file's own history.
    Bump it with any edit to this page, as cookies.astro already does. */
-const updated = "November 2026";
+const updated = "6 November 2026";
 ---
 
 <Base
@@ -55,6 +55,14 @@ const updated = "November 2026";
           If you send an enquiry we collect your name, phone number, email address, the area you are
           in, whatever you tell us about the job, any photographs or documents you attach, and how you heard about
           us. We use it to answer your enquiry, quote for the work, and carry it out if you go ahead.
+        </p>
+        {/* Added 13 Oct 2026 with the form's hidden source fields (utm_ parameters,
+            landing page, referrer). One sentence, because the consent detail lives
+            on the cookies page and this notice should not repeat it. */}
+        <p style="margin-top:var(--space-8)">
+          The form also records which page or link brought you to this site, so we can see which of
+          our pages and posts bring in enquiries, and that note is kept in your browser for the visit
+          only if you accept analytics cookies.
         </p>
         <p style="margin-top:var(--space-8)">
           The lawful basis is taking steps at your request before entering a contract, and our

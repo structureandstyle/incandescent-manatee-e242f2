@@ -1,5 +1,6 @@
 ---
 import { SERVICES, DEFERRED_SERVICES, serviceLabel } from "../data/site";
+import { FIELD_NAMES as SOURCE_FIELDS } from "../scripts/enquiry-source.mjs";
 
 interface Props {
   compact?: boolean;
@@ -209,6 +210,15 @@ const SOURCES = [
       runs: Netlify fills in %{submissionId}, which is unique, so no two
       enquiries share a subject either way. */}
   <input type="hidden" name="subject" data-remove-prefix value="Website enquiry (%{submissionId})" />
+  {/* WHERE THE ENQUIRY CAME FROM, 13 Oct 2026. Seven empty fields: the five
+      utm_ parameters, the landing page and the referring site. They are real
+      markup, not added by script, so Netlify registers them when it reads the
+      built HTML at deploy; a field it has never seen is dropped on submission.
+      The script at the foot of this file fills them in when the form is sent.
+      With JavaScript off they arrive empty, which is correct. The list of names
+      lives in src/scripts/enquiry-source.mjs, beside the rules for filling
+      them. */}
+  {SOURCE_FIELDS.map((name) => <input type="hidden" name={name} value="" />)}
   <p hidden>
     <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
   </p>
@@ -1199,4 +1209,79 @@ const SOURCES = [
       });
     });
   })();
+</script>
+
+{/*
+  WHERE THE ENQUIRY CAME FROM, 13 Oct 2026. Fills the seven hidden source
+  fields near the top of the form (utm_source to referrer) when the form is
+  submitted, so a lead that began at a Google Business Profile post carries the
+  post's tagged link into the notification email.
+
+  The rules, and the reason for each, are in src/scripts/enquiry-source.mjs.
+  Short version: a page that carries utm_ parameters supplies them itself. If it
+  does not, the first page of the visit is used, but that is only remembered, in
+  session storage, once the visitor has accepted analytics cookies. Without a
+  yes nothing is stored and the landing page is simply the page they are on.
+
+  Consent is read from window.ssCookieConsent, the interface Base.astro defines
+  and the cookie notice and the cookies page both call. "granted" is the only
+  value that counts. If that object is missing, or throws, the answer is no.
+
+  A bundled module rather than the inline script above: it imports the rules
+  module so the same code is what the tests run. It still loads before any
+  realistic submit, and the capture-phase listener below runs ahead of the
+  upload script's submit handler, which can build its FormData in the same tick.
+  The Base layout mounts the modal copy of this form on every page, so this
+  runs site-wide and records the first page of a visit wherever it starts.
+*/}
+<script>
+  import {
+    FIELD_NAMES,
+    forgetSource,
+    rememberSource,
+    sourceForSubmit,
+  } from "../scripts/enquiry-source.mjs";
+
+  type ConsentApi = { current?: () => string | null };
+
+  const consented = (): boolean => {
+    try {
+      const api = (window as unknown as { ssCookieConsent?: ConsentApi }).ssCookieConsent;
+      return api?.current?.() === "granted";
+    } catch {
+      return false;
+    }
+  };
+  const getStorage = () => window.sessionStorage;
+  const visit = () => ({
+    href: window.location.href,
+    referrer: document.referrer,
+    consented: consented(),
+    getStorage,
+  });
+
+  if (consented()) rememberSource(visit());
+  else forgetSource(getStorage);
+
+  // Accepting on a page that carries utm_ parameters should keep them. Declining
+  // or reopening the choice from /cookies/ deletes what was kept.
+  document.addEventListener("ss:consent", () => {
+    if (consented()) rememberSource(visit());
+    else forgetSource(getStorage);
+  });
+
+  // Capture phase, so the fields are filled before any other submit handler.
+  document.addEventListener(
+    "submit",
+    (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || form.getAttribute("name") !== "enquiry") return;
+      const source = sourceForSubmit(visit());
+      for (const name of FIELD_NAMES) {
+        const field = form.elements.namedItem(name);
+        if (field instanceof HTMLInputElement) field.value = source[name];
+      }
+    },
+    true,
+  );
 </script>
