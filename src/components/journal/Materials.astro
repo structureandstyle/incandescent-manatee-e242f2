@@ -1,0 +1,25 @@
+---
+/**
+ * A row of material cards, wider than the reading column. Each card is a
+ * <Material>. Photographs of finished rooms, never swatches or stock (Arthur,
+ * 11 Oct 2026).
+ */
+---
+
+<div class="materials wide">
+  <slot />
+</div>
+
+<style>
+  .materials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--space-15);
+    border-top: var(--rule-structure);
+    border-bottom: var(--rule-structure);
+    margin-top: var(--space-12);
+  }
+  @media (max-width: 760px) {
+    .materials { grid-template-columns: 1fr; }
+  }
+</style>

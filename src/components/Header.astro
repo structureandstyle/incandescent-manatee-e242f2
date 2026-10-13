@@ -18,8 +18,16 @@ import NavBar from "./ds/NavBar.astro";
 import { NAV, ENQUIRE_HREF } from "../data/site-content";
 import { SERVICES, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
+import { getCollection } from "astro:content";
+import { isLive } from "../data/journal";
 
 const here = Astro.url.pathname;
+
+/* Journal joins the nav on its own the day the first article is cleared
+   (13 Oct 2026), rather than waiting for someone to remember the comment in
+   site-content.ts. Drafts on a preview build do not count. */
+const hasJournal = (await getCollection("journal")).some(isLive);
+const items = hasJournal ? [...NAV, { label: "Journal", href: "/journal/" }] : NAV;
 const services = SERVICES.filter((s) => !s.guide && indexable(servicePath(s))).map((s) => ({
   label: serviceLabel(s),
   href: servicePath(s),
@@ -27,7 +35,7 @@ const services = SERVICES.filter((s) => !s.guide && indexable(servicePath(s))).m
 ---
 
 <NavBar
-  items={NAV}
+  items={items}
   menu={{ label: "Services", items: services }}
   cta={{ label: "Enquire", href: ENQUIRE_HREF }}
   activeHref={here}

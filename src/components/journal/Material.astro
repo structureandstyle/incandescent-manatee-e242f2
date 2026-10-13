@@ -1,0 +1,69 @@
+---
+/**
+ * One material card inside <Materials>: a photograph, the name, then three
+ * short answers. `ask` turns the caption's right half into an open question,
+ * for a card whose board or photograph Kaspar has not yet confirmed.
+ */
+import Plate from "../ds/Plate.astro";
+import Ask from "../Ask.astro";
+
+interface Props {
+  name: string;
+  photo: string;
+  alt: string;
+  width: number;
+  height: number;
+  caption: string;
+  ask?: { q: string; text: string };
+  what: string;
+  goodFor: string;
+  bearInMind: string;
+}
+
+const { name, photo, alt, width, height, caption, ask, what, goodFor, bearInMind } = Astro.props;
+---
+
+<div class="material">
+  <Plate
+    photo={photo}
+    alt={alt}
+    width={width}
+    height={height}
+    ratio="4 / 3"
+    subject={caption}
+    sizes="(max-width: 760px) 92vw, 340px"
+  >
+    {ask && <Ask q={ask.q} slot="controls">{ask.text}</Ask>}
+  </Plate>
+  <h3>{name}</h3>
+  <dl>
+    <dt>What it is</dt><dd>{what}</dd>
+    <dt>Good for</dt><dd>{goodFor}</dd>
+    <dt class="bim">Bear in mind</dt><dd>{bearInMind}</dd>
+  </dl>
+</div>
+
+<style>
+  .material { padding: var(--space-11) 0 var(--space-10); }
+  .material h3 {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: 24px;
+    margin: var(--space-9) 0 var(--space-6);
+  }
+  dl { margin: 0; }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: var(--space-6);
+  }
+  dt.bim { color: var(--walnut); }
+  dd { margin: var(--space-1) 0 0; font-size: 15px; line-height: 1.5; }
+  @media (max-width: 760px) {
+    .material { border-bottom: var(--rule-hair); }
+    .material:last-child { border-bottom: 0; }
+  }
+</style>

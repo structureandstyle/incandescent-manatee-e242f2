@@ -25,12 +25,15 @@ import Link from "../../components/ds/Link.astro";
 import EnquireBand from "../../components/ds/EnquireBand.astro";
 import Value from "../../components/Value.astro";
 import { BAND, CONTACT } from "../../data/site-content";
+import { isLive, SHOW_DRAFTS } from "../../data/journal";
 
 const all = await getCollection("journal");
 const live = all
-  .filter((p) => p.data.blocked === false)
+  .filter(isLive)
   .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
-const held = all.filter((p) => p.data.blocked !== false);
+/* Drafts are listed only on preview builds, so a reviewer can reach them.
+   The live index never names a held article. */
+const held = SHOW_DRAFTS ? all.filter((p) => !isLive(p)) : [];
 ---
 
 <Base
@@ -77,6 +80,24 @@ const held = all.filter((p) => p.data.blocked !== false);
       </div>
     )}
   </Wrap>
+
+  {held.length > 0 && (
+    <Wrap style="padding-bottom:var(--section-y)" data-journal-draft>
+      <SectionHead meta={`${held.length} on this preview only`} scribe>
+        Drafts
+      </SectionHead>
+      <ul style="list-style:none;margin:0;padding:0">
+        {held.map((p) => (
+          <li style="padding:var(--space-10) 0;border-top:var(--rule-hair)">
+            <Link href={`/journal/${p.id}/`} variant="nav" chamfer>{p.data.title}</Link>
+            {p.data.blockedReason && (
+              <p style="margin-top:var(--space-5);max-width:var(--measure);color:var(--text-quiet)">{p.data.blockedReason}</p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Wrap>
+  )}
 
   <EnquireBand heading="If you have a room in mind, start here." chamfer>
     {BAND.body}

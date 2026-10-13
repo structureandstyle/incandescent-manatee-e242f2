@@ -1,0 +1,23 @@
+---
+/**
+ * "We fit <service> across London, including ..." with the ten districts in
+ * the Business Profile's own order, read from BUSINESS.areaServed so the list
+ * cannot drift from the profile or the schema.
+ */
+import { BUSINESS } from "../../data/site";
+
+interface Props {
+  /** Lower case, as it reads mid-sentence: "alcove units". */
+  service: string;
+}
+
+const { service } = Astro.props;
+const areas = [...BUSINESS.areaServed];
+const list = `${areas.slice(0, -1).join(", ")} and ${areas.at(-1)}`;
+---
+
+<p class="areas">We fit {service} across London, including {list}.</p>
+
+<style>
+  .areas { margin-top: var(--space-11); font-size: 15px; color: var(--ink-soft); }
+</style>

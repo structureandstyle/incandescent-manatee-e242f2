@@ -70,7 +70,8 @@ export const NAV = [
   { label: "About", href: "/about/" },
   /* Journal returns to the nav the day the first article publishes. Until
      then a primary nav link to an empty section costs credibility on every
-     page. The route stays live and noindexed (2 Sep 2026). */
+     page. The route stays live and noindexed (2 Sep 2026). Header.astro now
+     appends it automatically once an article is cleared (13 Oct 2026). */
 ] as const;
 
 export const ENQUIRE_HREF = "/contact/";

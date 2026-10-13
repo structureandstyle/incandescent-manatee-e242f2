@@ -1,0 +1,146 @@
+---
+/**
+ * Drawing 1 of the alcove article: a front view of two alcove units either
+ * side of a chimney breast and a side section of one, with lettered
+ * dimensions. Dimensioned drawings are one of the two things none of the six
+ * competitor sites studied on 11 Oct 2026 has (the other is real prices).
+ *
+ * The drawing is fixed; the sizes it keys to are props, so the numbers stay in
+ * the article where Kaspar approves them:
+ *
+ *   <AlcoveDrawing
+ *     legend={[{ k: "A", label: "Alcove width.", text: "Measure at the top, middle and bottom." }, ...]}
+ *     note="Starting points for planning, not fixed sizes." />
+ *
+ * Colours are the brand tokens written out, because SVG presentation
+ * attributes do not resolve CSS custom properties.
+ */
+interface Props {
+  title?: string;
+  legend: { k: string; label: string; text: string }[];
+  note?: string;
+}
+
+const { title = "Drawing 1 · Starting sizes", legend, note } = Astro.props;
+const CHAR = "#221D18";
+const GREEN = "#2C4A3A";
+const OAK = "#B28451";
+const PANEL = "#F6F3EA";
+const SOFT = "rgba(34,29,24,.66)";
+const shelves = [200, 172, 144, 116, 88];
+---
+
+<figure class="diagram">
+  <div class="diagram-cap">
+    <span class="mono green">{title}</span>
+    <span class="mono">Front view and side section</span>
+  </div>
+  <svg viewBox="0 0 640 350" role="img" aria-label="Front view of two alcove units beside a chimney breast and a side section of one unit, marking width, height, cupboard height and depth, shelf depth and the gap between shelves">
+    <g stroke={CHAR} fill="none" stroke-width="1.2">
+      <line x1="20" y1="40" x2="400" y2="40" />
+      <line x1="20" y1="52" x2="400" y2="52" stroke-dasharray="3 3" stroke="rgba(34,29,24,.5)" />
+      <line x1="20" y1="300" x2="400" y2="300" />
+      <rect x="150" y="52" width="120" height="248" fill="rgba(34,29,24,.06)" />
+      <rect x="183" y="245" width="54" height="55" fill="#F2EEE3" />
+      {[45, 275].map((x) => (
+        <g>
+          <rect x={x} y="58" width="100" height="242" />
+          <line x1={x} y1="228" x2={x + 100} y2="228" />
+          <line x1={x + 50} y1="228" x2={x + 50} y2="300" />
+          <g stroke={OAK}>{shelves.map((y) => <line x1={x} y1={y} x2={x + 100} y2={y} />)}</g>
+        </g>
+      ))}
+    </g>
+    <g stroke={GREEN} stroke-width="1">
+      <line x1="45" y1="26" x2="145" y2="26" /><line x1="45" y1="20" x2="45" y2="32" /><line x1="145" y1="20" x2="145" y2="32" />
+      <line x1="30" y1="52" x2="30" y2="300" /><line x1="24" y1="52" x2="36" y2="52" /><line x1="24" y1="300" x2="36" y2="300" />
+      <line x1="388" y1="228" x2="388" y2="300" /><line x1="382" y1="228" x2="394" y2="228" /><line x1="382" y1="300" x2="394" y2="300" />
+      <line x1="388" y1="172" x2="388" y2="200" /><line x1="382" y1="172" x2="394" y2="172" /><line x1="382" y1="200" x2="394" y2="200" />
+    </g>
+    <g font-size="11" fill={GREEN}>
+      <rect x="84" y="16" width="20" height="18" fill={PANEL} stroke={GREEN} /><text x="94" y="29" text-anchor="middle">A</text>
+      <rect x="20" y="160" width="20" height="18" fill={PANEL} stroke={GREEN} /><text x="30" y="173" text-anchor="middle">C</text>
+      <rect x="378" y="255" width="20" height="18" fill={PANEL} stroke={GREEN} /><text x="388" y="268" text-anchor="middle">D</text>
+      <rect x="378" y="177" width="20" height="18" fill={PANEL} stroke={GREEN} /><text x="388" y="190" text-anchor="middle">E</text>
+      <text x="160" y="72" fill={SOFT} font-size="9" letter-spacing="1.2">CHIMNEY BREAST</text>
+      <text x="20" y="324" fill={SOFT} font-size="9" letter-spacing="1.2">FRONT VIEW</text>
+    </g>
+    <g stroke={CHAR} fill="none" stroke-width="1.2">
+      <line x1="470" y1="40" x2="470" y2="300" stroke-width="2.4" />
+      <line x1="470" y1="300" x2="625" y2="300" />
+      <rect x="470" y="228" width="105" height="72" fill="rgba(178,132,81,.18)" />
+      <line x1="571" y1="232" x2="571" y2="296" stroke="rgba(34,29,24,.55)" />
+      <g stroke={OAK} stroke-width="2">{shelves.map((y) => <line x1="470" y1={y} x2="535" y2={y} />)}</g>
+    </g>
+    <g stroke={GREEN} stroke-width="1">
+      <line x1="470" y1="316" x2="575" y2="316" /><line x1="470" y1="310" x2="470" y2="322" /><line x1="575" y1="310" x2="575" y2="322" />
+      <line x1="470" y1="66" x2="535" y2="66" /><line x1="470" y1="60" x2="470" y2="72" /><line x1="535" y1="60" x2="535" y2="72" />
+    </g>
+    <g font-size="11" fill={GREEN}>
+      <rect x="513" y="307" width="20" height="18" fill={PANEL} stroke={GREEN} /><text x="523" y="320" text-anchor="middle">B</text>
+      <rect x="493" y="57" width="20" height="18" fill={PANEL} stroke={GREEN} /><text x="503" y="70" text-anchor="middle">F</text>
+      <text x="476" y="50" fill={SOFT} font-size="9" letter-spacing="1.2">WALL</text>
+      <text x="470" y="344" fill={SOFT} font-size="9" letter-spacing="1.2">SIDE SECTION</text>
+    </g>
+  </svg>
+  <div class="legend">
+    {legend.map((item) => (
+      <div><span class="k">{item.k}</span><span><b>{item.label}</b> {item.text}</span></div>
+    ))}
+  </div>
+  {note && <p class="diagram-note">{note}</p>}
+</figure>
+
+<style>
+  .diagram {
+    margin-top: var(--space-14);
+    margin-bottom: var(--space-4);
+    border: var(--rule-structure);
+    padding: var(--space-11) var(--space-11) var(--space-7);
+    background: #F6F3EA;
+  }
+  .diagram-cap {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-6);
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .mono.green { color: var(--green); }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: var(--font-mono); }
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-5) var(--space-12);
+    margin: var(--space-8) 0 var(--space-2);
+    padding-top: var(--space-7);
+    border-top: var(--rule-hair);
+  }
+  .legend div {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: var(--space-4);
+    font-size: var(--type-body-sm);
+    line-height: 1.45;
+  }
+  .legend b { font-weight: var(--weight-medium); }
+  .k {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--green);
+    color: var(--green);
+    display: grid;
+    place-items: center;
+  }
+  .diagram-note { margin: var(--space-5) 0 0; font-size: 13.5px; color: var(--ink-soft); }
+</style>
