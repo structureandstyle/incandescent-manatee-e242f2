@@ -52,8 +52,9 @@ export const GA4_ID = "G-FSGVTJXMMP";
 /**
  * The agency credit in the footer.
  *
- * OFF, AND IT STAYS OFF UNTIL KASPAR AGREES TO IT. Built 5 September 2026 so
- * that agreeing is a one-word change rather than a job, not because it is
+ * ON SINCE 16 OCTOBER 2026, WHEN KASPAR AGREED TO IT (relayed to Flow to Form
+ * that day). Before that it was off, for the reasons below. Built 5 September
+ * 2026 so that agreeing is a one-word change rather than a job, not because it is
  * going live. This is his website: the executed agreement gives Flow to Form a
  * named case study, a testimonial once the results deserve one, and two
  * introductions where reasonably possible. A credit on his pages is not among
@@ -76,7 +77,7 @@ export const GA4_ID = "G-FSGVTJXMMP";
  * This decides only whether it shows and which line it says.
  */
 export const AGENCY_CREDIT = {
-  enabled: false,
+  enabled: true,
   line: "Site and search by",
 } as const;
 
