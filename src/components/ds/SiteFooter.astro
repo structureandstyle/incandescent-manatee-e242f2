@@ -11,6 +11,7 @@
  * data-motion="brand", already implemented by the ported motion CSS.
  */
 import Logo from "./Logo.astro";
+import FlowToFormCredit from "../FlowToFormCredit.astro";
 
 interface Props {
   lines?: readonly string[];
@@ -24,7 +25,7 @@ interface Props {
    * would not be true. The copyright here is the client's. This renders after
    * a gap, as a sentence saying what somebody did rather than who owns what.
    */
-  credit?: { label: string; href: string } | null;
+  credit?: "Site by" | "Site and search by" | null;
   /** Contact links, rendered as a row above the legal lines. */
   links?: readonly { label: string; href: string }[];
   /** Policy links, rendered beside the legal lines in the same faint mono. */
@@ -142,18 +143,13 @@ const {
         <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint)">{l}</span>
       ))}
       {credit && (
-        /* nofollow, deliberately. One followed footer link from one client site
-           is unremarkable. The same link, placed by the same agency, on every
-           client whose search work it also runs, is the pattern Google's link
-           spam policy names, and that convention is far cheaper to set on the
-           first site than to unpick on the fifth. Nothing is given up: nofollow
-           does not stop anyone clicking, and the click is the point. */
-        <a
-          href={credit.href}
-          target="_blank"
-          rel="noopener nofollow"
-          style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint);border-bottom:1px solid transparent;min-height:44px;display:inline-flex;align-items:center"
-        >{credit.label}</a>
+        /* The Flow to Form credit. The component owns the words, the link and
+           its nofollow; this span gives it the faint small print of the row.
+           Mono and faint like its neighbours, but not uppercase: the credit
+           keeps "flow to form" lowercase, as the wordmark is. */
+        <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);color:var(--ink-rev-faint);min-height:44px;display:inline-flex;align-items:center">
+          <FlowToFormCredit enabled line={credit} />
+        </span>
       )}
     </div>
   </div>
