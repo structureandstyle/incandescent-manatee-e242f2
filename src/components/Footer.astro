@@ -5,7 +5,7 @@
  * The mono lines carry the legal identity and nothing else. The design system's
  * own footer ended with "Identity by Flow to Form", a supplier credit on the
  * client's site. That is the client's decision to make rather than ours, so it
- * is left out until he is asked. Everything here is a matter of public record:
+ * was left out until he was asked; he agreed on 16 Oct 2026. Everything here is a matter of public record:
  * Companies House 16822866, incorporated 31 October 2025.
  */
 import SiteFooter from "./ds/SiteFooter.astro";
@@ -81,7 +81,7 @@ const links = [
     `Bespoke joinery and fitted furniture · London`,
     `© ${year}`,
   ]}
-  {/* Off until Kaspar agrees to it: see AGENCY_CREDIT in src/data/site.ts.
-      One boolean there is the whole change. */}
-  credit={AGENCY_CREDIT.enabled ? { label: AGENCY_CREDIT.label, href: AGENCY_CREDIT.href } : null}
+  {/* On since Kaspar agreed, 16 Oct 2026: see AGENCY_CREDIT in src/data/site.ts.
+      One boolean there turns it off again. */}
+  credit={AGENCY_CREDIT.enabled ? AGENCY_CREDIT.line : null}
 />

@@ -52,8 +52,9 @@ export const GA4_ID = "G-FSGVTJXMMP";
 /**
  * The agency credit in the footer.
  *
- * OFF, AND IT STAYS OFF UNTIL KASPAR AGREES TO IT. Built 5 September 2026 so
- * that agreeing is a one-word change rather than a job, not because it is
+ * ON SINCE 16 OCTOBER 2026, WHEN KASPAR AGREED TO IT (relayed to Flow to Form
+ * that day). Before that it was off, for the reasons below. Built 5 September
+ * 2026 so that agreeing is a one-word change rather than a job, not because it is
  * going live. This is his website: the executed agreement gives Flow to Form a
  * named case study, a testimonial once the results deserve one, and two
  * introductions where reasonably possible. A credit on his pages is not among
@@ -66,13 +67,18 @@ export const GA4_ID = "G-FSGVTJXMMP";
  * what was done instead, which is also the better advertisement, and
  * SiteFooter renders it after a gap rather than as another legal line.
  *
- * The link is nofollow. See the note at the render site for why that is a
- * convention rather than caution about this one link.
+ * The link is nofollow. A followed footer link placed by one agency on every
+ * client whose search it runs is the pattern Google's link spam policy names.
+ *
+ * Since 16 Oct 2026 the credit is Flow to Form's standard one, generated from
+ * f2f-patterns (f2f_credit) into src/components/FlowToFormCredit.astro: the
+ * words in the site's own type, with our emblem, which fills on hover. That
+ * component owns the link, the rel and the tagging, and is not edited here.
+ * This decides only whether it shows and which line it says.
  */
 export const AGENCY_CREDIT = {
-  enabled: false,
-  label: "Site and search by Flow to Form",
-  href: "https://flowtoform.co.uk/",
+  enabled: true,
+  line: "Site and search by",
 } as const;
 
 export type Service = {
