@@ -108,11 +108,11 @@ const components = {
     </nav>
     <h1>{d.title}</h1>
     <p class="standfirst">{d.standfirst ?? d.description}</p>
-    <div class="byline">
-      {author.photo
+    <div class:list={["byline", { "byline-date-only": !d.byline }]}>
+      {d.byline && (author.photo
         ? <img class="byline-photo" src={author.photo} alt={author.name} width="42" height="42" />
-        : <span class="byline-mark" aria-hidden="true">{author.initial}</span>}
-      <p class="byline-who"><b>{author.name}</b><br /><span>{author.role}, Structure &amp; Style</span></p>
+        : <span class="byline-mark" aria-hidden="true">{author.initial}</span>)}
+      {d.byline && <p class="byline-who"><b>{author.name}</b><br /><span>{author.role}, Structure &amp; Style</span></p>}
       <MonoLabel as="p" tone="soft" class="byline-when">
         <time datetime={d.published.toISOString().slice(0, 10)}>Published {published}</time><br />{minutes} min read
       </MonoLabel>
@@ -126,13 +126,19 @@ const components = {
       width={d.hero.width}
       height={d.hero.height}
       ratio="16 / 10"
-      subject={d.hero.caption}
-      detail={d.hero.area ? `Area · ${d.hero.area}` : undefined}
+      subject={d.hero.ai ? `AI-generated example · ${d.hero.caption}` : d.hero.caption}
+      detail={d.hero.ai ? "Not a photo of our work" : d.hero.area ? `Area · ${d.hero.area}` : undefined}
       sizes="(max-width: 700px) 92vw, 1080px"
       eager
     >
-      {!d.hero.area && <Ask q="area-hero" slot="controls">Area to confirm</Ask>}
+      {!d.hero.area && !d.hero.ai && <Ask q="area-hero" slot="controls">Area to confirm</Ask>}
     </Plate>
+    {d.hero.ai && (
+      <div class="ai-note">
+        <p><b>This image is AI-generated.</b> {d.hero.aiNote}</p>
+        <a class="btn" href="/work/">See our gallery</a>
+      </div>
+    )}
   </div>
 
   <div class="article">
@@ -239,11 +245,41 @@ const components = {
   .byline-who { margin: 0; font-size: 15px; line-height: 1.35; }
   .byline-who b { font-weight: var(--weight-medium); }
   .byline-who span { color: var(--ink-soft); }
+  .byline-date-only .byline-when { margin-left: 0 !important; text-align: left; }
   .byline-when { margin: 0 0 0 auto !important; text-align: right; line-height: 1.8 !important; white-space: nowrap; }
   @media (max-width: 560px) {
     .byline { flex-wrap: wrap; }
     .byline-when { margin-left: 0 !important; text-align: left; width: 100%; }
   }
+
+  /* The label an AI render carries (Kaspar, 17 Oct 2026): what it is, that
+     it is not our work, and the way to the real work. */
+  .ai-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-7) var(--space-11);
+    margin-top: var(--space-7);
+    padding: var(--space-7) var(--space-8);
+    background: var(--wash-green);
+    border-left: 2px solid var(--green);
+  }
+  .ai-note p { margin: 0; flex: 1 1 360px; font-size: 15px; line-height: 1.55; }
+  .ai-note b { font-weight: var(--weight-medium); }
+  /* The price panel's button, on green: the site has no shared one. */
+  .ai-note .btn {
+    display: inline-flex;
+    align-items: center;
+    background: var(--green);
+    color: var(--paper);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    padding: 13px 18px;
+    border: 1px solid var(--green);
+  }
+  .ai-note .btn:hover { background: var(--char); border-color: var(--char); }
 
   .glance {
     margin-top: var(--space-16);

@@ -42,7 +42,17 @@ const figure = z.object({
   /** The district, never an address. Absent means Kaspar has not named it yet,
       and the caption shows an open question instead. */
   area: z.string().optional(),
-});
+  /** An AI render, not a photograph of a job. Kaspar's rule, 17 Oct 2026: a
+      render may show a style as an example, but the page must say plainly that
+      it is AI-generated and send the reader to the gallery for real work. Set,
+      the caption says so, no district is asked for, and a note with a gallery
+      button follows the image. Keep renders under /images/journal/, never in a
+      service folder, so they cannot end up in a gallery. */
+  ai: z.boolean().default(false),
+  /** With `ai`: the note after "This image is AI-generated.", saying what the
+      render shows, that it is not our work, and pointing to the gallery. */
+  aiNote: z.string().optional(),
+}).refine((f) => !f.ai || !!f.aiNote, { message: "an AI render needs aiNote", path: ["aiNote"] });
 
 const journal = defineCollection({
   loader: glob({ base: "./src/content/journal", pattern: "**/*.{md,mdx}" }),
@@ -59,6 +69,10 @@ const journal = defineCollection({
     /** Schema only (dateModified). Never shown on the page. */
     updated: z.coerce.date().optional(),
     author: z.string().refine((a) => a in AUTHORS, { message: "unknown author; add them to AUTHORS in src/data/site.ts" }).default("kaspar"),
+    /** Show the author's name and role in the byline. Off leaves the date and
+        reading time only, as the alcove article was approved (18 Oct 2026);
+        the schema still names the author. */
+    byline: z.boolean().default(true),
     hero: figure,
     /** The At a glance box: three to six short points. */
     glance: z.array(z.string()).default([]),

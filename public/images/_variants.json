@@ -64,13 +64,6 @@
   900,
   1280
  ],
- "/images/alcove-units/alcove-units-11.webp": [
-  400,
-  640
- ],
- "/images/alcove-units/alcove-units-12.webp": [
-  400
- ],
  "/images/bathroom/bathroom-01.webp": [
   400,
   640,
@@ -226,6 +219,12 @@
   1280
  ],
  "/images/home-office/home-office-01.webp": [
+  400,
+  640,
+  900,
+  1280
+ ],
+ "/images/journal/alcove-ai-example-projecting-cupboards.webp": [
   400,
   640,
   900,

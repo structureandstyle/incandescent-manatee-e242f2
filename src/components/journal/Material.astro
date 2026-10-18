@@ -3,28 +3,39 @@
  * One material card inside <Materials>: a photograph, the name, then three
  * short answers. `ask` turns the caption's right half into an open question,
  * for a card whose board or photograph Kaspar has not yet confirmed.
+ *
+ * Text-only cards, 18 Oct 2026: the alcove article went live without job
+ * photographs, so `photo` is optional, and `rows` replaces the three fixed
+ * answers when a card needs its own labels. A row labelled "Bear in mind" keeps
+ * the walnut label.
  */
 import Plate from "../ds/Plate.astro";
 import Ask from "../Ask.astro";
 
 interface Props {
   name: string;
-  photo: string;
-  alt: string;
-  width: number;
-  height: number;
-  caption: string;
+  photo?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  caption?: string;
   ask?: { q: string; text: string };
-  what: string;
-  goodFor: string;
-  bearInMind: string;
+  what?: string;
+  goodFor?: string;
+  bearInMind?: string;
+  rows?: { label: string; text: string }[];
 }
 
 const { name, photo, alt, width, height, caption, ask, what, goodFor, bearInMind } = Astro.props;
+const rows = Astro.props.rows ?? [
+  { label: "What it is", text: what ?? "" },
+  { label: "Good for", text: goodFor ?? "" },
+  { label: "Bear in mind", text: bearInMind ?? "" },
+];
 ---
 
 <div class="material">
-  <Plate
+  {photo && <Plate
     photo={photo}
     alt={alt}
     width={width}
@@ -34,12 +45,10 @@ const { name, photo, alt, width, height, caption, ask, what, goodFor, bearInMind
     sizes="(max-width: 760px) 92vw, 340px"
   >
     {ask && <Ask q={ask.q} slot="controls">{ask.text}</Ask>}
-  </Plate>
-  <h3>{name}</h3>
+  </Plate>}
+  <h3 class:list={{ "no-photo": !photo }}>{name}</h3>
   <dl>
-    <dt>What it is</dt><dd>{what}</dd>
-    <dt>Good for</dt><dd>{goodFor}</dd>
-    <dt class="bim">Bear in mind</dt><dd>{bearInMind}</dd>
+    {rows.map((r) => <Fragment><dt class:list={{ bim: r.label === "Bear in mind" }}>{r.label}</dt><dd>{r.text}</dd></Fragment>)}
   </dl>
 </div>
 
@@ -51,6 +60,7 @@ const { name, photo, alt, width, height, caption, ask, what, goodFor, bearInMind
     font-size: 24px;
     margin: var(--space-9) 0 var(--space-6);
   }
+  .material h3.no-photo { margin-top: 0; }
   dl { margin: 0; }
   dt {
     font-family: var(--font-mono);
