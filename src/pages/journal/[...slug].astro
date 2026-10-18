@@ -2,64 +2,163 @@
 /**
  * A journal article.
  *
- * The guard is the point of this file. A post only gets a route when
- * `blocked: false`, so a draft cannot reach the site by being committed: it has
- * to be cleared explicitly. That mirrors what the question gate does for the
- * service pages, and it exists because the first article failed its Truth gate
- * on ten invented claims and was one careless merge away from publishable.
+ * The guard is the point of this file. A post only gets a route on the live
+ * site when `blocked: false`, so a draft cannot reach the site by being
+ * committed: it has to be cleared explicitly. That mirrors what the question
+ * gate does for the service pages, and it exists because the first article
+ * failed its Truth gate on ten invented claims and was one careless merge away
+ * from publishable. Preview builds also render drafts, noindexed and under a
+ * draft bar, so they can be reviewed as pages (src/data/journal.ts).
+ *
+ * THE ARTICLE TEMPLATE, 13 October 2026, from the alcove mockup that Kaspar
+ * rewrote and Arthur signed off on the page layout of:
+ *
+ *   - breadcrumb, title, standfirst, byline (Kaspar, his role, the published
+ *     date and the reading time; never an "Updated" line, Arthur 13 Oct);
+ *   - the hero photograph with a caption naming the district;
+ *   - At a glance and the jump list, from front matter;
+ *   - the article itself, at reading width, with the journal components
+ *     (src/components/journal/) breaking out wider where they need room;
+ *   - the closing band.
+ *
+ * Schema: BlogPosting with both dates, the hero image, the author as a Person
+ * with a URL, and the publisher pointing at the site-wide business node;
+ * BreadcrumbList Home > Journal > article (allowed on journal pages from
+ * 11 Oct; scripts/verify-build.mjs checks its shape).
  */
 import { getCollection, render } from "astro:content";
 import Base from "../../layouts/Base.astro";
-import Wrap from "../../components/ds/Wrap.astro";
-import Display from "../../components/ds/Display.astro";
-import Kicker from "../../components/ds/Kicker.astro";
+import Plate from "../../components/ds/Plate.astro";
 import MonoLabel from "../../components/ds/MonoLabel.astro";
 import EnquireBand from "../../components/ds/EnquireBand.astro";
+import Faq from "../../components/ds/Faq.astro";
 import Value from "../../components/Value.astro";
-import { BAND, CONTACT } from "../../data/site-content";
-import { SITE_URL, BUSINESS } from "../../data/site";
+import Ask from "../../components/Ask.astro";
+import Theme from "../../components/journal/Theme.astro";
+import Idea from "../../components/journal/Idea.astro";
+import BearInMind from "../../components/journal/BearInMind.astro";
+import AlcoveDrawing from "../../components/journal/AlcoveDrawing.astro";
+import Materials from "../../components/journal/Materials.astro";
+import Material from "../../components/journal/Material.astro";
+import PriceBars from "../../components/journal/PriceBars.astro";
+import Conduct from "../../components/journal/Conduct.astro";
+import Steps from "../../components/journal/Steps.astro";
+import Guarantee from "../../components/journal/Guarantee.astro";
+import Areas from "../../components/journal/Areas.astro";
+import { BAND } from "../../data/site-content";
+import { SITE_URL, AUTHORS, type AuthorId } from "../../data/site";
+import { isLive, isRendered, readingMinutes } from "../../data/journal";
 
 export async function getStaticPaths() {
   const posts = await getCollection("journal");
-  return posts
-    .filter((p) => p.data.blocked === false)
-    .map((post) => ({ params: { slug: post.id }, props: { post } }));
+  return posts.filter(isRendered).map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const d = post.data;
+const draft = !isLive(post);
+const author = AUTHORS[d.author as AuthorId];
+const pageUrl = new URL(`/journal/${post.id}/`, SITE_URL).href;
+const heroUrl = new URL(d.hero.src, SITE_URL).href;
+const minutes = readingMinutes(post.body);
+const published = d.published.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+const crumb = d.crumb ?? d.title;
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: post.data.title,
-  description: post.data.description,
-  datePublished: post.data.published.toISOString(),
-  author: { "@type": "Organization", name: BUSINESS.legalName },
-  publisher: { "@id": `${SITE_URL}/#business` },
-  mainEntityOfPage: new URL(`/journal/${post.id}/`, SITE_URL).href,
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: d.title,
+    description: d.description,
+    datePublished: d.published.toISOString(),
+    dateModified: (d.updated ?? d.published).toISOString(),
+    image: heroUrl,
+    author: { "@type": "Person", name: author.name, jobTitle: author.role, url: author.url },
+    publisher: { "@id": `${SITE_URL}/#business` },
+    mainEntityOfPage: pageUrl,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Journal", item: `${SITE_URL}/journal/` },
+      { "@type": "ListItem", position: 3, name: crumb, item: pageUrl },
+    ],
+  },
+];
+
+const components = {
+  Theme, Idea, BearInMind, AlcoveDrawing, Materials, Material, PriceBars,
+  Conduct, Steps, Guarantee, Areas, Faq, Ask,
 };
 ---
 
-<Base title={post.data.title} description={post.data.description} schema={schema}>
-  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
-    <Kicker scribe>{post.data.primary}</Kicker>
-    <Display level={2} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
-      {post.data.title}
-    </Display>
-    <MonoLabel as="p" tone="soft">
-      {post.data.published.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
-    </MonoLabel>
-  </Wrap>
-
-  <Wrap style="padding-bottom:var(--section-y)">
-    <div class="journal-prose" style="max-width:var(--measure)">
-      <Content />
+<Base title={d.title} description={d.description} schema={schema} image={d.hero.src} noindex={draft}>
+  {draft && (
+    <div class="draft-bar" data-journal-draft>
+      Draft preview · not published{d.blockedReason ? ` · ${d.blockedReason}` : ""}
     </div>
-  </Wrap>
+  )}
 
-  <EnquireBand heading="If you have a room in mind, start here." chamfer>
-    {BAND.body}
+  <div class="article-head">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">/</span><a href="/journal/">Journal</a><span aria-hidden="true">/</span><span aria-current="page">{crumb}</span>
+    </nav>
+    <h1>{d.title}</h1>
+    <p class="standfirst">{d.standfirst ?? d.description}</p>
+    <div class:list={["byline", { "byline-date-only": !d.byline }]}>
+      {d.byline && (author.photo
+        ? <img class="byline-photo" src={author.photo} alt={author.name} width="42" height="42" />
+        : <span class="byline-mark" aria-hidden="true">{author.initial}</span>)}
+      {d.byline && <p class="byline-who"><b>{author.name}</b><br /><span>{author.role}, Structure &amp; Style</span></p>}
+      <MonoLabel as="p" tone="soft" class="byline-when">
+        <time datetime={d.published.toISOString().slice(0, 10)}>Published {published}</time><br />{minutes} min read
+      </MonoLabel>
+    </div>
+  </div>
+
+  <div class="article-hero">
+    <Plate
+      photo={d.hero.src}
+      alt={d.hero.alt}
+      width={d.hero.width}
+      height={d.hero.height}
+      ratio="16 / 10"
+      subject={d.hero.ai ? `AI-generated example · ${d.hero.caption}` : d.hero.caption}
+      detail={d.hero.ai ? "Not a photo of our work" : d.hero.area ? `Area · ${d.hero.area}` : undefined}
+      sizes="(max-width: 700px) 92vw, 1080px"
+      eager
+    >
+      {!d.hero.area && !d.hero.ai && <Ask q="area-hero" slot="controls">Area to confirm</Ask>}
+    </Plate>
+    {d.hero.ai && (
+      <div class="ai-note">
+        <p><b>This image is AI-generated.</b> {d.hero.aiNote}</p>
+        <a class="btn" href="/work/">See our gallery</a>
+      </div>
+    )}
+  </div>
+
+  <div class="article">
+    {d.glance.length > 0 && (
+      <section class="glance" aria-labelledby="glance">
+        <h2 id="glance">At a glance</h2>
+        <ul>{d.glance.map((g) => <li>{g}</li>)}</ul>
+      </section>
+    )}
+    {d.contents.length > 0 && (
+      <nav class="jump" aria-label="In this article">
+        <span>In this article</span>
+        <ol>{d.contents.map((c) => <li><a href={`#${c.id}`}>{c.label}</a></li>)}</ol>
+      </nav>
+    )}
+    <Content components={components} />
+  </div>
+
+  <EnquireBand heading={d.band?.heading ?? "If you have a room in mind, start here."} chamfer>
+    {d.band?.body ?? BAND.body}
     <Fragment slot="facts">
       {BAND.facts.map((q) => (
         <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
@@ -70,23 +169,192 @@ const schema = {
   </EnquireBand>
 </Base>
 
-<style>
-  .journal-prose :global(h2) {
+<style is:global>
+  /* The page frame. The article column carries the gutter; each child sits
+     at reading width unless it carries `.wide`, which the idea rows, material
+     cards and price panel do. Children keep their own padding, so a bordered
+     or filled block (the drawing, At a glance, the price panel) is never
+     pushed to the edge of a phone screen. */
+  .article-head {
+    max-width: calc(680px + 2 * var(--gutter));
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+  .article-hero {
+    max-width: calc(1080px + 2 * var(--gutter));
+    margin: var(--space-14) auto 0;
+    padding: 0 var(--gutter);
+  }
+  .article { padding: 0 var(--gutter); }
+  .article > * { max-width: 680px; margin-left: auto; margin-right: auto; }
+  .article > .wide { max-width: 1080px; }
+  .article { padding-bottom: var(--section-y); }
+
+  .draft-bar {
+    background: var(--green);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-md);
+    text-transform: uppercase;
+    text-align: center;
+    padding: var(--space-4) var(--gutter);
+  }
+
+  .crumbs {
+    padding-top: var(--space-15);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .crumbs a { border-bottom: var(--rule-hair); }
+  .crumbs span[aria-hidden] { margin: 0 var(--space-4); color: var(--ink-faint); }
+  .article-head h1 {
     font-family: var(--font-serif-display);
     font-weight: var(--weight-regular);
-    font-size: var(--type-display-5);
-    margin: var(--space-17) 0 var(--space-10);
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.005em;
+    margin: var(--space-11) 0 var(--space-9);
   }
-  .journal-prose :global(h3) {
+  .standfirst { font-size: 19px; line-height: 1.55; color: var(--ink-soft); margin: 0 0 var(--space-12); max-width: 36em; }
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-7);
+    padding: var(--space-8) 0;
+    border-top: var(--rule-hair);
+    border-bottom: var(--rule-hair);
+  }
+  .byline-mark,
+  .byline-photo {
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border: var(--rule-structure);
+  }
+  .byline-mark {
+    display: grid;
+    place-items: center;
+    font-family: var(--font-serif-display);
+    font-size: 20px;
+  }
+  .byline-photo { object-fit: cover; }
+  .byline-who { margin: 0; font-size: 15px; line-height: 1.35; }
+  .byline-who b { font-weight: var(--weight-medium); }
+  .byline-who span { color: var(--ink-soft); }
+  .byline-date-only .byline-when { margin-left: 0 !important; text-align: left; }
+  .byline-when { margin: 0 0 0 auto !important; text-align: right; line-height: 1.8 !important; white-space: nowrap; }
+  @media (max-width: 560px) {
+    .byline { flex-wrap: wrap; }
+    .byline-when { margin-left: 0 !important; text-align: left; width: 100%; }
+  }
+
+  /* The label an AI render carries (Kaspar, 17 Oct 2026): what it is, that
+     it is not our work, and the way to the real work. */
+  .ai-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-7) var(--space-11);
+    margin-top: var(--space-7);
+    padding: var(--space-7) var(--space-8);
+    background: var(--wash-green);
+    border-left: 2px solid var(--green);
+  }
+  .ai-note p { margin: 0; flex: 1 1 360px; font-size: 15px; line-height: 1.55; }
+  .ai-note b { font-weight: var(--weight-medium); }
+  /* The price panel's button, on green: the site has no shared one. */
+  .ai-note .btn {
+    display: inline-flex;
+    align-items: center;
+    background: var(--green);
+    color: var(--paper);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    padding: 13px 18px;
+    border: 1px solid var(--green);
+  }
+  .ai-note .btn:hover { background: var(--char); border-color: var(--char); }
+
+  .glance {
+    margin-top: var(--space-16);
+    border: var(--rule-structure);
+    padding: var(--space-12) 28px var(--space-11);
+    background: var(--wash-char);
+  }
+  .glance h2 {
+    font-family: var(--font-mono);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    margin: 0 0 var(--space-7);
+    color: var(--green);
+  }
+  .glance ul { margin: 0; padding: 0; list-style: none; }
+  .glance li { padding: 9px 0 9px 26px; position: relative; border-top: var(--rule-hair); font-size: 16px; line-height: 1.5; }
+  .glance li:first-child { border-top: 0; }
+  .glance li::before { content: ""; position: absolute; left: 0; top: 17px; width: 12px; height: 1px; background: var(--green); }
+
+  .jump { margin-top: var(--space-12); display: grid; grid-template-columns: auto 1fr; gap: var(--space-3) var(--space-11); align-items: baseline; }
+  .jump > span { font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono); text-transform: uppercase; color: var(--ink-soft); }
+  .jump ol { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-11); font-size: 15px; }
+  .jump a { border-bottom: var(--rule-hair); }
+  .jump a:hover { border-color: var(--char); }
+
+  /* Running text */
+  .article > p { margin-top: 0; margin-bottom: 1.05em; }
+  .article > p:first-of-type { margin-top: var(--space-15); }
+  .article > h3 {
     font-family: var(--font-serif-display);
     font-weight: var(--weight-regular);
-    font-size: var(--type-serif-lg);
-    margin: var(--space-15) 0 var(--space-8);
+    font-size: clamp(23px, 2.6vw, 30px);
+    line-height: 1.18;
+    margin-top: var(--space-17);
+    margin-bottom: var(--space-7);
   }
-  .journal-prose :global(p) { margin-bottom: var(--space-10); }
-  .journal-prose :global(ul),
-  .journal-prose :global(ol) { margin: 0 0 var(--space-10) var(--space-12); }
-  .journal-prose :global(li) { margin-bottom: var(--space-5); }
-  .journal-prose :global(img) { margin: var(--space-14) 0; border: var(--rule-structure); }
-  .journal-prose :global(a) { color: var(--green); border-bottom: 1px solid rgba(44, 74, 58, 0.4); }
+  .article > h2:not([class]) {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-display-4);
+    line-height: var(--lh-display-3);
+    margin-top: var(--space-17);
+    margin-bottom: var(--space-9);
+  }
+  .article > ul, .article > ol:not([class]) { padding-left: 1.2em; }
+  /* Links in running prose only. A component that sets its own link colour
+     (the dark price panel) keeps it. */
+  .article > p a:not([class]),
+  .article > ul a:not([class]),
+  .article > ol a:not([class]) { color: var(--green); border-bottom: 1px solid var(--green); }
+  .article > .idea + p { margin-top: var(--space-15); }
+  .article [id] { scroll-margin-top: 96px; }
+
+  /* Tables, for comparison and specification content in markdown. */
+  .article > table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-4);
+    font-size: 15.5px;
+  }
+  .article th, .article td { text-align: left; vertical-align: top; padding: 12px 14px 12px 0; border-top: var(--rule-hair); }
+  .article thead th {
+    font-family: var(--font-mono);
+    font-weight: var(--weight-regular);
+    font-size: 10.5px;
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-top: var(--rule-structure);
+  }
+  .article tbody tr:last-child td { border-bottom: var(--rule-structure); }
+
+  /* The questions block: the site's Faq, given a closing rule. */
+  .article .ss-faq:last-of-type { border-bottom: var(--rule-hair); }
 </style>

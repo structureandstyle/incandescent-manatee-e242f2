@@ -1,0 +1,48 @@
+---
+/**
+ * A theme heading inside a journal article: a mono count above a serif title,
+ * on a structural rule. The jump list at the top of the article links to its
+ * `id`, so every entry in the article's `contents` needs a Theme with that id.
+ *
+ *   <Theme id="size" count="Ideas 1 and 2" title="Size and height" />
+ *
+ * `wide` lines it up with the idea rows that follow; leave it off when prose
+ * follows at reading width.
+ */
+interface Props {
+  id: string;
+  title: string;
+  count?: string;
+  wide?: boolean;
+}
+
+const { id, title, count, wide = false } = Astro.props;
+---
+
+<header class:list={["theme", { wide }]} id={id}>
+  {count && <p class="theme-count">{count}</p>}
+  <h2>{title}</h2>
+</header>
+
+<style>
+  .theme {
+    margin-top: clamp(64px, 9vw, 96px);
+    padding-top: var(--space-11);
+    border-top: var(--rule-structure);
+  }
+  .theme-count {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-5);
+  }
+  .theme h2 {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-display-4);
+    line-height: var(--lh-display-3);
+    margin: 0 0 var(--space-9);
+  }
+</style>

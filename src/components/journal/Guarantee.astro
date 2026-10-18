@@ -1,0 +1,45 @@
+---
+/**
+ * The guarantee, as the two numbers a reader looks for. The terms are the
+ * approved ones the home page FAQ already states (src/data/site-content.ts):
+ * 2 years on installation and workmanship, 10 years on the structure and
+ * joinery, hardware under its maker's warranty. The slot carries any further
+ * sentence the article needs.
+ */
+---
+
+<div class="guarantee">
+  <div class="yrs">
+    <div>2<small>years on installation and workmanship</small></div>
+    <div>10<small>years on the structure of the joinery</small></div>
+  </div>
+  <div class="terms"><slot /></div>
+</div>
+
+<style>
+  .guarantee {
+    margin-top: var(--space-17);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-11) var(--space-13);
+    padding: var(--space-12) 0;
+    border-top: var(--rule-structure);
+    border-bottom: var(--rule-structure);
+  }
+  .yrs { display: flex; gap: var(--space-12); }
+  .yrs div { font-family: var(--font-serif-display); font-size: 46px; line-height: 1; }
+  small {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: var(--space-4);
+    max-width: 12em;
+    line-height: 1.5;
+  }
+  .terms { font-size: 15.5px; }
+  .terms :global(p) { margin: 0; }
+  @media (max-width: 640px) { .guarantee { grid-template-columns: 1fr; } }
+</style>

@@ -13,10 +13,12 @@
     "verify": "node scripts/verify-build.mjs",
     "test:uploads": "node --test tests/enquiry-uploads.test.mjs",
     "build:production": "astro build && node scripts/verify-build.mjs",
+    "build:drafts": "node scripts/build-drafts.mjs",
     "build:preview": "astro build && node scripts/verify-build.mjs && node scripts/build-preview.mjs && python scripts/zip-preview.py",
     "zip:preview": "python scripts/zip-preview.py"
   },
   "dependencies": {
+    "@astrojs/mdx": "^7.0.8",
     "@astrojs/sitemap": "^3.7.3",
     "@aws-sdk/client-s3": "^3.1137.0",
     "@aws-sdk/s3-request-presigner": "^3.1137.0",

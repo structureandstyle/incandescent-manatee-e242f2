@@ -1,0 +1,35 @@
+---
+/**
+ * The honest caveat: what an idea gives up, or what catches people out.
+ *
+ * Use it only where a reader could get caught out (Arthur, 13 Oct 2026). One on
+ * every section reads as boilerplate and gets skipped, which defeats it.
+ */
+---
+
+<div class="bear-in-mind">
+  <p class="bim-label">Bear in mind</p>
+  <slot />
+</div>
+
+<style>
+  .bear-in-mind {
+    margin-top: var(--space-8);
+    margin-bottom: 0;
+    border-left: 2px solid var(--oak);
+    padding: var(--space-2) 0 var(--space-2) var(--space-7);
+    font-size: 15.5px;
+    line-height: 1.5;
+  }
+  .bim-label {
+    font-family: var(--font-mono);
+    font-weight: var(--weight-medium);
+    font-size: 10.5px;
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--walnut);
+    margin: 0 0 var(--space-1);
+  }
+  .bear-in-mind :global(p) { margin: 0; }
+  .bear-in-mind :global(p + p) { margin-top: 0.6em; }
+</style>

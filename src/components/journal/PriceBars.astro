@@ -1,0 +1,149 @@
+---
+/**
+ * The price panel: guide starting prices as bars, then what moves them.
+ *
+ * Copy protocol section 12: a from-price is always followed straight away by
+ * the factors that move it, and no number is published that would not be
+ * honoured at the bottom of the range. The figures come from the live service
+ * pages (src/data/site.ts and service-copy.ts), which Kaspar approved; an
+ * article quotes them, it never sets them.
+ *
+ *   <PriceBars id="cost" kicker="What it costs" title="How much does a pair of alcove units cost?"
+ *     lead="Guide starting prices for ..." items={[{ label: "Melamine", from: 3300 }, ...]}
+ *     factors={["The size of each alcove", ...]}
+ *     ctas={[{ label: "Send us a photo of your wall", href: "/contact/" }]}>
+ *     The "comparing quotes" note.
+ *   </PriceBars>
+ */
+interface Props {
+  id: string;
+  kicker?: string;
+  title: string;
+  lead?: string;
+  items: { label: string; from: number }[];
+  factors: string[];
+  ctas?: { label: string; href: string; ghost?: boolean }[];
+}
+
+const { id, kicker, title, lead, items, factors, ctas = [] } = Astro.props;
+const max = Math.max(...items.map((i) => i.from));
+const gbp = (n: number) => `£${n.toLocaleString("en-GB")}`;
+const label = `Guide prices: ${items.map((i) => `${i.label.toLowerCase()} from ${gbp(i.from)}`).join(", ")}`;
+---
+
+<section class="price wide" id={id} aria-labelledby={`${id}-h`}>
+  {kicker && <p class="price-kicker">{kicker}</p>}
+  <h2 id={`${id}-h`}>{title}</h2>
+  {lead && <p class="price-lead">{lead}</p>}
+  <div class="bars" role="img" aria-label={label}>
+    {items.map((i) => (
+      <div class="bar">
+        <span class="lab">{i.label}</span>
+        <span class="track"><span class="fill" style={`width:${((i.from / max) * 100).toFixed(1)}%`} /></span>
+        <span class="val">{gbp(i.from)}</span>
+      </div>
+    ))}
+    <div class="scale"><span>£0</span><span>{gbp(max / 2)}</span><span>{gbp(max)}</span></div>
+  </div>
+  <div class="factors">
+    {factors.map((f, n) => <div><b>{String(n + 1).padStart(2, "0")}</b>{f}</div>)}
+  </div>
+  <div class="price-note"><slot /></div>
+  {ctas.length > 0 && (
+    <div class="cta-row">
+      {ctas.map((c) => <a class:list={["btn", { ghost: c.ghost }]} href={c.href}>{c.label}</a>)}
+    </div>
+  )}
+</section>
+
+<style>
+  .price {
+    margin-top: clamp(64px, 9vw, 96px);
+    background: var(--char);
+    color: var(--ink-rev);
+    padding: clamp(28px, 5vw, 56px);
+  }
+  .price-kicker {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--oak);
+    margin: 0 0 var(--space-5);
+  }
+  .price h2 {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-display-4);
+    line-height: var(--lh-display-3);
+    margin: 0 0 var(--space-9);
+    color: var(--ink-rev);
+  }
+  .price-lead { color: var(--ink-rev-soft); max-width: 34em; margin: 0; }
+  .bars { margin: var(--space-13) 0 var(--space-4); }
+  .bar {
+    display: grid;
+    grid-template-columns: 170px 1fr 82px;
+    align-items: center;
+    gap: var(--space-7);
+    padding: 11px 0;
+    border-top: var(--rule-hair-rev);
+  }
+  .lab { font-size: var(--type-body-sm); }
+  .track { height: 12px; background: rgba(242, 238, 227, 0.08); position: relative; }
+  .fill { position: absolute; inset: 0 auto 0 0; background: var(--oak); }
+  .val { font-family: var(--font-mono); font-size: 14px; text-align: right; }
+  .scale {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-4) 96px 0 184px;
+    color: var(--ink-rev-soft);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    border-top: var(--rule-hair-rev);
+  }
+  .factors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    margin-top: var(--space-12);
+    border-top: var(--rule-hair-rev);
+  }
+  .factors div {
+    padding: var(--space-7) var(--space-8) var(--space-7) 0;
+    font-size: var(--type-body-sm);
+    line-height: 1.45;
+    color: var(--ink-rev-soft);
+  }
+  .factors b {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: var(--weight-regular);
+    font-size: 10.5px;
+    letter-spacing: var(--ls-mono);
+    color: var(--oak);
+    margin-bottom: var(--space-2);
+  }
+  .price-note { font-size: var(--type-body-sm); color: var(--ink-rev-soft); margin: var(--space-11) 0 0; max-width: 40em; }
+  .price-note :global(p) { margin: 0; }
+  .price-note :global(strong) { color: var(--ink-rev); font-weight: var(--weight-medium); }
+  .price-note :global(a) { color: var(--ink-rev); border-bottom: 1px solid var(--ink-rev); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--space-7); margin-top: var(--space-13); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    background: var(--paper);
+    color: var(--char);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    padding: 13px 18px;
+    border: 1px solid var(--paper);
+  }
+  .btn.ghost { background: transparent; color: var(--ink-rev); border-color: var(--hair-rev); }
+  @media (max-width: 560px) {
+    .bar { grid-template-columns: 1fr 70px; }
+    .track { grid-column: 1 / -1; grid-row: 2; }
+    .scale { display: none; }
+  }
+</style>

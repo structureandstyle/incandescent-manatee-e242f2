@@ -1,0 +1,97 @@
+---
+/**
+ * One numbered idea: a real photograph beside a short answer. The layout the
+ * alcove mockup settled on (11 to 13 Oct 2026): teach first, then show the
+ * advice in a room that was actually fitted.
+ *
+ *   <Idea num="01" title="How tall and deep should the cupboards be?"
+ *     photo="/images/alcove-units/alcove-units-07.webp" alt="..." width={1600} height={1069}
+ *     caption="Cupboards with a lamp-height top · soft white" area="South Kensington"
+ *     service={{ label: "Alcove units", href: "/alcove-units/" }}>
+ *     Paragraphs, and optionally a <BearInMind>.
+ *   </Idea>
+ *
+ * The caption names the district where the job was, never the address. With no
+ * `area`, the caption carries an open question instead, which keeps the page
+ * out of the index until Kaspar names it (scripts/verify-build.mjs). A job's
+ * true location may be named even outside the ten profile districts (Arthur,
+ * 13 Oct 2026).
+ *
+ * `flip` puts the photograph on the right; `tall` frames it portrait.
+ */
+import Plate from "../ds/Plate.astro";
+import Ask from "../Ask.astro";
+
+interface Props {
+  num: string;
+  title: string;
+  photo: string;
+  alt: string;
+  width: number;
+  height: number;
+  caption: string;
+  area?: string;
+  flip?: boolean;
+  tall?: boolean;
+  service?: { label: string; href: string };
+}
+
+const { num, title, photo, alt, width, height, caption, area, flip = false, tall = false, service } = Astro.props;
+---
+
+<article class:list={["idea", "wide", { flip }]}>
+  <Plate
+    photo={photo}
+    alt={alt}
+    width={width}
+    height={height}
+    ratio={tall ? "3 / 4" : "4 / 3"}
+    subject={caption}
+    detail={area ? `Area · ${area}` : undefined}
+    sizes="(max-width: 760px) 92vw, 600px"
+    class="idea-plate"
+  >
+    {!area && <Ask q={`area-${num}`} slot="controls">Area to confirm</Ask>}
+  </Plate>
+  <div class="idea-text">
+    <p class="idea-num">{num}</p>
+    <h3>{title}</h3>
+    <slot />
+    {service && (
+      <p class="idea-service"><a href={service.href}>{service.label}</a></p>
+    )}
+  </div>
+</article>
+
+<style>
+  .idea {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: var(--gap-lg);
+    align-items: start;
+    margin-top: var(--space-17);
+  }
+  .idea.flip { grid-template-columns: 1fr 1.25fr; }
+  .idea.flip :global(.idea-plate) { order: 2; }
+  .idea-num {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono-md);
+    letter-spacing: var(--ls-mono);
+    color: var(--green);
+    margin: 0;
+  }
+  .idea h3 {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: clamp(23px, 2.6vw, 30px);
+    line-height: 1.18;
+    margin: var(--space-3) 0 var(--space-7);
+  }
+  .idea-text :global(p) { margin: 0 0 0.9em; }
+  .idea-service { margin-top: var(--space-8); font-size: var(--type-body-sm); }
+  .idea-service a { color: var(--green); border-bottom: 1px solid var(--green); }
+  @media (max-width: 760px) {
+    .idea, .idea.flip { grid-template-columns: 1fr; }
+    .idea.flip :global(.idea-plate) { order: 0; }
+  }
+</style>

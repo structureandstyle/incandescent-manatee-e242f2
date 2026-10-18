@@ -71,6 +71,7 @@ const SERVICE_PATHS = new Set([
   "/bespoke-kitchens/",
 ]);
 const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
+const isArticle = (page) => page.startsWith("/journal/") && page !== "/journal/";
 
 function verifySchema(html, page, errors) {
   const scripts = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
@@ -138,7 +139,16 @@ function verifySchema(html, page, errors) {
   }
 
   const breadcrumbs = ofType("BreadcrumbList");
-  if (BREADCRUMB_PATHS.has(page)) {
+  if (isArticle(page)) {
+    // Journal articles carry Home > Journal > article (allowed 11 Oct 2026).
+    const items = breadcrumbs[0]?.itemListElement;
+    if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 3 ||
+        items[0]?.position !== 1 || items[0]?.item !== `${SITE_URL}/` ||
+        items[1]?.position !== 2 || items[1]?.item !== `${SITE_URL}/journal/` ||
+        items[2]?.position !== 3 || items[2]?.item !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  article breadcrumb schema is missing or does not match the page`);
+    }
+  } else if (BREADCRUMB_PATHS.has(page)) {
     const items = breadcrumbs[0]?.itemListElement;
     if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 2 ||
         items[0]?.position !== 1 || items[0]?.item !== `${SITE_URL}/` ||
@@ -149,7 +159,7 @@ function verifySchema(html, page, errors) {
     errors.push(`${page}  unexpected breadcrumb schema`);
   }
 
-  if (page.startsWith("/journal/") && page !== "/journal/") {
+  if (isArticle(page)) {
     const posts = ofType("BlogPosting");
     const post = posts[0];
     if (posts.length !== 1 || !post.headline || !post.datePublished || !post.dateModified ||
@@ -208,6 +218,12 @@ for (const file of files) {
   const raw = [...text.matchAll(RAW_PLACEHOLDER)].map((m) => m[0]);
 
   verifySchema(html, page, errors);
+
+  // A draft article renders only on preview builds (src/data/journal.ts). If
+  // one reaches a production build, the gate has failed: stop the deploy.
+  if (process.env.CONTEXT === "production" && html.includes("data-journal-draft")) {
+    errors.push(`${page}  draft journal content in a production build`);
+  }
 
   asks.forEach((q) => openQuestions.add(q));
 

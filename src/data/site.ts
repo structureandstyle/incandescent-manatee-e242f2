@@ -418,3 +418,27 @@ export const servicePath = (s: Service) => `/${s.slug}/`;
 
 /** What to call a service anywhere but its own page. See `label` above. */
 export const serviceLabel = (s: Service) => s.label ?? s.title;
+
+/**
+ * Journal bylines, 13 October 2026.
+ *
+ * Arthur's ruling of 11 October: journal articles carry Kaspar's name, which
+ * overrides the company-only byline of Q1 and Q60 for the journal alone. The
+ * rest of the site still presents Structure & Style as a company.
+ *
+ * `role` is shown as given until Kaspar confirms it ("Founder/Carpenter for
+ * now", Arthur, 13 Oct). `photo` stays unset until his headshot arrives; the
+ * byline shows his initial in a square frame instead. `url` is required by the
+ * BlogPosting check in scripts/verify-build.mjs.
+ */
+export const AUTHORS = {
+  kaspar: {
+    name: "Kaspar",
+    role: "Founder/Carpenter",
+    initial: "K",
+    photo: undefined as string | undefined,
+    url: `${SITE_URL}/about/`,
+  },
+} as const;
+
+export type AuthorId = keyof typeof AUTHORS;
