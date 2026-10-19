@@ -1,0 +1,42 @@
+---
+/**
+ * An AI render shown as a style example inside an article.
+ *
+ * The article says once, above its first image, that the images are AI-generated
+ * examples (Denis, 19 Oct 2026; the hero needs `ai: true` for that line). Each
+ * caption then names what differs in that render, so a reader comparing them
+ * sees the point at a glance. The gallery button under the hero takes readers
+ * to real work. Renders live under /images/journal/, never in a service folder,
+ * so they cannot reach a gallery.
+ *
+ * On its own a render sits at reading width. Inside <Renders> two sit side by
+ * side (give each `pair`), so a reader can compare the options a section
+ * describes.
+ *   <Render src="/images/journal/alcove-ai-floating-shelves.webp" width={1536}
+ *     height={1024} caption="Floating shelves · flat handleless cupboards"
+ *     alt="Floating shelves above handleless cupboards" />
+ */
+import Plate from "../ds/Plate.astro";
+
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** What this render shows that the others do not, in a few words. */
+  caption: string;
+  /** Set on each render inside <Renders>: half the wide column. */
+  pair?: boolean;
+}
+
+const { src, alt, width, height, caption, pair = false } = Astro.props;
+const sizes = pair ? "(max-width: 760px) 92vw, 530px" : "(max-width: 700px) 92vw, 680px";
+---
+
+<div class="render">
+  <Plate photo={src} alt={alt} width={width} height={height} ratio={`${width} / ${height}`} subject={caption} sizes={sizes} />
+</div>
+
+<style>
+  .render { margin-top: var(--space-12); margin-bottom: var(--space-12); }
+</style>

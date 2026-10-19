@@ -45,6 +45,8 @@ import Conduct from "../../components/journal/Conduct.astro";
 import Steps from "../../components/journal/Steps.astro";
 import Guarantee from "../../components/journal/Guarantee.astro";
 import Areas from "../../components/journal/Areas.astro";
+import Render from "../../components/journal/Render.astro";
+import Renders from "../../components/journal/Renders.astro";
 import { BAND } from "../../data/site-content";
 import { SITE_URL, AUTHORS, type AuthorId } from "../../data/site";
 import { isLive, isRendered, readingMinutes } from "../../data/journal";
@@ -91,7 +93,7 @@ const schema = [
 
 const components = {
   Theme, Idea, BearInMind, AlcoveDrawing, Materials, Material, PriceBars,
-  Conduct, Steps, Guarantee, Areas, Faq, Ask,
+  Conduct, Steps, Guarantee, Areas, Faq, Ask, Render, Renders,
 };
 ---
 
@@ -120,24 +122,22 @@ const components = {
   </div>
 
   <div class="article-hero">
+    {d.hero.ai && <p class="ai-intro">The images in this guide are AI-generated examples, shown for inspiration and so you can compare the options side by side.</p>}
     <Plate
       photo={d.hero.src}
       alt={d.hero.alt}
       width={d.hero.width}
       height={d.hero.height}
       ratio="16 / 10"
-      subject={d.hero.ai ? `AI-generated example · ${d.hero.caption}` : d.hero.caption}
-      detail={d.hero.ai ? "Not a photo of our work" : d.hero.area ? `Area · ${d.hero.area}` : undefined}
+      subject={d.hero.caption}
+      detail={d.hero.ai ? undefined : d.hero.area ? `Area · ${d.hero.area}` : undefined}
       sizes="(max-width: 700px) 92vw, 1080px"
       eager
     >
       {!d.hero.area && !d.hero.ai && <Ask q="area-hero" slot="controls">Area to confirm</Ask>}
     </Plate>
     {d.hero.ai && (
-      <div class="ai-note">
-        <p><b>This image is AI-generated.</b> {d.hero.aiNote}</p>
-        <a class="btn" href="/work/">See our gallery</a>
-      </div>
+      <p class="gallery-cta"><a class="btn" href="/work/">See our gallery</a></p>
     )}
   </div>
 
@@ -252,23 +252,14 @@ const components = {
     .byline-when { margin-left: 0 !important; text-align: left; width: 100%; }
   }
 
-  /* The label an AI render carries (Kaspar, 17 Oct 2026): what it is, that
-     it is not our work, and the way to the real work. */
-  .ai-note {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-7) var(--space-11);
-    margin-top: var(--space-7);
-    padding: var(--space-7) var(--space-8);
-    background: var(--wash-green);
-    border-left: 2px solid var(--green);
-  }
-  .ai-note p { margin: 0; flex: 1 1 360px; font-size: 15px; line-height: 1.55; }
-  .ai-note b { font-weight: var(--weight-medium); }
+  /* Under an AI hero: this button takes readers to real work (Kaspar,
+     18 Oct 2026). */
+  .gallery-cta { margin: var(--space-9) 0 0; }
+  /* Said once, above the first render (Denis, 19 Oct 2026); each caption
+     then names what differs in that image. */
+  .ai-intro { margin: 0 0 var(--space-7); font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
   /* The price panel's button, on green: the site has no shared one. */
-  .ai-note .btn {
+  .gallery-cta .btn {
     display: inline-flex;
     align-items: center;
     background: var(--green);
@@ -279,7 +270,7 @@ const components = {
     padding: 13px 18px;
     border: 1px solid var(--green);
   }
-  .ai-note .btn:hover { background: var(--char); border-color: var(--char); }
+  .gallery-cta .btn:hover { background: var(--char); border-color: var(--char); }
 
   .glance {
     margin-top: var(--space-16);
