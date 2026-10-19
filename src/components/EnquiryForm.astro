@@ -325,10 +325,10 @@ const SOURCES = [
       <p class="help upload-status" role="status" data-upload-status hidden></p>
       <p class="help attachment-error" id={`${idPrefix}attachments-error`} role="alert" data-attachment-error hidden></p>
       {/* 19 Oct 2026. The attachment_links field is gone. It carried every link
-          a second time, so six files meant twelve long links in one
-          submission, and no six-file enquiry ever reached the inbox or Make:
-          Netlify's spam filter is the likely reason. The links now go once, in
-          the job description, which is what Make copies into the CRM. */}
+          a second time. Netlify drops a submission with more than five links
+          (tested that day), so the enquiry now carries one link, to a page
+          listing all its files, in the job description that Make copies into
+          the CRM. */}
     </fieldset>
     <noscript><p class="help">Send your enquiry now and share files when we reply.</p></noscript>
   ) : (
@@ -761,6 +761,9 @@ const SOURCES = [
         return item;
       }));
       list.hidden = !state.files.length;
+      // The link limit depends on whether files are attached, so a change to
+      // the list clears any link-limit message; the next send checks again.
+      form.elements.namedItem("detail")?.setCustomValidity?.("");
       const full = state.files.length >= maxFiles;
       if (count) {
         count.textContent = !state.files.length
@@ -897,6 +900,12 @@ const SOURCES = [
       addFiles(form, picked);
     });
 
+    // The link-limit message on the job description clears as soon as it is edited.
+    document.addEventListener("input", (event) => {
+      const field = event.target;
+      if (field?.name === "detail" && field.form?.getAttribute("name") === "enquiry") field.setCustomValidity("");
+    });
+
     document.addEventListener("click", (event) => {
       const button = event.target.closest?.("[data-remove-file]");
       if (!button?.form) return;
@@ -946,6 +955,18 @@ const SOURCES = [
       const input = form.querySelector("[data-enquiry-files]");
       const state = stateFor(form);
       const files = state.files.slice();
+      // 19 Oct 2026. Netlify drops a submission with more than five links and
+      // the visitor still sees the thank-you page, so an enquiry with six
+      // pasted links would vanish. Attached files add one link of their own.
+      const detailField = form.elements.namedItem("detail");
+      const linkLimit = files.length ? 4 : 5;
+      const pastedLinks = (String(detailField?.value || "").match(/https?:\/\//gi) || []).length;
+      if (detailField && pastedLinks > linkLimit) {
+        e.preventDefault();
+        detailField.setCustomValidity(`This box can take up to ${linkLimit === 4 ? "four" : "five"} web links${files.length ? " when files are attached" : ""}. Remove some, or send them when we reply.`);
+        detailField.reportValidity();
+        return;
+      }
       if (!files.length) {
         try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}
         return;
@@ -984,7 +1005,7 @@ const SOURCES = [
           const ticketData = await ticketResponse.json().catch(() => ({}));
           state.token = "";
           if (state.widgetId !== null && window.turnstile) window.turnstile.reset(state.widgetId);
-          if (!ticketResponse.ok || ticketData.tickets?.length !== files.length) {
+          if (!ticketResponse.ok || ticketData.tickets?.length !== files.length || !ticketData.filesUrl) {
             throw new Error(ticketData.error || "Could not prepare your files. Try again.");
           }
 
@@ -1007,17 +1028,22 @@ const SOURCES = [
               showStatus(form, `Uploaded ${uploaded} of ${files.length} files...`);
             }));
           }
-          links = tickets.map((ticket, index) => `${files[index].name}: ${ticket.downloadUrl}`).join("\n");
+          // 19 Oct 2026. One link for the whole enquiry, then the names in the
+          // order its page lists the files. Netlify drops a submission with
+          // more than five links, so a link per file lost every six-file
+          // enquiry. See folderLink in netlify/functions/lib/enquiry-uploads.mjs.
+          const names = files.map((file, index) => `${index + 1}. ${file.name}`).join("\n");
+          links = `${ticketData.filesUrl}\n${names}`;
           state.uploadedLinks = links;
         }
 
         showStatus(form, "Sending your enquiry...");
         const data = new FormData(form);
         data.delete("cf-turnstile-response");
-        // Each link goes once, here. Make copies the job description into the
+        // The link goes here, once. Make copies the job description into the
         // CRM, so this is the copy everyone reads.
         const detail = String(data.get("detail") || "").trimEnd();
-        data.set("detail", `${detail}${detail ? "\n\n" : ""}Attached files:\n${links}`);
+        data.set("detail", `${detail}${detail ? "\n\n" : ""}Attached files: ${links}`);
         const response = await fetch("/", { method: "POST", body: data, credentials: "same-origin" });
         if (!response.ok) throw new Error("Your files uploaded, but the enquiry could not be sent. Try again.");
         try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}

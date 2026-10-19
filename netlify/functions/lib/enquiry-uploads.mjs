@@ -73,6 +73,35 @@ export function verifyDownloadLink(key, signature) {
   return timingSafeEqual(Buffer.from(signature, "hex"), Buffer.from(signKey(key), "hex"));
 }
 
+// ONE LINK PER ENQUIRY, 19 Oct 2026. Netlify drops a form submission that
+// carries more than five links: the visitor sees the thank-you page and no
+// email or webhook follows. Tested that day with two text-only enquiries a
+// minute apart, identical but for the links: five arrived, six vanished. One
+// link per file therefore lost every six-file enquiry. The enquiry now carries
+// a single link to a page listing all of its files.
+//
+// The link names the folder and each file's extension in order ("jpg.pdf.png"
+// for 1.jpg, 2.pdf, 3.png), so the page needs no bucket listing. The signed
+// text starts "folder:", which no file key does, so a folder signature can
+// never pass as a file signature or the other way round.
+const EXTENSION_LIST = /^(?:jpg|jpeg|png|webp|heic|heif|pdf|doc|docx)(?:\.(?:jpg|jpeg|png|webp|heic|heif|pdf|doc|docx)){0,5}$/;
+
+export function folderLink(folder, extensions, origin) {
+  const list = extensions.join(".");
+  const url = new URL("/api/enquiry-files", origin);
+  url.searchParams.set("f", folder);
+  url.searchParams.set("x", list);
+  url.searchParams.set("sig", signKey(`folder:${folder}:${list}`));
+  return url.toString();
+}
+
+export function verifyFolderLink(folder, list, signature) {
+  if (typeof folder !== "string" || !/^[0-9a-f-]{36}$/.test(folder)) return false;
+  if (typeof list !== "string" || !EXTENSION_LIST.test(list)) return false;
+  if (typeof signature !== "string" || !/^[0-9a-f]{64}$/.test(signature)) return false;
+  return timingSafeEqual(Buffer.from(signature, "hex"), Buffer.from(signKey(`folder:${folder}:${list}`), "hex"));
+}
+
 export function r2Client() {
   const accountId = process.env.R2_ACCOUNT_ID;
   const accessKeyId = process.env.R2_ACCESS_KEY_ID;
