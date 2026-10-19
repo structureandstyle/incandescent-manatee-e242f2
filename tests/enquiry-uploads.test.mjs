@@ -177,3 +177,22 @@ test("a changed enquiry link opens nothing", async () => {
   assert.equal(response.status, 403);
   assert.doesNotMatch(await response.text(), /enquiry-file/);
 });
+
+test("a malformed upload request gets a plain message, never engine error text", async (t) => {
+  const originalFetch = globalThis.fetch;
+  t.after(() => { globalThis.fetch = originalFetch; });
+  globalThis.fetch = async () => Response.json({ success: true, action: "ss_enquiry_upload", hostname: "structureandstyle.co.uk" });
+  const send = (body) => ticketsHandler(new Request(`${site}/api/enquiry-upload-tickets`, {
+    method: "POST",
+    headers: { Origin: site, "Content-Type": "application/json" },
+    body,
+  }));
+  for (const body of ["{not json", "null", "42", "\"files\"", "[]"]) {
+    const response = await send(body);
+    assert.equal(response.status, 400, body);
+    const { error } = await response.json();
+    assert.ok(["Invalid upload request.", "Choose 1 to 6 files."].includes(error), `${body}: ${error}`);
+  }
+  const visitorMessage = await send(JSON.stringify({ files: [{ name: "plan.svg", size: 10 }], turnstileToken: "t" }));
+  assert.equal((await visitorMessage.json()).error, "File 1 has an unsupported format.");
+});

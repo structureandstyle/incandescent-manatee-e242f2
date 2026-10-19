@@ -278,7 +278,12 @@ const SOURCES = [
       name="detail"
       rows={compact ? 3 : 5}
       placeholder={jobExample}
+      aria-describedby={`${idPrefix}link-limit`}
     ></textarea>
+    {/* 19 Oct 2026. Netlify drops an enquiry that carries too many links, and
+        the visitor still sees the thank-you page. The script refuses to send
+        one and says why here, under the box the links usually go in. */}
+    <p class="help link-limit" id={`${idPrefix}link-limit`} role="alert" data-link-limit hidden></p>
   </div>
 
   {largeUploadsEnabled ? (
@@ -516,12 +521,13 @@ const SOURCES = [
     padding: var(--space-3) 0;
     border-bottom: var(--rule-hair);
   }
+  /* 19 Oct 2026. Names wrap rather than end in an ellipsis: on a phone two
+     WhatsApp photos both read "IMG-20261019-WA0..." and there is no tooltip
+     on touch, so the Remove buttons could not be told apart. */
   .enquiry-form .attachments-list :global(.file-name) {
     flex: 1 1 auto;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
     font-size: var(--type-body-sm);
     color: var(--char);
   }
@@ -566,10 +572,18 @@ const SOURCES = [
   .enquiry-form .upload-status {
     margin-top: var(--space-5);
   }
+  /* overflow-wrap: a refused file name with no spaces is the first word of
+     its message, and at phone width it pushed the page sideways. */
   .enquiry-form .attachment-notice,
-  .enquiry-form .attachment-error {
+  .enquiry-form .attachment-error,
+  .enquiry-form .link-limit {
     color: var(--char);
     margin-top: var(--space-5);
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  .enquiry-form .link-limit[hidden] {
+    display: none;
   }
   .enquiry-form fieldset {
     border: 0;
@@ -763,7 +777,7 @@ const SOURCES = [
       list.hidden = !state.files.length;
       // The link limit depends on whether files are attached, so a change to
       // the list clears any link-limit message; the next send checks again.
-      form.elements.namedItem("detail")?.setCustomValidity?.("");
+      showLinkLimit(form, "");
       const full = state.files.length >= maxFiles;
       if (count) {
         count.textContent = !state.files.length
@@ -813,9 +827,56 @@ const SOURCES = [
       renderFiles(form);
       if (state.files.length) showChallenge(form);
     };
+    // While files upload, the text boxes are read-only: the enquiry is built
+    // from them after the uploads, so a link typed mid-upload would otherwise
+    // reach Netlify without ever passing the link check.
     const setBusy = (form, busy) => {
       stateFor(form).busy = busy;
+      for (const name of ["name", "phone", "email", "area", "detail"]) {
+        const field = form.elements.namedItem(name);
+        if (field) field.readOnly = busy;
+      }
       renderFiles(form);
+    };
+
+    // LINKS, 19 Oct 2026. Netlify drops an enquiry that carries too many links
+    // and still shows the visitor the thank-you page. Live tests that day: six
+    // links in the job description vanished and five arrived; three links in
+    // each of two boxes arrived; a burst of posts was dropped whatever its
+    // links. So the job description may hold five links, four when files are
+    // attached (their page link is the fifth), "www." counted as a link; the
+    // other boxes hold none. A link is counted once however it is written.
+    const LINK = /(?:https?:\/\/|\bwww\.)\S*/gi;
+    const countLinks = (text) => (String(text || "").match(LINK) || []).length;
+    const showLinkLimit = (form, message) => {
+      const line = form.querySelector("[data-link-limit]");
+      if (!line) return;
+      line.textContent = message;
+      line.hidden = !message;
+    };
+    // Returns the field at fault and the message, or null when the enquiry
+    // can go. Checked when Send is pressed and again on the text that is
+    // actually posted, which by then includes the files page link.
+    const linkProblem = (form, detailText, withFiles) => {
+      for (const name of ["name", "phone", "area"]) {
+        const field = form.elements.namedItem(name);
+        if (field && countLinks(field.value)) {
+          return { field, message: "Web links can only go in the job description. Take the link out of your name, phone or area, and add it there." };
+        }
+      }
+      const limit = withFiles ? 4 : 5;
+      if (countLinks(detailText) > limit) {
+        return {
+          field: form.elements.namedItem("detail"),
+          message: `The job description can take up to ${limit === 4 ? "four" : "five"} web links${withFiles ? " when files are attached" : ""}. Remove some, or send them when we reply.`,
+        };
+      }
+      return null;
+    };
+    const refuseLinks = (form, problem) => {
+      showLinkLimit(form, problem.message);
+      problem.field?.scrollIntoView?.({ block: "center" });
+      problem.field?.focus?.({ preventScroll: true });
     };
     // fromCheck marks a message about the upload check itself. Only those are
     // cleared when the check passes: it re-runs after every send attempt, and
@@ -900,10 +961,12 @@ const SOURCES = [
       addFiles(form, picked);
     });
 
-    // The link-limit message on the job description clears as soon as it is edited.
+    // The link message clears as soon as any box it can be about is edited.
     document.addEventListener("input", (event) => {
       const field = event.target;
-      if (field?.name === "detail" && field.form?.getAttribute("name") === "enquiry") field.setCustomValidity("");
+      if (["name", "phone", "area", "detail"].includes(field?.name) && field.form?.getAttribute("name") === "enquiry") {
+        showLinkLimit(field.form, "");
+      }
     });
 
     document.addEventListener("click", (event) => {
@@ -933,19 +996,25 @@ const SOURCES = [
     // The notification email's subject, so each enquiry opens its own thread
     // and reads at a glance in the inbox: "Website enquiry from Nuno: Alcove
     // units and shelving, Hendon". Set here, before either way of sending
-    // builds the form data. Line breaks and control characters are taken out,
-    // since this text ends up in an email header.
+    // builds the form data. Line breaks, control and invisible direction
+    // characters, and links are taken out, since this text ends up in an
+    // email header and every link counts against the enquiry. The cut counts
+    // characters, not code units, so it cannot split an emoji.
     const setSubject = (form) => {
       const field = form.querySelector('input[name="subject"]');
       if (!field) return;
-      const clean = (text) => String(text || "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim();
+      const clean = (text) => String(text || "")
+        .replace(LINK, " ")
+        .replace(/[\u0000-\u001f\u007f​-‏‪-‮⁠⁦-⁩]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
       const name = clean(form.elements.namedItem("name")?.value);
       if (!name) return;
       const services = Array.from(form.querySelectorAll('input[name="service"]:checked'), (box) => clean(box.value)).join(", ");
       const area = clean(form.elements.namedItem("area")?.value);
       const about = [services, area].filter(Boolean).join(", ");
-      const subject = `Website enquiry from ${name}${about ? `: ${about}` : ""}`;
-      field.value = subject.length > 150 ? `${subject.slice(0, 147).trimEnd()}...` : subject;
+      const subject = Array.from(`Website enquiry from ${name}${about ? `: ${about}` : ""}`);
+      field.value = subject.length > 150 ? `${subject.slice(0, 147).join("").trimEnd()}...` : subject.join("");
     };
 
     document.addEventListener("submit", (e) => {
@@ -955,24 +1024,19 @@ const SOURCES = [
       const input = form.querySelector("[data-enquiry-files]");
       const state = stateFor(form);
       const files = state.files.slice();
-      // 19 Oct 2026. Netlify drops a submission with more than five links and
-      // the visitor still sees the thank-you page, so an enquiry with six
-      // pasted links would vanish. Attached files add one link of their own.
-      const detailField = form.elements.namedItem("detail");
-      const linkLimit = files.length ? 4 : 5;
-      const pastedLinks = (String(detailField?.value || "").match(/https?:\/\//gi) || []).length;
-      if (detailField && pastedLinks > linkLimit) {
+      if (state.busy) { e.preventDefault(); return; }
+      const problem = linkProblem(form, form.elements.namedItem("detail")?.value, files.length > 0);
+      if (problem) {
         e.preventDefault();
-        detailField.setCustomValidity(`This box can take up to ${linkLimit === 4 ? "four" : "five"} web links${files.length ? " when files are attached" : ""}. Remove some, or send them when we reply.`);
-        detailField.reportValidity();
+        refuseLinks(form, problem);
         return;
       }
+      showLinkLimit(form, "");
       if (!files.length) {
         try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}
         return;
       }
       e.preventDefault();
-      if (state.busy) return;
       const error = validateFiles(files);
       if (error) {
         showError(form, error);
@@ -990,21 +1054,32 @@ const SOURCES = [
       if (button) button.disabled = true;
       showError(form, "");
 
+      // Each send gets its own number. A failed batch of uploads rejects at
+      // once while its other uploads finish later; the number stops those
+      // late ones writing "Uploaded 2 of 6" under the error.
+      const attempt = (state.attempt = (state.attempt || 0) + 1);
       (async () => {
         let links = state.uploadedLinks;
         if (!links) {
           showStatus(form, "Preparing your files...");
-          const ticketResponse = await fetch("/api/enquiry-upload-tickets", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              files: files.map((file) => ({ name: file.name, size: file.size })),
-              turnstileToken: state.token,
-            }),
-          });
+          let ticketResponse;
+          try {
+            ticketResponse = await fetch("/api/enquiry-upload-tickets", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                files: files.map((file) => ({ name: file.name, size: file.size })),
+                turnstileToken: state.token,
+              }),
+            });
+          } finally {
+            // A token is spent once it reaches the server, and a dropped
+            // response does not say whether it did, so start a fresh check
+            // after every attempt rather than resend a spent one.
+            state.token = "";
+            if (state.widgetId !== null && window.turnstile) window.turnstile.reset(state.widgetId);
+          }
           const ticketData = await ticketResponse.json().catch(() => ({}));
-          state.token = "";
-          if (state.widgetId !== null && window.turnstile) window.turnstile.reset(state.widgetId);
           if (!ticketResponse.ok || ticketData.tickets?.length !== files.length || !ticketData.filesUrl) {
             throw new Error(ticketData.error || "Could not prepare your files. Try again.");
           }
@@ -1025,14 +1100,17 @@ const SOURCES = [
               }).catch(() => null);
               if (!response?.ok) throw new Error(`${file.name} could not upload. Try again. If it fails again, remove it and add it again.`);
               uploaded += 1;
-              showStatus(form, `Uploaded ${uploaded} of ${files.length} files...`);
+              if (state.attempt === attempt) showStatus(form, `Uploaded ${uploaded} of ${files.length} files...`);
             }));
           }
           // 19 Oct 2026. One link for the whole enquiry, then the names in the
           // order its page lists the files. Netlify drops a submission with
           // more than five links, so a link per file lost every six-file
           // enquiry. See folderLink in netlify/functions/lib/enquiry-uploads.mjs.
-          const names = files.map((file, index) => `${index + 1}. ${file.name}`).join("\n");
+          // A name is one line, and "www." in it is broken up so a photo saved
+          // as "www.pinterest.com.jpg" does not count as a link.
+          const listName = (name) => name.replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\bwww\./gi, (www) => `${www.slice(0, 3)}_`);
+          const names = files.map((file, index) => `${index + 1}. ${listName(file.name)}`).join("\n");
           links = `${ticketData.filesUrl}\n${names}`;
           state.uploadedLinks = links;
         }
@@ -1043,17 +1121,27 @@ const SOURCES = [
         // The link goes here, once. Make copies the job description into the
         // CRM, so this is the copy everyone reads.
         const detail = String(data.get("detail") || "").trimEnd();
-        data.set("detail", `${detail}${detail ? "\n\n" : ""}Attached files: ${links}`);
+        const finalDetail = `${detail}${detail ? "\n\n" : ""}Attached files: ${links}`;
+        // Checked again on the text actually posted, files page link included.
+        const problem = linkProblem(form, finalDetail, false);
+        if (problem) {
+          refuseLinks(form, problem);
+          throw Object.assign(new Error(""), { shown: true });
+        }
+        data.set("detail", finalDetail);
         const response = await fetch("/", { method: "POST", body: data, credentials: "same-origin" });
         if (!response.ok) throw new Error("Your files uploaded, but the enquiry could not be sent. Try again.");
         try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}
         window.location.assign(form.action);
       })().catch((error) => {
+        if (state.attempt === attempt) state.attempt += 1;
         showStatus(form, "");
         // A TypeError here is the browser's own network failure message.
-        showError(form, error instanceof TypeError
-          ? "The connection dropped before your enquiry was sent. Check your signal and send it again."
-          : error.message || "The upload failed. Try again.");
+        if (!error?.shown) {
+          showError(form, error instanceof TypeError
+            ? "The connection dropped before your enquiry was sent. Check your signal and send it again."
+            : error.message || "The upload failed. Try again.");
+        }
         if (button) button.disabled = false;
         setBusy(form, false);
       });

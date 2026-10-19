@@ -8,6 +8,7 @@ import {
   newEnquiryFolder,
   newObjectKey,
   r2Client,
+  UploadRequestError,
   validateFiles,
 } from "./lib/enquiry-uploads.mjs";
 
@@ -43,15 +44,17 @@ export default async function handler(request) {
   let token;
   try {
     const body = await request.text();
-    if (body.length > 10_000) throw new Error("Request is too large.");
+    if (body.length > 10_000) throw new UploadRequestError("Request is too large.");
     const payload = JSON.parse(body);
+    if (!payload || typeof payload !== "object") throw new UploadRequestError("Invalid upload request.");
     files = validateFiles(payload.files);
     token = payload.turnstileToken;
     if (typeof token !== "string" || token.length < 1 || token.length > 2048) {
-      throw new Error("Complete the upload check and try again.");
+      throw new UploadRequestError("Complete the upload check and try again.");
     }
   } catch (error) {
-    return jsonResponse({ error: error.message || "Invalid upload request." }, 400);
+    const message = error instanceof UploadRequestError ? error.message : "Invalid upload request.";
+    return jsonResponse({ error: message }, 400);
   }
 
   let challenge;
