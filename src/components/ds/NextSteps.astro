@@ -1,0 +1,195 @@
+---
+/**
+ * What happens after an enquiry, as a short route the visitor has just
+ * started on. Built for the thank-you page, 19 Oct 2026, to replace a
+ * paragraph with something read at a glance.
+ *
+ * Step 01 is drawn as done (filled green mark, the track in green up to step
+ * 02); the rest wait in outline. Across on wide screens, down on a phone, with
+ * the track as a rule between the marks either way.
+ *
+ * The copy is the confirmed copy: the reply sentence is the one this page
+ * already carried, and stages 03 and 04 are PROCESS stages 01 and 02 by their
+ * approved names, shortened, with no fact that is not in site-content.ts.
+ */
+import { GLYPHS, ICON_NAMES, TONE, FADES } from "./glyphs";
+
+interface Step {
+  title: string;
+  text: string;
+  icon: string;
+  /** Short mono stamp under the number: when, or where. */
+  note?: string;
+  done?: boolean;
+}
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="route" style={`--n:${steps.length}`}>
+  {steps.map((s, n) => {
+    const glyph = GLYPHS[s.icon] ?? [];
+    const num = String(n + 1).padStart(2, "0");
+    return (
+      <li class:list={["stop", { done: s.done, next: !s.done && n > 0 && steps[n - 1].done }]}>
+        <span class="mark" aria-hidden="true">
+          {s.done && (
+            <svg viewBox="0 0 12 12" width="10" height="10"><path d="M2.5,6.3 L5,8.6 L9.6,3.6" /></svg>
+          )}
+        </span>
+        <p class="meta">
+          <span>{num}</span>
+          {s.note && <span aria-hidden="true">·</span>}
+          {s.note && <span>{s.note}</span>}
+        </p>
+        <svg
+          role="img"
+          aria-label={ICON_NAMES[s.icon] ?? s.icon}
+          viewBox="0 0 60 44"
+          width="52"
+          class="glyph"
+          data-glyph
+        >
+          {glyph.map(([tag, attrs, tone], i) => {
+            const Shape = tag as any;
+            const fades = FADES[tone];
+            const delay = 140 + n * 160 + Math.min(i, 10) * 60;
+            return (
+              <Shape
+                {...attrs}
+                fill="none"
+                pathLength={fades ? undefined : 1}
+                data-fades={fades ? "" : undefined}
+                style={`${TONE[tone]};--d:${delay}ms`}
+              />
+            );
+          })}
+        </svg>
+        <h2>{s.title}</h2>
+        <p class="text">{s.text}</p>
+      </li>
+    );
+  })}
+</ol>
+
+<style>
+  .route {
+    --mark: 18px;
+    --col-gap: var(--gap-md);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+    column-gap: var(--col-gap);
+  }
+
+  .stop { position: relative; padding-right: var(--space-4); }
+
+  /* The track: from this mark to the next, under the gap. */
+  .stop::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--mark) / 2 - 0.5px);
+    left: var(--mark);
+    right: calc(var(--col-gap) * -1);
+    border-top: 1px solid var(--hair);
+  }
+  .stop:last-child::before { display: none; }
+  .stop.done::before { border-top: 2px solid var(--green); top: calc(var(--mark) / 2 - 1px); }
+
+  .mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--mark);
+    height: var(--mark);
+    border: 1.5px solid var(--char);
+    border-radius: 50%;
+    background: var(--paper);
+  }
+  .done .mark { background: var(--green); border-color: var(--green); }
+  .mark svg path {
+    fill: none;
+    stroke: var(--paper);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .next .mark { border-color: var(--green); box-shadow: 0 0 0 4px rgba(44, 74, 58, 0.14); }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin: var(--space-9) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .done .meta, .next .meta { color: var(--green); }
+
+  .glyph { display: block; margin: var(--space-12) 0 var(--space-9); overflow: visible; }
+
+  h2 {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-serif-md);
+    line-height: 1.2;
+    margin: 0 0 var(--space-4);
+  }
+  .text {
+    margin: 0;
+    max-width: 30ch;
+    font-size: var(--type-body-sm);
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  /* Down the page on narrow screens: marks in a column, the track running
+     between them, everything else beside it. */
+  @media (max-width: 820px) {
+    .route { grid-template-columns: 1fr; row-gap: 0; }
+    .stop {
+      display: grid;
+      grid-template-columns: var(--mark) minmax(0, 1fr);
+      column-gap: var(--space-12);
+      padding: 0 0 var(--space-15);
+    }
+    .stop:last-child { padding-bottom: 0; }
+    .stop > :not(.mark) { grid-column: 2; }
+    .mark { grid-row: 1; }
+    .meta { grid-row: 1; margin: 0; align-self: center; }
+    .glyph { margin: var(--space-8) 0 var(--space-6); width: 44px; }
+    .stop::before {
+      top: var(--mark);
+      bottom: 0;
+      left: calc(var(--mark) / 2 - 0.5px);
+      right: auto;
+      border-top: 0;
+      border-left: 1px solid var(--hair);
+    }
+    .stop.done::before { border-top: 0; border-left: 2px solid var(--green); left: calc(var(--mark) / 2 - 1px); top: var(--mark); }
+  }
+
+  /* The scribe-in, as ProcessStep runs it. Base.astro adds .in on reveal. */
+  [data-glyph] > :not([data-fades]) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 520ms var(--ease-out) var(--d);
+  }
+  [data-glyph] > [data-fades] { opacity: 0; transition: opacity 420ms var(--ease-out) var(--d); }
+  [data-glyph].in > :not([data-fades]) { stroke-dashoffset: 0; }
+  [data-glyph].in > [data-fades] { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-glyph] > :not([data-fades]) { stroke-dashoffset: 0; transition: none; }
+    [data-glyph] > [data-fades] { opacity: 1; transition: none; }
+  }
+</style>
