@@ -3,6 +3,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   BUCKET,
   downloadLink,
+  folderLink,
   jsonResponse,
   newEnquiryFolder,
   newObjectKey,
@@ -91,7 +92,9 @@ export default async function handler(request) {
         downloadUrl: downloadLink(key, origin),
       };
     }));
-    return jsonResponse({ tickets });
+    // filesUrl is the one link the enquiry carries; see folderLink.
+    const filesUrl = folderLink(folder, files.map((file) => file.extension), origin);
+    return jsonResponse({ tickets, filesUrl });
   } catch {
     return jsonResponse({ error: "Could not prepare uploads. Try again." }, 502);
   }
