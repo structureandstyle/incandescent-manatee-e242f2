@@ -122,13 +122,14 @@ const components = {
   </div>
 
   <div class="article-hero">
+    {d.hero.ai && <p class="ai-intro">The images in this guide are AI-generated examples, shown for inspiration and so you can compare the options side by side.</p>}
     <Plate
       photo={d.hero.src}
       alt={d.hero.alt}
       width={d.hero.width}
       height={d.hero.height}
       ratio="16 / 10"
-      subject={d.hero.ai ? "AI-generated example" : d.hero.caption}
+      subject={d.hero.caption}
       detail={d.hero.ai ? undefined : d.hero.area ? `Area · ${d.hero.area}` : undefined}
       sizes="(max-width: 700px) 92vw, 1080px"
       eager
@@ -251,9 +252,12 @@ const components = {
     .byline-when { margin-left: 0 !important; text-align: left; width: 100%; }
   }
 
-  /* Under an AI hero: the caption says "AI-generated example" and nothing
-     more (Kaspar, 18 Oct 2026); this button takes readers to real work. */
+  /* Under an AI hero: this button takes readers to real work (Kaspar,
+     18 Oct 2026). */
   .gallery-cta { margin: var(--space-9) 0 0; }
+  /* Said once, above the first render (Denis, 19 Oct 2026); each caption
+     then names what differs in that image. */
+  .ai-intro { margin: 0 0 var(--space-7); font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
   /* The price panel's button, on green: the site has no shared one. */
   .gallery-cta .btn {
     display: inline-flex;
