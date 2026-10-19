@@ -301,7 +301,7 @@ const SOURCES = [
           multiple
           disabled
           data-enquiry-files
-          aria-describedby={`${idPrefix}attachments-help ${idPrefix}attachments-count ${idPrefix}attachments-error`}
+          aria-describedby={`${idPrefix}attachments-help ${idPrefix}attachments-count ${idPrefix}attachments-notice ${idPrefix}attachments-error`}
           accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
         />
         <label for={`${idPrefix}attachments`} class="attachments-button" data-add-files>Add files</label>
@@ -310,6 +310,11 @@ const SOURCES = [
         </p>
       </div>
       <ul class="attachments-list" data-file-list hidden></ul>
+      {/* 19 Oct 2026. Files the form turns away are named here, next to the
+          list, and stay until the next pick. They used to share the error line
+          at the foot of the fieldset, which the upload check cleared a second
+          later, so a phone that picked five and kept two showed no reason. */}
+      <p class="help attachment-notice" id={`${idPrefix}attachments-notice`} role="alert" data-file-notice hidden></p>
       <div
         id={`${idPrefix}upload-challenge`}
         class="upload-challenge"
@@ -319,7 +324,11 @@ const SOURCES = [
       ></div>
       <p class="help upload-status" role="status" data-upload-status hidden></p>
       <p class="help attachment-error" id={`${idPrefix}attachments-error`} role="alert" data-attachment-error hidden></p>
-      <input type="hidden" name="attachment_links" value="" />
+      {/* 19 Oct 2026. The attachment_links field is gone. It carried every link
+          a second time, so six files meant twelve long links in one
+          submission, and no six-file enquiry ever reached the inbox or Make:
+          Netlify's spam filter is the likely reason. The links now go once, in
+          the job description, which is what Make copies into the CRM. */}
     </fieldset>
     <noscript><p class="help">Send your enquiry now and share files when we reply.</p></noscript>
   ) : (
@@ -550,12 +559,14 @@ const SOURCES = [
   }
   .enquiry-form .upload-challenge[hidden],
   .enquiry-form .upload-status[hidden],
+  .enquiry-form .attachment-notice[hidden],
   .enquiry-form .attachment-error[hidden] {
     display: none;
   }
   .enquiry-form .upload-status {
     margin-top: var(--space-5);
   }
+  .enquiry-form .attachment-notice,
   .enquiry-form .attachment-error {
     color: var(--char);
     margin-top: var(--space-5);
@@ -689,12 +700,34 @@ const SOURCES = [
     const maxFileBytes = 15_000_000;
     const maxTotalBytes = 60_000_000;
     const allowedExtensions = new Set(["jpg", "jpeg", "png", "webp", "heic", "heif", "pdf", "doc", "docx"]);
+    const typeExtensions = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp",
+      "image/heic": "heic",
+      "image/heif": "heif",
+      "application/pdf": "pdf",
+      "application/msword": "doc",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+    };
     const uploadStates = new WeakMap();
     let turnstileLoader;
 
     const stateFor = (form) => {
-      if (!uploadStates.has(form)) uploadStates.set(form, { widgetId: null, token: "", busy: false, uploadedLinks: null, files: [] });
+      if (!uploadStates.has(form)) uploadStates.set(form, { widgetId: null, token: "", busy: false, uploadedLinks: null, files: [], errorFromCheck: false });
       return uploadStates.get(form);
+    };
+    // 19 Oct 2026. Android can hand over a photo whose name has no extension,
+    // "1000001524" from the photo picker, and the form turned those away as
+    // "not a photo". The file's type is the fallback: a JPEG named 1000001524
+    // goes as 1000001524.jpg, the name the ticket function checks. Returns ""
+    // for anything that is neither an allowed extension nor an allowed type.
+    const uploadName = (file) => {
+      const name = String(file.name || "").trim() || "file";
+      const extension = name.includes(".") ? name.split(".").pop().toLowerCase() : "";
+      if (allowedExtensions.has(extension)) return name;
+      const fromType = typeExtensions[String(file.type || "").toLowerCase()];
+      return fromType ? `${name}.${fromType}` : "";
     };
     const formatSize = (bytes) => bytes >= 100_000
       ? `${(bytes / 1_000_000).toFixed(1)} MB`
@@ -749,11 +782,17 @@ const SOURCES = [
       const messages = [];
       let overflow = 0;
       let total = state.files.reduce((sum, file) => sum + file.size, 0);
-      for (const file of picked) {
-        if (state.files.some((f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified)) continue;
+      for (const pickedFile of picked) {
+        const name = uploadName(pickedFile);
+        if (!name) { messages.push(`${pickedFile.name} is not a photo, PDF or Word document.`); continue; }
+        const file = name === pickedFile.name
+          ? pickedFile
+          : new File([pickedFile], name, { type: pickedFile.type, lastModified: pickedFile.lastModified });
+        if (state.files.some((f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified)) {
+          messages.push(`${file.name} is already in the list.`);
+          continue;
+        }
         if (state.files.length >= maxFiles) { overflow += 1; continue; }
-        const extension = file.name.split(".").pop()?.toLowerCase();
-        if (!allowedExtensions.has(extension)) { messages.push(`${file.name} is not a photo, PDF or Word document.`); continue; }
         if (file.size < 1) { messages.push(`${file.name} is empty.`); continue; }
         if (file.size > maxFileBytes) { messages.push(`${file.name} is over 15 MB.`); continue; }
         if (total + file.size > maxTotalBytes) { messages.push(`${file.name} would take the files over 60 MB together.`); continue; }
@@ -767,7 +806,7 @@ const SOURCES = [
         messages.push(`You can add up to six files, so ${howMany} not added.`);
       }
       state.uploadedLinks = null;
-      showError(form, messages.join(" "));
+      showNotice(form, [...new Set(messages)].join(" "));
       renderFiles(form);
       if (state.files.length) showChallenge(form);
     };
@@ -775,12 +814,22 @@ const SOURCES = [
       stateFor(form).busy = busy;
       renderFiles(form);
     };
-    const showError = (form, message) => {
+    // fromCheck marks a message about the upload check itself. Only those are
+    // cleared when the check passes: it re-runs after every send attempt, and
+    // clearing everything wiped an upload failure a second after it appeared.
+    const showError = (form, message, fromCheck = false) => {
+      stateFor(form).errorFromCheck = Boolean(message) && fromCheck;
       const error = form.querySelector("[data-attachment-error]");
       if (error) {
         error.textContent = message;
         error.hidden = !message;
       }
+    };
+    const showNotice = (form, message) => {
+      const notice = form.querySelector("[data-file-notice]");
+      if (!notice) return showError(form, message);
+      notice.textContent = message;
+      notice.hidden = !message;
     };
     const showStatus = (form, message) => {
       const status = form.querySelector("[data-upload-status]");
@@ -827,12 +876,12 @@ const SOURCES = [
           sitekey: container.dataset.sitekey,
           action: "ss_enquiry_upload",
           theme: "light",
-          callback: (token) => { state.token = token; showError(form, ""); },
+          callback: (token) => { state.token = token; if (state.errorFromCheck) showError(form, ""); },
           "expired-callback": () => { state.token = ""; },
-          "error-callback": () => { state.token = ""; showError(form, "Upload check failed. Try again shortly."); },
+          "error-callback": () => { state.token = ""; showError(form, "Upload check failed. Try again shortly.", true); },
         });
       } catch {
-        showError(form, "Upload check could not load. Try again shortly.");
+        showError(form, "Upload check could not load. Try again shortly.", true);
       }
     };
 
@@ -844,6 +893,7 @@ const SOURCES = [
       // Cleared so the same file can be picked again after it is removed.
       input.value = "";
       showStatus(form, "");
+      showError(form, "");
       addFiles(form, picked);
     });
 
@@ -910,7 +960,7 @@ const SOURCES = [
       }
       if (!state.uploadedLinks && !state.token) {
         showChallenge(form);
-        showError(form, "Complete the upload check, then send your enquiry.");
+        showError(form, "Complete the upload check, then send your enquiry.", true);
         return;
       }
 
@@ -943,13 +993,16 @@ const SOURCES = [
           for (let start = 0; start < files.length; start += 3) {
             await Promise.all(files.slice(start, start + 3).map(async (file, offset) => {
               const ticket = tickets[start + offset];
+              // A dropped connection, or a phone that can no longer read the
+              // file, rejects the fetch rather than returning a status. Either
+              // way the visitor needs the file's name, not "Failed to fetch".
               const response = await fetch(ticket.uploadUrl, {
                 method: "PUT",
                 headers: { "Content-Type": ticket.contentType },
                 body: file,
                 credentials: "omit",
-              });
-              if (!response.ok) throw new Error(`${file.name} could not upload. Try again.`);
+              }).catch(() => null);
+              if (!response?.ok) throw new Error(`${file.name} could not upload. Try again. If it fails again, remove it and add it again.`);
               uploaded += 1;
               showStatus(form, `Uploaded ${uploaded} of ${files.length} files...`);
             }));
@@ -961,7 +1014,8 @@ const SOURCES = [
         showStatus(form, "Sending your enquiry...");
         const data = new FormData(form);
         data.delete("cf-turnstile-response");
-        data.set("attachment_links", links);
+        // Each link goes once, here. Make copies the job description into the
+        // CRM, so this is the copy everyone reads.
         const detail = String(data.get("detail") || "").trimEnd();
         data.set("detail", `${detail}${detail ? "\n\n" : ""}Attached files:\n${links}`);
         const response = await fetch("/", { method: "POST", body: data, credentials: "same-origin" });
@@ -970,7 +1024,10 @@ const SOURCES = [
         window.location.assign(form.action);
       })().catch((error) => {
         showStatus(form, "");
-        showError(form, error.message || "The upload failed. Try again.");
+        // A TypeError here is the browser's own network failure message.
+        showError(form, error instanceof TypeError
+          ? "The connection dropped before your enquiry was sent. Check your signal and send it again."
+          : error.message || "The upload failed. Try again.");
         if (button) button.disabled = false;
         setBusy(form, false);
       });
