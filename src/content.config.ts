@@ -42,17 +42,13 @@ const figure = z.object({
   /** The district, never an address. Absent means Kaspar has not named it yet,
       and the caption shows an open question instead. */
   area: z.string().optional(),
-  /** An AI render, not a photograph of a job. Kaspar's rule, 17 Oct 2026: a
-      render may show a style as an example, but the page must say plainly that
-      it is AI-generated and send the reader to the gallery for real work. Set,
-      the caption says so, no district is asked for, and a note with a gallery
-      button follows the image. Keep renders under /images/journal/, never in a
-      service folder, so they cannot end up in a gallery. */
+  /** An AI render, not a photograph of a job. Kaspar's rule, 18 Oct 2026:
+      the caption reads "AI-generated example" and nothing more, and a gallery
+      button follows so readers can see real work. No district is asked for.
+      Keep renders under /images/journal/, never in a service folder, so they
+      cannot end up in a gallery. Renders inside an article use <Render>. */
   ai: z.boolean().default(false),
-  /** With `ai`: the note after "This image is AI-generated.", saying what the
-      render shows, that it is not our work, and pointing to the gallery. */
-  aiNote: z.string().optional(),
-}).refine((f) => !f.ai || !!f.aiNote, { message: "an AI render needs aiNote", path: ["aiNote"] });
+});
 
 const journal = defineCollection({
   loader: glob({ base: "./src/content/journal", pattern: "**/*.{md,mdx}" }),

@@ -1,0 +1,25 @@
+---
+/**
+ * Two AI renders side by side, wider than the reading column, so a section
+ * that names two options (floating or framed shelves) shows both at once.
+ * Each child is a <Render>; on a phone they stack.
+ */
+---
+
+<div class="renders wide">
+  <slot />
+</div>
+
+<style>
+  .renders {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--space-11);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-12);
+  }
+  .renders :global(.render) { margin: 0; }
+  @media (max-width: 760px) {
+    .renders { grid-template-columns: 1fr; row-gap: var(--space-11); }
+  }
+</style>
