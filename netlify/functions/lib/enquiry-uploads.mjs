@@ -18,9 +18,14 @@ const contentTypes = {
   docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 };
 
+// A message written for the visitor. The ticket function passes these
+// through and replaces anything else, such as a JSON parse error, with a
+// plain "Invalid upload request." (19 Oct 2026).
+export class UploadRequestError extends Error {}
+
 export function validateFiles(files) {
   if (!Array.isArray(files) || files.length < 1 || files.length > MAX_FILES) {
-    throw new Error(`Choose 1 to ${MAX_FILES} files.`);
+    throw new UploadRequestError(`Choose 1 to ${MAX_FILES} files.`);
   }
 
   let total = 0;
@@ -29,14 +34,14 @@ export function validateFiles(files) {
     const extension = name.split(".").pop()?.toLowerCase();
     const size = Number(file?.size);
     if (!extension || !Object.hasOwn(contentTypes, extension)) {
-      throw new Error(`File ${index + 1} has an unsupported format.`);
+      throw new UploadRequestError(`File ${index + 1} has an unsupported format.`);
     }
     if (!Number.isSafeInteger(size) || size < 1 || size > MAX_FILE_BYTES) {
-      throw new Error(`File ${index + 1} must be under 15 MB.`);
+      throw new UploadRequestError(`File ${index + 1} must be under 15 MB.`);
     }
     total += size;
     if (total > MAX_TOTAL_BYTES) {
-      throw new Error("Files must be under 60 MB combined.");
+      throw new UploadRequestError("Files must be under 60 MB combined.");
     }
     return { name, extension, size, contentType: contentTypes[extension] };
   });
