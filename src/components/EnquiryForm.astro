@@ -775,9 +775,6 @@ const SOURCES = [
         return item;
       }));
       list.hidden = !state.files.length;
-      // The link limit depends on whether files are attached, so a change to
-      // the list clears any link-limit message; the next send checks again.
-      showLinkLimit(form, "");
       const full = state.files.length >= maxFiles;
       if (count) {
         count.textContent = !state.files.length
@@ -824,6 +821,9 @@ const SOURCES = [
       }
       state.uploadedLinks = null;
       showNotice(form, [...new Set(messages)].join(" "));
+      // The link limit depends on whether files are attached, so a change to
+      // the list clears any link message; the next send checks again.
+      showLinkLimit(form, "");
       renderFiles(form);
       if (state.files.length) showChallenge(form);
     };
@@ -845,9 +845,15 @@ const SOURCES = [
     // each of two boxes arrived; a burst of posts was dropped whatever its
     // links. So the job description may hold five links, four when files are
     // attached (their page link is the fifth), "www." counted as a link; the
-    // other boxes hold none. A link is counted once however it is written.
+    // other boxes hold none.
+    // LINK takes a whole link, to strip it from the subject. LINK_START
+    // counts where links begin, so links glued together with commas or
+    // brackets still count one each; "https://www." is one start, not two.
+    // No lookbehind: older Safari cannot parse it, and a parse error would
+    // stop this whole script.
     const LINK = /(?:https?:\/\/|\bwww\.)\S*/gi;
-    const countLinks = (text) => (String(text || "").match(LINK) || []).length;
+    const LINK_START = /https?:\/\/(?:www\.)?|\bwww\./gi;
+    const countLinks = (text) => (String(text || "").match(LINK_START) || []).length;
     const showLinkLimit = (form, message) => {
       const line = form.querySelector("[data-link-limit]");
       if (!line) return;
@@ -856,16 +862,19 @@ const SOURCES = [
     };
     // Returns the field at fault and the message, or null when the enquiry
     // can go. Checked when Send is pressed and again on the text that is
-    // actually posted, which by then includes the files page link.
-    const linkProblem = (form, detailText, withFiles) => {
-      for (const name of ["name", "phone", "area"]) {
+    // actually posted; ownLinks is the files page link already in that text.
+    const linkProblem = (form, detailText, withFiles, ownLinks = 0) => {
+      // The email box is checked for "://" only: an address at a www.
+      // domain is a real address, but no address holds a scheme.
+      for (const name of ["name", "phone", "area", "email"]) {
         const field = form.elements.namedItem(name);
-        if (field && countLinks(field.value)) {
-          return { field, message: "Web links can only go in the job description. Take the link out of your name, phone or area, and add it there." };
+        const value = String(field?.value || "");
+        if (field && (name === "email" ? value.includes("://") : countLinks(value))) {
+          return { field, message: "Web links can only go in the job description. Take the link out of this box and add it there." };
         }
       }
       const limit = withFiles ? 4 : 5;
-      if (countLinks(detailText) > limit) {
+      if (countLinks(detailText) - ownLinks > limit) {
         return {
           field: form.elements.namedItem("detail"),
           message: `The job description can take up to ${limit === 4 ? "four" : "five"} web links${withFiles ? " when files are attached" : ""}. Remove some, or send them when we reply.`,
@@ -873,7 +882,11 @@ const SOURCES = [
       }
       return null;
     };
+    // The message line moves to sit under the box at fault, so a link in the
+    // name box is explained by the name box, not a screen further down.
     const refuseLinks = (form, problem) => {
+      const line = form.querySelector("[data-link-limit]");
+      if (line && problem.field) problem.field.insertAdjacentElement("afterend", line);
       showLinkLimit(form, problem.message);
       problem.field?.scrollIntoView?.({ block: "center" });
       problem.field?.focus?.({ preventScroll: true });
@@ -942,7 +955,13 @@ const SOURCES = [
           theme: "light",
           callback: (token) => { state.token = token; if (state.errorFromCheck) showError(form, ""); },
           "expired-callback": () => { state.token = ""; },
-          "error-callback": () => { state.token = ""; showError(form, "Upload check failed. Try again shortly.", true); },
+          // A check error never covers a different error already on screen,
+          // such as the reason a send just failed.
+          "error-callback": () => {
+            state.token = "";
+            const shown = form.querySelector("[data-attachment-error]");
+            if (!shown || shown.hidden || state.errorFromCheck) showError(form, "Upload check failed. Try again shortly.", true);
+          },
         });
       } catch {
         showError(form, "Upload check could not load. Try again shortly.", true);
@@ -979,10 +998,34 @@ const SOURCES = [
       state.files.splice(index, 1);
       state.uploadedLinks = null;
       showError(form, "");
+      showLinkLimit(form, "");
       renderFiles(form);
       // Focus goes to the row that took its place, or back to Add files.
       const remaining = form.querySelectorAll("[data-remove-file]");
       (remaining[Math.min(index, remaining.length - 1)] || form.querySelector("[data-enquiry-files]"))?.focus();
+    });
+
+    // Back from the thank-you page can restore this page exactly as it was
+    // left, mid-send: Send disabled, "Sending your enquiry..." and read-only
+    // boxes. Unlock it. Files already sent are cleared, so a second Send
+    // starts a new enquiry rather than reposting the last one's files.
+    window.addEventListener("pageshow", (event) => {
+      if (!event.persisted) return;
+      document.querySelectorAll('form[name="enquiry"]').forEach((form) => {
+        const state = stateFor(form);
+        if (state.sent) {
+          state.files = [];
+          state.uploadedLinks = null;
+          state.sent = false;
+          showNotice(form, "");
+        }
+        showStatus(form, "");
+        showError(form, "");
+        showLinkLimit(form, "");
+        const button = form.querySelector('button[type="submit"]');
+        if (button) button.disabled = false;
+        setBusy(form, false);
+      });
     });
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -1003,9 +1046,12 @@ const SOURCES = [
     const setSubject = (form) => {
       const field = form.querySelector('input[name="subject"]');
       if (!field) return;
+      // Invisible characters go first and to nothing, so "Cam<zero width>den"
+      // stays Camden and a link split by one is still found and stripped.
       const clean = (text) => String(text || "")
+        .replace(/[\u00ad\u061c\u180e\u200b-\u200f\u202a-\u202e\u2060-\u2064\u2066-\u206f\ufeff]/g, "")
         .replace(LINK, " ")
-        .replace(/[\u0000-\u001f\u007f​-‏‪-‮⁠⁦-⁩]+/g, " ")
+        .replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, " ")
         .replace(/\s+/g, " ")
         .trim();
       const name = clean(form.elements.namedItem("name")?.value);
@@ -1077,7 +1123,9 @@ const SOURCES = [
             // response does not say whether it did, so start a fresh check
             // after every attempt rather than resend a spent one.
             state.token = "";
-            if (state.widgetId !== null && window.turnstile) window.turnstile.reset(state.widgetId);
+            try {
+              if (state.widgetId !== null && window.turnstile) window.turnstile.reset(state.widgetId);
+            } catch {}
           }
           const ticketData = await ticketResponse.json().catch(() => ({}));
           if (!ticketResponse.ok || ticketData.tickets?.length !== files.length || !ticketData.filesUrl) {
@@ -1107,15 +1155,18 @@ const SOURCES = [
           // order its page lists the files. Netlify drops a submission with
           // more than five links, so a link per file lost every six-file
           // enquiry. See folderLink in netlify/functions/lib/enquiry-uploads.mjs.
-          // A name is one line, and "www." in it is broken up so a photo saved
-          // as "www.pinterest.com.jpg" does not count as a link.
-          const listName = (name) => name.replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\bwww\./gi, (www) => `${www.slice(0, 3)}_`);
+          // A name is one line, and "www." in it becomes "www_." so a photo
+          // saved as "www.pinterest.com.jpg" does not count as a link, while
+          // "www.jpg" keeps its extension.
+          const listName = (name) => name.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, " ").replace(/\bwww\./gi, (www) => `${www.slice(0, 3)}_.`);
           const names = files.map((file, index) => `${index + 1}. ${listName(file.name)}`).join("\n");
           links = `${ticketData.filesUrl}\n${names}`;
           state.uploadedLinks = links;
         }
 
         showStatus(form, "Sending your enquiry...");
+        // Again, in case a service was ticked or unticked during the uploads.
+        setSubject(form);
         const data = new FormData(form);
         data.delete("cf-turnstile-response");
         // The link goes here, once. Make copies the job description into the
@@ -1123,7 +1174,7 @@ const SOURCES = [
         const detail = String(data.get("detail") || "").trimEnd();
         const finalDetail = `${detail}${detail ? "\n\n" : ""}Attached files: ${links}`;
         // Checked again on the text actually posted, files page link included.
-        const problem = linkProblem(form, finalDetail, false);
+        const problem = linkProblem(form, finalDetail, true, 1);
         if (problem) {
           refuseLinks(form, problem);
           throw Object.assign(new Error(""), { shown: true });
@@ -1132,6 +1183,7 @@ const SOURCES = [
         const response = await fetch("/", { method: "POST", body: data, credentials: "same-origin" });
         if (!response.ok) throw new Error("Your files uploaded, but the enquiry could not be sent. Try again.");
         try { sessionStorage.setItem("ss_enquiry_submitted", String(Date.now())); } catch {}
+        state.sent = true;
         window.location.assign(form.action);
       })().catch((error) => {
         if (state.attempt === attempt) state.attempt += 1;

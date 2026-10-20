@@ -52,7 +52,7 @@ Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. On 
 - **Why: Netlify drops a submission with more than five links.** The visitor still sees the thank-you page, and no email or webhook follows. Tested on 19 October 2026 with two text-only enquiries a minute apart, identical but for the links: five links arrived, six vanished. Until then each file added a link, so every six-file enquiry was lost (five-file ones got through). A second field, `attachment_links`, which repeated the links, was removed the same day; Make never mapped it.
 - **The link guard.** The form will not send rather than let an enquiry vanish, and says why under the job description:
   - The job description can hold up to five links, or four when files are attached.
-  - `www.` counts as a link.
+  - `www.` counts as a link, and links run together without spaces count one each.
   - The name, phone and area boxes can hold none.
   - The guard runs when Send is pressed and again on the text actually posted. The text boxes are read-only while files upload.
   - Links are stripped from the email subject, which copies the name and area.
