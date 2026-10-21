@@ -122,7 +122,7 @@ const components = {
   </div>
 
   <div class="article-hero">
-    {d.hero.ai && <p class="ai-intro">The images in this guide are AI-generated examples, shown for inspiration and so you can compare the options side by side.</p>}
+    {d.hero.ai && <p class="ai-intro">The images in this guide are AI-generated examples, shown for inspiration and to help you compare the options.</p>}
     <Plate
       photo={d.hero.src}
       alt={d.hero.alt}
@@ -136,6 +136,7 @@ const components = {
     >
       {!d.hero.area && !d.hero.ai && <Ask q="area-hero" slot="controls">Area to confirm</Ask>}
     </Plate>
+    {d.hero.description && <p class="image-desc">{d.hero.description}</p>}
     {d.hero.ai && (
       <p class="gallery-cta"><a class="btn" href="/work/">See our gallery</a></p>
     )}
@@ -258,6 +259,8 @@ const components = {
   /* Said once, above the first render (Denis, 19 Oct 2026); each caption
      then names what differs in that image. */
   .ai-intro { margin: 0 0 var(--space-7); font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
+  /* The hero's description, as <Render> shows one under each image. */
+  .image-desc { margin: var(--space-5) 0 0; font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
   /* The price panel's button, on green: the site has no shared one. */
   .gallery-cta .btn {
     display: inline-flex;

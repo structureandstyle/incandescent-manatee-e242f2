@@ -9,6 +9,13 @@
  * to real work. Renders live under /images/journal/, never in a service folder,
  * so they cannot reach a gallery.
  *
+ * `description` adds a fuller sentence or two beneath the image: the door
+ * style, handles, shelving, lighting, ceiling finish and any contrasting
+ * finish, so customers can compare the options and say what they want
+ * (Kaspar, 20 Oct 2026). Keep it to what the image shows, with no dimensions
+ * or specifications he has not confirmed. The alt text can repeat it, since
+ * the lightbox shows the alt when a reader taps the image.
+ *
  * On its own a render sits at reading width. Inside <Renders> two sit side by
  * side (give each `pair`), so a reader can compare the options a section
  * describes.
@@ -25,18 +32,22 @@ interface Props {
   height: number;
   /** What this render shows that the others do not, in a few words. */
   caption: string;
+  /** The fuller description shown beneath the image. */
+  description?: string;
   /** Set on each render inside <Renders>: half the wide column. */
   pair?: boolean;
 }
 
-const { src, alt, width, height, caption, pair = false } = Astro.props;
+const { src, alt, width, height, caption, description, pair = false } = Astro.props;
 const sizes = pair ? "(max-width: 760px) 92vw, 530px" : "(max-width: 700px) 92vw, 680px";
 ---
 
 <div class="render">
   <Plate photo={src} alt={alt} width={width} height={height} ratio={`${width} / ${height}`} subject={caption} sizes={sizes} />
+  {description && <p class="render-desc">{description}</p>}
 </div>
 
 <style>
   .render { margin-top: var(--space-12); margin-bottom: var(--space-12); }
+  .render-desc { margin: var(--space-5) 0 0; font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
 </style>
