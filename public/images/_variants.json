@@ -278,12 +278,6 @@
   900,
   1280
  ],
- "/images/journal/built-in-wardrobes-ai-alcoves.webp": [
-  400,
-  640,
-  900,
-  1280
- ],
  "/images/journal/built-in-wardrobes-ai-around-bed.webp": [
   400,
   640,
@@ -296,13 +290,13 @@
   900,
   1280
  ],
- "/images/journal/built-in-wardrobes-ai-double-hanging.webp": [
+ "/images/journal/built-in-wardrobes-ai-eight-door-shaker.webp": [
   400,
   640,
   900,
   1280
  ],
- "/images/journal/built-in-wardrobes-ai-full-wall.webp": [
+ "/images/journal/built-in-wardrobes-ai-handle-free-interior.webp": [
   400,
   640,
   900,
@@ -320,13 +314,19 @@
   900,
   1280
  ],
+ "/images/journal/built-in-wardrobes-ai-loft-oak-niches.webp": [
+  400,
+  640,
+  900,
+  1280
+ ],
  "/images/journal/built-in-wardrobes-ai-long-hanging-drawers.webp": [
   400,
   640,
   900,
   1280
  ],
- "/images/journal/built-in-wardrobes-ai-oak-veneer.webp": [
+ "/images/journal/built-in-wardrobes-ai-oak-veneer-eight-door.webp": [
   400,
   640,
   900,
@@ -350,6 +350,12 @@
   900,
   1280
  ],
+ "/images/journal/built-in-wardrobes-ai-sage-alcoves.webp": [
+  400,
+  640,
+  900,
+  1280
+ ],
  "/images/journal/built-in-wardrobes-ai-shaker-knobs.webp": [
   400,
   640,
@@ -357,12 +363,6 @@
   1280
  ],
  "/images/journal/built-in-wardrobes-ai-sliding-doors.webp": [
-  400,
-  640,
-  900,
-  1280
- ],
- "/images/journal/built-in-wardrobes-ai-sloping-ceiling.webp": [
   400,
   640,
   900,
