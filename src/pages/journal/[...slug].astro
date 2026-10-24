@@ -13,8 +13,9 @@
  * THE ARTICLE TEMPLATE, 13 October 2026, from the alcove mockup that Kaspar
  * rewrote and Arthur signed off on the page layout of:
  *
- *   - breadcrumb, title, standfirst, byline (Kaspar, his role, the published
- *     date and the reading time; never an "Updated" line, Arthur 13 Oct);
+ *   - breadcrumb, title, standfirst, byline ("By Kas, Founder & Bespoke Joiner
+ *     at Structure & Style", his wording of 24 Oct, then the published date and
+ *     the reading time; never an "Updated" line, Arthur 13 Oct);
  *   - the hero photograph with a caption naming the district;
  *   - At a glance and the jump list, from front matter;
  *   - the article itself, at reading width, with the journal components
@@ -115,7 +116,7 @@ const components = {
       {d.byline && (author.photo
         ? <img class="byline-photo" src={author.photo} alt={author.name} width="42" height="42" />
         : <span class="byline-mark" aria-hidden="true">{author.initial}</span>)}
-      {d.byline && <p class="byline-who"><b>{author.name}</b><br /><span>{author.role}, Structure &amp; Style</span></p>}
+      {d.byline && <p class="byline-who">By <b>{author.name}</b>, <span>{author.role} at Structure &amp; Style</span></p>}
       <MonoLabel as="p" tone="soft" class="byline-when">
         <time datetime={d.published.toISOString().slice(0, 10)}>Published {published}</time><br />{minutes} min read
       </MonoLabel>

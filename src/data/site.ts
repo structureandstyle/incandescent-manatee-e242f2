@@ -426,15 +426,17 @@ export const serviceLabel = (s: Service) => s.label ?? s.title;
  * overrides the company-only byline of Q1 and Q60 for the journal alone. The
  * rest of the site still presents Structure & Style as a company.
  *
- * `role` is shown as given until Kaspar confirms it ("Founder/Carpenter for
- * now", Arthur, 13 Oct). `photo` stays unset until his headshot arrives; the
- * byline shows his initial in a square frame instead. `url` is required by the
- * BlogPosting check in scripts/verify-build.mjs.
+ * Kaspar confirmed the byline on 24 October 2026: "By Kas, Founder & Bespoke
+ * Joiner at Structure & Style", on both the alcove and the wardrobe guides.
+ * `name` and `role` are his words, and the BlogPosting author carries the same
+ * name and job title so the page and its schema agree. `photo` stays unset
+ * until he sends a headshot; the byline shows his initial in a square frame
+ * instead. `url` is required by the BlogPosting check in scripts/verify-build.mjs.
  */
 export const AUTHORS = {
   kaspar: {
-    name: "Kaspar",
-    role: "Founder/Carpenter",
+    name: "Kas",
+    role: "Founder & Bespoke Joiner",
     initial: "K",
     photo: undefined as string | undefined,
     url: `${SITE_URL}/about/`,
