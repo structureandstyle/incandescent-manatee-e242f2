@@ -35,11 +35,19 @@ export const isRendered = (p: Article) => isLive(p) || SHOW_DRAFTS;
  * tags and their attributes are stripped first so they do not count as words;
  * text passed to a component as a prop (an idea's caption, a material card's
  * description) still counts, because the reader reads it.
+ *
+ * MDX comments and the attributes a reader never reads (alt, src, width,
+ * height) are stripped too, from 22 October 2026. They were being counted: the
+ * built-in wardrobe guide read "22 min" with about 3,700 words on the page,
+ * because each render's alt text repeats the description shown beneath it and
+ * the notes at the top of the file are several hundred words on their own.
  */
 export function readingMinutes(body: string | undefined): number {
   if (!body) return 1;
   const text = body
     .replace(/^import .*$/gm, " ")
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, " ")
+    .replace(/\s(?:alt|src|width|height)=(?:"[^"]*"|\{[^}]*\})/g, " ")
     .replace(/<\/?[A-Z][\w.]*/g, " ")
     .replace(/[{}<>/=]/g, " ");
   const words = text.match(/[A-Za-z0-9£'’,.-]+/g)?.length ?? 0;
