@@ -178,20 +178,38 @@ function verifySchema(html, page, errors) {
  * live rather than publishing a bad number. A missing or unparsable file fails
  * the same way. It also checks that the built homepage shows the file's
  * numbers, so the count cannot quietly go back to being typed by hand.
+ *
+ * The file is the one thing an automation is allowed to write on this site, so
+ * it is held to exactly its three keys and a small size: nothing else can ride
+ * in through it.
  */
 const REVIEWS_FILE = "src/data/reviews.json";
+const REVIEWS_KEYS = ["average", "count", "updated"];
+const REVIEWS_MAX_BYTES = 200;
 
 async function verifyReviews(errors) {
+  let text;
   let data;
   try {
     // A byte order mark is not valid JSON, but the build reads such a file fine.
-    data = JSON.parse((await readFile(REVIEWS_FILE, "utf8")).replace(/^\uFEFF/, ""));
+    text = (await readFile(REVIEWS_FILE, "utf8")).replace(/^\uFEFF/, "");
+    data = JSON.parse(text);
   } catch (error) {
     errors.push(`${REVIEWS_FILE}  missing or not valid JSON: ${error.message}`);
     return;
   }
 
-  const { count, average, updated } = data ?? {};
+  if (Buffer.byteLength(text, "utf8") > REVIEWS_MAX_BYTES) {
+    errors.push(`${REVIEWS_FILE}  is larger than ${REVIEWS_MAX_BYTES} bytes; it holds three short values`);
+    return;
+  }
+  const keys = data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data).sort() : [];
+  if (keys.join(",") !== REVIEWS_KEYS.join(",")) {
+    errors.push(`${REVIEWS_FILE}  must hold exactly ${REVIEWS_KEYS.join(", ")}, found ${JSON.stringify(keys)}`);
+    return;
+  }
+
+  const { count, average, updated } = data;
   const problems = [];
   if (!Number.isInteger(count) || count < 1 || count > 1000) {
     problems.push(`count must be a whole number from 1 to 1000, found ${JSON.stringify(count)}`);
