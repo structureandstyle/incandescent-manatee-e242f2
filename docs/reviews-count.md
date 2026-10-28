@@ -31,6 +31,7 @@ The git history of the file is the record of what the site said and when.
 `scripts/verify-build.mjs` checks the file on every production build and fails the build, naming the field, if:
 
 - the file is missing or is not valid JSON
+- it holds anything other than exactly `count`, `average` and `updated`, or is larger than 200 bytes (it is the one file an automation may write, so nothing else can ride in through it)
 - `count` is not a whole number from 1 to 1000 (so `"20"` in quotes, `0` and `20.5` all fail)
 - `average` is not a JSON number from 1 to 5
 - `updated` does not look like `YYYY-MM-DD`
