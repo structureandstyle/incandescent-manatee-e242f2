@@ -39,11 +39,8 @@ export const BUSINESS = {
     { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "18:00" },
     { days: ["Saturday"], opens: "09:00", closes: "14:00" },
   ],
-  /** Read live from the public profile on 1 September 2026. Down from the
-      22 August baseline of 15: Arthur Kvasnei's review is no longer on the
-      profile. See the ops repo baseline record, A6.1. */
-  reviewCount: 14,
-  ratingValue: "5.0",
+  /* No review count or rating here. They sit in src/data/reviews.json, so
+     there is one place to change them (docs/reviews-count.md). */
 } as const;
 
 /** GA4 measurement ID, live in Kaspar's own Analytics account. */

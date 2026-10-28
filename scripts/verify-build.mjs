@@ -170,6 +170,51 @@ function verifySchema(html, page, errors) {
   }
 }
 
+/**
+ * The homepage review count and average come from src/data/reviews.json, which
+ * F2F's Make scenario "S&S Google review count to site" rewrites from the
+ * Business Profile API. Whatever writes it, a value outside the contract in
+ * docs/reviews-count.md fails the build, so Netlify keeps the previous deploy
+ * live rather than publishing a bad number. A missing or unparsable file fails
+ * the same way. It also checks that the built homepage shows the file's
+ * numbers, so the count cannot quietly go back to being typed by hand.
+ */
+const REVIEWS_FILE = "src/data/reviews.json";
+
+async function verifyReviews(errors) {
+  let data;
+  try {
+    // A byte order mark is not valid JSON, but the build reads such a file fine.
+    data = JSON.parse((await readFile(REVIEWS_FILE, "utf8")).replace(/^\uFEFF/, ""));
+  } catch (error) {
+    errors.push(`${REVIEWS_FILE}  missing or not valid JSON: ${error.message}`);
+    return;
+  }
+
+  const { count, average, updated } = data ?? {};
+  const problems = [];
+  if (!Number.isInteger(count) || count < 1 || count > 1000) {
+    problems.push(`count must be a whole number from 1 to 1000, found ${JSON.stringify(count)}`);
+  }
+  if (typeof average !== "number" || !Number.isFinite(average) || average < 1 || average > 5) {
+    problems.push(`average must be a JSON number from 1 to 5, found ${JSON.stringify(average)}`);
+  }
+  if (typeof updated !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(updated)) {
+    problems.push(`updated must be a YYYY-MM-DD date, found ${JSON.stringify(updated)}`);
+  }
+  if (problems.length) {
+    for (const p of problems) errors.push(`${REVIEWS_FILE}  ${p}`);
+    return;
+  }
+
+  const home = visibleText(await readFile(join(DIST, "index.html"), "utf8").catch(() => ""));
+  // Same rounding as REVIEWS.average in site-content.ts: halves round up.
+  const shown = (Math.round(average * 10) / 10).toFixed(1);
+  if (!new RegExp(`\\b${count} reviews\\b`).test(home) || !home.includes(`average ${shown}`)) {
+    errors.push(`/  homepage does not show ${count} reviews at average ${shown}, as ${REVIEWS_FILE} says`);
+  }
+}
+
 async function htmlFiles(dir) {
   const out = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -249,6 +294,8 @@ for (const file of files) {
     if (hits.length) errors.push(`${page}  ${why}: ${hits.map((h) => JSON.stringify(h)).join(", ")}`);
   }
 }
+
+await verifyReviews(errors);
 
 console.log(`Scanned ${files.length} page(s) in ${DIST}/.`);
 
