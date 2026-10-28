@@ -52,6 +52,7 @@
  */
 
 import type { QuestionKey } from "./answers";
+import reviewsData from "./reviews.json";
 
 /* ------------------------------------------------------------------ nav */
 
@@ -95,23 +96,30 @@ export const BAND = {
 /* ------------------------------------------------------------ reviews */
 
 /**
- * Read live from the public profile on 28 September 2026: 16 reviews, all five
- * stars. The count was 15 at the 22 August baseline and 14 on 1 September,
- * when Arthur Kvasnei's review left the profile (ops repo baseline, A6.1). Two
- * wardrobe reviews arrived in the week to 23 September. The site states what
- * the profile shows today.
+ * THE COUNT AND AVERAGE ARE NOT TYPED HERE. They are read from
+ * src/data/reviews.json, which F2F's Make scenario "S&S Google review count to
+ * site" commits to main whenever the Business Profile API reports a different
+ * totalReviewCount or averageRating. The git history of that file is the
+ * record of what the site said and when. The contract, what the build refuses
+ * and how to change it by hand are in docs/reviews-count.md. The site states
+ * what the profile shows today, and the figure can fall as well as rise: it
+ * went from 15 to 14 on 1 September 2026 when a review left the profile (ops
+ * repo baseline, A6.1). `average` is formatted to one decimal here, "5.0" or
+ * "4.9", whatever the file holds. Halves round up, which toFixed(1) alone does
+ * not do (4.85 comes out as "4.8"), so the rounding is done first.
  *
- * The quotes are real, transcribed verbatim from the profile on 28 September
- * 2026. Compliance line: genuine past customers only, unedited, no gating, no
+ * THE QUOTES ARE STILL HAND-PICKED, and no automation ever touches them. They
+ * are real, transcribed verbatim from the profile on 28 September 2026.
+ * Compliance line: genuine past customers only, unedited, no gating, no
  * incentives. Unedited means unedited, and that rule decides the selection:
  * a review is quotable only when its COMPLETE text also passes the site's own
- * gates. Thirteen of the sixteen carry text; eight of those thirteen are
- * excluded because their verbatim text names a person (the Q1/Q60 ruling keeps
- * every personal name off the site, and three also name Uwe, who left in April
- * 2026), says "the team" (the verify gate's crew-noun ban, and a headcount the
- * business does not have), carries an em dash (the style gate), or is a line
- * and a row of emoji. Never trim a review around a problem word: pick a
- * different review.
+ * gates. On 28 September thirteen of the sixteen reviews carried text; eight of
+ * those thirteen were excluded because their verbatim text names a person (the
+ * Q1/Q60 ruling keeps every personal name off the site, and three also name
+ * Uwe, who left in April 2026), says "the team" (the verify gate's crew-noun
+ * ban, and a headcount the business does not have), carries an em dash (the
+ * style gate), or is a line and a row of emoji. Never trim a review around a
+ * problem word: pick a different review.
  *
  * Five pass. These three say the most: what was made, where, and how it was
  * finished (Denis's ask, 28 September 2026, for the best on the homepage).
@@ -121,8 +129,8 @@ export const BAND = {
  * and quotable, only shorter.
  */
 export const REVIEWS = {
-  count: 16,
-  average: "5.0",
+  count: reviewsData.count,
+  average: (Math.round(reviewsData.average * 10) / 10).toFixed(1),
   source: "Google Business Profile",
   /** The public profile, for the click-through. The cid is the listing's
       stable id, taken from the Maps place URL on 1 September 2026. */
