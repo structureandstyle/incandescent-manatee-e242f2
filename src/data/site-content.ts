@@ -136,7 +136,8 @@ export const REVIEWS = {
       stable id, taken from the Maps place URL on 1 September 2026. */
   profileUrl: "https://maps.google.com/?cid=14703132250787863880",
   /* `id` lets a page pick a quote without counting positions in this list:
-     the enquiry form shows rafael and lorenzo (FormProof.astro). */
+     the enquiry form shows the two wardrobe reviews, lorenzo and ozge
+     (FormProof.astro). */
   quotes: [
     {
       id: "ozge",
