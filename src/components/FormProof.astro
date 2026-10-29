@@ -36,13 +36,18 @@
  * No AggregateRating markup: Google gives no review stars to a business for
  * reviews of itself, and Base.astro keeps the profile in sameAs only.
  */
-import { REVIEWS } from "../data/site-content";
-
-type QuoteId = (typeof REVIEWS.quotes)[number]["id"];
+import { REVIEWS, type ReviewId } from "../data/site-content";
 
 interface Props {
   /** Quotes by id, in the order shown. */
-  quotes?: readonly QuoteId[];
+  quotes?: readonly ReviewId[];
+  /** The rating line. Off where a page shows it elsewhere and wants the quotes alone. */
+  rating?: boolean;
+  /**
+   * "dark" for the door green enquiry band (EnquireBand.astro), which carries
+   * the rating on every page it closes from 29 Oct 2026: paper stars and type.
+   */
+  tone?: "paper" | "dark";
   /**
    * How many of those a narrow screen keeps. The rest drop there, so the proof
    * does not push the first field of a long form further down.
@@ -58,32 +63,47 @@ interface Props {
   style?: string;
 }
 
-const { quotes = [], keep = quotes.length, narrow = "phone", class: className, style = "" } = Astro.props;
+const {
+  quotes = [],
+  rating = true,
+  tone = "paper",
+  keep = quotes.length,
+  narrow = "phone",
+  class: className,
+  style = "",
+} = Astro.props;
 
 const shown = quotes.flatMap((id) => REVIEWS.quotes.filter((q) => q.id === id));
 const filled = Math.round(Number(REVIEWS.average) || 0);
 ---
 
-<div data-form-proof class:list={["fp", { "fp-at-fold": narrow === "fold" }, className]} style={style}>
-  <p class="fp-rating">
-    {/* The same five stars as the home page's reviews block (Reviews.astro). */}
-    <span class="fp-stars" aria-hidden="true">
-      {[0, 1, 2, 3, 4].map((i) => (
-        <svg width="13" height="13" viewBox="0 0 24 24">
-          <path
-            d="M12 2.5l2.95 6.35 6.95.7-5.2 4.7 1.5 6.85L12 17.6l-6.2 3.5 1.5-6.85-5.2-4.7 6.95-.7z"
-            fill={i < filled ? "var(--green)" : "none"}
-            stroke="var(--green)"
-            stroke-width="1.5"
-            stroke-linejoin="round"
-          />
-        </svg>
-      ))}
-    </span>
-    <a class="fp-link" href={REVIEWS.profileUrl} target="_blank" rel="noopener">
-      {REVIEWS.average} from {REVIEWS.count} Google reviews
-    </a>
-  </p>
+<div
+  data-form-proof
+  class:list={["fp", { "fp-at-fold": narrow === "fold", "fp-dark": tone === "dark" }, className]}
+  style={style}
+>
+  {rating && (
+    <p class="fp-rating">
+      {/* The same five stars as the home page's reviews block (Reviews.astro). */}
+      <span class="fp-stars" aria-hidden="true">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <svg width="13" height="13" viewBox="0 0 24 24">
+            <path
+              class:list={[{ on: i < filled }]}
+              d="M12 2.5l2.95 6.35 6.95.7-5.2 4.7 1.5 6.85L12 17.6l-6.2 3.5 1.5-6.85-5.2-4.7 6.95-.7z"
+              fill={i < filled ? "var(--green)" : "none"}
+              stroke="var(--green)"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+          </svg>
+        ))}
+      </span>
+      <a class="fp-link" href={REVIEWS.profileUrl} target="_blank" rel="noopener">
+        {REVIEWS.average} from {REVIEWS.count} Google reviews
+      </a>
+    </p>
+  )}
 
   {shown.map((q, i) => (
     <figure class:list={["fp-quote", { "fp-wide": i >= keep }]}>
@@ -177,6 +197,40 @@ const filled = Math.round(Number(REVIEWS.average) || 0);
     letter-spacing: var(--ls-mono);
     text-transform: uppercase;
     color: var(--ink-soft);
+  }
+
+  /* On the door green band: paper stars, paper type, reversed hairline. The
+     band's data-on-dark already turns the focus ring paper. Quiet tones as the
+     band's own mono labels use them (MonoLabel paper-soft). */
+  .fp-dark .fp-stars path {
+    stroke: var(--ink-rev);
+  }
+
+  .fp-dark .fp-stars path.on {
+    fill: var(--ink-rev);
+  }
+
+  .fp-dark .fp-link {
+    color: var(--ink-rev);
+    text-decoration-color: var(--ink-rev-faint);
+  }
+
+  .fp-dark .fp-link:hover,
+  .fp-dark .fp-link:focus-visible {
+    color: var(--ink-rev);
+    text-decoration-color: currentColor;
+  }
+
+  .fp-dark .fp-quote {
+    border-top: var(--rule-hair-rev);
+  }
+
+  .fp-dark .fp-quote blockquote {
+    color: var(--ink-rev-soft);
+  }
+
+  .fp-dark .fp-quote figcaption {
+    color: var(--ink-rev-quiet);
   }
 
   @media (max-width: 599px) {
