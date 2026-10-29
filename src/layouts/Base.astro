@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import CookieNotice from "../components/ds/CookieNotice.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
+import FormProof from "../components/FormProof.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import { SITE_URL, BUSINESS, GA4_ID } from "../data/site";
 import { REVIEWS } from "../data/site-content";
@@ -362,10 +363,15 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       <h2 style="font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:var(--type-serif-lg);margin:var(--space-6) 0 var(--space-4)">
         If you have a room in mind, start here.
       </h2>
-      <p style="font-size:var(--type-body-sm);color:var(--text-quiet);margin-bottom:var(--space-10)">
+      <p style="font-size:var(--type-body-sm);color:var(--text-quiet);margin-bottom:var(--space-8)">
         Rough dimensions, a photo or drawing, and a sense of what the piece needs to do gets you a
         considered reply, not a brochure.
       </p>
+      {/* The Google rating above the first field, and Lorenzo I's wardrobe
+          review from 600px up, 29 Oct 2026 (FormProof.astro). A phone keeps
+          the rating alone: this pop-up is the quick way in, and its form is
+          already long on a phone. */}
+      <FormProof quotes={["lorenzo"]} keep={0} style="margin-bottom:var(--space-10)" />
       <EnquiryForm compact idPrefix="modal-" preselectedService={enquiryService} />
     </dialog>
 

@@ -135,16 +135,22 @@ export const REVIEWS = {
   /** The public profile, for the click-through. The cid is the listing's
       stable id, taken from the Maps place URL on 1 September 2026. */
   profileUrl: "https://maps.google.com/?cid=14703132250787863880",
+  /* `id` lets a page pick a quote without counting positions in this list:
+     the enquiry form shows the two wardrobe reviews, lorenzo and ozge
+     (FormProof.astro). */
   quotes: [
     {
+      id: "ozge",
       text: "We had bespoke built-in wardrobes made for our home in Hampstead Heath and are very happy with the result. The workmanship is excellent, with great attention to detail and a really high-quality finish. Everything was made to fit the space perfectly and looks clean, elegant and well considered. Professional, reliable and clearly very skilled at bespoke carpentry. Would definitely recommend Structure & Style for fitted wardrobes and custom joinery.",
       meta: "Ozge B · Built-in wardrobes",
     },
     {
+      id: "rafael",
       text: "Really pleased with the work. They did our wall panelling, new doors, skirting and architraves and everything looks sharp and properly finished. Turned up when they said they would and left the place tidy. Would happily recommend.",
       meta: "Rafael C · Panelling, doors and skirting",
     },
     {
+      id: "lorenzo",
       text: "Really happy with the work from Structure & Style. We had some fitted wardrobes built in our home in Camden and they came out great. Everything was done properly, communication was easy and the place was kept tidy while the work was being done. Would definitely use them again and recommend to anyone looking for a carpenter in the area.",
       meta: "Lorenzo I · Fitted wardrobes",
     },

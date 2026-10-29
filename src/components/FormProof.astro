@@ -1,0 +1,193 @@
+---
+/**
+ * Reviews at the enquiry form, added 29 October 2026 (Denis: reviews on the
+ * form "clear objections from leads' mind").
+ *
+ * WHAT IT SHOWS. The Google rating and count, read from the same live data as
+ * the home page (src/data/reviews.json, which the Make scenario keeps in step
+ * with the profile every week), linked to the profile. Under it, up to two
+ * quotes from REVIEWS in site-content.ts, by id, whole and unedited, under the
+ * rule that governs every quote on this site: never trim a review, pick a
+ * different one.
+ *
+ * WHY THESE TWO. Wardrobe reviews, on Denis's ask the same day: fitted
+ * wardrobes are the work most enquiries are for. Two quotable reviews are
+ * about wardrobes. Lorenzo I's leads, and is the one kept where space is
+ * short: it is the shorter, and besides the finish it answers two of the
+ * worries homeowners name before hiring a tradesperson, communication and
+ * mess. Ozge B's follows where there is room: fit, finish and reliability, on
+ * a job in Hampstead. Rafael C's says the work turned up when promised, the
+ * worry named most (62% in a Which? Trusted Traders survey), but the job was
+ * panelling and doors, so it gave way. Svetlozar Z's walk-in wardrobe review
+ * waits on Kaspar's consent (question C5 in the ops repo).
+ *
+ * WHERE, AND WHY. Beside the form or above it, never at the submit button.
+ * A rating people can check carries more weight than quotes a business picks
+ * itself, and people want to click through to the source (Baymard, usability
+ * testing, 2023), so the rating is the link and it opens in a new tab: the
+ * form keeps its place. The one form-specific test with a result put a
+ * testimonial above a lead form and reported 50% more submissions (VWO, a
+ * vendor case study, so weak evidence), and no lift is promised. None
+ * of the sixteen joinery and kitchen sites checked on 29 October 2026 shows
+ * reviews at its form; the national brands carry a site-wide rating badge
+ * instead, and a one-person business a visitor has never heard of needs the
+ * proof more than they do.
+ *
+ * No AggregateRating markup: Google gives no review stars to a business for
+ * reviews of itself, and Base.astro keeps the profile in sameAs only.
+ */
+import { REVIEWS } from "../data/site-content";
+
+type QuoteId = (typeof REVIEWS.quotes)[number]["id"];
+
+interface Props {
+  /** Quotes by id, in the order shown. */
+  quotes?: readonly QuoteId[];
+  /**
+   * How many of those a narrow screen keeps. The rest drop there, so the proof
+   * does not push the first field of a long form further down.
+   */
+  keep?: number;
+  /**
+   * What counts as narrow: under 600px (a phone), or "fold", 820px and under,
+   * where a two-column page has folded to one column and the proof sits above
+   * the form rather than beside it (site-layout.css folds at the same width).
+   */
+  narrow?: "phone" | "fold";
+  class?: string;
+  style?: string;
+}
+
+const { quotes = [], keep = quotes.length, narrow = "phone", class: className, style = "" } = Astro.props;
+
+const shown = quotes.flatMap((id) => REVIEWS.quotes.filter((q) => q.id === id));
+const filled = Math.round(Number(REVIEWS.average) || 0);
+---
+
+<div data-form-proof class:list={["fp", { "fp-at-fold": narrow === "fold" }, className]} style={style}>
+  <p class="fp-rating">
+    {/* The same five stars as the home page's reviews block (Reviews.astro). */}
+    <span class="fp-stars" aria-hidden="true">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <svg width="13" height="13" viewBox="0 0 24 24">
+          <path
+            d="M12 2.5l2.95 6.35 6.95.7-5.2 4.7 1.5 6.85L12 17.6l-6.2 3.5 1.5-6.85-5.2-4.7 6.95-.7z"
+            fill={i < filled ? "var(--green)" : "none"}
+            stroke="var(--green)"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+        </svg>
+      ))}
+    </span>
+    <a class="fp-link" href={REVIEWS.profileUrl} target="_blank" rel="noopener">
+      {REVIEWS.average} from {REVIEWS.count} Google reviews
+    </a>
+  </p>
+
+  {shown.map((q, i) => (
+    <figure class:list={["fp-quote", { "fp-wide": i >= keep }]}>
+      {/* A blockquote, as on the home page: customers' own words, quoted
+          unedited, which no copy pass or tone gate may touch. */}
+      <blockquote>{q.text}</blockquote>
+      <figcaption>{q.meta}</figcaption>
+    </figure>
+  ))}
+</div>
+
+<style>
+  .fp {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  /* Stars and words on one line from a 360px phone up, in the pop-up as well
+     as on the page: tighter than the home page's stars and tracking, which
+     put the words on a line of their own at 375px. */
+  .fp-rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-4);
+    margin: 0;
+  }
+
+  .fp-stars {
+    display: flex;
+    gap: var(--space-1);
+  }
+
+  .fp-stars svg {
+    display: block;
+  }
+
+  /* The mono label voice, underlined at rest because it is the way to check
+     the reviews, and 44px tall like every other control on the site. */
+  .fp-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+    text-transform: uppercase;
+    color: var(--char);
+    border-bottom: 0;
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--ink-faint);
+    text-underline-offset: 0.35em;
+  }
+
+  .fp-link:hover,
+  .fp-link:focus-visible {
+    color: var(--green);
+    text-decoration-color: currentColor;
+  }
+
+  /* Measured in the pop-up at 360px: the line needed 287px and had 280px. */
+  @media (max-width: 399px) {
+    .fp-link {
+      letter-spacing: var(--ls-mono-tight);
+    }
+  }
+
+  .fp-quote {
+    margin: 0;
+    padding-top: var(--space-8);
+    border-top: var(--rule-hair);
+  }
+
+  /* Set as the home page sets its quotes: the mono annotation voice at the
+     small body size, sentence case. */
+  .fp-quote blockquote {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-body-sm);
+    letter-spacing: var(--ls-mono-tight);
+    line-height: 1.62;
+    color: var(--char);
+    text-wrap: pretty;
+  }
+
+  .fp-quote figcaption {
+    margin-top: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 599px) {
+    .fp:not(.fp-at-fold) .fp-wide {
+      display: none;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .fp-at-fold .fp-wide {
+      display: none;
+    }
+  }
+</style>
