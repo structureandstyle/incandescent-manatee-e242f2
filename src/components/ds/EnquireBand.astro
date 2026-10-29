@@ -13,11 +13,20 @@
  * "Bench books 6-8 weeks ahead" and "North West London". The first was
  * unconfirmed, the second described a bench that does not exist, and the third
  * was never checked. See src/data/site-content.ts.
+ *
+ * THE GOOGLE RATING, from 29 October 2026, on Denis's go-ahead for reviews on
+ * every page: one line above the call to action, so the proof sits where the
+ * page asks for the enquiry, and on wardrobe pages Lorenzo I's review as well,
+ * found by the page's path in BAND_QUOTES (site-content.ts). The review takes
+ * the band's empty right-hand side on a laptop and follows the buttons below
+ * 900px, so the call to action never moves down for it. FormProof.astro
+ * carries the evidence for both.
  */
 import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
 import Link from "./Link.astro";
-import { CONTACT } from "../../data/site-content";
+import FormProof from "../FormProof.astro";
+import { BAND_QUOTES, CONTACT } from "../../data/site-content";
 
 interface Props {
   kicker?: string;
@@ -60,6 +69,7 @@ const {
 } = Astro.props;
 
 const hasFacts = Astro.slots.has("facts");
+const quote = BAND_QUOTES[Astro.url.pathname];
 ---
 
 {/* data-on-dark, 5 Sep 2026. It is what switches the focus ring to paper: the
@@ -72,51 +82,78 @@ const hasFacts = Astro.slots.has("facts");
   style={`background:var(--surface-accent);color:var(--text-on-accent);${style}`}
 >
   <div style="max-width:var(--page-max);margin:0 auto;padding:var(--band-y) var(--gutter)">
-    {kicker && <MonoLabel as="p" tone="paper-soft">{kicker}</MonoLabel>}
+    <div class:list={["band-grid", { "has-quote": quote }]}>
+      <div>
+        {kicker && <MonoLabel as="p" tone="paper-soft">{kicker}</MonoLabel>}
 
-    <Display level={2} as="h2" tone="paper" style="margin-top:var(--space-8)">{heading}</Display>
+        {/* A hyphenated word never splits across lines here (29 Oct 2026): beside
+            a review the column narrows, and "Planning a built-in wardrobe?" broke
+            at its hyphen, "built- / in wardrobe?". */}
+        <Display level={2} as="h2" tone="paper" style="margin-top:var(--space-8)">
+          {heading.split(/(\s+)/).map((part) => (part.includes("-") ? <span style="white-space:nowrap">{part}</span> : part))}
+        </Display>
 
-    {Astro.slots.has("default") && (
-      <p style="max-width:56ch;margin-top:var(--space-10);color:var(--ink-rev-soft)">
-        <slot />
-      </p>
-    )}
-
-    {/*
-      The form leads and the two direct channels sit beside it, 2 Sep 2026,
-      Denis's ask. This is not a reversal of his 1 September ruling that took
-      the email address off this band: that ruling was about attribution, and
-      the address is the one channel that loses it, since a copied address
-      arrives with nothing attached. A tel: or wa.me tap fires its own GA4
-      event from Base.astro, so both of these are as attributable as the form
-      and none of them costs the commission evidence.
-
-      The call to action is bigger than a nav label here because it is the one
-      action this whole band exists to ask for.
-    */}
-    {cta && (
-      <div class="band-actions">
-        <a class="band-cta" href={cta.href}>{cta.label}</a>
-
-        {direct && (
-          <p class="band-direct">
-            <MonoLabel as="span" tone="paper-soft">Prefer to call or message?</MonoLabel>
-            <Link variant="nav" tone="paper" chamfer href={CONTACT.phoneHref}>
-              Call {CONTACT.phoneDisplay}
-            </Link>
-            {/* rel="noopener" with no target does nothing at all: it only bites
-                when a link opens a new browsing context. Every external link on
-                this site now opens in a new tab and carries the rel, which is
-                what the Maps and reviews links already did (5 Sep 2026). */}
-            <Link variant="nav" tone="paper" chamfer href={CONTACT.whatsapp} target="_blank" rel="noopener">
-              WhatsApp
-            </Link>
+        {Astro.slots.has("default") && (
+          <p style="max-width:56ch;margin-top:var(--space-10);color:var(--ink-rev-soft)">
+            <slot />
           </p>
         )}
+
+        <FormProof tone="dark" style="margin-top:var(--space-10)" />
+
+        {/*
+          The form leads and the two direct channels sit beside it, 2 Sep 2026,
+          Denis's ask. This is not a reversal of his 1 September ruling that took
+          the email address off this band: that ruling was about attribution, and
+          the address is the one channel that loses it, since a copied address
+          arrives with nothing attached. A tel: or wa.me tap fires its own GA4
+          event from Base.astro, so both of these are as attributable as the form
+          and none of them costs the commission evidence.
+
+          The call to action is bigger than a nav label here because it is the one
+          action this whole band exists to ask for.
+        */}
+        {cta && (
+          <div class="band-actions">
+            <a class="band-cta" href={cta.href}>{cta.label}</a>
+
+            {direct && (
+              <p class="band-direct">
+                <MonoLabel as="span" tone="paper-soft">Prefer to call or message?</MonoLabel>
+                <Link variant="nav" tone="paper" chamfer href={CONTACT.phoneHref}>
+                  Call {CONTACT.phoneDisplay}
+                </Link>
+                {/* rel="noopener" with no target does nothing at all: it only bites
+                    when a link opens a new browsing context. Every external link on
+                    this site now opens in a new tab and carries the rel, which is
+                    what the Maps and reviews links already did (5 Sep 2026). */}
+                <Link variant="nav" tone="paper" chamfer href={CONTACT.whatsapp} target="_blank" rel="noopener">
+                  WhatsApp
+                </Link>
+              </p>
+            )}
+          </div>
+        )}
       </div>
-    )}
+
+      {quote && <FormProof tone="dark" rating={false} quotes={[quote]} />}
+    </div>
 
     <style>
+      /* The band's copy, and on a wardrobe page the review beside it from
+         900px, where the copy stops at 56ch and leaves the right-hand side
+         empty. Below that the review follows the buttons. */
+      .band-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-15) var(--gap-xl);
+        align-items: start;
+      }
+      @media (min-width: 900px) {
+        .band-grid.has-quote {
+          grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        }
+      }
       .band-actions {
         margin-top: var(--space-14);
         display: flex;

@@ -157,6 +157,24 @@ export const REVIEWS = {
   ],
 } as const;
 
+export type ReviewId = (typeof REVIEWS.quotes)[number]["id"];
+
+/**
+ * The review the enquiry band quotes, by page. Wardrobe pages only (Denis,
+ * 29 October 2026): every band carries the Google rating, and a page about
+ * wardrobes adds Lorenzo I's fitted wardrobe review, the one the enquiry form
+ * leads with (FormProof.astro says why). Elsewhere no quotable review matches
+ * the page, and the same quote on every page would read as the only one there
+ * is. Keyed by path, so EnquireBand.astro finds its own quote and no page has
+ * to pass one; a page added here needs no other change.
+ */
+export const BAND_QUOTES: Readonly<Partial<Record<string, ReviewId>>> = {
+  "/fitted-wardrobes/": "lorenzo",
+  "/walk-in-wardrobes/": "lorenzo",
+  "/fitted-wardrobe-cost/": "lorenzo",
+  "/journal/built-in-wardrobe-ideas/": "lorenzo",
+};
+
 /* ---------------------------------------------------------- materials */
 
 /**
