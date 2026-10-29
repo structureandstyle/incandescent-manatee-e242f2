@@ -23,15 +23,10 @@ import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
-import { BUSINESS } from "../data/site";
+import { BUSINESS, hoursLines } from "../data/site";
 import { indexable } from "../data/page-gates";
 
-const dayShort = (d: string) => d.slice(0, 3);
-const hours = BUSINESS.openingHours.map((h) => {
-  const days =
-    h.days.length > 1 ? `${dayShort(h.days[0])} to ${dayShort(h.days[h.days.length - 1])}` : dayShort(h.days[0]);
-  return `${days} ${h.opens} to ${h.closes}`;
-});
+const hours = hoursLines();
 
 const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry via structureandstyle.co.uk")}`;
 ---

@@ -7,11 +7,20 @@
  * client's site. That is the client's decision to make rather than ours, so it
  * was left out until he was asked; he agreed on 16 Oct 2026. Everything here is a matter of public record:
  * Companies House 16822866, incorporated 31 October 2025.
+ *
+ * Reorganised 29 Oct 2026 (Denis: "needs to be organised a bit"). What it
+ * holds is what it held, plus the journal and the opening hours, both already
+ * published elsewhere on the site. What changed is the grouping: the contact
+ * routes and the hours are one block, the links are three groups that mirror
+ * the header, and the small print is one bar. SiteFooter.astro says why each
+ * piece sits where it does and which sites in the trade it was taken from.
  */
 import SiteFooter from "./ds/SiteFooter.astro";
-import { AGENCY_CREDIT, BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
+import { AGENCY_CREDIT, BUSINESS, SERVICES, hoursLines, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
-import { NAV } from "../data/site-content";
+import { NAV, ENQUIRE_HREF } from "../data/site-content";
+import { getCollection } from "astro:content";
+import { isLive } from "../data/journal";
 
 /* Derived, not typed (5 Sep 2026). A literal 2026 on a static site with no
    scheduled rebuild goes silently wrong on 1 January, on every page at once,
@@ -40,20 +49,44 @@ const serviceLinks = SERVICES.filter((s) => !s.guide && indexable(servicePath(s)
   href: servicePath(s),
 }));
 
-const guideLinks = SERVICES.filter((s) => s.guide && indexable(servicePath(s))).map((s) => ({
-  label: serviceLabel(s),
-  href: servicePath(s),
-}));
+/* The journal never did join, 29 Oct 2026: the header grew a Journal link the
+   day the alcove guide went live (Header.astro, 13 Oct 2026) and the footer
+   kept one guide, with two articles published. Now both follow the header's
+   rule: an article counts once it is cleared, and a draft on a preview build
+   does not. The articles go under Guides by their breadcrumb label, which is
+   short enough for a list, newest first and no more than three, so the group
+   stays a list as the journal grows. The journal itself sits under The
+   company, where the header puts it. */
+const articles = (await getCollection("journal"))
+  .filter(isLive)
+  .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+
+const guideLinks = [
+  ...SERVICES.filter((s) => s.guide && indexable(servicePath(s))).map((s) => ({
+    label: serviceLabel(s),
+    href: servicePath(s),
+  })),
+  ...articles.slice(0, 3).map((a) => ({ label: a.data.crumb ?? a.data.title, href: `/journal/${a.id}/` })),
+];
 
 const pageLinks = [
   ...NAV.filter((item) => indexable(item.href)),
-  { label: "Enquire", href: "/contact/" },
+  ...(articles.length > 0 ? [{ label: "Journal", href: "/journal/" }] : []),
 ];
 
 /* The contact routes, on every page. The address lives here by Denis's 1 Sep
    2026 ruling (off the enquiry band, kept on the contact page, in the footer
-   and in the schema). The mailto subject labels the source, as on contact. */
-const links = [
+   and in the schema). The mailto subject labels the source, as on contact.
+
+   Enquire moved here from The company on 29 Oct 2026, to stand with the other
+   ways in, and it leads them for the reason the enquiry band leads with the
+   form: the form is the route that attributes itself end to end, and the
+   email the one that does not, so the address stays last and at the size of
+   the links around it. It still navigates rather than opening the enquiry
+   modal (7 Sep 2026): Base.astro leaves every /contact/ link inside
+   [data-site-footer] alone. */
+const contact = [
+  { label: "Enquire", href: ENQUIRE_HREF, lead: true },
   { label: `Call ${BUSINESS.phoneDisplay}`, href: BUSINESS.phoneHref },
   { label: "WhatsApp", href: BUSINESS.whatsapp },
   { label: BUSINESS.email, href: `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry via structureandstyle.co.uk")}` },
@@ -62,25 +95,23 @@ const links = [
 
 <SiteFooter
   brand
+  tagline="Bespoke joinery and fitted furniture · London"
+  contact={contact}
+  hours={hoursLines()}
   nav={[
     /* "What we make" was the first heading and the verify gate refused the
        build: "we make" is a Section 5 provenance ban, because the site never
        claims the making. It caught it on all twelve pages at once, which is
        the argument for the gate in one line. */
     { heading: "Services", links: serviceLinks },
-    { heading: "Guides", links: guideLinks },
     { heading: "The company", links: pageLinks },
+    { heading: "Guides", links: guideLinks },
   ]}
-  links={links}
   legal={[
     { label: "Privacy notice", href: "/privacy/" },
     { label: "Cookies", href: "/cookies/" },
   ]}
-  lines={[
-    `${BUSINESS.legalName} · Company no. ${BUSINESS.companyNumber}`,
-    `Bespoke joinery and fitted furniture · London`,
-    `© ${year}`,
-  ]}
+  lines={[`© ${year} ${BUSINESS.legalName}`, `Company no. ${BUSINESS.companyNumber}`]}
   {/* On since Kaspar agreed, 16 Oct 2026: see AGENCY_CREDIT in src/data/site.ts.
       One boolean there turns it off again. */}
   credit={AGENCY_CREDIT.enabled ? AGENCY_CREDIT.line : null}
