@@ -1,6 +1,7 @@
 ---
 /**
- * The footer: wordmark, the ampersand at size, and a row of mono lines.
+ * The footer: wordmark and the ampersand at size, the ways to get in touch,
+ * the page links in three groups, and one bar of small print.
  * Ported from the design system's components/sections/SiteFooter.jsx.
  *
  * On the ink surface, so both lockups take the paper colour from `color`
@@ -9,29 +10,61 @@
  * The source wrapped the mark in a <Brand> motion component, the one blur in
  * the system, which burns the mark in once on reveal. Here that is
  * data-motion="brand", already implemented by the ported motion CSS.
+ *
+ * REORGANISED 29 OCTOBER 2026. Until then it was six bands under four rules
+ * (wordmark, links, contact, policies, legal lines, credit), every item in the
+ * same 11px uppercase mono with only its opacity to tell a heading from a
+ * link from small print. It ran 1,524px tall on a 375px phone, 757px of it the
+ * link groups stacked one per row, and its legal lines broke mid-phrase. The
+ * new arrangement is taken from 25 footers in the trade, captured in a real
+ * browser at 1440 and 375 and rated for how well they are organised, and it
+ * uses only what the best of them share:
+ *
+ * - The ways in first: on the left at desktop, at the top on a phone, with
+ *   the hours beside them (Uncommon Projects, Sebastian Cox, Herringbone
+ *   Kitchens, which sets its studio hours with the contact details).
+ * - Small, dim, tracked capitals over larger sentence-case links, so the
+ *   heading recedes and the thing you click reads first (Charles Yorke,
+ *   Neptune, Harvey Jones, deVOL). The mono keeps the label role it has
+ *   everywhere else on the site; the links take Archivo.
+ * - Two columns of links on a phone rather than one long stack (Neptune,
+ *   Harvey Jones, Reform, deVOL).
+ * - All the small print in one bar under one rule, the copyright on the left
+ *   and the policies on the right, in the same voice as the headings (Charles
+ *   Yorke, Herringbone, deVOL).
  */
 import Logo from "./Logo.astro";
 import FlowToFormCredit from "../FlowToFormCredit.astro";
 
+type FooterLink = { label: string; href: string };
+
 interface Props {
+  /** The line under the wordmark: what the business does, and where. */
+  tagline?: string;
+  /**
+   * The ways in, the first block. `lead` marks the one route the footer
+   * points at first (the enquiry form), set in the call-to-action label.
+   */
+  contact?: readonly (FooterLink & { lead?: boolean })[];
+  /** Opening hours, one line per range, under the contact routes. */
+  hours?: readonly string[];
+  /** Page navigation, in groups. Two columns on a phone; an odd last group spans both. */
+  nav?: readonly { heading: string; links: readonly FooterLink[] }[];
+  /** Policy links, at the right of the small-print bar. */
+  legal?: readonly FooterLink[];
+  /** The legal identity, at the left of the small-print bar. Each string wraps as a unit. */
   lines?: readonly string[];
   /**
-   * An agency credit, rendered at the end of the legal row.
+   * An agency credit, rendered after the legal lines in the small-print bar.
    *
    * SEPARATE FROM `lines` ON PURPOSE, and that is the whole reason this prop
-   * exists rather than the credit being a fourth string. `lines` ends on the
+   * exists rather than the credit being a third string. `lines` holds the
    * copyright, and in one wrapping row the © governs everything a reader sees
    * near it: a name dropped in beside it reads as a claim on the site, which
    * would not be true. The copyright here is the client's. This renders after
    * a gap, as a sentence saying what somebody did rather than who owns what.
    */
   credit?: "Site by" | "Site and search by" | null;
-  /** Contact links, rendered as a row above the legal lines. */
-  links?: readonly { label: string; href: string }[];
-  /** Policy links, rendered beside the legal lines in the same faint mono. */
-  legal?: readonly { label: string; href: string }[];
-  /** Page navigation, grouped into columns above the contact row. */
-  nav?: readonly { heading: string; links: readonly { label: string; href: string }[] }[];
   showMark?: boolean;
   brand?: boolean;
   class?: string;
@@ -39,118 +72,371 @@ interface Props {
 }
 
 const {
+  tagline,
+  contact = [],
+  hours = [],
+  nav = [],
+  legal = [],
   lines = [],
   credit = null,
-  links = [],
-  legal = [],
-  nav = [],
   showMark = true,
   brand = false,
   class: className,
   style = "",
 } = Astro.props;
+
+/* A middle dot that starts a line reads as a stray mark; the live footer had
+   two ("COMPANY / NO. 16822866", "FURNITURE / · LONDON") on every phone.
+   Binding the dot to the words either side makes "furniture · London" one
+   unit, so the line breaks before it rather than inside it. */
+const bind = (s: string) => s.replace(/ · /g, " · ");
 ---
 
-<footer
-  class={className}
-  data-on-dark
-  data-site-footer
-  style={`background:var(--surface-ink);color:var(--ink-rev);${style}`}
->
-  <div style="max-width:var(--page-max);margin:0 auto;padding:var(--footer-y) var(--gutter) var(--space-15);display:flex;flex-direction:column;gap:var(--space-16)">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-14);flex-wrap:wrap">
-      <Logo lockup="wordmark" height={26} title="Structure & Style" />
+<footer class:list={["ftr", className]} data-on-dark data-site-footer style={style}>
+  <div class="ftr-in">
+    <div class="ftr-head">
+      <div class="ftr-id">
+        <Logo lockup="wordmark" height={26} title="Structure & Style" />
+        {tagline && <p class="ftr-small ftr-tagline">{bind(tagline)}</p>}
+      </div>
       {showMark && (
-        <span data-motion={brand ? "brand" : undefined} style="opacity:.92">
-          <Logo lockup="mark" height={56} title="" />
+        <span class="ftr-mark" data-motion={brand ? "brand" : undefined}>
+          {/* Sized by the custom property rather than the prop, so a phone can
+              take it down to fit beside the wordmark instead of below it. */}
+          <Logo lockup="mark" height={56} title="" style="height:var(--ftr-mark);width:var(--ftr-mark)" />
         </span>
       )}
     </div>
 
-    {nav.length > 0 && (
-      /* Page navigation, added 4 Sep 2026. The footer linked to two policy
-         documents and nothing else, on a site with twelve indexable pages, so
-         every route lived in the header alone: five items, and fewer than that
-         on a phone. A visitor who reaches the bottom of a service page had
-         nowhere to go but back up.
+    <div class="ftr-body">
+      {(contact.length > 0 || hours.length > 0) && (
+        <div class="ftr-contact">
+          {contact.length > 0 && (
+            <div>
+              <p class="ftr-label">Contact</p>
+              <ul class="ftr-list">
+                {/* An http href here is WhatsApp, which leaves the site, so it
+                    opens in its own tab and carries the rel that only means
+                    something once it does. tel: and mailto: hand off to an app
+                    and take neither. Until 5 Sep 2026 the four wa.me links
+                    across the site disagreed with each other: two carried
+                    rel="noopener" with no target, which does nothing, and this
+                    one carried neither. */}
+                {contact.map((l) => (
+                  <li>
+                    <a
+                      class:list={["ftr-link", { "ftr-lead": l.lead }]}
+                      href={l.href}
+                      target={l.href.startsWith("http") ? "_blank" : undefined}
+                      rel={l.href.startsWith("http") ? "noopener" : undefined}
+                    >{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {hours.length > 0 && (
+            <div>
+              <p class="ftr-label">Hours</p>
+              <ul class="ftr-list ftr-hours">
+                {hours.map((h) => <li>{h}</li>)}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
-         The lists are DERIVED from the page gates rather than typed out, so a
-         page that is noindexed cannot be linked from here by accident and
-         appears on its own the day its gate clears. That is why Work is absent
-         while it waits on Q44 to Q49, and why media walls and bespoke kitchens
-         are absent while they wait on wave-two copy. */
-      /* Flex rather than a grid, and deliberately. An auto-fit grid stretched
-         the two groups to 513px each at 1200px wide, holding four short mono
-         labels apiece, which reads as two lists marooned in a lot of dark. The
-         contact row and the legal row above and below are both wrapping flex
-         rows sitting at their natural width, so this matches them. Measured,
-         not eyeballed: the Browser pane was hidden and a screenshot of a hidden
-         pane is blank paper. */
-      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-16);border-top:var(--rule-hair-rev);padding-top:var(--space-11)">
-        {nav.map((group) => (
-          <div style="min-width:180px">
-            <p style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint);margin-bottom:var(--space-8)">{group.heading}</p>
-            <ul style="list-style:none;margin:0;padding:0;display:grid;gap:var(--space-6)">
-              {group.links.map((l) => (
-                <li>
-                  <a
-                    href={l.href}
-                    style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-soft);border-bottom:1px solid transparent;min-height:44px;display:inline-flex;align-items:center"
-                  >{l.label}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    )}
+      {nav.length > 0 && (
+        /* Page navigation, added 4 Sep 2026. The footer linked to two policy
+           documents and nothing else, on a site with twelve indexable pages, so
+           every route lived in the header alone: five items, and fewer than that
+           on a phone. A visitor who reaches the bottom of a service page had
+           nowhere to go but back up.
 
-    {links.length > 0 && (
-      <div style="display:flex;gap:var(--space-9) var(--space-14);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
-        {/* An http href here is WhatsApp, which leaves the site, so it opens in
-            its own tab and carries the rel that only means something once it
-            does. tel: and mailto: hand off to an app and take neither. Until
-            5 Sep 2026 the four wa.me links across the site disagreed with each
-            other: two carried rel="noopener" with no target, which does
-            nothing, and this one carried neither. */}
-        {links.map((l) => (
-          <a
-            href={l.href}
-            target={l.href.startsWith("http") ? "_blank" : undefined}
-            rel={l.href.startsWith("http") ? "noopener" : undefined}
-            style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-soft);border-bottom:1px solid var(--hair-rev-strong);padding:var(--space-4) 0;display:inline-block"
-          >{l.label}</a>
-        ))}
+           The lists are DERIVED from the page gates rather than typed out, so a
+           page that is noindexed cannot be linked from here by accident and
+           appears on its own the day its gate clears. See Footer.astro. */
+        <nav class="ftr-nav" aria-label="Footer">
+          {nav.map((group) => (
+            <div class="ftr-group">
+              <p class="ftr-label">{group.heading}</p>
+              <ul class="ftr-list">
+                {group.links.map((l) => (
+                  <li><a class="ftr-link" href={l.href}>{l.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      )}
+    </div>
+
+    <div class="ftr-base">
+      <div class="ftr-own">
+        <p class="ftr-small ftr-lines">
+          {lines.map((l) => <span>{bind(l)}</span>)}
+        </p>
+        {credit && (
+          /* The Flow to Form credit, beside the copyright line, as the
+             component's own rule asks, and after a gap, as the prop note above
+             asks. The component owns the words, the link and its nofollow;
+             this span gives it the faint small print of the bar. Mono and faint
+             like its neighbours, but not uppercase: the credit keeps "flow to
+             form" lowercase, as the wordmark is. */
+          <span class="ftr-credit">
+            <FlowToFormCredit enabled line={credit} />
+          </span>
+        )}
       </div>
-    )}
-    {legal.length > 0 && (
-      /* The policy row. Both documents were reachable only from the enquiry
-         form's small print before 4 Sep 2026, which is not where anyone looks
-         for them, and the cookie notice needs its policy findable after it has
-         been answered and dismissed. Its own row, above the legal lines, in the
-         same faint mono so it reads as small print rather than as navigation. */
-      <div style="display:flex;gap:var(--space-9) var(--space-12);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
-        {legal.map((l) => (
-          <a
-            href={l.href}
-            style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-quiet);border-bottom:1px solid transparent;min-height:44px;display:inline-flex;align-items:center"
-          >{l.label}</a>
-        ))}
-      </div>
-    )}
-    <div style="display:flex;justify-content:space-between;gap:var(--space-9);flex-wrap:wrap;border-top:var(--rule-hair-rev);padding-top:var(--space-9)">
-      {lines.map((l) => (
-        <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);text-transform:uppercase;color:var(--ink-rev-faint)">{l}</span>
-      ))}
-      {credit && (
-        /* The Flow to Form credit. The component owns the words, the link and
-           its nofollow; this span gives it the faint small print of the row.
-           Mono and faint like its neighbours, but not uppercase: the credit
-           keeps "flow to form" lowercase, as the wordmark is. */
-        <span style="font-family:var(--font-mono);font-size:var(--type-mono);letter-spacing:var(--ls-mono-table);color:var(--ink-rev-faint);min-height:44px;display:inline-flex;align-items:center">
-          <FlowToFormCredit enabled line={credit} />
-        </span>
+      {legal.length > 0 && (
+        /* The policies used to be a row of their own. Both documents were
+           reachable only from the enquiry form's small print before 4 Sep 2026,
+           which is not where anyone looks for them, and the cookie notice needs
+           its policy findable after it has been answered and dismissed. They
+           stay on every page, now at the far end of the small-print bar. */
+        <ul class="ftr-policies">
+          {legal.map((l) => (
+            <li><a class="ftr-small ftr-policy" href={l.href}>{l.label}</a></li>
+          ))}
+        </ul>
       )}
     </div>
   </div>
 </footer>
+
+<style>
+  .ftr {
+    --ftr-mark: 56px;
+    background: var(--surface-ink);
+    color: var(--ink-rev);
+  }
+
+  .ftr-in {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: var(--footer-y) var(--gutter) var(--space-13);
+  }
+
+  /* One rule in the whole footer, above the small print. The old one had
+     four; none of the best footers in the trade use more than one, and space
+     does the separating instead. */
+  .ftr-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+
+  /* A zero basis, so the tagline wraps under the wordmark rather than pushing
+     the mark onto a line of its own. The wordmark's own width is the floor:
+     only below it, at about 330px, does the mark drop. */
+  .ftr-id {
+    flex: 1 1 0;
+  }
+
+  .ftr-small.ftr-tagline {
+    margin-top: var(--space-6);
+    text-wrap: balance;
+  }
+
+  .ftr-mark {
+    flex: none;
+    opacity: 0.92;
+  }
+
+  /* The ways in, then the links: side by side from 960px, and the ways in on
+     top below that, so a phone reaches the number before the site map. */
+  .ftr-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 3fr);
+    gap: var(--space-15) var(--space-14);
+    padding: var(--space-16) 0 var(--space-15);
+  }
+
+  .ftr-contact {
+    display: grid;
+    gap: var(--space-11);
+    align-content: start;
+  }
+
+  .ftr-nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-15) var(--space-14);
+  }
+
+  /* The label voice: the mono the rest of the site uses for kickers and spec
+     labels, small and dim, so it names a group without competing with it. */
+  .ftr-label {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+    text-transform: uppercase;
+    color: var(--ink-rev-faint);
+  }
+
+  .ftr-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* The things a reader clicks, in the body face at the small body size and
+     sentence case. 44px tall, the target every control on the site is held
+     to; a label that wraps in a narrow phone column grows rather than
+     shrinks. The underline is text-decoration rather than the site's border
+     rule, which on a 44px box would sit a dozen pixels under the words. */
+  .ftr-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) 0;
+    font-family: var(--font-sans);
+    font-size: var(--type-body-sm);
+    line-height: 1.35;
+    color: var(--ink-rev-soft);
+    border-bottom: 0;
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.3em;
+  }
+
+  .ftr-link:hover,
+  .ftr-link:focus-visible {
+    color: var(--ink-rev);
+    text-decoration-color: currentColor;
+  }
+
+  /* Enquire, set as the site's call to action is set: the uppercase label,
+     underlined at rest, in full paper. It is the one route the footer points
+     at, and the reason it leads is the enquiry band's (EnquireBand.astro). */
+  .ftr-lead {
+    font-weight: var(--weight-medium);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--ink-rev);
+    text-decoration-color: currentColor;
+  }
+
+  .ftr-hours {
+    padding-top: var(--space-4);
+    font-size: var(--type-body-sm);
+    line-height: 1.7;
+    color: var(--ink-rev-quiet);
+  }
+
+  /* The small print: the bar's one voice, the label voice above. */
+  .ftr-small {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+    text-transform: uppercase;
+    color: var(--ink-rev-faint);
+  }
+
+  .ftr-base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3) var(--space-14);
+    padding-top: var(--space-6);
+    border-top: var(--rule-hair-rev);
+  }
+
+  /* Each line is one unit, so "Company no. 16822866" can drop under the
+     copyright but never splits. */
+  .ftr-lines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-12);
+  }
+
+  .ftr-lines span {
+    white-space: nowrap;
+  }
+
+  .ftr-own {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-14);
+  }
+
+  .ftr-policies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-12);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ftr-policy {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-rev-quiet);
+    border-bottom: 0;
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.3em;
+  }
+
+  .ftr-policy:hover,
+  .ftr-policy:focus-visible {
+    color: var(--ink-rev);
+    text-decoration-color: currentColor;
+  }
+
+  .ftr-credit {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+    color: var(--ink-rev-faint);
+  }
+
+  @media (max-width: 959px) {
+    .ftr-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ftr-contact {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-11) var(--space-14);
+    }
+  }
+
+  @media (max-width: 599px) {
+    .ftr {
+      --ftr-mark: 40px;
+    }
+
+    .ftr-contact {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ftr-nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-14) var(--space-10);
+    }
+
+    .ftr-group:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
+    .ftr-base {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

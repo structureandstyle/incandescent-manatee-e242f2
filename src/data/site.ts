@@ -43,6 +43,18 @@ export const BUSINESS = {
      there is one place to change them (docs/reviews-count.md). */
 } as const;
 
+/**
+ * The opening hours as lines a reader reads: "Mon to Fri 08:00 to 18:00".
+ * One formatter for the contact page and the footer (29 Oct 2026), so the two
+ * cannot set the same hours two ways.
+ */
+export const hoursLines = (): string[] =>
+  BUSINESS.openingHours.map((h) => {
+    const day = (d: string) => d.slice(0, 3);
+    const days = h.days.length > 1 ? `${day(h.days[0])} to ${day(h.days[h.days.length - 1])}` : day(h.days[0]);
+    return `${days} ${h.opens} to ${h.closes}`;
+  });
+
 /** GA4 measurement ID, live in Kaspar's own Analytics account. */
 export const GA4_ID = "G-FSGVTJXMMP";
 
