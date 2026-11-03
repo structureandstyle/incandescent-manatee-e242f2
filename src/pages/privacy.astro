@@ -22,7 +22,7 @@ import { BUSINESS } from "../data/site";
    which is a UK GDPR Article 13(1)(e) disclosure. A revision date is itself a
    factual claim and this one was checkable against the file's own history.
    Bump it with any edit to this page, as cookies.astro already does. */
-const updated = "September 2026";
+const updated = "November 2026";
 ---
 
 <Base
@@ -111,14 +111,18 @@ const updated = "September 2026";
             longer disclosed at all. The compliant middle is one nameless
             clause, "the agency that maintains this website for us can see
             enquiry data in the course of that work", and it should go back in
-            the day the DPA is signed, when it will also be true. */}
+            the day the DPA is signed, when it will also be true.
+
+            Back in, nameless, Nov 2026 with the trade emails. Merge this only
+            once the data agreement is signed. */}
         <p style="margin-top:var(--space-8)">
           Our website is hosted by Netlify, and enquiries submitted through the form are processed by
           them on our behalf. Cloudflare stores files attached to enquiries and checks file uploads
           for automated misuse. Analytics data is processed by Google. If you choose to message us on
           WhatsApp, that conversation runs through WhatsApp, which is operated by Meta under its own
-          terms and privacy policy. We do not sell your information to anyone and we do not use it
-          for marketing lists.
+          terms and privacy policy. The agency that maintains this website for us can see enquiry
+          data in the course of that work, under a written agreement. We do not sell your information
+          to anyone and we do not add people who send us an enquiry to marketing lists.
         </p>
       </section>
 
@@ -132,6 +136,42 @@ const updated = "September 2026";
       </section>
 
       <section>
+        <SectionHead level={5}>If we email your business</SectionHead>
+        <p style="margin-top:var(--space-8)">
+          We sometimes email limited companies and LLPs whose work suits ours, such as builders,
+          interior designers, architects and property agents, to ask if they need fitted joinery. We
+          do not email sole traders or ordinary partnerships this way, and we send at most three
+          emails.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          We hold the contact's name and work email address, the company's name and details, the
+          project on its website that we mentioned, and anything we write to each other. We take these
+          from the company's own website and from Companies House. We do not buy lists.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          The lawful basis is our legitimate interest in finding work for our business. We have
+          weighed that against your rights and keep a written record of it.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          Some of these emails include a link to a page showing our work. That page records each time
+          it is opened: the time, whether it was a phone, computer or tablet, the rough place and the
+          network's name. It stores no cookie on your device and no IP address, and each record is
+          deleted after 180 days. We use it only to decide whether to follow up by email.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          The agency that helps us with this handles these details for us under a written agreement,
+          using its own tools, which include an AI assistant. So do our email provider, Google, and
+          the company that hosts the page, Cloudflare.
+        </p>
+        <p style="margin-top:var(--space-8)">
+          If you do not reply, we delete your details 6 months after our last email. You can object at
+          any time, with no need to give a reason: reply "stop" to any email, or write to{" "}
+          <Link href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</Link>. We then stop at once and keep
+          only your address on a do-not-contact list, so that we never write to you again.
+        </p>
+      </section>
+
+      <section>
         <SectionHead level={5}>Your rights</SectionHead>
         <p style="margin-top:var(--space-8)">
           You can ask us for a copy of the information we hold about you, ask us to correct it, ask
@@ -140,8 +180,10 @@ const updated = "September 2026";
           reply within a month.
         </p>
         <p style="margin-top:var(--space-8)">
-          If you are unhappy with how we have handled your information you can complain to the
-          Information Commissioner's Office at{" "}
+          If you are unhappy with how we have handled your information you can complain to us first at{" "}
+          <Link href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</Link>, and we will acknowledge your
+          complaint within 30 days. You can also complain to the UK data protection regulator, the
+          Information Commission (ICO), at{" "}
           <Link href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</Link>.
         </p>
       </section>
