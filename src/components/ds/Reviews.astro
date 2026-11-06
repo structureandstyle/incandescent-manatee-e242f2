@@ -213,4 +213,9 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
   .ss-review-link:hover p:first-of-type,
   .ss-review-link:focus-visible p:first-of-type { color: var(--green); }
   .ss-review-link:focus-visible { outline: 1px solid var(--green); outline-offset: 4px; }
+  /* Quote marks round every review, 6 Nov 2026 (Denis: so it reads as
+     someone else talking). Drawn by CSS, so the review's own text, which the
+     verify gate checks word for word, is untouched. */
+  [data-reviews] blockquote::before { content: "\201C"; }
+  [data-reviews] blockquote::after { content: "\201D"; }
 </style>

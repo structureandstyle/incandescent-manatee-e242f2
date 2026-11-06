@@ -51,6 +51,7 @@ import { HOMEPAGE_FAQS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-con
 import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import { questionLabel } from "../data/answers";
+import EnquiryActions from "../components/ds/EnquiryActions.astro";
 import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/");
@@ -204,6 +205,13 @@ const siteSchema = {
         </>
       ))}
     </MonoLabel>
+
+    {/* Get a quote and WhatsApp at the end of the hero text, 6 Nov 2026, as
+        every service page's hero has them. Until then the home page's first
+        way to enquire on a phone was the band at the foot of the page, about
+        9,850px down at 375px: Enquire had been in the link row under the
+        wordmark, and the one-row phone header moved it into the menu. */}
+    <EnquiryActions style="margin-top:var(--space-14)" />
 
     {/* No caption under the hero photograph since 6 Nov 2026. It read
         "Plate 01 · Bespoke kitchen   Completed"; Denis on the preview: no point
@@ -463,8 +471,9 @@ const siteSchema = {
       </p>
       <MonoLabel as="p" tone="soft" style="margin-top:var(--space-12)">Design</MonoLabel>
       <p style="margin-top:var(--space-5);color:var(--text-quiet)">
-        Cabinetry design is part of the service: internal layouts, materials, finishes, and 3D
-        visuals on more complex projects.
+        We design it with you: what goes inside (hanging space, shelves, drawers), the materials
+        and the finish. On more complex projects we also show you 3D visuals before anything is
+        made.
       </p>
       <p style="margin-top:var(--space-14)">
         <Link href="/about/" variant="nav" chamfer>More about how we work</Link>
