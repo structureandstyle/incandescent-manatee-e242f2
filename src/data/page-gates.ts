@@ -11,6 +11,7 @@
  */
 
 import { ready, type QuestionKey } from "./answers";
+import { CASE_STUDIES, caseStudyPath } from "./case-studies";
 
 /**
  * All seven service pages render from one template, src/pages/[slug].astro, so
@@ -104,6 +105,12 @@ export const PAGE_GATES = {
     "areaHampsteadMerge",
   ],
 
+  /* Case studies. One gated path per entry in src/data/case-studies.ts, each
+     waiting on that entry's own keys, so an entry publishes itself the moment
+     its last answer lands and the others stay held. The index, /case-studies/,
+     is handled in indexable() below: it has no keys of its own. */
+  ...Object.fromEntries(CASE_STUDIES.map((c) => [caseStudyPath(c), c.gate])),
+
   // No client dependency.
   "/journal/": [],
   "/contact/": [],
@@ -121,10 +128,15 @@ export function gateFor(path: string): readonly QuestionKey[] {
 
 /** A page is indexable only when every question it depends on is answered. */
 export function indexable(path: string): boolean {
+  /* The case-study index is indexable only once at least one entry is, the
+     same rule the journal index follows with its articles. */
+  if (path === CASE_STUDY_INDEX) return CASE_STUDIES.some((c) => indexable(caseStudyPath(c)));
   return ready(gateFor(path));
 }
 
+export const CASE_STUDY_INDEX = "/case-studies/";
+
 /** Paths that must stay out of the sitemap because their copy is still incomplete. */
 export function blockedPaths(): string[] {
-  return Object.keys(PAGE_GATES).filter((p) => !indexable(p));
+  return [...Object.keys(PAGE_GATES), CASE_STUDY_INDEX].filter((p) => !indexable(p));
 }

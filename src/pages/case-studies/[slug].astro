@@ -1,0 +1,271 @@
+---
+/**
+ * A case study.
+ *
+ * Built from a record of one finished job, in the section order set by the
+ * brief (briefs/case-study-2026-11.md in the S&S ops repo, section 2). The
+ * template holds no fact about any job. Every client fact is a <Value> reading
+ * a key in src/data/answers.ts, so until Kaspar answers it renders as an open
+ * question, and the page is noindexed and kept out of the sitemap by the gate
+ * in src/data/page-gates.ts. Nothing links to it.
+ *
+ * Photographs: none until his originals arrive and pass the checks. The gallery
+ * shows empty frames with the open question; a photograph from another job is
+ * never used to stand in. When a photograph is added it needs real alt text,
+ * and scripts/verify-build.mjs fails an <img> without one.
+ *
+ * Schema: Article about the service, BreadcrumbList Home > Case studies > page.
+ * No byline (the business is the author), and never Review or AggregateRating:
+ * the customer's words, if any, are quoted as text.
+ */
+import Base from "../../layouts/Base.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import Kicker from "../../components/ds/Kicker.astro";
+import Display from "../../components/ds/Display.astro";
+import MonoLabel from "../../components/ds/MonoLabel.astro";
+import EnquireBand from "../../components/ds/EnquireBand.astro";
+import Link from "../../components/ds/Link.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Value from "../../components/Value.astro";
+import Ask from "../../components/Ask.astro";
+import { ANSWERS, answered } from "../../data/answers";
+import { CASE_STUDIES, caseStudyPath } from "../../data/case-studies";
+import { indexable } from "../../data/page-gates";
+import { BAND } from "../../data/site-content";
+import { SITE_URL, SERVICES } from "../../data/site";
+
+export function getStaticPaths() {
+  return CASE_STUDIES.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const k = entry.keys;
+const path = caseStudyPath(entry);
+const live = indexable(path);
+const text = (key: keyof typeof ANSWERS) => {
+  const v = ANSWERS[key].value;
+  return Array.isArray(v) ? v.join(" · ") : (v ?? "");
+};
+
+/* The title and district are facts. Until they are answered the page's own
+   <title> is a neutral working name rather than a guess. */
+const titleKnown = answered(k.title);
+const areaKnown = answered(k.area);
+const pageTitle = titleKnown ? text(k.title) : "Case study (draft)";
+const pageUrl = new URL(path, SITE_URL).href;
+
+const service = SERVICES.find((s) => s.slug === entry.service);
+/* /fitted-wardrobes/ is a frozen page until after Mon 23 Nov 2026; no link to
+   it from here before then. */
+const wardrobeFrozen = entry.service === "fitted-wardrobes" && new Date() < new Date("2026-11-23T13:00:00Z");
+const serviceLink = service && !wardrobeFrozen ? { href: `/${service.slug}/`, label: service.title } : null;
+
+const article: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: pageTitle,
+  publisher: { "@id": `${SITE_URL}/#business` },
+  mainEntityOfPage: pageUrl,
+  image: new URL("/og-default.jpg", SITE_URL).href,
+};
+if (entry.published) {
+  article.datePublished = entry.published;
+  article.dateModified = entry.published;
+}
+if (service) article.about = { "@type": "Service", name: service.title };
+if (areaKnown) article.contentLocation = { "@type": "Place", name: text(k.area) };
+
+const schema = [
+  article,
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Case studies", item: `${SITE_URL}/case-studies/` },
+      { "@type": "ListItem", position: 3, name: pageTitle, item: pageUrl },
+    ],
+  },
+];
+
+/* Optional sections: shown once answered; while the page is still a draft they
+   show as an open question so a reviewer sees where they would sit. */
+const showOptional = (key: keyof typeof ANSWERS) => answered(key) || !live;
+
+const glance: { label: string; key: keyof typeof ANSWERS }[] = [
+  { label: "District", key: k.area },
+  { label: "Home", key: k.home },
+  { label: "Pieces fitted", key: k.pieces },
+  { label: "Materials and finish", key: k.materials },
+  { label: "Time on site", key: k.dates },
+];
+const frames = ["Wide shot, lights on", "Wide shot, lights off", "Close detail of the joinery", "Close detail of the lighting"];
+---
+
+<Base title={pageTitle} description="A finished Structure & Style job, with the brief, what was fitted and how it was made." schema={schema} noindex={!live}>
+  {!live && (
+    <div class="cs-draft" data-case-study-draft>
+      Draft preview · not published · {entry.note}
+    </div>
+  )}
+
+  <Wrap style="padding-top:var(--hero-y)">
+    <nav class="cs-crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><span aria-hidden="true">/</span><a href="/case-studies/">Case studies</a><span aria-hidden="true">/</span><span aria-current="page">{titleKnown ? text(k.title) : <Ask q="cs1_title">Title to confirm</Ask>}</span>
+    </nav>
+    <Kicker scribe>Case study</Kicker>
+    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
+      <Value q={k.title} />
+    </Display>
+    <p class="cs-standfirst">
+      <Value q={k.problem} />
+    </p>
+  </Wrap>
+
+  <Wrap style="padding-top:var(--space-13)">
+    <figure class="cs-frame cs-hero" aria-label="Hero photograph, not yet supplied">
+      <Ask q="cs1_photos">Hero photograph: the wide shot, from Kaspar's originals</Ask>
+    </figure>
+  </Wrap>
+
+  <Wrap style="padding-top:var(--space-15)">
+    <section class="cs-section" aria-labelledby="cs-glance">
+      <MonoLabel as="h2" id="cs-glance" tone="soft">At a glance</MonoLabel>
+      <dl class="cs-glance">
+        {glance.map((g) => (
+          <div><dt>{g.label}</dt><dd><Value q={g.key} /></dd></div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="cs-section" aria-labelledby="cs-brief">
+      <h2 id="cs-brief">The brief</h2>
+      <p><Value q={k.problem} /></p>
+    </section>
+
+    <section class="cs-section" aria-labelledby="cs-built">
+      <h2 id="cs-built">What was fitted</h2>
+      <p><Value q={k.pieces} /></p>
+    </section>
+
+    <section class="cs-section" aria-labelledby="cs-made">
+      <h2 id="cs-made">How it was made</h2>
+      <p><Value q={k.materials} /></p>
+      <p><Value q={k.painting} /></p>
+    </section>
+
+    <section class="cs-section" aria-labelledby="cs-gallery">
+      <h2 id="cs-gallery">Photographs</h2>
+      <div class="cs-grid">
+        {frames.map((f) => (
+          <figure class="cs-frame" aria-label={`${f}, not yet supplied`}>
+            <Ask q="cs1_photos">{f}</Ask>
+          </figure>
+        ))}
+      </div>
+    </section>
+
+    {showOptional(k.video) && (
+      <section class="cs-section" aria-labelledby="cs-video">
+        <h2 id="cs-video">A minute in the room</h2>
+        <p><Value q={k.video} /></p>
+      </section>
+    )}
+
+    {showOptional(k.review) && (
+      <section class="cs-section" aria-labelledby="cs-review">
+        <h2 id="cs-review">What the customer said</h2>
+        <blockquote class="cs-quote"><Value q={k.review} /></blockquote>
+      </section>
+    )}
+
+    {showOptional(k.cost) && (
+      <section class="cs-section" aria-labelledby="cs-cost">
+        <h2 id="cs-cost">Cost and time</h2>
+        <p><Value q={k.cost} /></p>
+        <p><Value q={k.dates} /></p>
+      </section>
+    )}
+
+    <section class="cs-section" aria-labelledby="cs-faq">
+      <h2 id="cs-faq">Questions about this job</h2>
+      <Faq q="How long did the job take?"><Value q={k.dates} /></Faq>
+      <Faq q="What was it made from?"><Value q={k.materials} /></Faq>
+    </section>
+
+    <section class="cs-section cs-links" aria-label="Related">
+      <MonoLabel tone="soft">Related</MonoLabel>
+      <ul>
+        {serviceLink && <li><Link href={serviceLink.href} variant="cta">{serviceLink.label}</Link></li>}
+        <li><Link href="/process/" variant="cta">How a project runs</Link></li>
+        <li><Link href="/contact/" variant="cta">Start an enquiry</Link></li>
+      </ul>
+    </section>
+  </Wrap>
+
+  <EnquireBand heading="If you have a room in mind, start here." chamfer>
+    {BAND.body}
+    <Fragment slot="facts">
+      {BAND.facts.map((q) => (
+        <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+          <Value q={q} />
+        </MonoLabel>
+      ))}
+    </Fragment>
+  </EnquireBand>
+</Base>
+
+<style is:global>
+  .cs-draft {
+    background: var(--green);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-md);
+    text-transform: uppercase;
+    text-align: center;
+    padding: var(--space-4) var(--gutter);
+  }
+  .cs-crumbs {
+    padding-bottom: var(--space-9);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono);
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .cs-crumbs a { border-bottom: var(--rule-hair); }
+  .cs-crumbs span[aria-hidden] { margin: 0 var(--space-4); color: var(--ink-faint); }
+  .cs-standfirst { max-width: var(--measure); font-size: var(--type-lede); color: var(--text-quiet); margin: 0; }
+  .cs-frame {
+    margin: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    min-height: 220px;
+    padding: var(--space-9);
+    border: var(--rule-structure);
+    background: var(--wash-char);
+  }
+  .cs-hero { aspect-ratio: 16 / 9; }
+  .cs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-7); }
+  .cs-section { max-width: 760px; padding-bottom: var(--space-15); }
+  .cs-section:last-of-type { padding-bottom: var(--section-y); }
+  .cs-section h2:not([class]) {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-display-4);
+    line-height: var(--lh-display-3);
+    margin: 0 0 var(--space-9);
+  }
+  .cs-section p { margin: 0 0 1.05em; }
+  .cs-glance { margin: var(--space-7) 0 0; border-top: var(--rule-structure); }
+  .cs-glance > div { display: grid; grid-template-columns: minmax(120px, 200px) 1fr; gap: var(--space-7); padding: 12px 0; border-bottom: var(--rule-hair); }
+  .cs-glance dt { font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono); text-transform: uppercase; color: var(--ink-soft); }
+  .cs-glance dd { margin: 0; }
+  .cs-quote { margin: 0; padding-left: var(--space-9); border-left: var(--rule-structure); font-family: var(--font-serif-display); font-size: var(--type-serif-md); }
+  .cs-links ul { list-style: none; margin: var(--space-6) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-5) var(--space-11); }
+  @media (max-width: 560px) {
+    .cs-glance > div { grid-template-columns: 1fr; gap: var(--space-2); }
+  }
+</style>

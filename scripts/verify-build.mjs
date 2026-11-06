@@ -125,6 +125,9 @@ function blockquotes(html) {
 
 /** £ figures as written: £2,300, £10,000, £5. A trailing comma is punctuation, not the figure. */
 const prices = (text) => [...new Set([...text.matchAll(/£\d{1,3}(?:,\d{3})+|£\d+/g)].map((m) => m[0]))];
+const isCaseStudy = (page) => page.startsWith("/case-studies/") && page !== "/case-studies/";
+/** The title rule for a case study: "[Service] in [Area]". */
+const CASE_STUDY_TITLE = /^[A-Z][A-Za-z' -]+ in [A-Z][A-Za-z' -]+$/;
 
 function verifySchema(html, page, errors) {
   const scripts = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
@@ -201,6 +204,14 @@ function verifySchema(html, page, errors) {
         items[2]?.position !== 3 || items[2]?.item !== `${SITE_URL}${page}`) {
       errors.push(`${page}  article breadcrumb schema is missing or does not match the page`);
     }
+  } else if (isCaseStudy(page)) {
+    // Case studies carry Home > Case studies > page (briefs/case-study-2026-11.md, section 6).
+    const items = breadcrumbs[0]?.itemListElement;
+    if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 3 ||
+        items[0]?.item !== `${SITE_URL}/` || items[1]?.item !== `${SITE_URL}/case-studies/` ||
+        items[2]?.item !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  case study breadcrumb schema is missing or does not match the page`);
+    }
   } else if (BREADCRUMB_PATHS.has(page)) {
     const items = breadcrumbs[0]?.itemListElement;
     if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 2 ||
@@ -220,6 +231,18 @@ function verifySchema(html, page, errors) {
     const pages = ofType("WebPage");
     if (pages.length !== 1 || pages[0].url !== `${SITE_URL}${page}` || pages[0].about?.["@id"] !== BUSINESS_ID) {
       errors.push(`${page}  area page needs one WebPage node with this page's url, about the business`);
+    }
+  }
+
+  if (isCaseStudy(page)) {
+    const articles = ofType("Article");
+    const a = articles[0];
+    if (articles.length !== 1 || !a.headline || a.publisher?.["@id"] !== BUSINESS_ID || a.mainEntityOfPage !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  case study needs one Article with headline, publisher and page URL`);
+    }
+    if ("author" in (a ?? {})) errors.push(`${page}  case study has no byline; the business is the author`);
+    if (ofType("Review").length || ofType("AggregateRating").length || JSON.stringify(nodes).includes('"Review"') || JSON.stringify(nodes).includes("AggregateRating")) {
+      errors.push(`${page}  Review or AggregateRating markup on a case study`);
     }
   }
 
@@ -299,6 +322,38 @@ async function verifyReviews(errors) {
   }
 }
 
+/**
+ * Case-study cross-checks: the sitemap and each page's own robots tag must
+ * agree, and no case-study image may carry an EXIF block (which is where
+ * location data lives). Images are expected under public/images/case-studies/.
+ */
+async function verifyCaseStudies(errors, files) {
+  const sitemapText = (await Promise.all(
+    (await readdir(DIST).catch(() => [])).filter((f) => /^sitemap.*\.xml$/.test(f)).map((f) => readFile(join(DIST, f), "utf8"))
+  )).join("\n");
+  for (const file of files) {
+    const page = file.split(sep).join("/").replace(/^dist/, "").replace(/index\.html$/, "") || "/";
+    if (page !== "/case-studies/" && !page.startsWith("/case-studies/")) continue;
+    const noindex = /<meta[^>]+name=["']robots["'][^>]*noindex/i.test(await readFile(file, "utf8"));
+    const inMap = sitemapText.includes(`${SITE_URL}${page}`);
+    if (noindex && inMap) errors.push(`${page}  noindex but listed in the sitemap`);
+    if (!noindex && !inMap) errors.push(`${page}  indexable but missing from the sitemap`);
+  }
+  const walk = async (dir) => {
+    const out = [];
+    for (const e of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) out.push(...(await walk(full)));
+      else if (/\.jpe?g$/i.test(e.name)) out.push(full);
+    }
+    return out;
+  };
+  for (const img of await walk("public/images/case-studies")) {
+    const buf = await readFile(img);
+    if (buf.includes(Buffer.from("Exif\0\0"))) errors.push(`${img}  still holds EXIF data (location); strip it before committing`);
+  }
+}
+
 async function htmlFiles(dir) {
   const out = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -354,6 +409,24 @@ for (const file of files) {
   // one reaches a production build, the gate has failed: stop the deploy.
   if (process.env.CONTEXT === "production" && html.includes("data-journal-draft")) {
     errors.push(`${page}  draft journal content in a production build`);
+  }
+
+  if (isCaseStudy(page)) {
+    const draftBar = html.includes("data-case-study-draft");
+    if (!noindex && draftBar) errors.push(`${page}  INDEXABLE case study still under the draft bar`);
+    if (noindex && !draftBar) errors.push(`${page}  noindexed case study without the draft bar`);
+    if (!noindex) {
+      const title = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1].replace(/<[^>]+>/g, "").trim() ?? "";
+      if (!CASE_STUDY_TITLE.test(title)) errors.push(`${page}  title ${JSON.stringify(title)} breaks the "[Service] in [Area]" pattern`);
+      if (!html.includes('"datePublished"')) errors.push(`${page}  cleared case study has no published date`);
+    }
+    for (const img of html.match(/<img\b[^>]*>/gi) ?? []) {
+      if (!/\bsrc=/i.test(img)) continue; // the shared lightbox <img> has no src until opened
+      if (!/\balt=["'][^"']+["']/i.test(img)) errors.push(`${page}  image without alt text`);
+    }
+    // Address-shaped strings: a full UK postcode, or a number followed by a road word.
+    const addr = [...text.matchAll(/\b[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}\b|\b\d{1,4} [A-Z][a-z]+ (?:Road|Street|Lane|Avenue|Gardens|Close|Terrace|Crescent|Place|Mews|Way)\b/g)].map((m) => m[0]);
+    if (addr.length) errors.push(`${page}  address-shaped text: ${addr.join(", ")}`);
   }
 
   asks.forEach((q) => openQuestions.add(q));
@@ -420,6 +493,7 @@ for (const page of AREA_PATHS) {
 }
 
 await verifyReviews(errors);
+await verifyCaseStudies(errors, files);
 
 console.log(`Scanned ${files.length} page(s) in ${DIST}/.`);
 
