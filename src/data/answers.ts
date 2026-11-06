@@ -202,6 +202,43 @@ export const ANSWERS = {
   q54: { value: null, about: "What he turns down. Declined 30 Aug 2026: covered by the About-page direction change" },
   q55: { value: null, about: "The piece he is proudest of. Declined 30 Aug 2026: covered by the About-page direction change" },
   q56: { value: null, about: "Whether he is happy to be photographed. No portrait at this stage, 30 Aug 2026" },
+  // Home office and under-stair storage page, drafted 6 Nov 2026. 1, 2, 4 and 6 answered by a founder the same day; 3 (price) and 5 (the AI examples) are still to ask Kaspar and hold the page.
+  // homeOffice1, 2 and 6 render through a <Value> in service-copy.ts; 3 to 5 only hold the page.
+  homeOffice1: {
+    // Answered by a founder for Kaspar, 6 Nov 2026: "yes he does, everything".
+    value: "We design and fit cupboards, pull-out drawers, and coat and shoe storage under the stairs.",
+    blocking: true,
+    provisional: "We design and fit cupboards, pull-out drawers, and coat and shoe storage under the stairs.",
+    about: "Do you still take under-stair storage jobs, and what do you fit there? We have drafted: cupboards, pull-out drawers, and coat and shoe storage cut to the stair. Please correct it.",
+  },
+  homeOffice2: {
+    // Answered by a founder for Kaspar, 6 Nov 2026: "yes".
+    value: "We design and fit home offices: built-in desks with drawers, shelving and tall cupboards, planned around the room.",
+    blocking: true,
+    provisional: "We design and fit home offices: built-in desks with drawers, shelving and tall cupboards, planned around the room.",
+    about: "Do you still take home office jobs, and what do you fit? We have drafted: built-in desks with drawers, shelving and tall cupboards. Please correct it, and add anything missing such as cable routes or lighting.",
+  },
+  homeOffice3: {
+    value: null,
+    blocking: true,
+    about: "What price should the page show for under-stair storage and for a home office: a starting price for each, one for both, or no figure? Without a figure the page keeps 'Priced per project, projects generally from £2,000'.",
+  },
+  homeOffice4: {
+    // Answered by a founder for Kaspar, 6 Nov 2026: "whatever photos we have in the drive".
+    value: "Use the photographs in the Drive. The folder holds one finished home office, already on the page, and three close-ups of the same desk; there are no under-stair photographs, so the AI examples stay.",
+    about: "Do you have photographs of a finished under-stair job, or more photographs of home offices you have fitted? If you do, send them and they replace the AI examples. If not, say so.",
+  },
+  homeOffice5: {
+    value: null,
+    blocking: true,
+    about: "Are you happy for this page to show four AI-generated example images, each labelled 'AI-generated example', as the two journal guides do, with the page saying plainly they are not photographs of your work?",
+  },
+  homeOffice6: {
+    // Answered by a founder for Kaspar, 6 Nov 2026: "yes".
+    value: "We check what is under the stairs at the survey, then design around anything that has to stay reachable.",
+    provisional: "We check what is under the stairs at the survey, then design around anything that has to stay reachable.",
+    about: "When the space under the stairs holds a meter, boiler or fuse box, do you fit around it, and what do you do about access? We have drafted: we check at the survey and design around anything that has to stay reachable.",
+  },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;

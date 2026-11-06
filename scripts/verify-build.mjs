@@ -60,7 +60,7 @@ const STYLE = [
 ];
 
 /** Hand-typed placeholders, the convention the document kit already greps for. */
-const RAW_PLACEHOLDER = /\[[A-Z][A-Z _/]{3,}\]|\bTBC\b|\bTODO\b|\bXXX\b|\bLorem\b/g;
+const RAW_PLACEHOLDER = /\[[A-Z][A-Z _/]{3,}\]|\{\{q:[^}]*\}\}|\bTBC\b|\bTODO\b|\bXXX\b|\bLorem\b/g;
 const SITE_URL = "https://structureandstyle.co.uk";
 const BUSINESS_ID = `${SITE_URL}/#business`;
 const SERVICE_PATHS = new Set([
@@ -69,6 +69,7 @@ const SERVICE_PATHS = new Set([
   "/alcove-units/",
   "/media-walls/",
   "/bespoke-kitchens/",
+  "/home-office-understairs-storage/",
 ]);
 const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
 const isArticle = (page) => page.startsWith("/journal/") && page !== "/journal/";
@@ -233,6 +234,37 @@ async function verifyReviews(errors) {
   }
 }
 
+/**
+ * AI-generated images must be labelled on the page (6 Nov 2026, home office
+ * and under-stair page; the journal guides already do it). Any built <img>
+ * whose src contains "-ai-" must sit in a <figure> whose visible text says
+ * "AI-generated example", and the page must say, in visible text before the
+ * first such image, that the images are AI-generated examples. A future edit
+ * that drops the label or the notice fails the build instead of showing an
+ * unlabelled render as if it were his work. An AI image is never his work and
+ * never goes on the Google Business Profile.
+ */
+const AI_LABEL = /AI-generated example/i;
+function verifyAiLabels(html, page, errors) {
+  const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']*-ai-[^"']*)["'][^>]*>/gi)];
+  if (!imgs.length) return;
+  /* Journal guides (approved before this rule) say it once above the first
+     image and caption each render with what differs in it, so they are held
+     to the notice only. Every other page labels each image itself. */
+  for (const m of isArticle(page) ? [] : imgs) {
+    const start = html.lastIndexOf("<figure", m.index);
+    const end = html.indexOf("</figure>", m.index);
+    const fig = start === -1 || end === -1 || html.indexOf("</figure>", start) < m.index ? "" : html.slice(start, end);
+    if (!AI_LABEL.test(visibleText(fig.replace(/<img\b[^>]*>/gi, " ")))) {
+      errors.push(`${page}  AI image ${m[1]} has no visible "AI-generated example" label in its figure`);
+    }
+  }
+  const before = visibleText(html.slice(0, imgs[0].index));
+  if (!AI_LABEL.test(before)) {
+    errors.push(`${page}  no visible line saying the images are AI-generated examples above the first AI image`);
+  }
+}
+
 async function htmlFiles(dir) {
   const out = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -281,6 +313,7 @@ for (const file of files) {
   const raw = [...text.matchAll(RAW_PLACEHOLDER)].map((m) => m[0]);
 
   verifySchema(html, page, errors);
+  verifyAiLabels(html, page, errors);
 
   // A draft article renders only on preview builds (src/data/journal.ts). If
   // one reaches a production build, the gate has failed: stop the deploy.
@@ -304,6 +337,19 @@ for (const file of files) {
           `${asks.length ? ` (${[...new Set(asks)].join(", ")})` : ""}` +
           `${raw.length ? `, raw placeholder(s): ${[...new Set(raw)].join(", ")}` : ""}`
       );
+    }
+  }
+
+  // Founder rule, 6 Nov 2026: no FAQ answer, and no sentence inside one, opens
+  // with "Yes" or "No" as the reply ("Yes. ...", "No, ...", "Yes, because ...").
+  // The answer leads with the fact. "No two alcoves ..." is a determiner, not a
+  // reply, so only Yes/No followed by punctuation or the end counts.
+  for (const m of html.matchAll(/<details\b[^>]*\bss-faq\b[^>]*>[\s\S]*?<\/summary>\s*<p\b[^>]*>([\s\S]*?)<\/p>/g)) {
+    const answer = visibleText(m[1]).trim();
+    for (const sentence of answer.split(/(?<=[.!?])\s+/)) {
+      if (/^(Yes|No)\b\s*([.,;:!–-]|$)/i.test(sentence.trim())) {
+        errors.push(`${page}  FAQ answer sentence starts with Yes/No, lead with the fact: ${JSON.stringify(sentence.trim().slice(0, 70))}`);
+      }
     }
   }
 

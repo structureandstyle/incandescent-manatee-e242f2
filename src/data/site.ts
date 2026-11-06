@@ -394,31 +394,29 @@ export const SERVICES: Service[] = [
       "Made-to-measure kitchen cabinetry with tall units, islands, internal storage and surrounding finishes resolved around the room.",
     wave: 2,
   },
-];
-
-/**
- * Deferred, 31 Aug 2026, Denis's call: the page ships when its imagery exists.
- * The photo library holds ZERO usable under-stair photographs and no finished
- * home office, and a service page with empty plates sells nothing. This is a
- * deferral of a signed wave-two page, not a drop: it is recorded in the ops
- * repo's engagement status, Kaspar gets told in the next update, and the ask
- * that brings it back is him photographing an under-stair or home office job.
- * To restore: move the entry back into SERVICES and re-add its gate in
- * page-gates.ts.
- */
-export const DEFERRED_SERVICES: Service[] = [
+  /* Home office and under-stair storage. Deferred 31 Aug 2026 (no photographs),
+     built 6 Nov 2026 on a founder's decision, illustrated with one real
+     photograph and four AI-generated examples, each labelled on the page. It
+     stays a noindexed draft until Kaspar answers homeOffice1 to homeOffice6
+     (page-gates.ts). The H1, metaTitle and kicker lead with under-stair; the
+     title stays the signed scope name, because the enquiry form's tick box and
+     job example key on that exact string. When he answers homeOffice3 with a
+     figure, edit price and bandPrice in the same commit. */
   {
     slug: "home-office-understairs-storage",
+    metaTitle: "Under-stair storage and home offices in London",
+    noMinimum: true,
     bandPrice: "Projects generally from £2,000",
     price:
       "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Home office and under-stair storage",
-    heading: "Home office and under-stair storage",
-    primary: "under stairs storage london",
+    heading: "Under-stair storage and fitted home offices in London",
+    kicker: "Under stairs storage, London",
+    primary: "under stairs storage",
     description:
-      "Built-in desks, study storage and under-stair storage that uses the whole void, fitted around windows, radiators and the stair pitch.",
+      "Fitted under-stair storage and home offices for London homes, with cupboards, drawers and desks planned around the stair, the room and what you keep.",
     summary:
-      "Desks and storage fitted around windows, radiators and sloped ceilings, and under-stair storage that uses the whole void.",
+      "We fit storage under the stairs, and desks with drawers and shelving for a home office.",
     wave: 2,
   },
 ];

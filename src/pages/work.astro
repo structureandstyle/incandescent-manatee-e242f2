@@ -99,7 +99,9 @@ const altFor = (type: string, n: number) =>
 /* The services with a page of their own, for the row under the gallery. The
    cost guide is excluded by its flag: it is a guide, not something a visitor
    looking at photographs has just seen one of. */
-const services = SERVICES.filter((s) => !s.guide);
+/* Only pages that are live: a draft held by its gate (home office and
+   under-stair, 6 Nov 2026) is not linked from a finished page. */
+const services = SERVICES.filter((s) => !s.guide && indexable(servicePath(s)));
 ---
 
 <Base
@@ -151,6 +153,7 @@ const services = SERVICES.filter((s) => !s.guide);
               Finished work. The fact survives in the alt text, where it is
               read once per image by the people who need it. */}
           subject={s.type}
+          label={s.type}
           eager={i < 2}
           plane={i === 0 ? "left" : false}
         />

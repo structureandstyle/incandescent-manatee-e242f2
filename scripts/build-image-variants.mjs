@@ -102,8 +102,12 @@ const selection = JSON.parse(readFileSync(join(IMAGES, "_selection.json"), "utf8
 const OG_DIR = join(ROOT, "public/og");
 if (!existsSync(OG_DIR)) mkdirSync(OG_DIR, { recursive: true });
 
-for (const [slug, shots] of Object.entries(selection)) {
-  if (!Array.isArray(shots) || !shots.length) continue;
+for (const [slug, allShots] of Object.entries(selection)) {
+  /* An AI-generated example (`ai: true`) is never the share card: a link
+     shared into WhatsApp must show his real work, not a render. A service
+     whose only photographs are AI gets no card and falls back to the default. */
+  const shots = Array.isArray(allShots) ? allShots.filter((s) => !s.ai) : [];
+  if (!shots.length) continue;
   const landscape = shots.find((s) => s.w / s.h >= 1.2) ?? shots[0];
   const src = join(ROOT, "public", landscape.file.replace(/^\//, ""));
   const out = join(OG_DIR, `${slug}.jpg`);
