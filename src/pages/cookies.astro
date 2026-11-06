@@ -27,7 +27,7 @@ import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
 import { BUSINESS } from "../data/site";
 
-const updated = "September 2026";
+const updated = "6 November 2026";
 ---
 
 <Base
@@ -69,6 +69,18 @@ const updated = "September 2026";
           where they are and what device they use. Google shortens IP addresses before storing them
           and we cannot identify you from any of it. We do not use analytics for advertising and
           none of it is shared with advertisers.
+        </p>
+        {/* Added 13 Oct 2026. This page lists what is stored, so the enquiry form's
+            source note has to be on it. It is written to sessionStorage only on a
+            "granted" answer: see src/scripts/enquiry-source.mjs. */}
+        <p style="margin-top:var(--space-8)">
+          The enquiry form records which page or link brought you to the site, such as a link from
+          our Google Business Profile. If you accept, a short note of that is kept in your browser's
+          session storage under <strong>ss_enquiry_source</strong>, so it can go with an enquiry you
+          send later in the same visit. It is not sent anywhere unless you send the form, and it is
+          deleted when you close the tab or withdraw your consent. Without your consent nothing is
+          kept, and the form notes only the page you are sending it from and the link or website
+          that led to that page, if there was one.
         </p>
       </section>
 
