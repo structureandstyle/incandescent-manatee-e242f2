@@ -68,6 +68,8 @@ export type ServiceCopy = {
     body: string[];
     /** A shared section id, or "intro" to sit straight after the intro. */
     after?: string;
+    /** One line saying the images below are AI-generated; drawn once, just before the first AI image. */
+    aiNotice?: string;
     /** Images in this section. No `afterParagraph` means above the body. */
     figures?: { afterParagraph?: number; items: Figure[] }[];
   }[];
@@ -467,7 +469,6 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
   "home-office-understairs-storage": {
     intro: [
       "The space under a staircase slopes, narrows and rarely sits square to the walls around it. A home office has its own fixed points: the window, the radiator and the sockets. Fitted joinery is designed around those, so the storage or the desk suits the room as it is.",
-      "You do not need to arrive with a layout. Where a project needs design work, drawings are issued for you to review, with up to two rounds of revisions included.",
     ],
     leads: {
       cost: "Under-stair storage and home offices are priced per project, because the stair, the room and what goes in them decide the figure.",
@@ -478,8 +479,13 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         meta: "Under-stair",
         heading: "Under-stair storage that follows the stair",
         after: "intro",
+        /* Said once, above the first AI image, in the journal guides' words
+           changed only where this page differs: it is not a guide, and one
+           photograph below is real. */
+        aiNotice:
+          "Apart from the photograph of a finished home office, the images on this page are AI-generated examples, shown for inspiration and to help you compare the options.",
         body: [
-          "Images marked AI-generated example show a possible layout and are not photographs of our work. {{q:homeOffice1}}",
+          "{{q:homeOffice1}}",
           "The stair sets the height, so the tall end can take full-height cupboards and the low end can take drawers. Each unit is cut to follow the line of the stair and the walls beside it.",
         ],
         figures: [
@@ -533,7 +539,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
             items: [
               {
                 src: "/images/home-office/home-office-ai-alcove-desk.webp",
-                alt: "AI-generated example: a fitted oak desk spanning an alcove beside a chimney breast, with three off-white drawers under one side, open shelves above and a task lamp, in a London Victorian room.",
+                alt: "AI-generated example: a fitted oak desk spanning the right-hand alcove beside a central chimney breast with a fireplace, with three off-white drawers under one side, open shelves above and a task lamp, in a London Victorian room.",
                 width: 1400,
                 height: 933,
                 caption: "Desk run with drawers and shelving in an alcove",
@@ -554,16 +560,20 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
     ],
     faqs: [
       {
-        q: "Do you fit under stairs storage around meters and boilers?",
+        q: "Can you fit under-stair storage around a meter or fuse box?",
         a: "{{q:homeOffice6}}",
       },
       {
-        q: "How soon can an under-stair unit or a home office be fitted?",
-        a: "Lead time is typically 4 to 8 weeks, depending on the scope of the project, the specification and our current schedule.",
+        q: "Do I need to arrive with a layout?",
+        a: "You do not need to. We ask the right questions at the consultation and survey. Where a project needs design work, we issue drawings for you to review, with up to two rounds of revisions included.",
       },
       {
-        q: "Is there a minimum job size?",
-        a: "We generally work to a minimum project value of £2,000. If an under-stair unit on its own sits near that, ask before ruling it out.",
+        q: "How long does an under-stair unit or a home office take?",
+        a: "Lead time is typically 4 to 8 weeks, depending on the scope of the project, the specification and our current schedule. One week is set aside for design, with drawings issued for review by the end of it.",
+      },
+      {
+        q: "What if the stairs or the room are an awkward shape?",
+        a: "Walls, floors and ceilings are rarely straight, so each unit is scribed, cut to follow the line of the room, rather than left with gaps. Fitted and finished, it should look like one piece that belongs in the room.",
       },
     ],
   },

@@ -29,6 +29,8 @@ const AI_LABEL = "AI-generated example";
 const groups = sec.figures ?? [];
 const above = groups.filter((g) => g.afterParagraph === undefined);
 const below = (i: number) => groups.filter((g) => g.afterParagraph === i);
+// The notice sits once, just before the first group that holds an AI image.
+const firstAi = groups.find((g) => g.items.some((f) => f.ai));
 ---
 
 <Wrap style="padding-bottom:var(--section-y)">
@@ -56,8 +58,10 @@ const below = (i: number) => groups.filter((g) => g.afterParagraph === i);
       <div style="max-width:var(--measure)">
         <p style={i ? "margin-top:var(--space-10)" : undefined}><CopyText text={p} /></p>
       </div>
-      {below(i).map((g) =>
-        g.items.length > 1 ? (
+      {below(i).map((g) => (
+        <>
+        {sec.aiNotice && g === firstAi && <p class="ai-intro">{sec.aiNotice}</p>}
+        {g.items.length > 1 ? (
           <Renders>
             {g.items.map((f) => (
               <Render src={f.src} alt={f.alt} width={f.width} height={f.height} pair caption={f.ai ? `${AI_LABEL} · ${f.caption}` : f.caption} />
@@ -67,8 +71,14 @@ const below = (i: number) => groups.filter((g) => g.afterParagraph === i);
           g.items.map((f) => (
             <Render src={f.src} alt={f.alt} width={f.width} height={f.height} caption={f.ai ? `${AI_LABEL} · ${f.caption}` : f.caption} />
           ))
-        )
-      )}
+        )}
+        </>
+      ))}
     </>
   ))}
 </Wrap>
+
+<style>
+  /* Same notice and style as the journal guides' .ai-intro. */
+  .ai-intro { margin: var(--space-10) 0 var(--space-7); font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
+</style>

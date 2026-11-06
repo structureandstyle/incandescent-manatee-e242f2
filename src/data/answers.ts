@@ -206,9 +206,9 @@ export const ANSWERS = {
   // homeOffice1, 2 and 6 render through a <Value> in service-copy.ts; 3 to 5 only hold the page.
   homeOffice1: {
     // Answered by a founder for Kaspar, 6 Nov 2026: "yes he does, everything".
-    value: "We design and fit under-stair storage: cupboards, pull-out drawers, and coat and shoe storage, cut to the stair.",
+    value: "We design and fit cupboards, pull-out drawers, and coat and shoe storage under the stairs.",
     blocking: true,
-    provisional: "We design and fit under-stair storage: cupboards, pull-out drawers, and coat and shoe storage, cut to the stair.",
+    provisional: "We design and fit cupboards, pull-out drawers, and coat and shoe storage under the stairs.",
     about: "Do you still take under-stair storage jobs, and what do you fit there? We have drafted: cupboards, pull-out drawers, and coat and shoe storage cut to the stair. Please correct it.",
   },
   homeOffice2: {
@@ -235,8 +235,8 @@ export const ANSWERS = {
   },
   homeOffice6: {
     // Answered by a founder for Kaspar, 6 Nov 2026: "yes".
-    value: "That depends on what is there. We check at the survey, then design around anything that has to stay reachable.",
-    provisional: "That depends on what is there. We check at the survey, then design around anything that has to stay reachable.",
+    value: "We check what is under the stairs at the survey, then design around anything that has to stay reachable.",
+    provisional: "We check what is under the stairs at the survey, then design around anything that has to stay reachable.",
     about: "When the space under the stairs holds a meter, boiler or fuse box, do you fit around it, and what do you do about access? We have drafted: we check at the survey and design around anything that has to stay reachable.",
   },
 } as const satisfies Record<string, Answer>;

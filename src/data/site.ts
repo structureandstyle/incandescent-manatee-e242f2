@@ -416,7 +416,7 @@ export const SERVICES: Service[] = [
     description:
       "Fitted under-stair storage and home offices for London homes, with cupboards, drawers and desks planned around the stair, the room and what you keep.",
     summary:
-      "Under-stair storage cut to follow the stair, and home offices with desks, drawers and shelving planned around the room and what you keep.",
+      "We fit storage under the stairs, and desks with drawers and shelving for a home office.",
     wave: 2,
   },
 ];
