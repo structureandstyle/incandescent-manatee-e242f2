@@ -33,6 +33,16 @@
  * carries the rest of the count. Both open in a new tab, because a visitor
  * mid-way down the homepage should come back to it. GA4's enhanced
  * measurement counts the outbound click on its own; no custom event.
+ *
+ * THE COUNT ONCE, 6 November 2026 (Arthur). The block said the count twice
+ * and the average twice ("5.0", then "20 reviews · average 5.0 out of 5",
+ * then "All 20 reviews on Google"), and the enquiry band below says both
+ * again. Now: the big average with its stars, one line "From 20 Google
+ * reviews", and a link "All reviews on Google". The count stays: a bare 5.0
+ * reads as too good to be true (Spiegel Research Center: purchase likelihood
+ * peaks at 4.0 to 4.7 and falls towards 5.0), and the number is what makes it
+ * believable. "Out of 5" moves into the average's accessible name, since the
+ * stars beside it are hidden from screen readers.
  */
 import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
@@ -88,7 +98,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
   >
     <div data-motion={stamp ? "stamp-group" : undefined}>
       <div style="display:flex;align-items:baseline;gap:var(--space-10)">
-        <Display level={2} as="p" measure="none">{average}</Display>
+        <Display level={2} as="p" measure="none">{average}<span class="sr-only"> out of 5</span></Display>
         <span aria-hidden="true" style="display:flex;gap:var(--space-3);padding-bottom:var(--space-4)">
           {[0, 1, 2, 3, 4].map((i) => (
             <svg width="14" height="14" viewBox="0 0 24 24" style="display:block">
@@ -105,7 +115,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       </div>
 
       <MonoLabel as="p" tone="default" style="margin-top:var(--space-10)">
-        {count} reviews · average {average} out of 5
+        From {count} Google reviews
       </MonoLabel>
 
       {source && (
@@ -115,7 +125,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       {href && (
         <p style="margin-top:var(--space-10)">
           <Link href={href} variant="nav" chamfer target="_blank" rel="noopener">
-            All {count} reviews on Google
+            All reviews on Google
           </Link>
         </p>
       )}
@@ -168,7 +178,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
                   {q.meta && (
                     <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
                   )}
-                  <span class="sr-only">Read this review and all {count} others on Google</span>
+                  <span class="sr-only">Read this review on Google</span>
                 </div>
               </a>
             ) : (
