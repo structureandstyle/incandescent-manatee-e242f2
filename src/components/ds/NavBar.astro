@@ -508,5 +508,18 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
     window.matchMedia("(min-width: 861px)").addEventListener("change", (e) => {
       if (e.matches) drawer.open = false;
     });
+    // The CSS height assumes the header sits at the top of the screen. When
+    // something sits above it (a browser banner, a review bar on a preview
+    // link), the menu ends below the screen and its last rows cannot be
+    // reached, so on opening it measures the room actually left.
+    const panel = drawer.querySelector<HTMLElement>(".nav-drawer-panel");
+    drawer.addEventListener("toggle", () => {
+      if (!panel) return;
+      panel.style.height = "";
+      if (drawer.open) {
+        const room = window.innerHeight - panel.getBoundingClientRect().top;
+        if (room > 0) panel.style.height = `${Math.floor(room)}px`;
+      }
+    });
   }
 </script>
