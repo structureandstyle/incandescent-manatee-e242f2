@@ -565,15 +565,13 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       },
       {
         q: "Do I need to arrive with a layout?",
-        a: "You do not need to. We ask the right questions at the consultation and survey. Where a project needs design work, we issue drawings for you to review, with up to two rounds of revisions included.",
+        a: "A rough idea is enough: we ask the right questions at the consultation and survey. Where a project needs design work, we issue drawings for you to review, with up to two rounds of revisions included.",
       },
       {
-        q: "How long does an under-stair unit or a home office take?",
-        a: "Lead time is typically 4 to 8 weeks, depending on the scope of the project, the specification and our current schedule. One week is set aside for design, with drawings issued for review by the end of it.",
-      },
-      {
-        q: "What if the stairs or the room are an awkward shape?",
-        a: "Walls, floors and ceilings are rarely straight, so each unit is scribed, cut to follow the line of the room, rather than left with gaps. Fitted and finished, it should look like one piece that belongs in the room.",
+        /* Replaces "how long" and "awkward shape" (6 Nov 2026): both repeated the page's own
+           sections. Asked in his enquiry inbox (2 of 9) and in search results; sources q24, q28. */
+        q: "Can it match the woodwork I already have, and include lighting?",
+        a: "Finishes are chosen to complement or closely match the furniture and joinery already in the room, and lighting can be built in, with Häfele fittings.",
       },
     ],
   },
