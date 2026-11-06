@@ -5,6 +5,8 @@
  * It kept the Astro scaffold's own layout until now, wearing the new palette,
  * which was the worst of both. This is the design system's structure: hero,
  * approach, work, materials, process with the drawing, the maker, reviews.
+ * Materials came off the homepage on 6 Nov 2026 (Denis: it "doesn't bring
+ * much value and it doesn't help converting"); /materials/ keeps it all.
  *
  * THE COPY IS NOT THE DESIGN'S. Almost every sentence on the design's homepage
  * asserts something the questionnaire has since contradicted:
@@ -36,7 +38,6 @@ import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import Plate from "../components/ds/Plate.astro";
-import MaterialChip from "../components/ds/MaterialChip.astro";
 import ProcessStep from "../components/ds/ProcessStep.astro";
 import Reviews from "../components/ds/Reviews.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
@@ -46,7 +47,7 @@ import Ask from "../components/Ask.astro";
 
 import { SERVICES, BUSINESS, SITE_URL, servicePath, serviceLabel } from "../data/site";
 import Faq from "../components/ds/Faq.astro";
-import { HOMEPAGE_FAQS, MATERIALS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
+import { HOMEPAGE_FAQS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
 import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import { questionLabel } from "../data/answers";
@@ -168,11 +169,16 @@ const siteSchema = {
         of "made once, for one room". His is the plainer sentence and it is the
         one he wants read first.
 
-        The italic falls on "your room", which is where his line turns: the
-        emphasis is ours because he sent plain text, and it is the same
-        treatment the old headline had on its last clause. */}
+        The italic falls on the last two words, which is where his line turns:
+        the emphasis is ours because he sent plain text, and it is the same
+        treatment the old headline had on its last clause.
+
+        "Your space" in place of his "your room", 6 Nov 2026, Denis's preview
+        comment ("room seems small, I prefer space"): the work also fits
+        alcoves, under stairs and landings, which are not rooms. His sentence
+        otherwise; put to him on the preview link before it goes live. */}
     <Display level={1} style="margin:var(--space-12) 0 var(--space-13)">
-      Fitted furniture,<br />made to fit <Italic>your room.</Italic>
+      Fitted furniture,<br />made to fit <Italic>your space.</Italic>
     </Display>
 
     <p style="max-width:var(--measure);font-size:var(--type-lede)">
@@ -199,6 +205,10 @@ const siteSchema = {
       ))}
     </MonoLabel>
 
+    {/* No caption under the hero photograph since 6 Nov 2026. It read
+        "Plate 01 · Bespoke kitchen   Completed"; Denis on the preview: no point
+        to a label under each photo, nor to the numbering. The alt text still
+        says what it is, and the lightbox still names it from `label`. */}
     {hero && (
       <div style="margin-top:var(--plate-y)">
         <Plate
@@ -206,9 +216,7 @@ const siteSchema = {
           alt={`Bespoke kitchen, completed installation by ${BUSINESS.legalName}`}
           width={hero.w}
           height={hero.h}
-          subject="Plate 01 · Bespoke kitchen"
           label="Bespoke kitchens"
-          detail="Completed"
           ratio="1636 / 1091"
           eager
           plane="left"
@@ -326,40 +334,6 @@ const siteSchema = {
       href={REVIEWS.profileUrl}
       quotes={REVIEWS.quotes}
     />
-  </Wrap>
-
-  <!-- Materials. Expandable since 1 Sep 2026: each card opens with where the
-       material is used and what weighs for and against it, and hardware joined
-       as the sixth card so the grid sits even. Copy rules in site-content.ts. -->
-  <Wrap style="padding-top:var(--section-y)">
-    <SectionHead meta="Boards, finishes and hardware" scribe>Materials</SectionHead>
-    {/* THREE OVER TWO, 6 September 2026. Plywood came off the range on
-        Kaspar's instruction, which left five cards in a three-column grid and
-        the empty slot that hardware was added on 1 Sep to fill. Denis's call:
-        stretch the last two across. They span the row and keep the height of
-        the three above them by being wider rather than taller, so the section
-        reads as one set. The rule is "the last two", not two named cards, so
-        a sixth card puts the grid back to three and three on its own. */}
-    <div class="mat-grid">
-      {MATERIALS.map((m, i) => (
-        <MaterialChip
-          name={m.name}
-          swatch={m.swatch}
-          {/* The hardware swatch is a photograph of parts, not a finish, so it
-              keeps no pure band above the wash. See MaterialChip. */}
-          band={m.key !== "hardware"}
-          description={m.description}
-          uses={m.uses}
-          pros={m.pros}
-          cons={m.cons}
-          class={i >= MATERIALS.length - 2 ? "wide" : undefined}
-          sizes={i >= MATERIALS.length - 2 ? "(max-width: 700px) 92vw, (max-width: 1080px) 92vw, 480px" : undefined}
-        />
-      ))}
-    </div>
-    <p style="margin-top:var(--space-14)">
-      <Link href="/materials/" variant="nav" chamfer>Materials, finishes and why not solid timber</Link>
-    </p>
   </Wrap>
 
   <!-- Process -->
@@ -517,69 +491,3 @@ const siteSchema = {
     </Fragment>
   </EnquireBand>
 </Base>
-
-<style>
-  /* The materials grid, three over two: see the note beside the markup. Six
-     tracks so a card can take two thirds of a row without a fraction; an
-     ordinary card takes two, a stretched one three. The stretched card's
-     swatch goes to 9 / 4 so it keeps the height of a 3 / 2 swatch two thirds
-     as wide, give or take the gap. */
-  .mat-grid {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: var(--gap-md);
-    align-items: start;
-    /* A size container, so the frames below can take their height from the
-       grid's own width in cqw. */
-    container-type: inline-size;
-  }
-  .mat-grid > :global(*) {
-    grid-column: span 2;
-  }
-  .mat-grid > :global(.wide) {
-    grid-column: span 3;
-    --mat-ratio: 9 / 4;
-  }
-  /* EVERY FRAME IS THE HEIGHT OF A NARROW CARD'S FRAME, by construction.
-     The 9 / 4 ratio above was the first attempt and it is only a fallback
-     now: the render measured the stretched tiles 8px taller than the row
-     above on this page and 14px on /materials/, because a fixed ratio can
-     be right for one gap width only and the two grids have different gaps.
-     So the height is derived instead: a narrow card is two of six tracks and
-     one gap, (100cqw - 5g) / 6 * 2 + g, which simplifies to (100cqw - 2g) / 3,
-     and its 3 / 2 frame is that over 1.5. Set on all five frames, the wide
-     ones come out wider and never taller, whatever the viewport. A browser
-     without cqw ignores the height and keeps the ratio. */
-  .mat-grid :global(.ss-mat-frame) {
-    height: calc((100cqw - 2 * var(--gap-md)) / 4.5);
-  }
-  /* Two across on a tablet: the fourth card is an ordinary card again and
-     the fifth has a row to itself, so it takes the row. A narrow card is now
-     half the grid less half a gap. */
-  @media (max-width: 1080px) {
-    .mat-grid > :global(*),
-    .mat-grid > :global(.wide) {
-      grid-column: span 3;
-      --mat-ratio: 3 / 2;
-    }
-    .mat-grid > :global(.wide):last-child {
-      grid-column: span 6;
-      --mat-ratio: 9 / 4;
-    }
-    .mat-grid :global(.ss-mat-frame) {
-      height: calc((100cqw - var(--gap-md)) / 3);
-    }
-  }
-  /* One column on a phone, every card the same shape. */
-  @media (max-width: 660px) {
-    .mat-grid > :global(*),
-    .mat-grid > :global(.wide),
-    .mat-grid > :global(.wide):last-child {
-      grid-column: span 6;
-      --mat-ratio: 3 / 2;
-    }
-    .mat-grid :global(.ss-mat-frame) {
-      height: calc(100cqw / 1.5);
-    }
-  }
-</style>

@@ -54,9 +54,11 @@
  * Call off the in-page buttons the same day (EnquiryActions.astro). GA4 counts
  * the icon's wa.me click like every other (Base.astro's delegated listener).
  *
- * The menu opens with Enquire first, as the green button, because the form is
- * the only channel that leaves hard evidence; then Services, which expands to
- * the five; then the pages. Both are <details>, so the menu opens and closes
+ * The menu lists Services first, which expands to the five, then the pages,
+ * and ends with Enquire as the green button. Enquire opened the list until
+ * Denis's preview comment of 6 Nov ("that CTA has to be at the bottom"); it
+ * is held to the foot of the open menu, so it stays in view even when
+ * Services is open on a short phone and the list scrolls. Both are <details>, so the menu opens and closes
  * with JavaScript off. The script below adds Escape, closing on a link, and
  * the page not scrolling behind an open menu is CSS (:has).
  */
@@ -167,7 +169,6 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
         </summary>
         <div class="nav-drawer-panel">
           <nav aria-label="Menu">
-            {cta && <a class="nav-drawer-cta" href={cta.href}>{cta.label}</a>}
             <ul class="nav-drawer-list">
               {menu && menu.items.length > 0 && (
                 <li>
@@ -191,6 +192,11 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
                 </li>
               ))}
             </ul>
+            {cta && (
+              <div class="nav-drawer-foot">
+                <a class="nav-drawer-cta" href={cta.href}>{cta.label}</a>
+              </div>
+            )}
           </nav>
         </div>
       </details>
@@ -382,7 +388,25 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
     overscroll-behavior: contain;
     background: var(--surface-page);
     border-top: var(--rule-hair);
-    padding: var(--space-10) var(--gutter) var(--space-12);
+    padding: var(--space-6) var(--gutter) 0;
+    display: flex;
+    flex-direction: column;
+  }
+  /* The list takes the height it needs and the foot sits at the bottom of the
+     menu: pushed down by margin-top:auto when the list is short, and held at
+     the bottom edge by sticky when the list is longer than the screen. */
+  .nav-drawer-panel > nav {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-drawer-foot {
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+    padding: var(--space-8) 0 var(--space-12);
+    background: var(--surface-page);
+    border-top: var(--rule-hair);
   }
   @media (max-width: 860px) {
     :global(html:has([data-nav-drawer][open])) { overflow: hidden; }
@@ -391,14 +415,13 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
     .nav-drawer-panel { display: none; }
   }
 
-  /* Enquire first: the green button, full width. It navigates to /contact/,
+  /* Enquire last: the green button, full width. It navigates to /contact/,
      as the header's Enquire always has (Base.astro, 3 Sep 2026). */
   .nav-drawer-cta {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 52px;
-    margin-bottom: var(--space-8);
     border: 1px solid var(--surface-accent);
     background: var(--surface-accent);
     color: var(--text-on-accent);
