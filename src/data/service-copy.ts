@@ -491,7 +491,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
                 alt: "AI-generated example: painted sage green fitted cupboards and drawers under a straight staircase in a London Victorian hallway, with brass bar pulls and the tops of the units following the slope of the stairs.",
                 width: 1400,
                 height: 906,
-                caption: "Cupboards with pull-out drawers",
+                caption: "Cupboards and drawers",
                 ai: true,
               },
               {
