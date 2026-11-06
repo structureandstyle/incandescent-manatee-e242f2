@@ -258,37 +258,182 @@ export type WorkShot = {
   file: string;
   /** The plain description under the frame. */
   type: string;
+  /**
+   * What the photograph shows, for Google and screen readers (6 Nov 2026,
+   * Arthur). Written by looking at each frame: the service first, then what is
+   * plainly in the picture (shape, colour, handles, lighting, what it sits
+   * around). Never a material, room or place that is not visible in the frame
+   * (tone protocol v1.4 section 4), so no "oak", "MDF" or district names, and
+   * no workshop. No business name either: these are 2024 to 2026 photographs
+   * and the company was incorporated on 31 Oct 2025, so "by Structure and
+   * Style Ltd", which every alt used to end with, was wrong for most of them.
+   * Google's own guidance: describe the picture, do not stuff it with keywords.
+   */
+  alt: string;
 };
 
 export const WORK_GALLERY: WorkShot[] = [
-  { file: "/images/alcove-units/alcove-units-01.webp", type: "Alcove units" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-08.webp", type: "Fitted wardrobes" },
-  { file: "/images/media-walls/media-walls-01.webp", type: "Built-in TV units" },
-  { file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp", type: "Bespoke kitchens" },
-  { file: "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp", type: "Walk-in wardrobes" },
-  { file: "/images/doors-panelling/doors-panelling-02.webp", type: "Panelling and doors" },
-  { file: "/images/alcove-units/alcove-units-08.webp", type: "Alcove units" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
-  { file: "/images/alcove-units/alcove-units-06.webp", type: "Alcove units" },
-  { file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp", type: "Bespoke kitchens" },
-  { file: "/images/alcove-units/alcove-units-03.webp", type: "Alcove units" },
-  { file: "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp", type: "Walk-in wardrobes" },
-  { file: "/images/home-office/home-office-01.webp", type: "Home office" },
-  { file: "/images/media-walls/media-walls-02.webp", type: "Built-in TV units" },
-  { file: "/images/bespoke-kitchens/bespoke-kitchens-10.webp", type: "Bespoke kitchens" },
-  { file: "/images/alcove-units/alcove-units-05.webp", type: "Alcove units" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp", type: "Fitted wardrobes" },
-  { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
-  { file: "/images/alcove-units/alcove-units-09.webp", type: "Alcove units" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp", type: "Fitted wardrobes" },
-  { file: "/images/doors-panelling/doors-panelling-03.webp", type: "Panelling and doors" },
-  { file: "/images/bespoke-kitchens/bespoke-kitchens-05.webp", type: "Bespoke kitchens" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-10.webp", type: "Fitted wardrobes" },
-  { file: "/images/alcove-units/alcove-units-07.webp", type: "Alcove units" },
-  { file: "/images/doors-panelling/doors-panelling-01.webp", type: "Panelling and doors" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-05.webp", type: "Fitted wardrobes" },
-  { file: "/images/bespoke-kitchens/bespoke-kitchens-09.webp", type: "Bespoke kitchens" },
-  { file: "/images/alcove-units/alcove-units-10.webp", type: "Alcove units" },
-  { file: "/images/bathroom/bathroom-01.webp", type: "Bathroom" },
-  { file: "/images/fitted-wardrobes/fitted-wardrobes-04.webp", type: "Fitted wardrobes" },
+  {
+    file: "/images/alcove-units/alcove-units-01.webp",
+    type: "Alcove units",
+    alt: "Alcove units either side of a fireplace: lit open shelves above white panelled cupboards, with a TV above the fireplace",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-08.webp",
+    type: "Fitted wardrobes",
+    alt: "Fitted wardrobes with tall white handleless doors running floor to ceiling along two walls",
+  },
+  {
+    file: "/images/media-walls/media-walls-01.webp",
+    type: "Built-in TV units",
+    alt: "Built-in TV unit across a whole wall: the TV set among lit open shelves, with white panelled cupboards below",
+  },
+  {
+    file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp",
+    type: "Bespoke kitchens",
+    alt: "Bespoke kitchen with white Shaker-style cupboards, brass cup handles and knobs, built-in ovens and lighting under the wall cupboards",
+  },
+  {
+    file: "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp",
+    type: "Walk-in wardrobes",
+    alt: "Walk-in wardrobe with lit white shelving, hanging rails and a stack of drawers with long black handles",
+  },
+  {
+    file: "/images/doors-panelling/doors-panelling-02.webp",
+    type: "Panelling and doors",
+    alt: "Painted wall panelling in a grid of square panels behind a bed, with a wall light either side",
+  },
+  {
+    file: "/images/alcove-units/alcove-units-08.webp",
+    type: "Alcove units",
+    alt: "Cream alcove units either side of a fireplace: open shelves above cupboards, with a TV mounted above the fireplace",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp",
+    type: "Fitted wardrobes",
+    alt: "Fitted wardrobes along a whole wall: white Shaker-style doors with long black bar handles, up to the cornice",
+  },
+  {
+    file: "/images/alcove-units/alcove-units-06.webp",
+    type: "Alcove units",
+    alt: "Alcove shelving beside a fireplace and a built-in desk in the bay window of a living room",
+  },
+  {
+    file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp",
+    type: "Bespoke kitchens",
+    alt: "Bespoke kitchen with dark grey handleless cupboards, a matching island with two bar stools, and white worktops",
+  },
+  {
+    file: "/images/alcove-units/alcove-units-03.webp",
+    type: "Alcove units",
+    alt: "Alcove unit: built-in bookshelves in three bays above white cupboards with dark knobs",
+  },
+  {
+    file: "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp",
+    type: "Walk-in wardrobes",
+    alt: "Walk-in wardrobe in a dark wood-grain finish, with hanging rails on two walls, open compartments above and low shelves below",
+  },
+  {
+    file: "/images/home-office/home-office-01.webp",
+    type: "Home office",
+    alt: "Built-in home office: a wood-grain desk under the window with drawers, a tall white cupboard and full-height shelving for files",
+  },
+  {
+    file: "/images/media-walls/media-walls-02.webp",
+    type: "Built-in TV units",
+    alt: "Built-in TV unit across a whole wall: the TV set into a grey panel, framed by lit white shelving with cupboards below",
+  },
+  {
+    file: "/images/bespoke-kitchens/bespoke-kitchens-10.webp",
+    type: "Bespoke kitchens",
+    alt: "Bespoke kitchen: the tall sage green end of the kitchen run, beside an open-plan dining and living room",
+  },
+  {
+    file: "/images/alcove-units/alcove-units-05.webp",
+    type: "Alcove units",
+    alt: "Alcove units: white built-in shelving around a TV, with glass shelves either side and Shaker-style cupboards below",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp",
+    type: "Fitted wardrobes",
+    alt: "Fitted wardrobes beside a bed: white panelled doors with small round knobs, and cupboards above up to the ceiling",
+  },
+  {
+    file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp",
+    type: "Bespoke kitchens",
+    alt: "Bespoke kitchen with sage green handleless cupboards, built-in ovens in a tall unit and a round dining table in front",
+  },
+  {
+    file: "/images/alcove-units/alcove-units-09.webp",
+    type: "Alcove units",
+    alt: "Alcove shelving filling a wall recess: lit white shelves at each side, a grey centre bay and cupboards along the bottom",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp",
+    type: "Fitted wardrobes",
+    alt: "Fitted wardrobes under a sloping ceiling with a roof window: navy panelled doors, with lit open shelves at the end",
+  },
+  {
+    file: "/images/doors-panelling/doors-panelling-03.webp",
+    type: "Panelling and doors",
+    alt: "Panelled front door painted soft green, with a brass knocker and letterbox, between glazed side panels",
+  },
+  {
+    file: "/images/bespoke-kitchens/bespoke-kitchens-05.webp",
+    type: "Bespoke kitchens",
+    alt: "Bespoke kitchen with grey gloss cupboards, long bar handles, a wood-look worktop and a pale green splashback",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-10.webp",
+    type: "Fitted wardrobes",
+    alt: "Inside a fitted wardrobe under a sloping ceiling: lit shelving and two columns of drawers, below a roof window",
+  },
+  {
+    file: "/images/alcove-units/alcove-units-07.webp",
+    type: "Alcove units",
+    alt: "Alcove units either side of a fireplace: open shelves above white Shaker-style cupboards with brass knobs",
+  },
+  {
+    file: "/images/doors-panelling/doors-panelling-01.webp",
+    type: "Panelling and doors",
+    alt: "Hallway joinery: a built-in bench with drawers, white panelled cupboard doors and a lit recess, beside a green front door",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-05.webp",
+    type: "Fitted wardrobes",
+    alt: "Inside a fitted wardrobe: light wood-grain interior with a hanging rail, shelves and a stack of seven drawers",
+  },
+  {
+    file: "/images/bespoke-kitchens/bespoke-kitchens-09.webp",
+    type: "Bespoke kitchens",
+    alt: "Bespoke kitchen with white handleless cupboards and a peninsula, white worktops with grey veining and a gas hob",
+  },
+  {
+    file: "/images/alcove-units/alcove-units-10.webp",
+    type: "Alcove units",
+    alt: "Alcove units: a full-height bookcase in the alcove beside a panelled window seat",
+  },
+  {
+    file: "/images/bathroom/bathroom-01.webp",
+    type: "Bathroom",
+    alt: "Bathroom with a cream wall-hung vanity unit, mirrored cabinet, brass towel radiator and a bath with a shower screen",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-04.webp",
+    type: "Fitted wardrobes",
+    alt: "Fitted wardrobe with its white doors open: light wood-grain interior with a hanging rail, shelves and four drawers",
+  },
 ];
+
+/* The home page's first photograph is the same frame as bespoke-kitchens-07,
+   kept as its own file. Photographs off the gallery get their description here. */
+const EXTRA_ALT: Record<string, string> = {
+  "/images/bespoke-kitchens/green-kitchen.webp":
+    "Bespoke kitchen with sage green handleless cupboards, built-in ovens in a tall unit and a round dining table in front",
+};
+
+/** The description of a photograph by its file, from the gallery or the list
+    above. A photograph with none falls back to its service name alone. */
+export function photoAlt(file: string, type: string): string {
+  return WORK_GALLERY.find((s) => s.file === file)?.alt ?? EXTRA_ALT[file] ?? type;
+}
