@@ -65,6 +65,23 @@ const paper = tone === "paper";
 </div>
 
 <style>
+  /* On a phone the band's Get a quote fills the width and WhatsApp wraps under
+     it; centre it there so the pair reads as one control (founder, 6 Nov 2026). */
+  @media (max-width: 640px) {
+    .enq-actions.on-paper {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-8);
+    }
+    /* Link.astro sets align-self: flex-start on its own links. */
+    .enq-actions.on-paper > :global(.ds-link) {
+      align-self: center;
+    }
+    .enq-actions.on-paper > .enq-band-cta {
+      align-self: stretch;
+      text-align: center;
+    }
+  }
   .enq-actions {
     display: flex;
     flex-wrap: wrap;

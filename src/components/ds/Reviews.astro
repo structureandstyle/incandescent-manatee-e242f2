@@ -80,7 +80,8 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
 ---
 
 <section data-reviews class={className} style={style}>
-  <SectionHead meta={meta} scribe={scribe}>{title}</SectionHead>
+  {/* A page may show its review with no heading at all (founder, 6 Nov 2026). */}
+  {title && <SectionHead meta={meta} scribe={scribe}>{title}</SectionHead>}
 
   <div
     style={`display:grid;grid-template-columns:${hasQuotes ? "minmax(0,5fr) minmax(0,7fr)" : "minmax(0,1fr)"};gap:var(--gap-xl);align-items:start`}
@@ -150,11 +151,8 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
                 href={href}
                 target="_blank"
                 rel="noopener"
-                style="display:grid;grid-template-columns:66px minmax(0,1fr);gap:var(--space-6);padding:var(--space-12) 0;text-decoration:none;color:inherit"
+                style="display:grid;grid-template-columns:minmax(0,1fr);padding:var(--space-12) 0;text-decoration:none;color:inherit"
               >
-                <MonoLabel as="span" tone="soft" style="padding-top:4px">
-                  Rev. {String(i + 1).padStart(2, "0")}
-                </MonoLabel>
                 <div>
                   {/* A blockquote, not a paragraph. It is semantically what
                       this is, and it marks the text as verbatim: these are
@@ -174,10 +172,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
                 </div>
               </a>
             ) : (
-              <div style="display:grid;grid-template-columns:66px minmax(0,1fr);gap:var(--space-6);padding:var(--space-12) 0">
-                <MonoLabel as="span" tone="soft" style="padding-top:4px">
-                  Rev. {String(i + 1).padStart(2, "0")}
-                </MonoLabel>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr);padding:var(--space-12) 0">
                 <div>
                   {/* A blockquote, not a paragraph. It is semantically what
                       this is, and it marks the text as verbatim: these are
