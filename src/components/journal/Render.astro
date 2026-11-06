@@ -32,18 +32,26 @@ interface Props {
   height: number;
   /** What this render shows that the others do not, in a few words. */
   caption: string;
+  /**
+   * A short name of what the render shows, for the enlarged photograph
+   * ("Sliding doors"). The lightbox reads "AI-generated example · " and this.
+   * Needed where the caption is only "AI-generated example"; where the caption
+   * already names the render, that is used.
+   */
+  short?: string;
   /** The fuller description shown beneath the image. */
   description?: string;
   /** Set on each render inside <Renders>: half the wide column. */
   pair?: boolean;
 }
 
-const { src, alt, width, height, caption, description, pair = false } = Astro.props;
+const { src, alt, width, height, caption, short, description, pair = false } = Astro.props;
+const label = short ?? (/^AI-generated example$/i.test(caption) ? undefined : caption);
 const sizes = pair ? "(max-width: 760px) 92vw, 530px" : "(max-width: 700px) 92vw, 680px";
 ---
 
 <div class="render">
-  <Plate photo={src} alt={alt} width={width} height={height} ratio={`${width} / ${height}`} subject={caption} sizes={sizes} />
+  <Plate photo={src} alt={alt} width={width} height={height} ratio={`${width} / ${height}`} subject={caption} label={label} ai sizes={sizes} />
   {description && <p class="render-desc">{description}</p>}
 </div>
 

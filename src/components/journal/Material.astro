@@ -42,6 +42,7 @@ const rows = Astro.props.rows ?? [
     height={height}
     ratio="4 / 3"
     subject={caption}
+    label={caption}
     sizes="(max-width: 760px) 92vw, 340px"
   >
     {ask && <Ask q={ask.q} slot="controls">{ask.text}</Ask>}
