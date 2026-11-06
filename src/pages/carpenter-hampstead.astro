@@ -55,8 +55,6 @@ const quotes = QUOTE_BANK.filter((q) => q.areas.includes(area.name)).map((q) => 
   text: q.text,
   meta: q.gate && answered(q.gate) ? String(ANSWERS[q.gate].value) : q.meta,
 }));
-const reviewsTitle =
-  quotes.length === 1 ? "A Google review that mentions Hampstead" : "Google reviews that mention Hampstead";
 
 const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
 const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
@@ -120,10 +118,7 @@ const P2 = "margin-top:var(--space-10)";
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Access" level={4}>How do parking and access work for a job in Hampstead?</SectionHead>
     <div style="max-width:var(--measure)">
-      <p>
-        Many Hampstead streets are narrow, and many houses have steps up to the front door.
-      </p>
-      <p style={P2}><Value q="areaHampstead4" /></p>
+      <p><Value q="areaHampstead4" /></p>
     </div>
   </Wrap>
 
@@ -147,8 +142,7 @@ const P2 = "margin-top:var(--space-10)";
   {/* The count and "All N reviews on Google" are the component's, from REVIEWS.count. */}
   <Wrap style="padding-bottom:var(--section-y)">
     <Reviews
-      title={reviewsTitle}
-      meta="Google"
+      title=""
       average={REVIEWS.average}
       count={REVIEWS.count}
       href={REVIEWS.profileUrl}
