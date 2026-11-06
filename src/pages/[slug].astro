@@ -18,6 +18,8 @@
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import Value from "../components/Value.astro";
+import CopyText from "../components/CopyText.astro";
+import CopySection from "../components/CopySection.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
@@ -79,10 +81,15 @@ const isIndexable = indexable(path) && Boolean(SERVICE_COPY[service.slug]);
  */
 const SERVICE_ONLY = SERVICES.filter((s) => !s.guide);
 const at = SERVICE_ONLY.findIndex((s) => s.slug === service.slug);
+/* Rotated from this page's position as before, then only pages that are live
+   (a draft held by its gate, such as home office and under-stair on 6 Nov
+   2026, is not linked from a finished page), then the first three. */
 const others = Array.from(
-  { length: Math.min(3, SERVICE_ONLY.length) },
+  { length: SERVICE_ONLY.length },
   (_, i) => SERVICE_ONLY[(Math.max(at, -1) + 1 + i) % SERVICE_ONLY.length]
-).filter((s) => s.slug !== service.slug);
+)
+  .filter((s) => s.slug !== service.slug && indexable(servicePath(s)))
+  .slice(0, 3);
 
 /**
  * The cost guide, offered as a guide rather than as a fourth service, and only
@@ -109,7 +116,28 @@ const copy = SERVICE_COPY[service.slug];
  * card this page sends. The gallery it used to build came off on 6 September
  * 2026, see the note in the markup below.
  */
-const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
+const sel = selection as Record<string, { file: string; w: number; h: number; ai?: boolean }[]>;
+
+/**
+ * Figures placed inside a copy section (home office and under-stair page,
+ * 6 Nov 2026). Each must be a registered photograph in _selection.json, and
+ * its `ai` flag must match the selection's, so a flag cannot be dropped from
+ * one place and left in the other. An AI figure is drawn by <Render> with the
+ * visible caption "AI-generated example"; a real one by a plain <Plate>.
+ */
+const registered = new Map(Object.values(sel).flat().map((s) => [s.file, s]));
+for (const sec of copy?.sections ?? []) {
+  for (const group of sec.figures ?? []) {
+    for (const f of group.items) {
+      const entry = registered.get(f.src);
+      if (!entry) throw new Error(`${service.slug}: figure ${f.src} is not in public/images/_selection.json`);
+      if (Boolean(entry.ai) !== Boolean(f.ai)) {
+        throw new Error(`${service.slug}: figure ${f.src} has ai=${Boolean(f.ai)} in service-copy.ts but ai=${Boolean(entry.ai)} in _selection.json`);
+      }
+      if (f.src.includes("-ai-") && !f.ai) throw new Error(`${service.slug}: ${f.src} is named -ai- but is not flagged ai`);
+    }
+  }
+}
 
 /**
  * This page's own share image, 5 September 2026.
@@ -123,7 +151,7 @@ const sel = selection as Record<string, { file: string; w: number; h: number }[]
  * WebP. The cost guide borrows the wardrobe card for the same reason it
  * borrows the wardrobe photography.
  */
-const ogSlug = sel[service.slug]
+const ogSlug = sel[service.slug]?.some((x) => !x.ai)
   ? service.slug
   : service.slug === "fitted-wardrobe-cost"
     ? "fitted-wardrobes"
@@ -343,11 +371,14 @@ const SECTIONS: Section[] = [
       <Wrap style="padding-bottom:var(--section-y)">
         <div style="max-width:var(--measure)">
           {copy.intro.map((p, i) => (
-            <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
+            <p style={i ? "margin-top:var(--space-10)" : undefined}><CopyText text={p} /></p>
           ))}
         </div>
       </Wrap>
     )}
+
+    {/* Sections that sit straight after the intro (after: "intro"). */}
+    {copy?.sections.filter((sec) => sec.after === "intro").map((sec) => <CopySection sec={sec} />)}
 
     <!-- Question-shaped sections -->
     {SECTIONS.map((section) => (
@@ -460,29 +491,11 @@ const SECTIONS: Section[] = [
           </Wrap>
         )}
 
-        {copy?.sections.filter((sec) => sec.after === section.id).map((sec) => (
-          <Wrap style="padding-bottom:var(--section-y)">
-            <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
-            <div style="max-width:var(--measure)">
-              {sec.body.map((p, i) => (
-                <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
-              ))}
-            </div>
-          </Wrap>
-        ))}
+        {copy?.sections.filter((sec) => sec.after === section.id).map((sec) => <CopySection sec={sec} />)}
       </>
     ))}
 
-    {copy && copy.sections.filter((sec) => !sec.after).map((sec) => (
-      <Wrap style="padding-bottom:var(--section-y)">
-        <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
-        <div style="max-width:var(--measure)">
-          {sec.body.map((p, i) => (
-            <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
-          ))}
-        </div>
-      </Wrap>
-    ))}
+    {copy && copy.sections.filter((sec) => !sec.after).map((sec) => <CopySection sec={sec} />)}
 
     <Wrap style="padding-bottom:var(--section-y)">
       <SectionHead meta="Portfolio" level={5}>Selected work</SectionHead>
@@ -509,7 +522,7 @@ const SECTIONS: Section[] = [
       <Wrap style="padding-bottom:var(--section-y)">
         <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
         <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
-          {copy.faqs.map((f) => <Faq q={f.q}>{f.a}</Faq>)}
+          {copy.faqs.map((f) => <Faq q={f.q}><CopyText text={f.a} /></Faq>)}
         </div>
       </Wrap>
     )}

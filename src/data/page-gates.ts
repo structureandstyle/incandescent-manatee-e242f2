@@ -48,8 +48,14 @@ export const PAGE_GATES = {
   "/fitted-wardrobe-cost/": SERVICE_PAGE,
   "/media-walls/": SERVICE_PAGE,
   "/bespoke-kitchens/": SERVICE_PAGE,
-  /* home-office-understairs-storage deferred 31 Aug 2026 with its SERVICES
-     entry: no route, no gate. See DEFERRED_SERVICES in site.ts. */
+  /* Home office and under-stair storage, built 6 Nov 2026 as a draft. Six keys
+     of its own gate it: homeOffice1, 2 and 6 are sentences shown through a
+     <Value>, 3 to 5 only hold the page (price, photographs, the AI examples).
+     It lifts itself when all six have values. */
+  "/home-office-understairs-storage/": [
+    ...SERVICE_PAGE,
+    "homeOffice1", "homeOffice2", "homeOffice3", "homeOffice4", "homeOffice5", "homeOffice6",
+  ],
 
   /**
    * The brand pages. Each list is that page read section by section, plus the

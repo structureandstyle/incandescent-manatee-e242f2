@@ -188,7 +188,7 @@ const siteSchema = {
         homepage carried no link at all to the fitted wardrobes page, the
         flagship, since the four carousels below are the other services. */}
     <MonoLabel as="p" style="margin-top:var(--space-14)">
-      {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map((s, i) => (
+      {SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost" && indexable(servicePath(s))).map((s, i) => (
         <>
           {i > 0 && <span aria-hidden="true"> · </span>}
           <a href={servicePath(s)} style="color:inherit">{serviceLabel(s)}</a>

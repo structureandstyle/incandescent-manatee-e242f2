@@ -1,0 +1,74 @@
+---
+/**
+ * One extra section of a service page's copy (service-copy.ts `sections`).
+ *
+ * Paragraphs go through CopyText, so `{{q:KEY}}` markers become open questions
+ * until answered. Figures sit above the body or after a numbered paragraph.
+ * A real photograph is a plain Plate. An AI-generated example is a journal
+ * <Render>, whose caption always starts with the visible label "AI-generated
+ * example" (added here, so a copy edit cannot drop it); two in one group sit
+ * side by side in <Renders>, as in the journal guides. The sentence saying
+ * these images are AI-generated examples is written once, in the copy, above
+ * the first one. scripts/verify-build.mjs checks both on the built page.
+ */
+import Wrap from "./ds/Wrap.astro";
+import SectionHead from "./ds/SectionHead.astro";
+import Plate from "./ds/Plate.astro";
+import Render from "./journal/Render.astro";
+import Renders from "./journal/Renders.astro";
+import CopyText from "./CopyText.astro";
+import type { ServiceCopy } from "../data/service-copy";
+
+interface Props {
+  sec: ServiceCopy["sections"][number];
+}
+
+const { sec } = Astro.props;
+const AI_LABEL = "AI-generated example";
+
+const groups = sec.figures ?? [];
+const above = groups.filter((g) => g.afterParagraph === undefined);
+const below = (i: number) => groups.filter((g) => g.afterParagraph === i);
+---
+
+<Wrap style="padding-bottom:var(--section-y)">
+  <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
+
+  {above.map((g) => (
+    <div style="max-width:var(--measure)">
+      {g.items.map((f) => (
+        <Plate
+          photo={f.src}
+          alt={f.alt}
+          width={f.width}
+          height={f.height}
+          ratio={`${f.width} / ${f.height}`}
+          subject={f.caption}
+          sizes="(max-width: 700px) 92vw, 420px"
+          style="max-width:420px;margin-bottom:var(--space-10)"
+        />
+      ))}
+    </div>
+  ))}
+
+  {sec.body.map((p, i) => (
+    <>
+      <div style="max-width:var(--measure)">
+        <p style={i ? "margin-top:var(--space-10)" : undefined}><CopyText text={p} /></p>
+      </div>
+      {below(i).map((g) =>
+        g.items.length > 1 ? (
+          <Renders>
+            {g.items.map((f) => (
+              <Render src={f.src} alt={f.alt} width={f.width} height={f.height} pair caption={f.ai ? `${AI_LABEL} · ${f.caption}` : f.caption} />
+            ))}
+          </Renders>
+        ) : (
+          g.items.map((f) => (
+            <Render src={f.src} alt={f.alt} width={f.width} height={f.height} caption={f.ai ? `${AI_LABEL} · ${f.caption}` : f.caption} />
+          ))
+        )
+      )}
+    </>
+  ))}
+</Wrap>

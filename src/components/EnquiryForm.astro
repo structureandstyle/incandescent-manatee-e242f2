@@ -1,5 +1,5 @@
 ---
-import { SERVICES, DEFERRED_SERVICES, serviceLabel } from "../data/site";
+import { SERVICES, serviceLabel } from "../data/site";
 import { FIELD_NAMES as SOURCE_FIELDS } from "../scripts/enquiry-source.mjs";
 
 interface Props {
@@ -46,8 +46,8 @@ const largeUploadsEnabled = Boolean(turnstileSiteKey);
  *   at all to refuse the enquiry.
  *
  *   Home office and under-stair storage is one of the six service pages in the
- *   signed scope, deferred on 31 August until its imagery exists. The page is
- *   deferred; the work is not.
+ *   signed scope, deferred on 31 August and built on 6 November 2026 as a
+ *   noindexed draft; it is in SERVICES like the rest.
  */
 const CHOICES = [
   // serviceLabel, not title: this list is read by a visitor, and one service
@@ -55,7 +55,6 @@ const CHOICES = [
   // else. The enquiry log records whatever is ticked, so the label is what
   // lands in it, and the two stay in step.
   ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map(serviceLabel),
-  ...DEFERRED_SERVICES.map(serviceLabel),
   "Panelling and doors",
   "Flooring",
   "Something else",

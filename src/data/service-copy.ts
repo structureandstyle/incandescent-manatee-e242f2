@@ -26,6 +26,30 @@
  * version of the shared template.
  */
 
+/**
+ * One image placed inside a section (home office and under-stair page, 6 Nov
+ * 2026). `ai` marks an AI-generated example: it is rendered with the visible
+ * caption "AI-generated example", the page template refuses to build if the
+ * flag disagrees with public/images/_selection.json, and scripts/verify-build.mjs
+ * fails any built image with "-ai-" in its path that is not labelled. An AI
+ * image is never his work and never goes on the Google Business Profile.
+ */
+export type Figure = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** What it shows, in a few words. An AI figure's label is added in front. */
+  caption: string;
+  ai?: true;
+};
+
+/**
+ * Strings in a ServiceCopy (intro, section bodies, FAQ answers) may hold
+ * `{{q:KEY}}`. Each is rendered through <Value q="KEY" />, so the sentence
+ * shows our provisional wording inside an Ask until the answer lands in
+ * answers.ts. CopyText.astro fails the build on a key that does not exist.
+ */
 export type ServiceCopy = {
   /** Body paragraphs rendered after the photography, before the spec sections. */
   intro: string[];
@@ -38,7 +62,15 @@ export type ServiceCopy = {
    */
   leads?: Record<string, string>;
   /** Extra sections. Set `after` to place one after a named shared section. */
-  sections: { meta: string; heading: string; body: string[]; after?: string }[];
+  sections: {
+    meta: string;
+    heading: string;
+    body: string[];
+    /** A shared section id, or "intro" to sit straight after the intro. */
+    after?: string;
+    /** Images in this section. No `afterParagraph` means above the body. */
+    figures?: { afterParagraph?: number; items: Figure[] }[];
+  }[];
   /**
    * Guide-price tables, rendered directly after the cost section. Source:
    * the client's pricing document, 31 Aug 2026 (ops repo,
@@ -424,6 +456,114 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
            value-to-a-house research; this page carried an older draft of the
            same answer until 8 Sep. One question, one answer, both pages. */
         a: "Not in a way anyone can honestly put a figure on, and we would rather say so than invent one. Buyers do ask about storage, and a fitted room is one of the things they notice at a viewing. Valuers price floor area, condition and location, so a fitted room supports the asking price rather than adding a line to it. Have them made for the years you live with them.",
+      },
+    ],
+  },
+  /* Home office and under-stair storage, 6 Nov 2026. Copy from the ops repo's
+     deliverables/home-office/copy.md; every sentence about what we fit is a
+     {{q:...}} that stays an open question until Kaspar confirms it. The
+     "AI-generated example" sentence sits above the first AI image and says it
+     once; each AI image repeats the label in its caption. */
+  "home-office-understairs-storage": {
+    intro: [
+      "The space under a staircase slopes, narrows and rarely sits square to the walls around it. A home office has its own fixed points: the window, the radiator and the sockets. Fitted joinery is designed around those, so the storage or the desk suits the room as it is.",
+      "You do not need to arrive with a layout. Where a project needs design work, drawings are issued for you to review, with up to two rounds of revisions included.",
+    ],
+    leads: {
+      cost: "Under-stair storage and home offices are priced per project, because the stair, the room and what goes in them decide the figure.",
+      fitting: "A staircase is rarely square to the walls around it, so each unit is cut to the stair as it actually is.",
+    },
+    sections: [
+      {
+        meta: "Under-stair",
+        heading: "Under-stair storage that follows the stair",
+        after: "intro",
+        body: [
+          "Images marked AI-generated example show a possible layout and are not photographs of our work. {{q:homeOffice1}}",
+          "The stair sets the height, so the tall end can take full-height cupboards and the low end can take drawers. Each unit is cut to follow the line of the stair and the walls beside it, so it leaves no gaps.",
+        ],
+        figures: [
+          {
+            afterParagraph: 0,
+            items: [
+              {
+                src: "/images/home-office/home-office-ai-understairs-drawers.webp",
+                alt: "AI-generated example: painted sage green fitted cupboards and drawers under a straight staircase in a London Victorian hallway, with brass bar pulls and the tops of the units following the slope of the stairs.",
+                width: 1400,
+                height: 906,
+                caption: "Cupboards with pull-out drawers",
+                ai: true,
+              },
+              {
+                src: "/images/home-office/home-office-ai-understairs-coats-shoes.webp",
+                alt: "AI-generated example: warm off-white fitted cupboard doors under a straight staircase in a London Edwardian hallway, with a low oak-topped bench drawer and an open shelf of shoes at the shallow end.",
+                width: 1400,
+                height: 933,
+                /* The picture shows hinged doors, a bench drawer and an open
+                   shoe shelf, so the caption says that and not "coats". */
+                caption: "Cupboards, bench and open shoe shelf",
+                ai: true,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        meta: "Home office",
+        heading: "Fitted home offices",
+        after: "intro",
+        body: [
+          "{{q:homeOffice2}} The window, radiator and sockets decide where a desk can sit, so we measure those before the layout is drawn.",
+          "Drawers, shelving and cupboards are planned around what you keep, so the desk run works as storage as well as a surface.",
+        ],
+        figures: [
+          {
+            items: [
+              {
+                src: "/images/home-office/home-office-01.webp",
+                alt: "Home office joinery, completed installation: a desk run with drawers, a tall cupboard and shelving.",
+                width: 1400,
+                height: 1867,
+                caption: "Finished built-in home office",
+              },
+            ],
+          },
+          {
+            afterParagraph: 0,
+            items: [
+              {
+                src: "/images/home-office/home-office-ai-alcove-desk.webp",
+                alt: "AI-generated example: a fitted oak desk spanning an alcove beside a chimney breast, with three off-white drawers under one side, open shelves above and a task lamp, in a London Victorian room.",
+                width: 1400,
+                height: 933,
+                caption: "Desk run with drawers and shelving in an alcove",
+                ai: true,
+              },
+              {
+                src: "/images/home-office/home-office-ai-study-wall.webp",
+                alt: "AI-generated example: a full study wall in a light London room, with a long oak desk and three drawers in the middle, open shelves above and a tall two-door cupboard at each end, all painted off-white with brass bar pulls.",
+                width: 1400,
+                height: 933,
+                caption: "Full study wall with tall cupboards",
+                ai: true,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Do you fit under stairs storage around meters and boilers?",
+        a: "{{q:homeOffice6}}",
+      },
+      {
+        q: "How soon can an under-stair unit or a home office be fitted?",
+        a: "Lead time is typically 4 to 8 weeks, depending on the scope of the project, the specification and our current schedule.",
+      },
+      {
+        q: "Is there a minimum job size?",
+        a: "We generally work to a minimum project value of £2,000. If an under-stair unit on its own sits near that, ask before ruling it out.",
       },
     ],
   },
