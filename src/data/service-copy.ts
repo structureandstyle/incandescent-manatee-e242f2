@@ -177,7 +177,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
          reached the following evening. */
       {
         q: "Can it match furniture we already have?",
-        a: "Yes. We can select materials, colours and finishes to complement existing furniture, flooring and other finishes within your home.",
+        a: "We can select materials, colours and finishes to complement existing furniture, flooring and other finishes within your home.",
       },
       {
         q: "What do you need from us before fitting?",
@@ -235,7 +235,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       },
       {
         q: "Can the units match our existing woodwork?",
-        a: "Yes. Finishes can be selected to complement or closely match existing furniture, joinery, flooring or other finishes within the room.",
+        a: "Finishes can be selected to complement or closely match existing furniture, joinery, flooring or other finishes within the room.",
       },
       {
         q: "How long does it take from survey to fitting?",
@@ -317,7 +317,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
     faqs: [
       {
         q: "Do I need a finished kitchen plan before enquiring?",
-        a: "No. Rough dimensions, a photograph or drawing, and a sense of what is not working are enough to start. The consultation and measured survey establish the detail needed for the quotation and any drawings.",
+        a: "Rough dimensions, a photograph or drawing, and a sense of what is not working are enough to start. The consultation and measured survey establish the detail needed for the quotation and any drawings.",
       },
       {
         q: "How many design revisions are included?",
@@ -412,7 +412,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       },
       {
         q: "Does the price include design?",
-        a: "Yes, any design work the project needs is included in the quotation, and there is no separate design fee.",
+        a: "Any design work the project needs is included in the quotation, and there is no separate design fee.",
       },
       {
         q: "Is there a minimum job size?",

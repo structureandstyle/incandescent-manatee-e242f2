@@ -507,7 +507,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       // still closes.
       let box: HTMLDivElement | null = null;
       let lastFocus: Element | null = null;
-      let set: { src: string; alt: string }[] = [];
+      let set: { src: string; alt: string; label: string }[] = [];
       let idx = 0;
 
       /**
@@ -535,7 +535,20 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         if (lastFocus instanceof HTMLElement) lastFocus.focus();
       }
 
-      const pad = (n: number) => String(n).padStart(2, "0");
+      // The short caption under an enlarged photograph (6 Nov 2026). It comes
+      // from the image's data-caption, set by Plate from its label (the service
+      // name for a real photograph, "AI-generated example · ..." for an AI
+      // image), and falls back to the alt up to its first comma. The alt stays
+      // long for screen readers; the AI disclosure is never dropped, because
+      // Plate puts it in data-caption and data-ai marks it here as well.
+      function captionFor(el: HTMLElement, alt: string): string {
+        const given = el.dataset.caption?.trim();
+        const short = given || alt.split(",")[0].trim();
+        if (el.hasAttribute("data-ai") && !/^AI-generated example/i.test(short)) {
+          return `AI-generated example · ${short}`;
+        }
+        return short;
+      }
 
       function showAt(next: number) {
         if (!box || !set.length) return;
@@ -544,8 +557,8 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         const cap = box.querySelector("p")!;
         big.src = set[idx].src;
         big.alt = set[idx].alt;
-        cap.textContent =
-          set.length > 1 ? `${pad(idx + 1)} / ${pad(set.length)} · ${set[idx].alt}` : set[idx].alt;
+        // Just what it is: no counter, no alt text (6 Nov 2026).
+        cap.textContent = set[idx].label;
         // The neighbours load while this one is looked at, so a swipe lands
         // on a picture rather than on a blank frame.
         if (set.length > 1) {
@@ -565,12 +578,13 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       // 400px picture in the middle of a 1500px screen. The src attribute is
       // the original at full size and is what an enlargement is for; the
       // variants exist so the grid does not pay for it until someone asks.
-      function setFor(img: HTMLImageElement): { src: string; alt: string; el?: HTMLImageElement }[] {
+      function setFor(img: HTMLImageElement): { src: string; alt: string; label: string; el?: HTMLImageElement }[] {
         const car = img.closest<HTMLElement>("[data-carousel]");
         if (car && car.dataset.files) {
           const files: string[] = JSON.parse(car.dataset.files);
           const altBase = car.dataset.altBase || img.alt;
-          return files.map((f, n) => ({ src: f, alt: `${altBase}, photograph ${n + 1}` }));
+          const label = captionFor(car, altBase);
+          return files.map((f, n) => ({ src: f, alt: `${altBase}, photograph ${n + 1}`, label }));
         }
         // Scoped, so the homepage's six do not count the hero as a seventh
         // and the counter reads 06 rather than 07.
@@ -578,6 +592,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         return [...scope.querySelectorAll<HTMLImageElement>("img[data-plate-photo]")].map((el) => ({
           src: el.getAttribute("src") || el.src,
           alt: el.alt,
+          label: captionFor(el, el.alt),
           el,
         }));
       }

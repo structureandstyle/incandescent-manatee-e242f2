@@ -86,6 +86,17 @@ export const PAGE_GATES = {
      with the aftercare section. */
   "/about/": [...BAND_QUESTIONS, "q06", "q29", "q35"],
 
+  /* The area pages (src/data/areas.ts). Each is gated on the band and on its
+     own client keys, one per claim only the client can confirm. While any is
+     open the page is noindexed, out of the sitemap, absent from the footer's
+     Areas group and unlinked from the where-we-work lines (AreaList). An area
+     page missing from this list would be ungated and so reach the sitemap by
+     default: add the entry in the same commit as the page. */
+  "/carpenter-hampstead/": [
+    ...BAND_QUESTIONS,
+    "areaHampstead1", "areaHampstead2", "areaHampstead3", "areaHampstead4",
+  ],
+
   // No client dependency.
   "/journal/": [],
   "/contact/": [],

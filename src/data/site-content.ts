@@ -53,6 +53,7 @@
 
 import type { QuestionKey } from "./answers";
 import reviewsData from "./reviews.json";
+import QUOTE_BANK_JSON from "./quote-bank.json";
 
 /* ------------------------------------------------------------------ nav */
 
@@ -95,6 +96,30 @@ export const BAND = {
 
 /* ------------------------------------------------------------ reviews */
 
+/**
+ * The review bank. Each entry is one Google review, verbatim and whole: `text`
+ * carries a blank line (two newlines) wherever the original has a paragraph
+ * break, and the Reviews component keeps them. `areas` is explicit, never
+ * matched on the text, because a "West Hampstead" review must not land on the
+ * Hampstead page. `gate`, where present, is the answers.ts key holding the
+ * reviewer's consent and byline for the page that quotes it.
+ */
+export type BankQuote = {
+  id: string;
+  text: string;
+  meta: string;
+  areas: readonly string[];
+  home: boolean;
+  gate?: QuestionKey;
+};
+export const QUOTE_BANK = QUOTE_BANK_JSON as readonly BankQuote[];
+
+/**
+ * Read live from the public profile on 28 September 2026: 16 reviews, all five
+ * stars. The count was 15 at the 22 August baseline and 14 on 1 September,
+ * when Arthur Kvasnei's review left the profile (ops repo baseline, A6.1). Two
+ * wardrobe reviews arrived in the week to 23 September. The site states what
+ * the profile shows today.
 /**
  * THE COUNT AND AVERAGE ARE NOT TYPED HERE. They are read from
  * src/data/reviews.json, which F2F's Make scenario "S&S Google review count to

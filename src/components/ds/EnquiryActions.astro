@@ -1,0 +1,127 @@
+---
+/**
+ * The two ways to start an enquiry: Get a quote and WhatsApp. One component,
+ * used by the service page heroes, the enquiry band and the 404, so the choice
+ * stays the same everywhere.
+ *
+ * TWO BUTTONS, NOT THREE (6 Nov 2026). The founders' decision after reviewing
+ * the Hampstead and home office previews: with Get a quote, Call and WhatsApp
+ * side by side there are too many options. Kaspar misses calls while he is on
+ * site, and WhatsApp gives him time to answer and leaves a written trail. The
+ * Google profile keeps its call button, and the phone number stays as contact
+ * information in the footer and on the contact page. It is not offered as a
+ * button here.
+ *
+ * GA4: a wa.me click fires enquiry_whatsapp from the delegated listener in
+ * Base.astro, and a /contact/ link opens the enquiry modal from the same
+ * place. Neither needs anything on the element.
+ *
+ * `tone="paper"` is for the green enquiry band: the filled paper button the
+ * band has always used, with WhatsApp as a paper link beside it.
+ */
+import Link from "./Link.astro";
+import { CONTACT } from "../../data/site-content";
+
+interface Props {
+  tone?: "default" | "paper";
+  /** Where Get a quote goes. The modal opens in place of /contact/. */
+  quoteHref?: string;
+  quoteLabel?: string;
+  /** Leave WhatsApp off where only the form is wanted. */
+  whatsapp?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const {
+  tone = "default",
+  quoteHref = "/contact/",
+  quoteLabel = "Get a quote",
+  whatsapp = true,
+  class: className,
+  style = "",
+} = Astro.props;
+
+const paper = tone === "paper";
+---
+
+<div class:list={["enq-actions", paper && "on-paper", className]} style={style}>
+  {paper ? (
+    <a class="enq-band-cta" href={quoteHref}>{quoteLabel}</a>
+  ) : (
+    <Link href={quoteHref} variant="button">{quoteLabel}</Link>
+  )}
+  {whatsapp && (
+    <Link
+      variant="nav"
+      tone={paper ? "paper" : "default"}
+      chamfer
+      href={CONTACT.whatsapp}
+      target="_blank"
+      rel="noopener"
+      style={paper ? undefined : "padding:var(--space-6) 0"}
+    >WhatsApp</Link>
+  )}
+</div>
+
+<style>
+  /* On a phone the band's Get a quote fills the width and WhatsApp wraps under
+     it; centre it there so the pair reads as one control (founder, 6 Nov 2026). */
+  @media (max-width: 640px) {
+    .enq-actions.on-paper {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-8);
+    }
+    /* Link.astro sets align-self: flex-start on its own links. */
+    .enq-actions.on-paper > :global(.ds-link) {
+      align-self: center;
+    }
+    .enq-actions.on-paper > .enq-band-cta {
+      align-self: stretch;
+      text-align: center;
+    }
+  }
+  .enq-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-12) var(--space-15);
+  }
+  /* The band's call to action: a filled block, so it reads as a control rather
+     than a line of text on a dark ground. */
+  .enq-band-cta {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-weight: var(--weight-medium);
+    font-size: var(--type-label-lg);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--green);
+    background: var(--paper);
+    border: 1px solid var(--paper);
+    padding: var(--space-8) var(--space-14);
+    transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+  }
+  .enq-band-cta:hover,
+  .enq-band-cta:focus-visible {
+    background: none;
+    color: var(--paper);
+  }
+  /* On a phone the button runs the full width so it is easy to hit, and
+     WhatsApp sits under it. */
+  @media (max-width: 560px) {
+    .on-paper {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-12);
+    }
+    .on-paper .enq-band-cta {
+      text-align: center;
+      padding: var(--space-9) var(--space-14);
+    }
+    .on-paper :global(a.ds-link) {
+      align-self: flex-start;
+    }
+  }
+</style>

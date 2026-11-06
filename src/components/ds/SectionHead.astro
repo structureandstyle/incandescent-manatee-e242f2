@@ -1,7 +1,7 @@
 ---
 /**
- * A section's opening: a structural rule, the title, and an optional mono note
- * sitting on the same baseline at the far right.
+ * A section's opening: a structural rule, an optional mono label directly above
+ * the title, and the title.
  * Ported from the design system's components/layout/SectionHead.jsx.
  *
  * Two changes from the source, both deliberate:
@@ -41,13 +41,21 @@ const {
 
 const rev = tone === "paper";
 
+/*
+ * THE LABEL SITS ABOVE THE TITLE (6 Nov 2026). It used to share a flex row with
+ * the title, pushed to the far right with space-between. On a wide screen it
+ * floated a whole page-width from the heading it described; below about 700px it
+ * wrapped under the heading with a large gap. Same at every width now: the
+ * mono label directly over the heading as a small kicker, the way the page
+ * hero's kicker sits over its H1, with a tight gap. The rule line and the
+ * scribe animation are unchanged.
+ */
 const row = [
   "display:flex",
-  "align-items:baseline",
-  "justify-content:space-between",
-  "gap:var(--space-12)",
+  "flex-direction:column",
+  "align-items:flex-start",
+  "gap:var(--space-5)",
   "padding-top:var(--space-8)",
-  "flex-wrap:wrap",
 ].join(";");
 
 const staticBorder = rev ? "var(--rule-structure-rev)" : "var(--rule-structure)";
@@ -61,8 +69,8 @@ const staticBorder = rev ? "var(--rule-structure-rev)" : "var(--rule-structure)"
       style={`display:block;height:var(--hairline);background:${rev ? "var(--hair-rev-strong)" : "var(--hair-strong)"}`}
     ></span>
     <div data-motion="square" data-from="bottom" data-motion-delay="1" style={row}>
-      <Display level={level} as={as} tone={tone} measure="none"><slot /></Display>
       {meta && <MonoLabel tone={rev ? "paper-soft" : "soft"}>{meta}</MonoLabel>}
+      <Display level={level} as={as} tone={tone} measure="none"><slot /></Display>
     </div>
   </div>
 ) : (
@@ -71,7 +79,7 @@ const staticBorder = rev ? "var(--rule-structure-rev)" : "var(--rule-structure)"
     style={`${row};border-top:${staticBorder};margin-bottom:var(--head-gap);${style}`}
     {...rest}
   >
-    <Display level={level} as={as} tone={tone} measure="none"><slot /></Display>
     {meta && <MonoLabel tone={rev ? "paper-soft" : "soft"}>{meta}</MonoLabel>}
+    <Display level={level} as={as} tone={tone} measure="none"><slot /></Display>
   </div>
 )}

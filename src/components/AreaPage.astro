@@ -1,0 +1,186 @@
+---
+/**
+ * The frame every area page shares, 3 October 2026. The page file supplies
+ * its copy; this supplies the order around it:
+ *
+ *   breadcrumb, kicker, h1
+ *   three plates, labelled by type only, then "See selected work"
+ *   the lede (slot "lede"), then the hero actions
+ *   the page's own sections (default slot), in the order its copy sets
+ *   the closing band and the inline enquiry form
+ *
+ * Photographs sit directly under the h1 and above the first block of body
+ * copy: tone protocol section 11 point 1. The service pages depart from that
+ * on Kaspar's 6 Sep instruction (no galleries there); an area page has no such
+ * instruction and follows the protocol.
+ *
+ * The sections are a slot, not fixed blocks, because each district needs its
+ * own questions and its own H2s: Camden and Primrose Hill must not inherit
+ * this page's.
+ *
+ * NOTHING HERE ADDS CSS. Inline styles and existing tokens only, as the
+ * site's own components do, so every other page's stylesheet is untouched.
+ *
+ * The gate: `noindex` comes from page-gates.ts, so the page stays out of the
+ * index and the sitemap until every key in its gate is answered, and verify
+ * fails the build if it is indexable while any open question remains.
+ *
+ * The enquiry form is not prefilled: its area field asks which area of London
+ * the visitor is in, and a default is not an observation.
+ */
+import Base from "../layouts/Base.astro";
+import EnquiryForm from "./EnquiryForm.astro";
+import Value from "./Value.astro";
+import Wrap from "./ds/Wrap.astro";
+import Display from "./ds/Display.astro";
+import Kicker from "./ds/Kicker.astro";
+import MonoLabel from "./ds/MonoLabel.astro";
+import Plate from "./ds/Plate.astro";
+import EnquireBand from "./ds/EnquireBand.astro";
+import Link from "./ds/Link.astro";
+import EnquiryActions from "./ds/EnquiryActions.astro";
+
+import { SITE_URL, BUSINESS } from "../data/site";
+import { BAND } from "../data/site-content";
+import { indexable } from "../data/page-gates";
+import { areaPath, type Area } from "../data/areas";
+import selection from "../../public/images/_selection.json";
+
+interface Props {
+  area: Area;
+}
+
+const { area } = Astro.props;
+const path = areaPath(area.slug);
+const url = new URL(path, SITE_URL).href;
+
+/* Sizes from the photo selection, as /work/ reads them, so a plate always
+   reserves its real proportions and a renamed file fails the build. */
+const sizeOf = new Map(
+  Object.values(selection as Record<string, { file: string; w: number; h: number }[]>)
+    .flat()
+    .map((p) => [p.file, p])
+);
+const plates = area.plates.map((p) => {
+  const found = sizeOf.get(p.file);
+  if (!found) throw new Error(`areas.ts names ${p.file}, which is not in public/images/_selection.json.`);
+  return { ...p, w: found.w, h: found.h };
+});
+
+/* The /work/ alt pattern without the photograph number: the type of work,
+   that it is finished, and whose it is. No place: none is a recorded job in
+   the district. */
+const altFor = (type: string) => `${type}, completed installation by ${BUSINESS.legalName}`;
+
+/* Schema. The site-wide HomeAndConstructionBusiness node comes from Base on
+   every page, with this district in its areaServed: no second business node.
+   This page adds what it is (a WebPage about that business, covering the
+   district) and the breadcrumb it shows. */
+const webPage = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${url}#webpage`,
+  url,
+  name: `${area.titleProp} | ${BUSINESS.name}`,
+  description: area.description,
+  about: { "@id": `${SITE_URL}/#business` },
+  spatialCoverage: { "@type": "Place", name: area.name },
+};
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: area.name, item: url },
+  ],
+};
+---
+
+<Base
+  title={area.titleProp}
+  description={area.description}
+  schema={[webPage, breadcrumb]}
+  noindex={!indexable(path)}
+>
+  <article>
+    <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+      <nav aria-label="Breadcrumb" style="margin-bottom:var(--space-10)">
+        <MonoLabel tone="soft">
+          <Link href="/" variant="nav">Home</Link>
+          <span aria-hidden="true" style="padding:0 var(--space-5)">/</span>
+          {area.name}
+        </MonoLabel>
+      </nav>
+
+      <Kicker scribe>{area.kicker}</Kicker>
+
+      <Display level={1} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
+        {area.h1}
+      </Display>
+
+      {/* The plates, then the lede. data-plate-set lets the lightbox step
+          through the three as one set.
+
+          One row at every width, 3 October 2026. Stacked on a phone the
+          three took about 750px and pushed the lede to 1.6 screens down.
+          Each column is at least min(72%, 260px) and shares the row equally
+          above that: on a desktop the three fill the row in thirds, as
+          before; where three minimums do not fit, the row scrolls sideways
+          and snaps, with the next plate showing at the edge. Inline only:
+          a minimum in the track size needs no media query. */}
+      <div
+        data-plate-set
+        style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(min(72%,260px),1fr);gap:var(--gap-md);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory"
+      >
+        {plates.map((p, i) => (
+          <Plate
+            photo={p.file}
+            alt={altFor(p.type)}
+            width={p.w}
+            height={p.h}
+            ratio="3 / 2"
+            sizes="(max-width: 660px) 72vw, 33vw"
+            subject={p.type}
+            eager={i === 0}
+            style="scroll-snap-align:start"
+          />
+        ))}
+      </div>
+      <p style="margin-top:var(--space-10)">
+        <Link href="/work/" variant="nav" chamfer>See more of our work</Link>
+      </p>
+
+      <div style="max-width:var(--measure);margin-top:var(--space-15);font-size:var(--type-lede);color:var(--text-quiet)">
+        <slot name="lede" />
+      </div>
+
+      {/* Two actions, as on the service pages (EnquiryActions.astro): Get a
+          quote opens the global modal, WhatsApp opens in a new tab. No Call
+          button (founders, 6 Nov 2026). */}
+      <EnquiryActions style="margin-top:var(--space-15)" />
+    </Wrap>
+
+    <slot />
+
+    <section id="enquire">
+      <EnquireBand heading={BAND.heading} chamfer>
+        {BAND.body}
+        <Fragment slot="facts">
+          {/* Lead time and area. No price line: the page prices five
+              services in its own copy. */}
+          {BAND.facts.slice(1).map((q) => (
+            <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+              <Value q={q} />
+            </MonoLabel>
+          ))}
+        </Fragment>
+      </EnquireBand>
+
+      <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
+        <div style="max-width:var(--measure-tight)">
+          <EnquiryForm compact />
+        </div>
+      </Wrap>
+    </section>
+  </article>
+</Base>
