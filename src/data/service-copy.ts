@@ -480,7 +480,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         after: "intro",
         body: [
           "Images marked AI-generated example show a possible layout and are not photographs of our work. {{q:homeOffice1}}",
-          "The stair sets the height, so the tall end can take full-height cupboards and the low end can take drawers. Each unit is cut to follow the line of the stair and the walls beside it, so it leaves no gaps.",
+          "The stair sets the height, so the tall end can take full-height cupboards and the low end can take drawers. Each unit is cut to follow the line of the stair and the walls beside it.",
         ],
         figures: [
           {
