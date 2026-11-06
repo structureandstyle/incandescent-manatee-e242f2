@@ -24,9 +24,9 @@
  */
 import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
-import Link from "./Link.astro";
+import EnquiryActions from "./EnquiryActions.astro";
 import FormProof from "../FormProof.astro";
-import { BAND_QUOTES, CONTACT } from "../../data/site-content";
+import { BAND_QUOTES } from "../../data/site-content";
 
 interface Props {
   kicker?: string;
@@ -46,9 +46,9 @@ interface Props {
    */
   cta?: { label: string; href: string } | null;
   /**
-   * Offer the phone and WhatsApp beside the form, under a line asking which
-   * the reader would rather use. Defaults on wherever there is a call to
-   * action at all.
+   * Offer WhatsApp beside Get a quote. Defaults on wherever there is a call to
+   * action at all. The phone number is not a button here since 6 Nov 2026
+   * (see EnquiryActions.astro).
    */
   direct?: boolean;
   stamp?: boolean;
@@ -114,25 +114,13 @@ const quote = BAND_QUOTES[Astro.url.pathname];
           action this whole band exists to ask for.
         */}
         {cta && (
-          <div class="band-actions">
-            <a class="band-cta" href={cta.href}>{cta.label}</a>
-
-            {direct && (
-              <p class="band-direct">
-                <MonoLabel as="span" tone="paper-soft">Prefer to call or message?</MonoLabel>
-                <Link variant="nav" tone="paper" chamfer href={CONTACT.phoneHref}>
-                  Call {CONTACT.phoneDisplay}
-                </Link>
-                {/* rel="noopener" with no target does nothing at all: it only bites
-                    when a link opens a new browsing context. Every external link on
-                    this site now opens in a new tab and carries the rel, which is
-                    what the Maps and reviews links already did (5 Sep 2026). */}
-                <Link variant="nav" tone="paper" chamfer href={CONTACT.whatsapp} target="_blank" rel="noopener">
-                  WhatsApp
-                </Link>
-              </p>
-            )}
-          </div>
+          <EnquiryActions
+            tone="paper"
+            quoteHref={cta.href}
+            quoteLabel={cta.label}
+            whatsapp={direct}
+            style="margin-top:var(--space-14)"
+          />
         )}
       </div>
 
@@ -152,63 +140,6 @@ const quote = BAND_QUOTES[Astro.url.pathname];
       @media (min-width: 900px) {
         .band-grid.has-quote {
           grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-        }
-      }
-      .band-actions {
-        margin-top: var(--space-14);
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: var(--space-10) var(--space-15);
-      }
-      /* Not a nav link: the one action the band is asking for, at a size that
-         says so, and a filled block so it reads as a control rather than a
-         line of text on a dark ground. */
-      .band-cta {
-        display: inline-block;
-        font-family: var(--font-sans);
-        font-weight: var(--weight-medium);
-        font-size: var(--type-label-lg);
-        letter-spacing: var(--ls-label);
-        text-transform: uppercase;
-        color: var(--green);
-        background: var(--paper);
-        border: 1px solid var(--paper);
-        padding: var(--space-8) var(--space-14);
-        transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
-      }
-      .band-cta:hover,
-      .band-cta:focus-visible {
-        background: none;
-        color: var(--paper);
-      }
-      .band-direct {
-        margin: 0;
-        display: flex;
-        align-items: baseline;
-        flex-wrap: wrap;
-        gap: var(--space-6) var(--space-10);
-      }
-      /* On a phone the two sit one above the other, the button runs the full
-         width so it is unmissable and easy to hit, and the question keeps its
-         own line so the phone number and WhatsApp stay side by side under it
-         rather than splitting across two. */
-      @media (max-width: 560px) {
-        .band-actions {
-          flex-direction: column;
-          align-items: stretch;
-          gap: var(--space-12);
-        }
-        .band-cta {
-          text-align: center;
-          padding: var(--space-9) var(--space-14);
-        }
-        .band-direct {
-          flex-direction: column;
-          gap: var(--space-7);
-        }
-        .band-direct :global(a) {
-          align-self: flex-start;
         }
       }
     </style>

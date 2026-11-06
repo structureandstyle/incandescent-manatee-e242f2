@@ -45,6 +45,21 @@ interface Props {
   subject?: string;
   /** The right-hand half of the caption. */
   detail?: string;
+  /**
+   * What the lightbox calls this photograph (6 Nov 2026): a few plain words,
+   * no numbering and no "completed installation by ...". A real photograph
+   * takes the service name ("Fitted wardrobes"). Alt text stays long and
+   * descriptive for screen readers; this is only what a sighted visitor reads
+   * under the enlarged picture. Left out, the lightbox uses the alt up to its
+   * first comma.
+   */
+  label?: string;
+  /**
+   * An AI-generated example, not a photograph of our work. The lightbox then
+   * leads with "AI-generated example · " and the label, so the disclosure is
+   * never lost when someone enlarges the picture.
+   */
+  ai?: boolean;
   /** What is still needed, shown in the empty frame. */
   awaiting?: string;
   /**
@@ -87,6 +102,8 @@ const {
   height,
   subject,
   detail,
+  label,
+  ai = false,
   awaiting = "Photograph to place",
   eager = false,
   sizes = "(max-width: 700px) 92vw, 1240px",
@@ -130,6 +147,10 @@ const frameCss = [
   "overflow:hidden",
   "display:grid",
 ].join(";");
+
+/** The lightbox's one-line caption, from `label` and `ai` (see Props). */
+const shortName = (label ?? (alt ?? "").split(",")[0]).trim();
+const lightboxCaption = ai ? `AI-generated example${shortName ? ` · ${shortName}` : ""}` : label;
 
 const hasCaption = Boolean(subject || detail);
 
@@ -191,6 +212,8 @@ const srcset =
         fetchpriority={eager ? "high" : undefined}
         decoding={eager ? "sync" : "async"}
         data-plate-photo
+        data-caption={lightboxCaption}
+        data-ai={ai ? "" : undefined}
         tabindex="0"
         role="button"
         aria-label={`Enlarge: ${alt}`}
