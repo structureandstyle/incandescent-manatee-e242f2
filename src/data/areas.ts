@@ -42,7 +42,7 @@ export const AREAS: Area[] = [
     slug: "carpenter-hampstead",
     name: "Hampstead",
     titleProp: "Hampstead carpenter, bespoke wardrobes",
-    h1: "Bespoke carpentry and fitted furniture in Hampstead",
+    h1: "Fitted wardrobes and bespoke carpentry in Hampstead",
     kicker: "Carpenter in Hampstead",
     description:
       "Carpenter for Hampstead homes: fitted wardrobes, walk-in wardrobes, alcove units and built-in TV units, measured in the room and cut to follow the walls.",
