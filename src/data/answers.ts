@@ -212,7 +212,7 @@ export const ANSWERS = {
    * NUMBERS. Q57, Q59 and Q60 exist in the questionnaire and are not keyed
    * here, so these take names rather than the next numbers. One key per claim
    * on the page that only the client can confirm, each asked in the page's
-   * fact-check list (C1 to C5). All five are in the page's gate in
+   * fact-check list (C1 to C4). All four are in the page's gate in
    * page-gates.ts: the page stays noindexed, out of the sitemap and unlinked
    * until every one is answered.
    *
@@ -243,14 +243,8 @@ export const ANSWERS = {
   },
   areaHampstead4: {
     value: null,
-    provisional: "We agree where deliveries can stop and how far pieces are carried to your door before installation.",
-    about: "C4: on a Hampstead job, are the delivery stop and the carry to the door agreed before installation, and how is parking handled",
-  },
-  /** The value, once answered, is the byline he approves for the review. */
-  areaHampstead5: {
-    value: null,
-    provisional: "Svetlozar Z · Walk-in wardrobe",
-    about: "C5: consent to quote Svetlozar Z's review of 30 Sep 2026 whole on this page, and the byline it carries",
+    provisional: "We agree parking and deliveries with you before the job starts, including where deliveries can stop and how far pieces are carried to your door.",
+    about: "C4: what does he do about parking on a Hampstead job, is it agreed with the client before the job starts, and is there anything the client needs to do (for example arrange a bay or tell us about a lift)",
   },
 } as const satisfies Record<string, Answer>;
 

@@ -38,9 +38,10 @@ import MonoLabel from "./ds/MonoLabel.astro";
 import Plate from "./ds/Plate.astro";
 import EnquireBand from "./ds/EnquireBand.astro";
 import Link from "./ds/Link.astro";
+import EnquiryActions from "./ds/EnquiryActions.astro";
 
 import { SITE_URL, BUSINESS } from "../data/site";
-import { BAND, CONTACT } from "../data/site-content";
+import { BAND } from "../data/site-content";
 import { indexable } from "../data/page-gates";
 import { areaPath, type Area } from "../data/areas";
 import selection from "../../public/images/_selection.json";
@@ -154,13 +155,10 @@ const breadcrumb = {
         <slot name="lede" />
       </div>
 
-      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:center;margin-top:var(--space-15)">
-        {/* The service pages' three actions. "Get a quote" opens the global
-            modal, with no service preselected. */}
-        <Link href="/contact/" variant="button">Get a quote</Link>
-        <Link href={CONTACT.phoneHref} variant="nav" chamfer style="padding:var(--space-6) 0">Call {CONTACT.phoneDisplay}</Link>
-        <Link href={CONTACT.whatsapp} variant="nav" chamfer style="padding:var(--space-6) 0">WhatsApp</Link>
-      </div>
+      {/* Two actions, as on the service pages (EnquiryActions.astro): Get a
+          quote opens the global modal, WhatsApp opens in a new tab. No Call
+          button (founders, 6 Nov 2026). */}
+      <EnquiryActions style="margin-top:var(--space-15)" />
     </Wrap>
 
     <slot />

@@ -21,7 +21,7 @@ const SCRIPT = fileURLToPath(new URL("../scripts/verify-build.mjs", import.meta.
 const BANK = JSON.parse(readFileSync(new URL("../src/data/quote-bank.json", import.meta.url), "utf8"));
 const SITE = "https://structureandstyle.co.uk";
 const AREA = "/carpenter-hampstead/";
-const PAGE_ORDER = ["areaHampstead1", "areaHampstead3", "areaHampstead2", "areaHampstead4", "areaHampstead5"];
+const PAGE_ORDER = ["areaHampstead1", "areaHampstead3", "areaHampstead2", "areaHampstead4"];
 
 const business = {
   "@context": "https://schema.org",
@@ -57,7 +57,6 @@ const quote = (text) => `<blockquote style="white-space:pre-line">${esc(text)}</
 const ask = (q, text) =>
   `<span class="ask" data-q="${q}"><span class="sr-only">Open question ${q}: </span>[&hairsp;${esc(text)}&hairsp;]</span>`;
 
-const svetlozar = BANK.find((q) => q.id.startsWith("svetlozar")).text;
 const ozge = BANK.find((q) => q.id.startsWith("ozge")).text;
 
 function html({ noindex = false, nodes = [], body = "" }) {
@@ -75,12 +74,11 @@ function areaPage(over = {}) {
     noindex: true,
     nodes: [webPage(AREA), breadcrumb(AREA, "Hampstead")],
     body:
-      `<p>Guide starting prices run from £2,300 for a fitted wardrobe to £10,000 for a bespoke kitchen.</p>` +
+      `<p>Every figure below is a starting price. Fitted wardrobes start from £2,300.</p>` +
       `<p>Bespoke kitchens typically start from £10,000, and more.</p>` +
       /* In the order the built page renders them (C3's bullets come before
          C2's sentence), so the draft report's sort is tested, not assumed. */
       PAGE_ORDER.map((k) => `<p>${ask(k, "a sentence waiting on the client")}</p>`).join("") +
-      quote(svetlozar) +
       quote(ozge),
     ...over,
   };
@@ -122,33 +120,32 @@ function run(pages) {
   }
 }
 
-test("an area page with the five keys open passes as a noindexed draft", () => {
+test("an area page with the four keys open passes as a noindexed draft", () => {
   const r = run({ [AREA]: areaPage(), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 0, r.out);
-  assert.match(r.out, /\/carpenter-hampstead\/ {2}waiting on AreaHampstead1, AreaHampstead2, AreaHampstead3, AreaHampstead4, AreaHampstead5/);
+  assert.match(r.out, /\/carpenter-hampstead\/ {2}waiting on AreaHampstead1, AreaHampstead2, AreaHampstead3, AreaHampstead4/);
 });
 
 test("the same page forced indexable with the keys open fails", () => {
   const r = run({ [AREA]: areaPage({ noindex: false }), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 1, r.out);
-  assert.match(r.out, /\/carpenter-hampstead\/ {2}INDEXABLE but unfinished: 5 open question\(s\)/);
+  assert.match(r.out, /\/carpenter-hampstead\/ {2}INDEXABLE but unfinished: 4 open question\(s\)/);
 });
 
-test("the whole Svetlozar review passes, entity-encoded and in paragraphs", () => {
-  assert.match(svetlozar, /\n\n/);
-  const r = run({ [AREA]: areaPage({ noindex: false, body: quote(svetlozar) }), "/fitted-wardrobe-cost/": costGuide });
+test("the whole Ozge review passes, entity-encoded", () => {
+  const r = run({ [AREA]: areaPage({ noindex: false, body: quote(ozge) }), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 0, r.out);
 });
 
-test("a trimmed Svetlozar review fails", () => {
-  const trimmed = svetlozar.split("\n\n").slice(0, 3).join("\n\n");
+test("a trimmed Ozge review fails", () => {
+  const trimmed = ozge.split(". ").slice(0, 3).join(". ") + ".";
   const r = run({ [AREA]: areaPage({ body: quote(trimmed) }), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 1, r.out);
   assert.match(r.out, /blockquote text is not a verbatim bank entry/);
 });
 
 test("one word changed inside a review fails", () => {
-  const edited = svetlozar.replace("couldn't be happier", "could not be happier");
+  const edited = ozge.replace("very happy", "really happy");
   const r = run({ [AREA]: areaPage({ body: quote(edited) }), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 1, r.out);
   assert.match(r.out, /not a verbatim bank entry/);

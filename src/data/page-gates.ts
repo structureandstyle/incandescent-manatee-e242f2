@@ -94,7 +94,7 @@ export const PAGE_GATES = {
      default: add the entry in the same commit as the page. */
   "/carpenter-hampstead/": [
     ...BAND_QUESTIONS,
-    "areaHampstead1", "areaHampstead2", "areaHampstead3", "areaHampstead4", "areaHampstead5",
+    "areaHampstead1", "areaHampstead2", "areaHampstead3", "areaHampstead4",
   ],
 
   // No client dependency.

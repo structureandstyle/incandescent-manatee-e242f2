@@ -7,18 +7,21 @@
  * gate goes back to the copy author. Every visible string on the page is in
  * that copy, including the labels, captions and link text.
  *
- * FIVE SENTENCES WAIT ON THE CLIENT, one key each in answers.ts
- * (areaHampstead1 to areaHampstead5, the fact-check list's C1 to C5). Each
+ * FOUR SENTENCES WAIT ON THE CLIENT, one key each in answers.ts
+ * (areaHampstead1 to areaHampstead4, the fact-check list's C1 to C4). Each
  * renders through <Value> or <Ask>, so while a key is open its sentence shows
  * in the open-question brackets on a branch deploy and the page carries the
- * markup verify counts. All five are in the page's gate: until every one is
+ * markup verify counts. All four are in the page's gate: until every one is
  * answered the page is noindexed, out of the sitemap, missing from the
  * footer's Areas group and linked from nowhere.
  *
- * If the client says no to one, the plan's fallback applies: remove that
- * sentence (or Svetlozar's review from the bank's Hampstead tag, which turns
- * the Reviews title singular) and its key from the gate. Each removal leaves
- * a page that still reads correctly.
+ * C5 (consent to quote Svetlozar Z's review) was removed on 6 Nov 2026 on the
+ * founders' review: the review and its key are gone, and the Reviews title
+ * reads in the singular for Ozge B's.
+ *
+ * If the client says no to one of the four, the plan's fallback applies:
+ * remove that sentence and its key from the gate. Each removal leaves a page
+ * that still reads correctly.
  *
  * Street and building names (Church Row, Keats Grove and the rest) are
  * Camden's, quoted from its 2001 conservation area statement and attributed
@@ -74,7 +77,7 @@ const P2 = "margin-top:var(--space-10)";
     <SectionHead meta="Fit" level={4}>Can fitted furniture work in a Hampstead period house or mansion block?</SectionHead>
     <div style="max-width:var(--measure)">
       <p>
-        Yes, because each piece is measured in the room and cut to follow its walls. Walls, floors and ceilings are rarely straight, and no two alcoves in a period house are the same width.
+        Each piece is measured in the room and cut to follow its walls. Walls, floors and ceilings are rarely straight, and no two alcoves in a period house are the same width.
       </p>
       <p style={P2}>
         <Link href="https://www.camden.gov.uk/hampstead-conservation-area" target="_blank" rel="noopener">Camden's conservation area statement for Hampstead</Link> describes early 18th century houses in Church Row and Regency villas on Keats Grove. It also describes Victorian terraces off Willoughby Road, many with semi-basements, and mansion blocks such as Northcote Mansions.
@@ -118,21 +121,16 @@ const P2 = "margin-top:var(--space-10)";
     <SectionHead meta="Access" level={4}>How do parking and access work for a job in Hampstead?</SectionHead>
     <div style="max-width:var(--measure)">
       <p>
-        Camden's parking zone for Hampstead is CA-H. Nearby streets fall in other zones with their own days and hours. Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" target="_blank" rel="noopener">controlled parking zones page</Link> lets you search a street or postcode for its zone, and a map shows each area's hours.
+        Many Hampstead streets are narrow, and many houses have steps up to the front door.
       </p>
-      <p style={P2}>
-        Camden sells trade permits by the day for a vehicle working for a local resident or business, but a permit does not guarantee a space. A parking bay suspension has to be booked ahead through Camden.
-      </p>
-      <p style={P2}>
-        Camden's conservation area statement calls narrow streets and steps characteristic of Hampstead village. Many Victorian terraces off Willoughby Road have steps up to the front door. <Value q="areaHampstead4" />
-      </p>
+      <p style={P2}><Value q="areaHampstead4" /></p>
     </div>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Guide prices" level={4}>What does fitted furniture cost?</SectionHead>
     <div style="max-width:var(--measure)">
-      <p>Guide starting prices run from £2,300 for a fitted wardrobe to £10,000 for a bespoke kitchen.</p>
+      <p>Every figure below is a starting price, and a larger or more detailed project costs more.</p>
       <ul style={LIST}>
         <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers, integrated lighting and more complex designs move the figure.</li>
         <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.</li>
@@ -146,13 +144,8 @@ const P2 = "margin-top:var(--space-10)";
     </div>
   </Wrap>
 
-  {/* C5. A review is a plain string and cannot carry markup, so while its key
-      is open the open question sits directly above the block. The count and
-      "All N reviews on Google" are the component's, from REVIEWS.count. */}
+  {/* The count and "All N reviews on Google" are the component's, from REVIEWS.count. */}
   <Wrap style="padding-bottom:var(--section-y)">
-    {!answered("areaHampstead5") && (
-      <p style="margin-bottom:var(--space-10)"><Ask q={questionLabel("areaHampstead5")}>{ANSWERS.areaHampstead5.about}</Ask></p>
-    )}
     <Reviews
       title={reviewsTitle}
       meta="Google"
@@ -175,14 +168,17 @@ const P2 = "margin-top:var(--space-10)";
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
-      <Faq q="How long does a first visit take?">
-        A first visit usually takes 45 to 60 minutes, and the measured survey takes about an hour on site. Both run longer for a larger or more complex project. <Link href="/process/">How a commission runs</Link> sets out each stage.
+      <Faq q="How much does fitted furniture cost?">
+        Fitted wardrobes start from £2,300. We generally take on projects of £2,000 or more, and a fixed, itemised quotation follows the measured survey. The <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out the prices by size and finish.
+      </Faq>
+      <Faq q="Can fitted furniture follow walls that are not straight?">
+        Each piece is scribed to the walls it meets, so there are no gaps where a wall bends. Fitted and finished, it should look like one piece that belongs in the room.
       </Faq>
       <Faq q="How long does a job take?">
-        Installation typically takes 2 to 3 days for a straightforward fitted wardrobe and around 3 to 5 days for a walk-in wardrobe. Larger or more complex projects take longer. The lead time before work starts is typically 4 to 8 weeks, depending on the project, specification and current schedule.
+        Installation typically takes 2 to 3 days for a straightforward wardrobe wall, and closer to a week where on-site construction or hand-painting is involved. The lead time before work starts is typically 4 to 8 weeks. Where a project needs design, one week is set aside for it, with drawings issued for you to review by the end.
       </Faq>
-      <Faq q="What do I need to do before the fitting starts?">
-        Clear personal belongings from the area being fitted and make sure we can reach it. Anything project-specific is agreed before installation.
+      <Faq q="What should I check before hiring a carpenter?">
+        Ask for public liability insurance, a written guarantee and an itemised fixed quotation. Ours is five million pounds of public liability cover, 2 years on installation and workmanship, and 10 years on the structural integrity of the joinery.
       </Faq>
     </div>
   </Wrap>
