@@ -29,9 +29,10 @@ import SpecTable from "../components/ds/SpecTable.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import Faq from "../components/ds/Faq.astro";
 import Link from "../components/ds/Link.astro";
+import EnquiryActions from "../components/ds/EnquiryActions.astro";
 
 import { SERVICES, SITE_URL, BUSINESS, servicePath, serviceLabel, type Service } from "../data/site";
-import { BAND, CONTACT } from "../data/site-content";
+import { BAND } from "../data/site-content";
 import { SERVICE_COPY } from "../data/service-copy";
 import { gateFor, indexable } from "../data/page-gates";
 import { unanswered } from "../data/answers";
@@ -343,14 +344,10 @@ const SECTIONS: Section[] = [
         {service.summary}
       </p>
 
-      <div style="display:flex;flex-wrap:wrap;gap:var(--space-12) var(--space-15);align-items:center;margin-top:var(--space-15)">
-        {/* All explicit quote actions use the global modal. The real contact
-            URL remains the no-JavaScript fallback, while Base preselects this
-            page's service when the dialog opens. */}
-        <Link href="/contact/" variant="button">Get a quote</Link>
-        <Link href={CONTACT.phoneHref} variant="nav" chamfer style="padding:var(--space-6) 0">Call {CONTACT.phoneDisplay}</Link>
-        <Link href={CONTACT.whatsapp} variant="nav" chamfer style="padding:var(--space-6) 0">WhatsApp</Link>
-      </div>
+      {/* Get a quote opens the global modal; the real contact URL stays the
+          no-JavaScript fallback, and Base preselects this page's service.
+          Two buttons, shared with the enquiry band (EnquiryActions.astro). */}
+      <EnquiryActions style="margin-top:var(--space-15)" />
     </Wrap>
 
     {/*

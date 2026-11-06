@@ -93,6 +93,7 @@ const srcsets = shots.map((s) => {
   data-srcsets={JSON.stringify(srcsets)}
   data-frame-ratio={String(frameRatio)}
   data-alt-base={altBase}
+  data-caption={subject}
 >
   <Plate
     photo={shots[0].file}
@@ -100,6 +101,7 @@ const srcsets = shots.map((s) => {
     width={shots[0].w}
     height={shots[0].h}
     subject={subject}
+    label={subject}
     detail={detail}
     ratio={ratio}
     eager={eager}

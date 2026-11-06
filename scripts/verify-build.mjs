@@ -340,6 +340,19 @@ for (const file of files) {
     }
   }
 
+  // Founder rule, 6 Nov 2026: no FAQ answer, and no sentence inside one, opens
+  // with "Yes" or "No" as the reply ("Yes. ...", "No, ...", "Yes, because ...").
+  // The answer leads with the fact. "No two alcoves ..." is a determiner, not a
+  // reply, so only Yes/No followed by punctuation or the end counts.
+  for (const m of html.matchAll(/<details\b[^>]*\bss-faq\b[^>]*>[\s\S]*?<\/summary>\s*<p\b[^>]*>([\s\S]*?)<\/p>/g)) {
+    const answer = visibleText(m[1]).trim();
+    for (const sentence of answer.split(/(?<=[.!?])\s+/)) {
+      if (/^(Yes|No)\b\s*([.,;:!–-]|$)/i.test(sentence.trim())) {
+        errors.push(`${page}  FAQ answer sentence starts with Yes/No, lead with the fact: ${JSON.stringify(sentence.trim().slice(0, 70))}`);
+      }
+    }
+  }
+
   for (const [re, why] of [...FACTUAL, ...STYLE]) {
     const hits = [...new Set([...text.matchAll(re)].map((m) => m[0]))];
     if (hits.length) errors.push(`${page}  ${why}: ${hits.map((h) => JSON.stringify(h)).join(", ")}`);

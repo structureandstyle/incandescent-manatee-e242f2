@@ -25,7 +25,7 @@ import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import Link from "../components/ds/Link.astro";
-import { BUSINESS } from "../data/site";
+import EnquiryActions from "../components/ds/EnquiryActions.astro";
 ---
 
 <Base
@@ -58,11 +58,6 @@ import { BUSINESS } from "../data/site";
       <Link href="/" variant="button">Back to the home page</Link>
     </p>
 
-    <div style="display:flex;flex-wrap:wrap;gap:var(--space-10) var(--space-14);align-items:baseline;margin-top:var(--space-13)">
-      <Link href="/contact/" variant="cta" chamfer>Send an enquiry</Link>
-      <Link href={BUSINESS.phoneHref} variant="nav" chamfer>Call {BUSINESS.phoneDisplay}</Link>
-      <Link href={BUSINESS.whatsapp} variant="nav" chamfer rel="noopener">WhatsApp</Link>
-      <Link href={`mailto:${BUSINESS.email}`} variant="nav" chamfer>Email</Link>
-    </div>
+    <EnquiryActions style="margin-top:var(--space-13)" />
   </Wrap>
 </Base>

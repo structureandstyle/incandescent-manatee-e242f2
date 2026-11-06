@@ -153,6 +153,7 @@ const services = SERVICES.filter((s) => !s.guide && indexable(servicePath(s)));
               Finished work. The fact survives in the alt text, where it is
               read once per image by the people who need it. */}
           subject={s.type}
+          label={s.type}
           eager={i < 2}
           plane={i === 0 ? "left" : false}
         />
