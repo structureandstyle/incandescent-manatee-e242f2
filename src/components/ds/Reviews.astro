@@ -48,6 +48,7 @@ import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
 import SectionHead from "./SectionHead.astro";
 import Link from "./Link.astro";
+import EnquiryActions from "./EnquiryActions.astro";
 
 interface Props {
   title?: string;
@@ -57,7 +58,7 @@ interface Props {
   source?: string;
   /** The public profile the reviews live on. Given, everything links to it. */
   href?: string;
-  /** A button on the right of the heading row (7 Nov 2026: Get a quote on the home page). */
+  /** Get a quote and WhatsApp on the right of the heading row (7 Nov 2026, home page). */
   cta?: { label: string; href: string };
   quotes?: readonly { text: string; meta?: string }[];
   scribe?: boolean;
@@ -94,15 +95,17 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
 
 <section data-reviews class={className} style={style}>
   {/* A page may show its review with no heading at all (founder, 6 Nov 2026). */}
-  {/* Get a quote sits on the right of the heading row when the page gives one
-      (Arthur, 7 Nov 2026: beside "Reviews", where the proof starts). */}
+  {/* Get a quote and WhatsApp sit on the right of the heading row when the
+      page gives a cta (Arthur, 7 Nov 2026: beside "Reviews", where the proof
+      starts; WhatsApp joined the same day in place of a floating button). The
+      same pair as every service page hero (EnquiryActions). */}
   {title && (
     <div class:list={["rv-head", cta && "has-cta"]}>
       <SectionHead meta={meta} scribe={scribe}>{title}</SectionHead>
       {cta && (
-        <p class="rv-head-cta">
-          <Link href={cta.href} variant="button">{cta.label}</Link>
-        </p>
+        <div class="rv-head-cta">
+          <EnquiryActions quoteHref={cta.href} quoteLabel={cta.label} />
+        </div>
       )}
     </div>
   )}
@@ -234,18 +237,11 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
     bottom: 0;
     margin: 0;
   }
-  /* On a phone the full-size button's top edge met the mono label above the
-     title (measured at 375px). Slimmer there: 40px tall, tighter sides. */
+  /* Two controls do not fit beside the title on a phone without running into
+     the mono label above it (one button already only just cleared it at
+     375px). Up to 560px the pair sits under the title instead, closer to it
+     than the section gap, before the rating. */
   @media (max-width: 560px) {
-    .rv-head-cta :global(a) {
-      min-height: 40px;
-      padding: 0 var(--space-7);
-    }
-  }
-  /* Under 360px there is no room beside the title: the label's last word ran
-     into the button at 320px. There it sits under the title instead, closer
-     to it than the section gap, before the rating. */
-  @media (max-width: 359px) {
     .rv-head-cta {
       position: static;
       margin: calc(var(--head-gap) * -1 + var(--space-8)) 0 var(--head-gap);
