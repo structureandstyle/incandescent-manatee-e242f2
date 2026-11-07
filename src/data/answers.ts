@@ -282,6 +282,14 @@ export const ANSWERS = {
     ],
     about: "D3: which premium materials he will take on when asked (solid oak, walnut, tulipwood, specialist veneers, leather or cane panels, reeded glass and antique mirror, solid brass or bronze, stone)",
   },
+  /* D4: ChatGPT, asked for carpenters in north London on 7 Nov 2026, told the
+     buyer to check whether a quote includes "removal of existing wardrobes and
+     making good". Nothing on the site says, so the sentence waits on him. */
+  areaHampsteadDesign4: {
+    value: null,
+    provisional: "Taking out your old wardrobes and making good the wall behind them can be included too, priced as its own line.",
+    about: "D4: does he take out existing wardrobes and make good when asked, and is it priced as its own line in the quotation",
+  },
   /** D2: the research found window seats with drawers in bays and dormers. Not on the site yet. */
   areaHampsteadDesign2: {
     value: null,

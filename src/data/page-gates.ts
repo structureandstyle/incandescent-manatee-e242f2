@@ -104,7 +104,7 @@ export const PAGE_GATES = {
   "/carpenter-hampstead-design/": [
     ...BAND_QUESTIONS,
     "areaHampstead1", "areaHampstead2", "areaHampstead4",
-    "areaHampsteadDesign1", "areaHampsteadDesign2", "areaHampsteadDesign3",
+    "areaHampsteadDesign1", "areaHampsteadDesign2", "areaHampsteadDesign3", "areaHampsteadDesign4",
   ],
 
   // No client dependency.
