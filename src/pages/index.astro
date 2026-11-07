@@ -338,7 +338,11 @@ const siteSchema = {
   </Wrap>
 
   <!-- Process -->
-  <Wrap style="padding-top:var(--section-y)">
+  {/* Half the usual section gap plus the reviews' own bottom space, so Get a
+      quote sits centred between the last review and this rule (Arthur, 7 Nov
+      2026). The other half is .rv-foot-cta's margin-top in Reviews.astro;
+      keep the two calc()s in step. */}
+  <Wrap style="padding-top:calc((var(--section-y) + var(--space-4) + var(--space-12)) / 2)">
     <SectionHead meta="Four stages" scribe>Process</SectionHead>
 
     {/*

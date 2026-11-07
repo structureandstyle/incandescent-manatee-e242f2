@@ -229,7 +229,14 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
 </section>
 
 <style>
-  .rv-foot-cta { margin-top: var(--space-4); }
+  /* Centred up and down between the last review and the Process rule (Arthur,
+     7 Nov 2026: "the spacing looks a bit off, needs to be centered"). The
+     space there was the review's own bottom padding (--space-12) plus 8px
+     above the buttons, and a whole --section-y below them. This and the home
+     Process section's padding-top (index.astro) each take half of that total,
+     so the buttons sit in the middle and nothing else on the page moves. Keep
+     the two calc()s in step. */
+  .rv-foot-cta { margin-top: calc((var(--section-y) + var(--space-4) - var(--space-12)) / 2); }
   /* Both a size up here, and WhatsApp at every width (Arthur, 7 Nov 2026:
      "enlarge a bit both buttons? make them to fit better in that space", then
      "add the whatsapp button on the mobile aswell, i think now it looks
