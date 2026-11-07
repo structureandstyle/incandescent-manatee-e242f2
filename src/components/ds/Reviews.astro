@@ -247,6 +247,12 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       margin: calc(var(--head-gap) * -1 + var(--space-8)) 0 var(--head-gap);
     }
   }
+  /* WhatsApp only on a computer (Arthur, 7 Nov 2026). Up to 860px the phone
+     header already carries the WhatsApp icon on every screen (NavBar.astro),
+     so here Get a quote stands alone. */
+  @media (max-width: 860px) {
+    .rv-head-cta :global(a[href*="wa.me"]) { display: none; }
+  }
 </style>
 
 <style is:global>
