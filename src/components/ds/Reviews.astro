@@ -58,7 +58,7 @@ interface Props {
   source?: string;
   /** The public profile the reviews live on. Given, everything links to it. */
   href?: string;
-  /** Get a quote and WhatsApp on the right of the heading row (7 Nov 2026, home page). */
+  /** Get a quote (and WhatsApp on a computer) under the last review (7 Nov 2026, home page). */
   cta?: { label: string; href: string };
   quotes?: readonly { text: string; meta?: string }[];
   scribe?: boolean;
@@ -95,20 +95,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
 
 <section data-reviews class={className} style={style}>
   {/* A page may show its review with no heading at all (founder, 6 Nov 2026). */}
-  {/* Get a quote and WhatsApp sit on the right of the heading row when the
-      page gives a cta (Arthur, 7 Nov 2026: beside "Reviews", where the proof
-      starts; WhatsApp joined the same day in place of a floating button). The
-      same pair as every service page hero (EnquiryActions). */}
-  {title && (
-    <div class:list={["rv-head", cta && "has-cta"]}>
-      <SectionHead meta={meta} scribe={scribe}>{title}</SectionHead>
-      {cta && (
-        <div class="rv-head-cta">
-          <EnquiryActions quoteHref={cta.href} quoteLabel={cta.label} />
-        </div>
-      )}
-    </div>
-  )}
+  {title && <SectionHead meta={meta} scribe={scribe}>{title}</SectionHead>}
 
   <div
     style={`display:grid;grid-template-columns:${hasQuotes ? "minmax(0,5fr) minmax(0,7fr)" : "minmax(0,1fr)"};gap:var(--gap-xl);align-items:start`}
@@ -154,7 +141,9 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       )}
     </div>
 
-    {hasQuotes && (
+    {(hasQuotes || cta) && (
+      <div>
+      {hasQuotes && (
       <ol style="list-style:none;margin:0;padding:0">
         {quotes.map((q, i) => (
           <li
@@ -221,37 +210,29 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
           </li>
         ))}
       </ol>
+      )}
+      {/* Get a quote under the last review, the last thing before the next
+          section (Arthur, 7 Nov 2026: "Put it under the last review before
+          process", then "for both desktop and mobile"). It sat beside the
+          Reviews heading earlier the same day. The same pair as every service
+          page hero (EnquiryActions); WhatsApp shows on a computer only. */}
+      {cta && (
+        <div class="rv-foot-cta">
+          <EnquiryActions quoteHref={cta.href} quoteLabel={cta.label} />
+        </div>
+      )}
+      </div>
     )}
   </div>
 </section>
 
 <style>
-  .rv-head { position: relative; }
-  /* Bottom of the button on the bottom of the heading, at the right edge.
-     SectionHead's own bottom margin collapses through this wrapper, so the
-     wrapper ends where the title does and 0 is flush with it (measured: a
-     --head-gap offset left the button 30px high on a phone, 56px on a laptop). */
-  .rv-head-cta {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    margin: 0;
-  }
-  /* Two controls do not fit beside the title on a phone without running into
-     the mono label above it (one button already only just cleared it at
-     375px). Up to 560px the pair sits under the title instead, closer to it
-     than the section gap, before the rating. */
-  @media (max-width: 560px) {
-    .rv-head-cta {
-      position: static;
-      margin: calc(var(--head-gap) * -1 + var(--space-8)) 0 var(--head-gap);
-    }
-  }
+  .rv-foot-cta { margin-top: var(--space-4); }
   /* WhatsApp only on a computer (Arthur, 7 Nov 2026). Up to 860px the phone
      header already carries the WhatsApp icon on every screen (NavBar.astro),
      so here Get a quote stands alone. */
   @media (max-width: 860px) {
-    .rv-head-cta :global(a[href*="wa.me"]) { display: none; }
+    .rv-foot-cta :global(a[href*="wa.me"]) { display: none; }
   }
 </style>
 
