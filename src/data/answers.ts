@@ -246,6 +246,56 @@ export const ANSWERS = {
     provisional: "We agree parking and deliveries with you before the job starts, including where deliveries can stop and how far pieces are carried to your door.",
     about: "C4: what does he do about parking on a Hampstead job, is it agreed with the client before the job starts, and is there anything the client needs to do (for example arrange a bay or tell us about a lift)",
   },
+
+  /**
+   * The design-led version of the Hampstead page, /carpenter-hampstead-design/,
+   * 7 November 2026. It is a copy, built so the founders can compare the two.
+   * Only one version ships. These two keys cover the claims only that version
+   * makes.
+   *
+   * D1: a founder said on 7 Nov that solid oak and walnut are not in the usual
+   * range but he will use them when a client asks. The live Materials page, in
+   * his own words, lists board only, and the copy protocol (section 5) allows
+   * "solid oak" only when true. So the sentence waits for his own yes.
+   */
+  /* Widened the same day: a founder asked for a section saying we are flexible
+     and can work with more premium materials, with examples. D1 is now its
+     opening sentence and D3 its list. */
+  areaHampsteadDesign1: {
+    value: null,
+    provisional: "If you would like something more premium, we can work with other materials too, solid timber included.",
+    about: "D1: will he work with more premium materials, solid oak or walnut included, when a client asks, and may the site say so",
+  },
+  /** D3: the examples, one entry each, "Name: what it is". An answer keeps the
+      ones he will take on; an empty list drops the list. */
+  areaHampsteadDesign3: {
+    value: null,
+    provisional: [
+      "Solid oak: a hard-wearing timber with a strong grain, oiled or lacquered.",
+      "Solid walnut: a darker timber with a richer, more varied grain.",
+      "Painted tulipwood: a hardwood for painted doors and frames, where mouldings need to stay crisp.",
+      "Specialist veneers: smoked oak, quarter-cut oak, walnut and other species, chosen for their grain.",
+      "Leather, fabric or cane door panels: set into a frame, for a softer front in a bedroom or dressing room.",
+      "Reeded glass and antique mirror: for display cabinets, dressing rooms and drinks cabinets.",
+      "Solid brass or bronze: handles, trims and inlays, in place of standard hardware.",
+      "Natural stone: marble or other stone tops for a dressing table, a bar or a kitchen.",
+    ],
+    about: "D3: which premium materials he will take on when asked (solid oak, walnut, tulipwood, specialist veneers, leather or cane panels, reeded glass and antique mirror, solid brass or bronze, stone)",
+  },
+  /* D4: ChatGPT, asked for carpenters in north London on 7 Nov 2026, told the
+     buyer to check whether a quote includes "removal of existing wardrobes and
+     making good". Nothing on the site says, so the sentence waits on him. */
+  areaHampsteadDesign4: {
+    value: null,
+    provisional: "Taking out your old wardrobes and making good the wall behind them can be included too, priced as its own line.",
+    about: "D4: does he take out existing wardrobes and make good when asked, and is it priced as its own line in the quotation",
+  },
+  /** D2: the research found window seats with drawers in bays and dormers. Not on the site yet. */
+  areaHampsteadDesign2: {
+    value: null,
+    provisional: "A window seat with deep drawers underneath turns a bay into storage as well.",
+    about: "D2: does he make window seats with drawers, for a bay or a dormer",
+  },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;

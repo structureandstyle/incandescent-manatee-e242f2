@@ -203,4 +203,9 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
   .ss-review-link:hover p:first-of-type,
   .ss-review-link:focus-visible p:first-of-type { color: var(--green); }
   .ss-review-link:focus-visible { outline: 1px solid var(--green); outline-offset: 4px; }
+  /* Quotation marks round each review (a founder, 7 Nov 2026). Drawn by CSS so
+     the blockquote keeps the customer's words exactly as written: verify checks
+     its text against the quote bank character for character. */
+  [data-reviews-item] blockquote::before { content: "\201C"; }
+  [data-reviews-item] blockquote::after { content: "\201D"; }
 </style>

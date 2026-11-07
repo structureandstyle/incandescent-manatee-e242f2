@@ -96,6 +96,16 @@ export const PAGE_GATES = {
     ...BAND_QUESTIONS,
     "areaHampstead1", "areaHampstead2", "areaHampstead3", "areaHampstead4",
   ],
+  /* The design-led copy of the Hampstead page, 7 Nov 2026, built for the
+     founders to compare with the one above. Both target the same search, so
+     only one may ever be indexed. This one is held by its own two keys as well
+     as the ones it shares. Whichever version loses is deleted, with its gate
+     entry, before the other is released. */
+  "/carpenter-hampstead-design/": [
+    ...BAND_QUESTIONS,
+    "areaHampstead1", "areaHampstead2", "areaHampstead4",
+    "areaHampsteadDesign1", "areaHampsteadDesign2", "areaHampsteadDesign3", "areaHampsteadDesign4",
+  ],
 
   // No client dependency.
   "/journal/": [],
