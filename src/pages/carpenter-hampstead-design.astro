@@ -38,6 +38,13 @@
  * Open keys: areaHampstead1, 2 and 4 (shared with the first version) and
  * areaHampsteadDesign1 to 4 (this version only). All seven are in the gate.
  *
+ * CHANGES FROM THE CHATGPT BASELINE, 7 Nov (ops repo, ai-check/2026-11-07-hampstead-baseline):
+ *   S&S was named only on Hampstead prompts, so the copy now uses the words those
+ *   answers used: Shaker doors with brass knobs, skirting carried round, alcove
+ *   prices beside the alcoves, one firm for cornice, panelling and paint, the
+ *   plainer Edwardian look, floor-to-ceiling, heritage colours matched, and the
+ *   first-visit question back. All from facts already on the site; no new keys.
+ *
  * "Hampstead Heath" stays out of our own voice, as in the first version.
  */
 import AreaPage from "../components/AreaPage.astro";
@@ -143,10 +150,13 @@ const premium = d3.map((line) => {
     <SectionHead meta="Victorian terraces" level={4}>Alcoves either side of the chimney breast</SectionHead>
     <div style={TEXT}>
       <p>
-        Much of Hampstead's housing is Victorian, and most rooms in it have a chimney breast with an alcove on each side. The two alcoves are rarely the same width, so each unit is measured for its own space.
+        Much of Hampstead's housing is Victorian, and most rooms in it have a chimney breast with an alcove on each side. The two alcoves are rarely the same width, so each unit is measured for its own space. The skirting can carry on round the base of the units, so they read as part of the room.
       </p>
       <p style={P2}>
-        In a living room the usual choice is cupboards below and shelves above. Framed doors with a cornice across the top suit a period room, and floating shelves over flat cupboards give the same alcoves a plainer, modern look.
+        In a living room the usual choice is cupboards below and shelves above. Framed or Shaker doors with small brass knobs and a cornice across the top suit a period room. Floating shelves over flat cupboards give the same alcoves a plainer, modern look.
+      </p>
+      <p style={P2}>
+        A pair of alcove units starts from £3,300 in melamine, £3,600 in hand-painted MDF, £4,000 in sprayed MDF and £6,000 in oak veneer. That is for base cupboards with shelves above, up to about 1m wide per alcove.
       </p>
     </div>
     <Renders>
@@ -190,7 +200,7 @@ const premium = d3.map((line) => {
         New joinery suits these rooms when it follows the same lines. That can mean panelled doors on a wardrobe, a cornice carried across the top, and a paint colour the room already uses.
       </p>
       <p style={P2}>
-        We also fit wall panelling and panelled doors, so cupboards and the walls around them can be designed together.
+        We also fit wall panelling and panelled doors, so cupboards and the walls around them can be designed together. The cornice and the paint finish can be part of the same job, so one firm answers for the whole wall.
       </p>
     </div>
     <Renders>
@@ -210,7 +220,7 @@ const premium = d3.map((line) => {
     <SectionHead meta="Arts and Crafts and Edwardian houses" level={4}>Under the roof and in the bay window</SectionHead>
     <div style={TEXT}>
       <p>
-        Many of Hampstead's Arts and Crafts and Edwardian houses have rooms in the roof, with sloping ceilings and dormer windows. The space under a slope can all be used.
+        Hampstead's Arts and Crafts and Edwardian houses often suit a plainer look than the Georgian rooms, with simpler Shaker doors and softer colours. Many also have rooms in the roof, with sloping ceilings and dormer windows. The space under a slope can all be used.
       </p>
       <p style={P2}>
         The taller part of the room takes the hanging space. The lower part under the eaves takes shelves, drawers or cupboards.
@@ -258,7 +268,7 @@ const premium = d3.map((line) => {
         The house belongs to the National Trust and is open to visitors. The same approach suits a modern flat, or a contemporary room in an older house.
       </p>
       <p style={P2}>
-        Flat doors with no handles and thin, even gaps keep the front plain. Real wood veneer brings in the grain of the timber.
+        Floor-to-ceiling flat doors with no handles and thin, even gaps keep the front plain. Real wood veneer brings in the grain of the timber.
       </p>
     </div>
     <Renders>
@@ -283,7 +293,7 @@ const premium = d3.map((line) => {
     </Renders>
     <div style={TEXT}>
       <p>
-        Where the skirting, picture rails and cornice meet the new joinery is settled in the drawings, before fitting starts. Painted pieces are hand-painted or spray-finished, and a colour close to the walls lets them blend into the room.
+        Where the skirting, picture rails and cornice meet the new joinery is settled in the drawings, before fitting starts. Painted pieces are hand-painted or spray-finished in a wide range of colours, and one close to the walls lets them blend into the room. A heritage colour already used in the room can be closely matched.
       </p>
     </div>
   </Wrap>
@@ -416,6 +426,10 @@ const premium = d3.map((line) => {
           guide's starting specification and price notes; the third is D4. */}
       <Faq q="What does the quote include?">
         The starting price covers the made-to-measure furniture with standard shelving and hanging space, soft-close hinges, delivery and installation. Drawers, lighting, mirrors, shoe storage and extra shelving are priced separately, each as its own line in the itemised quotation. <Value q="areaHampsteadDesign4" />
+      </Faq>
+      {/* The first version's approved answer, back on 7 Nov: ChatGPT tells buyers to book a design consultation first. */}
+      <Faq q="How long do the first visit and the survey take?">
+        The first visit usually takes 45 to 60 minutes, and the measured survey about an hour on site. Both run longer for a larger or more complex project. Before we arrive, you do not need to know every detail: asking the right questions is our job.
       </Faq>
       <Faq q="Can new furniture match the woodwork already in the house?">
         Finishes are chosen to complement or closely match the furniture, joinery and flooring already in the room. Spray-painted, hand-painted, veneered and lacquered or oiled finishes are all possible, and the right one depends on the design and what it needs to match.
