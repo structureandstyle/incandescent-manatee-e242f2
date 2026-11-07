@@ -189,6 +189,9 @@ const filled = Math.round(Number(REVIEWS.average) || 0);
     color: var(--char);
     text-wrap: pretty;
   }
+  /* Quotation marks round each review, as in the reviews block (7 Nov 2026). */
+  .fp-quote blockquote::before { content: "\201C"; }
+  .fp-quote blockquote::after { content: "\201D"; }
 
   .fp-quote figcaption {
     margin-top: var(--space-5);
