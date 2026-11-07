@@ -206,13 +206,6 @@ const siteSchema = {
       ))}
     </MonoLabel>
 
-    {/* Get a quote and WhatsApp at the end of the hero text, 6 Nov 2026, as
-        every service page's hero has them. Until then the home page's first
-        way to enquire on a phone was the band at the foot of the page, about
-        9,850px down at 375px: Enquire had been in the link row under the
-        wordmark, and the one-row phone header moved it into the menu. */}
-    <EnquiryActions style="margin-top:var(--space-14)" />
-
     {/* No caption under the hero photograph since 6 Nov 2026. It read
         "Plate 01 · Bespoke kitchen   Completed"; Denis on the preview: no point
         to a label under each photo, nor to the numbering. The alt text still
@@ -342,6 +335,13 @@ const siteSchema = {
       href={REVIEWS.profileUrl}
       quotes={REVIEWS.quotes}
     />
+    {/* Get a quote and WhatsApp straight after the reviews, 7 Nov 2026
+        (Arthur: under the headline was too early). Added on 6 Nov because the
+        home page's first way to enquire on a phone was the band at the foot,
+        about 9,850px down at 375px, once the one-row phone header moved
+        Enquire into the menu. Here it follows the proof; the WhatsApp icon
+        in the header covers the first screen. */}
+    <EnquiryActions style="margin-top:var(--space-14)" />
   </Wrap>
 
   <!-- Process -->
