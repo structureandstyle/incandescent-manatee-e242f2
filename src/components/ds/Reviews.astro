@@ -48,6 +48,7 @@ import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
 import SectionHead from "./SectionHead.astro";
 import Link from "./Link.astro";
+import EnquiryActions from "./EnquiryActions.astro";
 
 interface Props {
   title?: string;
@@ -57,6 +58,8 @@ interface Props {
   source?: string;
   /** The public profile the reviews live on. Given, everything links to it. */
   href?: string;
+  /** Get a quote (and WhatsApp on a computer) under the last review (7 Nov 2026, home page). */
+  cta?: { label: string; href: string };
   quotes?: readonly { text: string; meta?: string }[];
   scribe?: boolean;
   stamp?: boolean;
@@ -71,6 +74,7 @@ const {
   count,
   source,
   href,
+  cta,
   quotes = [],
   scribe = true,
   stamp = false,
@@ -137,7 +141,9 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       )}
     </div>
 
-    {hasQuotes && (
+    {(hasQuotes || cta) && (
+      <div>
+      {hasQuotes && (
       <ol style="list-style:none;margin:0;padding:0">
         {quotes.map((q, i) => (
           <li
@@ -204,9 +210,31 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
           </li>
         ))}
       </ol>
+      )}
+      {/* Get a quote under the last review, the last thing before the next
+          section (Arthur, 7 Nov 2026: "Put it under the last review before
+          process", then "for both desktop and mobile"). It sat beside the
+          Reviews heading earlier the same day. The same pair as every service
+          page hero (EnquiryActions); WhatsApp shows on a computer only. */}
+      {cta && (
+        <div class="rv-foot-cta">
+          <EnquiryActions quoteHref={cta.href} quoteLabel={cta.label} />
+        </div>
+      )}
+      </div>
     )}
   </div>
 </section>
+
+<style>
+  .rv-foot-cta { margin-top: var(--space-4); }
+  /* WhatsApp only on a computer (Arthur, 7 Nov 2026). Up to 860px the phone
+     header already carries the WhatsApp icon on every screen (NavBar.astro),
+     so here Get a quote stands alone. */
+  @media (max-width: 860px) {
+    .rv-foot-cta :global(a[href*="wa.me"]) { display: none; }
+  }
+</style>
 
 <style is:global>
   .ss-review-link p { transition: color var(--t-fast) var(--ease-out); }
