@@ -47,11 +47,10 @@ import Ask from "../components/Ask.astro";
 
 import { SERVICES, BUSINESS, SITE_URL, servicePath, serviceLabel } from "../data/site";
 import Faq from "../components/ds/Faq.astro";
-import { HOMEPAGE_FAQS, PROCESS, REVIEWS, BAND, CONTACT } from "../data/site-content";
+import { HOMEPAGE_FAQS, PROCESS, REVIEWS, BAND, CONTACT, ENQUIRE_HREF } from "../data/site-content";
 import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import { questionLabel } from "../data/answers";
-import EnquiryActions from "../components/ds/EnquiryActions.astro";
 import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/");
@@ -334,14 +333,8 @@ const siteSchema = {
       count={REVIEWS.count}
       href={REVIEWS.profileUrl}
       quotes={REVIEWS.quotes}
+      cta={{ label: "Get a quote", href: ENQUIRE_HREF }}
     />
-    {/* Get a quote and WhatsApp straight after the reviews, 7 Nov 2026
-        (Arthur: under the headline was too early). Added on 6 Nov because the
-        home page's first way to enquire on a phone was the band at the foot,
-        about 9,850px down at 375px, once the one-row phone header moved
-        Enquire into the menu. Here it follows the proof; the WhatsApp icon
-        in the header covers the first screen. */}
-    <EnquiryActions style="margin-top:var(--space-14)" />
   </Wrap>
 
   <!-- Process -->

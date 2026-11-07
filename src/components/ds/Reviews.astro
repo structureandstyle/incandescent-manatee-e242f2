@@ -57,6 +57,8 @@ interface Props {
   source?: string;
   /** The public profile the reviews live on. Given, everything links to it. */
   href?: string;
+  /** A button on the right of the heading row (7 Nov 2026: Get a quote on the home page). */
+  cta?: { label: string; href: string };
   quotes?: readonly { text: string; meta?: string }[];
   scribe?: boolean;
   stamp?: boolean;
@@ -71,6 +73,7 @@ const {
   count,
   source,
   href,
+  cta,
   quotes = [],
   scribe = true,
   stamp = false,
@@ -91,7 +94,18 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
 
 <section data-reviews class={className} style={style}>
   {/* A page may show its review with no heading at all (founder, 6 Nov 2026). */}
-  {title && <SectionHead meta={meta} scribe={scribe}>{title}</SectionHead>}
+  {/* Get a quote sits on the right of the heading row when the page gives one
+      (Arthur, 7 Nov 2026: beside "Reviews", where the proof starts). */}
+  {title && (
+    <div class:list={["rv-head", cta && "has-cta"]}>
+      <SectionHead meta={meta} scribe={scribe}>{title}</SectionHead>
+      {cta && (
+        <p class="rv-head-cta">
+          <Link href={cta.href} variant="button">{cta.label}</Link>
+        </p>
+      )}
+    </div>
+  )}
 
   <div
     style={`display:grid;grid-template-columns:${hasQuotes ? "minmax(0,5fr) minmax(0,7fr)" : "minmax(0,1fr)"};gap:var(--gap-xl);align-items:start`}
@@ -207,6 +221,37 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
     )}
   </div>
 </section>
+
+<style>
+  .rv-head { position: relative; }
+  /* Bottom of the button on the bottom of the heading, at the right edge.
+     SectionHead's own bottom margin collapses through this wrapper, so the
+     wrapper ends where the title does and 0 is flush with it (measured: a
+     --head-gap offset left the button 30px high on a phone, 56px on a laptop). */
+  .rv-head-cta {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+  }
+  /* On a phone the full-size button's top edge met the mono label above the
+     title (measured at 375px). Slimmer there: 40px tall, tighter sides. */
+  @media (max-width: 560px) {
+    .rv-head-cta :global(a) {
+      min-height: 40px;
+      padding: 0 var(--space-7);
+    }
+  }
+  /* Under 360px there is no room beside the title: the label's last word ran
+     into the button at 320px. There it sits under the title instead, closer
+     to it than the section gap, before the rating. */
+  @media (max-width: 359px) {
+    .rv-head-cta {
+      position: static;
+      margin: calc(var(--head-gap) * -1 + var(--space-8)) 0 var(--head-gap);
+    }
+  }
+</style>
 
 <style is:global>
   .ss-review-link p { transition: color var(--t-fast) var(--ease-out); }
