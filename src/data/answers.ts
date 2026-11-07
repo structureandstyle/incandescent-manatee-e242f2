@@ -246,6 +246,29 @@ export const ANSWERS = {
     provisional: "We agree parking and deliveries with you before the job starts, including where deliveries can stop and how far pieces are carried to your door.",
     about: "C4: what does he do about parking on a Hampstead job, is it agreed with the client before the job starts, and is there anything the client needs to do (for example arrange a bay or tell us about a lift)",
   },
+
+  /**
+   * The design-led version of the Hampstead page, /carpenter-hampstead-design/,
+   * 7 November 2026. It is a copy, built so the founders can compare the two.
+   * Only one version ships. These two keys cover the claims only that version
+   * makes.
+   *
+   * D1: a founder said on 7 Nov that solid oak and walnut are not in the usual
+   * range but he will use them when a client asks. The live Materials page, in
+   * his own words, lists board only, and the copy protocol (section 5) allows
+   * "solid oak" only when true. So the sentence waits for his own yes.
+   */
+  areaHampsteadDesign1: {
+    value: null,
+    provisional: "Solid oak or walnut is not part of our usual range, but we can use it where you ask for it.",
+    about: "D1: will he use solid oak or walnut when a client asks, and may the site say so",
+  },
+  /** D2: the research found window seats with drawers in bays and dormers. Not on the site yet. */
+  areaHampsteadDesign2: {
+    value: null,
+    provisional: "A window seat with deep drawers underneath turns a bay into storage as well.",
+    about: "D2: does he make window seats with drawers, for a bay or a dormer",
+  },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;
