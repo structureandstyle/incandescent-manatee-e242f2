@@ -258,10 +258,29 @@ export const ANSWERS = {
    * his own words, lists board only, and the copy protocol (section 5) allows
    * "solid oak" only when true. So the sentence waits for his own yes.
    */
+  /* Widened the same day: a founder asked for a section saying we are flexible
+     and can work with more premium materials, with examples. D1 is now its
+     opening sentence and D3 its list. */
   areaHampsteadDesign1: {
     value: null,
-    provisional: "Solid oak or walnut is not part of our usual range, but we can use it where you ask for it.",
-    about: "D1: will he use solid oak or walnut when a client asks, and may the site say so",
+    provisional: "If you would like something more premium, we can work with other materials too, solid timber included.",
+    about: "D1: will he work with more premium materials, solid oak or walnut included, when a client asks, and may the site say so",
+  },
+  /** D3: the examples, one entry each, "Name: what it is". An answer keeps the
+      ones he will take on; an empty list drops the list. */
+  areaHampsteadDesign3: {
+    value: null,
+    provisional: [
+      "Solid oak: a hard-wearing timber with a strong grain, oiled or lacquered.",
+      "Solid walnut: a darker timber with a richer, more varied grain.",
+      "Painted tulipwood: a hardwood for painted doors and frames, where mouldings need to stay crisp.",
+      "Specialist veneers: smoked oak, quarter-cut oak, walnut and other species, chosen for their grain.",
+      "Leather, fabric or cane door panels: set into a frame, for a softer front in a bedroom or dressing room.",
+      "Reeded glass and antique mirror: for display cabinets, dressing rooms and drinks cabinets.",
+      "Solid brass or bronze: handles, trims and inlays, in place of standard hardware.",
+      "Natural stone: marble or other stone tops for a dressing table, a bar or a kitchen.",
+    ],
+    about: "D3: which premium materials he will take on when asked (solid oak, walnut, tulipwood, specialist veneers, leather or cane panels, reeded glass and antique mirror, solid brass or bronze, stone)",
   },
   /** D2: the research found window seats with drawers in bays and dormers. Not on the site yet. */
   areaHampsteadDesign2: {

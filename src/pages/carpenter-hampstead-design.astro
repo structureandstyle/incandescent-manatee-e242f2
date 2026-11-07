@@ -25,8 +25,9 @@
  *     line saying so before the first. Every render is the guides' file, so no
  *     new image was made for this page.
  *   - Drawing: the alcove guide's Drawing 1 with its approved legend.
- *   - Materials: the alcove guide's three approved cards, plus D1 (solid oak
- *     or walnut on request), which waits on Kaspar.
+ *   - Materials: the alcove guide's three approved cards, then a block on
+ *     premium materials on request (D1 and its examples, D3), which waits on
+ *     Kaspar.
  *   - Questions: three from what people really ask, with the source of each in
  *     a comment beside it, plus three of the first version's.
  *
@@ -35,7 +36,7 @@
  * sources in the research file and make no claim about our past jobs.
  *
  * Open keys: areaHampstead1, 2 and 4 (shared with the first version) and
- * areaHampsteadDesign1 and 2 (this version only). All five are in the gate.
+ * areaHampsteadDesign1 to 3 (this version only). All six are in the gate.
  *
  * "Hampstead Heath" stays out of our own voice, as in the first version.
  */
@@ -56,7 +57,8 @@ import Material from "../components/journal/Material.astro";
 import { AREAS } from "../data/areas";
 import { BUSINESS } from "../data/site";
 import { QUOTE_BANK, REVIEWS } from "../data/site-content";
-import { ANSWERS, answered } from "../data/answers";
+import { ANSWERS, answered, questionLabel } from "../data/answers";
+import Ask from "../components/Ask.astro";
 
 /* The same district, headline and plates as the first version, at its own
    address. It is not added to AREAS: that list feeds the footer and the
@@ -80,6 +82,20 @@ const SECTION = "padding-bottom:var(--section-y);scroll-margin-top:var(--space-1
 const HOUSE = "display:block;font-family:var(--font-serif-display);font-size:22px;line-height:1.3;margin-bottom:var(--space-3)";
 const PAIR = "(max-width: 760px) 92vw, 530px";
 const PHOTO_NOTE = "margin:var(--space-5) 0 0;font-size:15px;line-height:1.55;color:var(--ink-soft)";
+const MATERIAL_NAME = "font-family:var(--font-serif-display);font-size:22px;line-height:1.5";
+const SUBHEAD = "font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:24px;line-height:1.25;margin:var(--space-13) 0 var(--space-6)";
+
+/* D3, the premium materials: one entry each, "Name: what it is". While the key
+   is open each line shows in the open-question brackets. An answer keeps the
+   entries he will take on, so the list is whatever the key holds. */
+const d3Open = !answered("areaHampsteadDesign3");
+const d3 = (d3Open ? ANSWERS.areaHampsteadDesign3.provisional : ANSWERS.areaHampsteadDesign3.value) as unknown as readonly string[];
+const d3Label = questionLabel("areaHampsteadDesign3");
+const premium = d3.map((line) => {
+  const at = line.indexOf(": ");
+  const text = at > 0 ? line.slice(at + 2) : line;
+  return { name: at > 0 ? line.slice(0, at) : "", text: text.charAt(0).toUpperCase() + text.slice(1) };
+});
 ---
 
 <AreaPage area={area}>
@@ -276,7 +292,7 @@ const PHOTO_NOTE = "margin:var(--space-5) 0 0;font-size:15px;line-height:1.55;co
     <SectionHead meta="Materials" level={4}>What the furniture is made from</SectionHead>
     <div style={TEXT}>
       <p>
-        Most of our work is in painted MDF, real wood veneer and melamine-faced board, often mixed within one piece. <Value q="areaHampsteadDesign1" />
+        Most of our work is in painted MDF, real wood veneer and melamine-faced board, often mixed within one piece.
       </p>
     </div>
     <Materials>
@@ -307,6 +323,28 @@ const PHOTO_NOTE = "margin:var(--space-5) 0 0;font-size:15px;line-height:1.55;co
     <div style={TEXT}>
       <p style={P2}>
         Our <Link href="/materials/">materials page</Link> sets out each one in more detail.
+      </p>
+
+      {/* Premium materials on request (a founder, 7 Nov 2026: "we are flexible
+          and can work with more premium materials if you wish, and give some
+          examples"). Held on D1 and D3 until Kaspar confirms which he takes on. */}
+      <h3 style={SUBHEAD}>More premium materials, if you'd like them</h3>
+      <p><Value q="areaHampsteadDesign1" /> These are some of the options:</p>
+      {premium.length > 0 && (
+        <ul style={LIST}>
+          {premium.map((m) => (
+            <li style={ITEM}>
+              {d3Open ? (
+                <Ask q={d3Label}>{m.name && <><span style={MATERIAL_NAME}>{m.name}</span><br /></>}{m.text}</Ask>
+              ) : (
+                <>{m.name && <><span style={MATERIAL_NAME}>{m.name}</span><br /></>}{m.text}</>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+      <p style={P2}>
+        Premium materials change the price and the lead time, so they are quoted after the measured survey like everything else.
       </p>
     </div>
   </Wrap>
