@@ -214,8 +214,10 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       {/* Get a quote under the last review, the last thing before the next
           section (Arthur, 7 Nov 2026: "Put it under the last review before
           process", then "for both desktop and mobile"). It sat beside the
-          Reviews heading earlier the same day. The same pair as every service
-          page hero (EnquiryActions); WhatsApp shows on a computer only. */}
+          Reviews heading earlier the same day, and beside the Process heading
+          until Denis's "you want the cta after the proof". The same pair as
+          every service page hero (EnquiryActions), a size up here, with
+          WhatsApp at every width. */}
       {cta && (
         <div class="rv-foot-cta">
           <EnquiryActions quoteHref={cta.href} quoteLabel={cta.label} />
@@ -228,11 +230,30 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
 
 <style>
   .rv-foot-cta { margin-top: var(--space-4); }
-  /* WhatsApp only on a computer (Arthur, 7 Nov 2026). Up to 860px the phone
-     header already carries the WhatsApp icon on every screen (NavBar.astro),
-     so here Get a quote stands alone. */
-  @media (max-width: 860px) {
-    .rv-foot-cta :global(a[href*="wa.me"]) { display: none; }
+  /* Both a size up here, and WhatsApp at every width (Arthur, 7 Nov 2026:
+     "enlarge a bit both buttons? make them to fit better in that space", then
+     "add the whatsapp button on the mobile aswell, i think now it looks
+     empty"). Scoped to this spot: the service page heroes, the enquiry band
+     and the 404 keep the standard sizes. */
+  .rv-foot-cta :global(.v-button) {
+    min-height: 52px;
+    padding: 0 var(--space-14);
+    font-size: var(--type-mono-md);
+  }
+  .rv-foot-cta :global(a[href*="wa.me"]) {
+    font-size: var(--type-label-lg);
+  }
+  /* On a phone, the green enquiry band's own pattern (founder, 6 Nov 2026):
+     Get a quote runs the full width, WhatsApp centred under it, so the pair
+     reads as one control. */
+  @media (max-width: 640px) {
+    .rv-foot-cta :global(.enq-actions) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-4);
+    }
+    .rv-foot-cta :global(.v-button) { align-self: stretch; }
+    .rv-foot-cta :global(a[href*="wa.me"]) { align-self: center; }
   }
 </style>
 
