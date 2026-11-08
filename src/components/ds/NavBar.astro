@@ -410,6 +410,13 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
   }
   @media (max-width: 860px) {
     :global(html:has([data-nav-drawer][open])) { overflow: hidden; }
+    /* The cookie notice (CookieNotice.astro) is fixed to the bottom of the
+       screen above the header, so on a first visit it covered the foot of the
+       open menu and hid Enquire until it was answered (found live, 8 Nov 2026).
+       It steps aside while the menu is open and comes back, still unanswered,
+       when the menu closes. Nothing is decided for the visitor: analytics stay
+       off until they say yes. */
+    :global(html:has([data-nav-drawer][open]) #cookie-notice) { display: none; }
   }
   @media (min-width: 861px) {
     .nav-drawer-panel { display: none; }
