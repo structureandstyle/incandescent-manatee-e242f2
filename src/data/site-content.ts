@@ -420,10 +420,16 @@ export const HOMEPAGE_FAQS = [
      replaces "The person who measures your room is the person who draws it
      and the person who fits it. Nobody is sent in their place", which was the
      one-person line and its only place on the site. Removed on his
-     instruction: do not put it back without his word. */
+     instruction: do not put it back without his word.
+
+     6 Nov 2026: the measured survey leads (Denis's preview comment asked for
+     reassurance that a real visit happens; Arthur: Kaspar wants it to read as
+     a company, but the survey can be said). "Measured survey" and "about an
+     hour on site" are the Process section's own words (stage 02). Still
+     company voice, no name. Put to Kaspar on the preview link. */
   {
     q: "Who actually does the work?",
-    a: "Each project is managed by Structure & Style from the initial survey through to installation and aftercare. We remain responsible for the work and the finished result throughout.",
+    a: "Every project starts with a measured survey at your home, about an hour on site, so the piece is planned around your exact space. Structure & Style manages it from that survey through to installation and aftercare, and we remain responsible for the work and the finished result throughout.",
   },
   /* His answer, 6 September 2026. */
   {
@@ -445,10 +451,18 @@ export const HOMEPAGE_FAQS = [
      holds refits at "supports the asking price" (RICS Registered Valuer,
      June 2026), and fitted wardrobes are fixtures that go with the house
      (HomeOwners Alliance, TA10). Denis chose the plain version over the two
-     that name the sources; the sources stay in the note. */
+     that name the sources; the sources stay in the note.
+
+     REWRITTEN 6 Nov 2026, Arthur on Denis's preview comment ("I don't
+     understand this sentence", on its last line, "Have them made for the
+     years you live with them"): lead with yes, when planned properly, because
+     well-planned fitted furniture does help a home sell. Still no figure, and
+     every claim is one the note supports: buyers notice and ask about storage
+     (Rightmove), it supports the asking price (RICS valuer). The same answer
+     is on the fitted wardrobes page (service-copy.ts). */
   {
     q: "Do fitted wardrobes add value to a house?",
-    a: "Not in a way anyone can honestly put a figure on, and we would rather say so than invent one. Buyers do ask about storage, and a fitted room is one of the things they notice at a viewing. Valuers price floor area, condition and location, so a fitted room supports the asking price rather than adding a line to it. Have them made for the years you live with them.",
+    a: "They can, when they are planned properly. Fitted storage that makes the most of the space and is built to last is one of the things buyers notice at a viewing, and storage is high on the list of what they ask about. That helps a home sell and supports the asking price. What nobody can honestly do is put a figure on it, so we won't make one up.",
   },
 ] as const;
 

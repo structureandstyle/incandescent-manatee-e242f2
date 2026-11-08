@@ -15,7 +15,7 @@
  * a change to one needs the same change in the other.
  */
 import NavBar from "./ds/NavBar.astro";
-import { NAV, ENQUIRE_HREF } from "../data/site-content";
+import { NAV, ENQUIRE_HREF, CONTACT } from "../data/site-content";
 import { SERVICES, servicePath, serviceLabel } from "../data/site";
 import { indexable } from "../data/page-gates";
 import { getCollection } from "astro:content";
@@ -38,6 +38,7 @@ const services = SERVICES.filter((s) => !s.guide && indexable(servicePath(s))).m
   items={items}
   menu={{ label: "Services", items: services }}
   cta={{ label: "Enquire", href: ENQUIRE_HREF }}
+  whatsapp={{ href: CONTACT.whatsapp, label: "WhatsApp Structure & Style" }}
   activeHref={here}
   homeHref="/"
 />
