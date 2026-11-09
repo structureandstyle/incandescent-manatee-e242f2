@@ -97,7 +97,7 @@ const REVIEWS_DATA = JSON.parse(readFileSync(new URL("../src/data/reviews.json",
 const homeStub = {
   noindex: true,
   nodes: [{ "@context": "https://schema.org", "@type": "WebSite", name: "Structure & Style", url: `${SITE}/` }],
-  body: `<p>5 stars from ${REVIEWS_DATA.count} reviews, average ${(Math.round(REVIEWS_DATA.average * 10) / 10).toFixed(1)}</p>`,
+  body: `<p>${(Math.round(REVIEWS_DATA.average * 10) / 10).toFixed(1)} out of 5 from ${REVIEWS_DATA.count} Google reviews</p>`,
 };
 
 /* The design-led copy of the Hampstead page (7 Nov 2026) is registered in

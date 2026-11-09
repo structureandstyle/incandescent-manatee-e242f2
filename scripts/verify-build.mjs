@@ -292,8 +292,10 @@ async function verifyReviews(errors) {
   const home = visibleText(await readFile(join(DIST, "index.html"), "utf8").catch(() => ""));
   // Same rounding as REVIEWS.average in site-content.ts: halves round up.
   const shown = (Math.round(average * 10) / 10).toFixed(1);
-  if (!new RegExp(`\\b${count} reviews\\b`).test(home) || !home.includes(`average ${shown}`)) {
-    errors.push(`/  homepage does not show ${count} reviews at average ${shown}, as ${REVIEWS_FILE} says`);
+  // Wording since 6 Nov 2026 (Reviews.astro): "5.0 out of 5", the last words
+  // for screen readers, and "From 20 Google reviews".
+  if (!new RegExp(`\\b${count} Google reviews\\b`).test(home) || !home.includes(`${shown} out of 5`)) {
+    errors.push(`/  homepage does not show ${count} Google reviews at ${shown} out of 5, as ${REVIEWS_FILE} says`);
   }
 }
 

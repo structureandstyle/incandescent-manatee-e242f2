@@ -423,7 +423,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         /* The homepage's answer, chosen by Denis on 7 Sep 2026 from the
            value-to-a-house research; this page carried an older draft of the
            same answer until 8 Sep. One question, one answer, both pages. */
-        a: "Not in a way anyone can honestly put a figure on, and we would rather say so than invent one. Buyers do ask about storage, and a fitted room is one of the things they notice at a viewing. Valuers price floor area, condition and location, so a fitted room supports the asking price rather than adding a line to it. Have them made for the years you live with them.",
+        a: "They can, when they are planned properly. Fitted storage that makes the most of the space and is built to last is one of the things buyers notice at a viewing, and storage is high on the list of what they ask about. That helps a home sell and supports the asking price. What nobody can honestly do is put a figure on it, so we won't make one up.",
       },
     ],
   },

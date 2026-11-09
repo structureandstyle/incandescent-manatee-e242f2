@@ -33,11 +33,22 @@
  * carries the rest of the count. Both open in a new tab, because a visitor
  * mid-way down the homepage should come back to it. GA4's enhanced
  * measurement counts the outbound click on its own; no custom event.
+ *
+ * THE COUNT ONCE, 6 November 2026 (Arthur). The block said the count twice
+ * and the average twice ("5.0", then "20 reviews · average 5.0 out of 5",
+ * then "All 20 reviews on Google"), and the enquiry band below says both
+ * again. Now: the big average with its stars, one line "From 20 Google
+ * reviews", and a link "All reviews on Google". The count stays: a bare 5.0
+ * reads as too good to be true (Spiegel Research Center: purchase likelihood
+ * peaks at 4.0 to 4.7 and falls towards 5.0), and the number is what makes it
+ * believable. "Out of 5" moves into the average's accessible name, since the
+ * stars beside it are hidden from screen readers.
  */
 import Display from "./Display.astro";
 import MonoLabel from "./MonoLabel.astro";
 import SectionHead from "./SectionHead.astro";
 import Link from "./Link.astro";
+import EnquiryActions from "./EnquiryActions.astro";
 
 interface Props {
   title?: string;
@@ -47,6 +58,8 @@ interface Props {
   source?: string;
   /** The public profile the reviews live on. Given, everything links to it. */
   href?: string;
+  /** Get a quote (and WhatsApp on a computer) under the last review (7 Nov 2026, home page). */
+  cta?: { label: string; href: string };
   quotes?: readonly { text: string; meta?: string }[];
   scribe?: boolean;
   stamp?: boolean;
@@ -61,6 +74,7 @@ const {
   count,
   source,
   href,
+  cta,
   quotes = [],
   scribe = true,
   stamp = false,
@@ -88,7 +102,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
   >
     <div data-motion={stamp ? "stamp-group" : undefined}>
       <div style="display:flex;align-items:baseline;gap:var(--space-10)">
-        <Display level={2} as="p" measure="none">{average}</Display>
+        <Display level={2} as="p" measure="none">{average}<span class="sr-only"> out of 5</span></Display>
         <span aria-hidden="true" style="display:flex;gap:var(--space-3);padding-bottom:var(--space-4)">
           {[0, 1, 2, 3, 4].map((i) => (
             <svg width="14" height="14" viewBox="0 0 24 24" style="display:block">
@@ -105,7 +119,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       </div>
 
       <MonoLabel as="p" tone="default" style="margin-top:var(--space-10)">
-        {count} reviews · average {average} out of 5
+        From {count} Google reviews
       </MonoLabel>
 
       {source && (
@@ -115,7 +129,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       {href && (
         <p style="margin-top:var(--space-10)">
           <Link href={href} variant="nav" chamfer target="_blank" rel="noopener">
-            All {count} reviews on Google
+            All reviews on Google
           </Link>
         </p>
       )}
@@ -127,7 +141,9 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
       )}
     </div>
 
-    {hasQuotes && (
+    {(hasQuotes || cta) && (
+      <div>
+      {hasQuotes && (
       <ol style="list-style:none;margin:0;padding:0">
         {quotes.map((q, i) => (
           <li
@@ -168,7 +184,7 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
                   {q.meta && (
                     <MonoLabel as="p" tone="soft" style="margin-top:var(--space-6)">{q.meta}</MonoLabel>
                   )}
-                  <span class="sr-only">Read this review and all {count} others on Google</span>
+                  <span class="sr-only">Read this review on Google</span>
                 </div>
               </a>
             ) : (
@@ -194,18 +210,68 @@ const quoteCss = (text: string) => (text.includes("\n") ? `${QUOTE_CSS};white-sp
           </li>
         ))}
       </ol>
+      )}
+      {/* Get a quote under the last review, the last thing before the next
+          section (Arthur, 7 Nov 2026: "Put it under the last review before
+          process", then "for both desktop and mobile"). It sat beside the
+          Reviews heading earlier the same day, and beside the Process heading
+          until Denis's "you want the cta after the proof". The same pair as
+          every service page hero (EnquiryActions), a size up here, with
+          WhatsApp at every width. */}
+      {cta && (
+        <div class="rv-foot-cta">
+          <EnquiryActions quoteHref={cta.href} quoteLabel={cta.label} />
+        </div>
+      )}
+      </div>
     )}
   </div>
 </section>
+
+<style>
+  /* Centred up and down between the last review and the Process rule (Arthur,
+     7 Nov 2026: "the spacing looks a bit off, needs to be centered"). The
+     space there was the review's own bottom padding (--space-12) plus 8px
+     above the buttons, and a whole --section-y below them. This and the home
+     Process section's padding-top (index.astro) each take half of that total,
+     so the buttons sit in the middle and nothing else on the page moves. Keep
+     the two calc()s in step. */
+  .rv-foot-cta { margin-top: calc((var(--section-y) + var(--space-4) - var(--space-12)) / 2); }
+  /* Both a size up here, and WhatsApp at every width (Arthur, 7 Nov 2026:
+     "enlarge a bit both buttons? make them to fit better in that space", then
+     "add the whatsapp button on the mobile aswell, i think now it looks
+     empty"). Scoped to this spot: the service page heroes, the enquiry band
+     and the 404 keep the standard sizes. */
+  .rv-foot-cta :global(.v-button) {
+    min-height: 52px;
+    padding: 0 var(--space-14);
+    font-size: var(--type-mono-md);
+  }
+  .rv-foot-cta :global(a[href*="wa.me"]) {
+    font-size: var(--type-label-lg);
+  }
+  /* On a phone, the green enquiry band's own pattern (founder, 6 Nov 2026):
+     Get a quote runs the full width, WhatsApp centred under it, so the pair
+     reads as one control. */
+  @media (max-width: 640px) {
+    .rv-foot-cta :global(.enq-actions) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-4);
+    }
+    .rv-foot-cta :global(.v-button) { align-self: stretch; }
+    .rv-foot-cta :global(a[href*="wa.me"]) { align-self: center; }
+  }
+</style>
 
 <style is:global>
   .ss-review-link p { transition: color var(--t-fast) var(--ease-out); }
   .ss-review-link:hover p:first-of-type,
   .ss-review-link:focus-visible p:first-of-type { color: var(--green); }
   .ss-review-link:focus-visible { outline: 1px solid var(--green); outline-offset: 4px; }
-  /* Quotation marks round each review (a founder, 7 Nov 2026). Drawn by CSS so
-     the blockquote keeps the customer's words exactly as written: verify checks
-     its text against the quote bank character for character. */
-  [data-reviews-item] blockquote::before { content: "\201C"; }
-  [data-reviews-item] blockquote::after { content: "\201D"; }
+  /* Quote marks round every review, 6 Nov 2026 (Denis: so it reads as
+     someone else talking). Drawn by CSS, so the review's own text, which the
+     verify gate checks word for word, is untouched. */
+  [data-reviews] blockquote::before { content: "\201C"; }
+  [data-reviews] blockquote::after { content: "\201D"; }
 </style>
