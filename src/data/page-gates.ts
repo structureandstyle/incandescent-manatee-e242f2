@@ -93,11 +93,12 @@ export const PAGE_GATES = {
      page missing from this list would be ungated and so reach the sitemap by
      default: add the entry in the same commit as the page. */
   /* Merged 9 Nov 2026: Kaspar's own rewrites replaced the sentences that keys
-     2 to 4 held, so the page is held by the Hampstead-job question (key 1, on
-     its lede) and by his approval of the new copy around his words. */
+     2 to 4 held. Later that day a founder ruled not to ask him about Hampstead
+     jobs (key 1), so the lede is no longer held. The page is held only by his
+     approval of the new copy around his words. */
   "/carpenter-hampstead/": [
     ...BAND_QUESTIONS,
-    "areaHampstead1", "areaHampsteadMerge",
+    "areaHampsteadMerge",
   ],
   /* The design-led copy of the Hampstead page, 7 Nov 2026, built for the
      founders to compare with the one above. Both target the same search, so
