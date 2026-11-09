@@ -225,7 +225,9 @@ export const ANSWERS = {
      /carpenter-hampstead/ no longer shows this sentence. The key now holds the
      Hampstead-job question, which he left unanswered: the merged page wraps its
      lede ("much of our work in Hampstead") in it. The design-led copy still
-     shows the provisional sentence below. */
+     shows the provisional sentence below, so DELETE /carpenter-hampstead-design/
+     (page and gate entry) BEFORE answering this key: an answer here would
+     replace that page's sentence with the job answer. */
   areaHampstead1: {
     value: null,
     provisional: "We fit both period houses and mansion-block flats.",
@@ -308,13 +310,13 @@ export const ANSWERS = {
    * Kaspar's four rewritten sections (8 Nov) are on the page as he wrote them,
    * so areaHampstead2 to 4 no longer hold /carpenter-hampstead/ (the design-led
    * copy still uses them). The new copy around his words is ours: the design
-   * section body under his heading, one line linking Camden's parking page and
-   * one linking the process page. It renders in the open-question brackets
+   * section body under his heading, three parking lines and a process line. It
+   * renders in the open-question brackets
    * until he approves it, and the page stays noindexed until then.
    */
   areaHampsteadMerge: {
     value: null,
-    about: "Merged page: does he approve the new design section under his heading, the line linking Camden's parking page and the line linking the process page",
+    about: "Merged page: does he approve the new design section under his heading, the three parking lines after his (CA-H zone, Camden's zone and trade-permit pages) and the process line at the end of the cost section",
   },
 } as const satisfies Record<string, Answer>;
 
