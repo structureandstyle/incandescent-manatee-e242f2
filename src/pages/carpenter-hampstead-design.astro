@@ -1,0 +1,445 @@
+---
+/**
+ * Hampstead, design-led version, 7 November 2026. Built hidden, as a copy.
+ *
+ * WHY THERE ARE TWO. A founder read the first Hampstead page
+ * (/carpenter-hampstead/) on 7 Nov and found it mostly logistics and legal.
+ * Arthur's direction: cut the legal content right down and add design and
+ * inspiration that suits the area, so a Hampstead owner recognises their own
+ * house. The founder asked for a copy rather than an edit, so the two can be
+ * compared. Both target the same search. Only one may ever be indexed, and the
+ * one that loses is deleted with its gate entry before the other is released.
+ *
+ * WHAT CHANGED FROM THE FIRST VERSION.
+ *   - The body is organised by the five kinds of house the area has, each with
+ *     the joinery that suits it. Research: ops repo,
+ *     research/hampstead-design-2026-11-07/ (01 site topics, 02 the research).
+ *   - Logistics and legal shrink to one short list ("The practical side").
+ *     The listed-building paragraphs, the Camden and Neighbourhood Plan
+ *     figures, the street names and the C3 conduct bullets are gone. The
+ *     guarantee moves into the questions.
+ *   - Images: the three real photographs stay at the top. Two more real ones
+ *     (wall panelling, a hallway bench) and ten of the journal's AI renders
+ *     illustrate the ideas. The renders are the ones Kaspar sent and approved
+ *     for the journal guides, each captioned "AI-generated example", with one
+ *     line saying so before the first. Every render is the guides' file, so no
+ *     new image was made for this page.
+ *   - Drawing: the alcove guide's Drawing 1 with its approved legend.
+ *   - Materials: the alcove guide's three approved cards, then a block on
+ *     premium materials on request (D1 and its examples, D3), which waits on
+ *     Kaspar.
+ *   - Questions: three from what people really ask, with the source of each in
+ *     a comment beside it, plus three of the first version's.
+ *
+ * Copy that is not new is the first version's approved wording, or the
+ * journal guides' (Kaspar's). New sentences describe house types from the
+ * sources in the research file and make no claim about our past jobs.
+ *
+ * Open keys: areaHampstead1, 2 and 4 (shared with the first version) and
+ * areaHampsteadDesign1 to 4 (this version only). All seven are in the gate.
+ *
+ * CHANGES FROM THE CHATGPT BASELINE, 7 Nov (ops repo, ai-check/2026-11-07-hampstead-baseline):
+ *   S&S was named only on Hampstead prompts, so the copy now uses the words those
+ *   answers used: Shaker doors with brass knobs, skirting carried round, alcove
+ *   prices beside the alcoves, one firm for cornice, panelling and paint, the
+ *   plainer Edwardian look, floor-to-ceiling, heritage colours matched, and the
+ *   first-visit question back. All from facts already on the site; no new keys.
+ *
+ * "Hampstead Heath" stays out of our own voice, as in the first version.
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Value from "../components/Value.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Reviews from "../components/ds/Reviews.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+import Plate from "../components/ds/Plate.astro";
+import Render from "../components/journal/Render.astro";
+import Renders from "../components/journal/Renders.astro";
+import AlcoveDrawing from "../components/journal/AlcoveDrawing.astro";
+import Materials from "../components/journal/Materials.astro";
+import Material from "../components/journal/Material.astro";
+
+import { AREAS } from "../data/areas";
+import { BUSINESS } from "../data/site";
+import { QUOTE_BANK, REVIEWS } from "../data/site-content";
+import { ANSWERS, answered, questionLabel } from "../data/answers";
+import Ask from "../components/Ask.astro";
+
+/* The same district, headline and plates as the first version, at its own
+   address. It is not added to AREAS: that list feeds the footer and the
+   where-we-work lines, and the district already has its entry there. */
+const first = AREAS.find((a) => a.slug === "carpenter-hampstead")!;
+const area = { ...first, slug: "carpenter-hampstead-design" };
+
+const quotes = QUOTE_BANK.filter((q) => q.areas.includes(area.name)).map((q) => ({
+  text: q.text,
+  meta: q.gate && answered(q.gate) ? String(ANSWERS[q.gate].value) : q.meta,
+}));
+
+/* A real photograph's alt follows the /work/ pattern, as AreaPage's plates do. */
+const altFor = (type: string) => `${type}, completed installation by ${BUSINESS.legalName}`;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y);scroll-margin-top:var(--space-15)";
+const HOUSE = "display:block;font-family:var(--font-serif-display);font-size:22px;line-height:1.3;margin-bottom:var(--space-3)";
+const PAIR = "(max-width: 760px) 92vw, 530px";
+const PHOTO_NOTE = "margin:var(--space-5) 0 0;font-size:15px;line-height:1.55;color:var(--ink-soft)";
+const MATERIAL_NAME = "font-family:var(--font-serif-display);font-size:22px;line-height:1.5";
+const SUBHEAD = "font-family:var(--font-serif-display);font-weight:var(--weight-regular);font-size:24px;line-height:1.25;margin:var(--space-13) 0 var(--space-6)";
+
+/* D3, the premium materials: one entry each, "Name: what it is". While the key
+   is open each line shows in the open-question brackets. An answer keeps the
+   entries he will take on, so the list is whatever the key holds. */
+const d3Open = !answered("areaHampsteadDesign3");
+const d3 = (d3Open ? ANSWERS.areaHampsteadDesign3.provisional : ANSWERS.areaHampsteadDesign3.value) as unknown as readonly string[];
+const d3Label = questionLabel("areaHampsteadDesign3");
+const premium = d3.map((line) => {
+  const at = line.indexOf(": ");
+  const text = at > 0 ? line.slice(at + 2) : line;
+  return { name: at > 0 ? line.slice(0, at) : "", text: text.charAt(0).toUpperCase() + text.slice(1) };
+});
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      Hampstead has Georgian and Regency houses, Victorian terraces, Arts and Crafts houses, mansion blocks and a few 1930s modernist homes. Each has its own kind of room, so furniture that suits one house can look out of place in the next.
+    </p>
+    <p style={P2}>
+      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link> across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
+    </p>
+  </Fragment>
+
+  <Wrap as="section" id="houses" style={SECTION}>
+    <SectionHead meta="Five kinds of house" level={4}>What suits each kind of Hampstead house</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The room images marked AI-generated example are shown for inspiration and to help you compare the options. The other photographs on this page are of finished work.
+      </p>
+      <ul style={LIST}>
+        <li style={ITEM}>
+          <Link href="#alcoves" style={HOUSE}>Victorian terraces</Link>
+          Much of Hampstead's housing. Most rooms have a chimney breast with an alcove on each side.
+        </li>
+        <li style={ITEM}>
+          <Link href="#panelled" style={HOUSE}>Georgian and Regency houses</Link>
+          Panelled halls and rooms, original shutters and deep cornices.
+        </li>
+        <li style={ITEM}>
+          <Link href="#roof" style={HOUSE}>Arts and Crafts and Edwardian houses</Link>
+          Rooms in the roof with sloping ceilings and dormers, and bay windows below.
+        </li>
+        <li style={ITEM}>
+          <Link href="#flats" style={HOUSE}>Mansion-block flats</Link>
+          Bay windows are common, and storage has to fit the bedrooms and the hall.
+        </li>
+        <li style={ITEM}>
+          <Link href="#built-in" style={HOUSE}>1930s modernist homes</Link>
+          Storage built into the walls from the start, with plain fronts.
+        </li>
+      </ul>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="alcoves" style={SECTION}>
+    <SectionHead meta="Victorian terraces" level={4}>Alcoves either side of the chimney breast</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Much of Hampstead's housing is Victorian, and most rooms in it have a chimney breast with an alcove on each side. The two alcoves are rarely the same width, so each unit is measured for its own space. The skirting can carry on round the base of the units, so they read as part of the room.
+      </p>
+      <p style={P2}>
+        In a living room the usual choice is cupboards below and shelves above. Framed or Shaker doors with small brass knobs and a cornice across the top suit a period room. Floating shelves over flat cupboards give the same alcoves a plainer, modern look.
+      </p>
+      <p style={P2}>
+        A pair of alcove units starts from £3,300 in melamine, £3,600 in hand-painted MDF, £4,000 in sprayed MDF and £6,000 in oak veneer. That is for base cupboards with shelves above, up to about 1m wide per alcove.
+      </p>
+    </div>
+    <Renders>
+      <Render src="/images/journal/alcove-ai-traditional-shaker.webp" width={1536} height={1024} caption="AI-generated example" short="Traditional alcove units" pair alt="Classic white fitted alcove shelving with Shaker-style base cupboards and brass knobs, framed shelves with integrated warm lighting, and decorative top mouldings that meet the room's cornice. The symmetrical units frame the fireplace and combine traditional joinery details with practical storage." />
+      <Render src="/images/journal/alcove-ai-contemporary-handleless.webp" width={1536} height={1024} caption="AI-generated example" short="Contemporary alcove units" pair alt="Contemporary white alcove shelving with clean horizontal lines: floating shelves with concealed warm lighting above minimalist handleless storage cabinets, with the wall above left plain. The floating shelves provide space for decorative objects, while the cupboards offer practical hidden storage." />
+    </Renders>
+    <div style={TEXT}>
+      <p>
+        In a bedroom the same alcoves can take wardrobes. A recess is often too shallow for clothes on hangers, so the wardrobe usually stands forward of the chimney breast, with its sides finished to match.
+      </p>
+    </div>
+    <div style={TEXT}>
+      <Render src="/images/journal/built-in-wardrobes-ai-sage-alcoves.webp" width={1555} height={1012} caption="AI-generated example" short="Wardrobes in both alcoves" alt="Twin sage-green alcove wardrobes frame a central chimney breast and fireplace. Each wardrobe has two flat doors with slender metal pull handles. The wardrobes project beyond the chimney breast, with finished side returns providing the additional depth. White ceiling cornicing follows the projecting cabinetry and returns across the chimney breast, while recessed plinths finish the bases." />
+    </div>
+    <AlcoveDrawing
+      title="Drawing 1 · What to decide"
+      legend={[
+        { k: "A", label: "Alcove width.", text: "Wide alcoves can take more doors and divisions; narrow ones, fewer." },
+        { k: "B", label: "Cupboard depth.", text: "Flush with the chimney breast, or projecting beyond it." },
+        { k: "C", label: "Height.", text: "To the ceiling, or stopping beneath existing cornicing." },
+        { k: "D", label: "Cupboard height.", text: "Sets the split between enclosed storage and open display." },
+        { k: "E", label: "Opening between shelves: around 250-350 mm", text: "for books and smaller objects, 350-450 mm or more for larger display pieces." },
+        { k: "F", label: "Shelf depth.", text: "Shallower than the cupboards, or about the same." },
+      ]}
+      note="These are planning suggestions rather than standard dimensions. The spacing is the clear height between the shelves, excluding their thickness."
+    />
+    <div style={TEXT}>
+      <p style={P2}>
+        Our <Link href="/journal/alcove-units-guide/">alcove units guide</Link> covers layouts, shelf spacing and lighting in more detail.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="panelled" style={SECTION}>
+    <SectionHead meta="Georgian and Regency houses" level={4}>Panelled rooms, shutters and deep cornices</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Hampstead's oldest houses date from the early 18th century. Their listing records describe panelled halls and rooms, original shutters and deep cornices.
+      </p>
+      <p style={P2}>
+        New joinery suits these rooms when it follows the same lines. That can mean panelled doors on a wardrobe, a cornice carried across the top, and a paint colour the room already uses.
+      </p>
+      <p style={P2}>
+        We also fit wall panelling and panelled doors, so cupboards and the walls around them can be designed together. The cornice and the paint finish can be part of the same job, so one firm answers for the whole wall.
+      </p>
+    </div>
+    <Renders>
+      <div class="render">
+        <Plate photo="/images/doors-panelling/doors-panelling-02.webp" alt={altFor("Wall panelling")} width={1600} height={1066} ratio="1600 / 1066" subject="Wall panelling" detail="Finished work" label="Wall panelling" sizes={PAIR} />
+      </div>
+      <Render src="/images/journal/built-in-wardrobes-ai-traditional-panelled.webp" width={1536} height={1024} caption="AI-generated example" short="Panelled wardrobe doors" pair alt="A traditional wardrobe filling the end wall between the two side walls, with six panelled doors in three pairs. Each door has a tall upper and a shorter lower panel edged with a bead moulding, painted soft sage with aged-brass bar handles. The room's cornice runs across the top above a slim infill, with slim side infills and a recessed plinth." />
+    </Renders>
+    <div style={TEXT}>
+      <p>
+        For ideas nearby, Kenwood is open to visitors. Robert Adam remodelled the house from 1764, including the library he designed for Lord Mansfield's books.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="roof" style={SECTION}>
+    <SectionHead meta="Arts and Crafts and Edwardian houses" level={4}>Under the roof and in the bay window</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Hampstead's Arts and Crafts and Edwardian houses often suit a plainer look than the Georgian rooms, with simpler Shaker doors and softer colours. Many also have rooms in the roof, with sloping ceilings and dormer windows. The space under a slope can all be used.
+      </p>
+      <p style={P2}>
+        The taller part of the room takes the hanging space. The lower part under the eaves takes shelves, drawers or cupboards.
+      </p>
+    </div>
+    <div style={TEXT}>
+      <Render src="/images/journal/built-in-wardrobes-ai-loft-oak-niches.webp" width={1672} height={941} caption="AI-generated example" short="Wardrobes under a sloping ceiling" alt="Fitted loft wardrobes arranged symmetrically around an oak window seat. Four flat ivory doors on each side follow the changing ceiling height, while open oak shelving fills the lowest space beneath the eaves. Bronze pull handles, slim infills along the ceiling slopes and recessed plinths complete the design." />
+    </div>
+    <div style={TEXT}>
+      <p>
+        <Value q="areaHampsteadDesign2" /> In a hallway, a bench with drawers beneath it does the same job.
+      </p>
+      <div style="margin-top:var(--space-11)">
+        <Plate photo="/images/doors-panelling/doors-panelling-01.webp" alt={altFor("Hallway cupboards and bench")} width={1600} height={1064} ratio="1600 / 1064" subject="Hallway cupboards and bench" detail="Finished work" label="Hallway cupboards and bench" sizes="(max-width: 700px) 92vw, 680px" />
+        <p style={PHOTO_NOTE}>A cushioned bench with drawers, beside full-height cupboards with panelled doors.</p>
+      </div>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="flats" style={SECTION}>
+    <SectionHead meta="Mansion-block flats" level={4}>Mansion-block flats and smaller rooms</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Hampstead has many Victorian and Edwardian mansion blocks, and bay windows are common in their flats. In a flat every wall counts, so storage goes around the bed, along the hall and into any recess.
+      </p>
+      <p style={P2}>
+        Wardrobes either side of the bed, joined by cupboards above it, give a bedroom a full wall of storage. The plan leaves room to sit up against the headboard and reach the bedside shelves.
+      </p>
+    </div>
+    <div style={TEXT}>
+      <Render src="/images/journal/built-in-wardrobes-ai-around-bed.webp" width={1536} height={1024} caption="AI-generated example" short="Wardrobes around a bed" alt="Two tall Shaker-style wardrobes, each with a pair of doors, frame the bed and are joined by overhead cupboards with four doors in two pairs. Slim aged-brass bar handles are used throughout, long on the tall doors and short above. Finished side panels face the bed, a slim top infill meets the flat ceiling and a recessed plinth runs beneath." />
+    </div>
+    <div style={TEXT}>
+      <p><Value q="areaHampstead1" /></p>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="built-in" style={SECTION}>
+    <SectionHead meta="1930s modernist homes" level={4}>Plain fronts and storage built into the walls</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Ernő Goldfinger designed 2 Willow Road in 1938 and lived there until 1987. Its listing records fitted bookcases in the living room and a fitted workbench in the studio, and the bedroom floor keeps much of its fitted furniture.
+      </p>
+      <p style={P2}>
+        The house belongs to the National Trust and is open to visitors. The same approach suits a modern flat, or a contemporary room in an older house.
+      </p>
+      <p style={P2}>
+        Floor-to-ceiling flat doors with no handles and thin, even gaps keep the front plain. Real wood veneer brings in the grain of the timber.
+      </p>
+    </div>
+    <Renders>
+      <Render src="/images/journal/built-in-wardrobes-ai-handleless.webp" width={1536} height={1024} caption="AI-generated example" short="Handleless flat doors" pair alt="A wall-to-wall wardrobe with six full-height flat doors in a smooth sage finish, with no visible handles and thin, even gaps between them. A slim top infill meets the flat ceiling, slim side infills run down to the floor, and one continuous recessed plinth gives the base a shadow line." />
+      <Render src="/images/journal/built-in-wardrobes-ai-oak-veneer-eight-door.webp" width={1672} height={941} caption="AI-generated example" short="Oak veneer doors" pair alt="A full-wall fitted wardrobe with eight flat oak-veneer doors arranged in four pairs. The vertical grain brings warmth and texture to the simple frontage, complemented by slim brass pull handles. Matching top and side infills connect the cabinetry to the room, with a recessed plinth beneath the doors." />
+    </Renders>
+  </Wrap>
+
+  <Wrap as="section" id="finishing" style={SECTION}>
+    <SectionHead meta="Finishing" level={4}>Fitting to the room's cornice, skirting and walls</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Walls, floors and ceilings in period houses are rarely straight. Each piece is measured in the room and cut to follow its walls, which joiners call scribing.
+      </p>
+      <p style={P2}>
+        At the top, the joinery can stop beneath an original cornice and leave it on show. It can also carry a cornice across the units and around the chimney breast.
+      </p>
+    </div>
+    <Renders>
+      <Render src="/images/journal/alcove-ai-below-cornice.webp" width={1536} height={1024} caption="AI-generated example" short="Stopping below the cornice" pair alt="Built-in alcove units combining warm lit display shelving with traditional framed cupboard doors and small brass knobs. The framed shelving stops beneath the room's cornice, leaving the original moulding and a band of wall visible above the units." />
+      <Render src="/images/journal/alcove-ai-cornice-across.webp" width={1536} height={1024} caption="AI-generated example" short="Cornice across the top" pair alt="Traditional bespoke alcove units with framed shelving and panelled cupboards beneath, finished with a cornice that runs across the top of the units and around the chimney breast. Warm lighting highlights the display shelves, while the joinery complements the period fireplace." />
+    </Renders>
+    <div style={TEXT}>
+      <p>
+        Where the skirting, picture rails and cornice meet the new joinery is settled in the drawings, before fitting starts. Painted pieces are hand-painted or spray-finished in a wide range of colours, and one close to the walls lets them blend into the room. A heritage colour already used in the room can be closely matched.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="materials" style={SECTION}>
+    <SectionHead meta="Materials" level={4}>What the furniture is made from</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Most of our work is in painted MDF, real wood veneer and melamine-faced board, often mixed within one piece.
+      </p>
+    </div>
+    <Materials>
+      <Material
+        name="Painted MDF"
+        rows={[
+          { label: "What it is", text: "MDF provides a smooth surface for painted joinery and can be used for flat fronts, panelled door designs and decorative details." },
+          { label: "Finish", text: "The final appearance depends on preparation and the chosen paint system as well as the board itself." },
+          { label: "Bear in mind", text: "Moisture-resistant MDF is an option for interior applications where humidity varies. It is not waterproof and should not be treated as a solution to a damp wall." },
+        ]}
+      />
+      <Material
+        name="Real wood veneer"
+        rows={[
+          { label: "What it is", text: "Veneer is a thin layer of real timber bonded to a board. Oak and other species bring natural grain to doors, shelves and backs." },
+          { label: "Grain", text: "The grain can be straight and relatively uniform or more varied and expressive. Its direction and how it continues across neighbouring panels influence the appearance." },
+          { label: "Bear in mind", text: "Stain and protective finishes change the colour, so a finished sample is the best basis for choosing. Natural variation means an exact match to existing flooring or furniture cannot always be achieved." },
+        ]}
+      />
+      <Material
+        name="Melamine-faced board"
+        rows={[
+          { label: "What it is", text: "Melamine-faced board has a factory-finished decorative surface, available in plain colours and wood-effect finishes. It can be used for cupboard interiors, modern fronts and shelving, depending on the specification." },
+          { label: "Bear in mind", text: "A wood-effect surface is a reproduction rather than real timber. The texture, colour and treatment of exposed edges should be assessed using physical samples." },
+        ]}
+      />
+    </Materials>
+    <div style={TEXT}>
+      <p style={P2}>
+        Our <Link href="/materials/">materials page</Link> sets out each one in more detail.
+      </p>
+
+      {/* Premium materials on request (a founder, 7 Nov 2026: "we are flexible
+          and can work with more premium materials if you wish, and give some
+          examples"). Held on D1 and D3 until Kaspar confirms which he takes on. */}
+      <h3 style={SUBHEAD}>More premium materials, if you'd like them</h3>
+      <p><Value q="areaHampsteadDesign1" /> These are some of the options:</p>
+      {premium.length > 0 && (
+        <ul style={LIST}>
+          {premium.map((m) => (
+            <li style={ITEM}>
+              {d3Open ? (
+                <Ask q={d3Label}>{m.name && <><span style={MATERIAL_NAME}>{m.name}</span><br /></>}{m.text}</Ask>
+              ) : (
+                <>{m.name && <><span style={MATERIAL_NAME}>{m.name}</span><br /></>}{m.text}</>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+      <p style={P2}>
+        Premium materials change the price and the lead time, so they are quoted after the measured survey like everything else.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="practical" style={SECTION}>
+    <SectionHead meta="Before work starts" level={4}>The practical side, in short</SectionHead>
+    <div style={TEXT}>
+      <ul style={LIST}>
+        <li style={ITEM}><Value q="areaHampstead2" /></li>
+        <li style={ITEM}>Where a block is managed, we arrange access, working hours, deliveries and any paperwork with the managing agent before work begins.</li>
+        <li style={ITEM}><Value q="areaHampstead4" /></li>
+        <li style={ITEM}>We work 8am to 5pm on weekdays in houses, and to whatever hours the building sets in a managed block.</li>
+        <li style={ITEM}>Floors are covered in taped-down protective board, furniture is wrapped and moved to one side, and doorways are sealed with zipped dust screens.</li>
+      </ul>
+    </div>
+  </Wrap>
+
+  <Wrap as="section" id="prices" style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What does fitted furniture cost?</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed project costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers, integrated lighting and more complex designs move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.</li>
+        <li style={ITEM}><Link href="/media-walls/">Built-in TV units</Link> start from £3,500. Overall size, cabinetry and storage, integrated lighting, cable management and specialist finishes move the figure.</li>
+        <li style={ITEM}><Link href="/bespoke-kitchens/">Bespoke kitchens</Link> typically start from £10,000. Kitchen size and layout, cabinetry and internal storage, worktops, appliances, and materials and finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        These are guide starting prices, and a fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <Reviews
+      title=""
+      average={REVIEWS.average}
+      count={REVIEWS.count}
+      href={REVIEWS.profileUrl}
+      quotes={quotes}
+    />
+  </Wrap>
+
+  <Wrap as="section" id="questions" style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      {/* Source: a Facebook group post titled "Building fitted wardrobes around
+          a chimney breast?" and Google UK's related search "Fitted wardrobe
+          around chimney breast", both seen 7 Nov 2026. The answer is the
+          wardrobe guide's. */}
+      <Faq q="Can fitted wardrobes go around a chimney breast?">
+        They can fill the alcoves on each side, usually standing forward of the chimney breast so there is room for clothes on hangers. Matching doors, heights and handles join the two sides up, even when the alcoves differ in width.
+      </Faq>
+      {/* Source: Mumsnet Property thread "built in wardrobes in a period
+          property", 4 Jun 2023. */}
+      <Faq q="Will built-in wardrobes look right in a period property?">
+        They look right when they follow the room. Panelled or Shaker doors, a finish at the ceiling and a colour from the room all help. Plain flat doors painted in the wall colour also sit quietly in a period room.
+      </Faq>
+      {/* Source: Mumsnet Home decoration thread "What to do with alcove space
+          next to bed?!", 27 Apr 2019. */}
+      <Faq q="What can I do with the alcoves next to the bed?">
+        Wardrobes or cupboards can fill them, and a cupboard top can double as a bedside table. Cupboards over the bed can join the two sides into one wall of storage.
+      </Faq>
+      {/* Source: ChatGPT, asked for carpenters in north London on 7 Nov 2026,
+          told the buyer to ask whether a quote includes full-height fitting, the
+          finish, soft-close hinges and drawers, interior fittings, and removal of
+          existing wardrobes and making good. The first two sentences are the cost
+          guide's starting specification and price notes; the third is D4. */}
+      <Faq q="What does the quote include?">
+        The starting price covers the made-to-measure furniture with standard shelving and hanging space, soft-close hinges, delivery and installation. Drawers, lighting, mirrors, shoe storage and extra shelving are priced separately, each as its own line in the itemised quotation. <Value q="areaHampsteadDesign4" />
+      </Faq>
+      {/* The first version's approved answer, back on 7 Nov: ChatGPT tells buyers to book a design consultation first. */}
+      <Faq q="How long do the first visit and the survey take?">
+        The first visit usually takes 45 to 60 minutes, and the measured survey about an hour on site. Both run longer for a larger or more complex project. Before we arrive, you do not need to know every detail: asking the right questions is our job.
+      </Faq>
+      <Faq q="Can new furniture match the woodwork already in the house?">
+        Finishes are chosen to complement or closely match the furniture, joinery and flooring already in the room. Spray-painted, hand-painted, veneered and lacquered or oiled finishes are all possible, and the right one depends on the design and what it needs to match.
+      </Faq>
+      <Faq q="How long does a job take?">
+        Installation typically takes 2 to 3 days for a straightforward wardrobe wall, and closer to a week where on-site construction or hand-painting is involved. The lead time before work starts is typically 4 to 8 weeks. Where a project needs design, one week is set aside for it, with drawings issued for you to review by the end.
+      </Faq>
+      <Faq q="What guarantee comes with the work?">
+        The guarantee covers installation and workmanship for 2 years and the structural integrity of the joinery for 10 years. Hinges, runners and other hardware carry their manufacturer's warranty. If doors, drawers or other moving parts require adjustment during the 2-year aftercare period, we will return and adjust them.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
