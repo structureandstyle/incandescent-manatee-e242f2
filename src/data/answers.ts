@@ -231,7 +231,7 @@ export const ANSWERS = {
   areaHampstead1: {
     value: null,
     provisional: "We fit both period houses and mansion-block flats.",
-    about: "C1: which jobs has he done in Hampstead (a house, a flat or a mansion block), and may one of the three photos be named as one; until then the merged page's lede claim stays open",
+    about: "C1: which jobs has he done in Hampstead (a house, a flat or a mansion block). Not to be asked (a founder, 9 Nov 2026); it no longer holds the merged page, only the design-led copy's sentence",
   },
   areaHampstead2: {
     value: null,
