@@ -220,10 +220,16 @@ export const ANSWERS = {
    * is one edit here: copy the sentence, or his corrected wording, into
    * `value`. Not `blocking`: they hold one page, not the launch.
    */
+  /* 9 Nov 2026, merged page: Kaspar's own rewrite of the period-house section
+     (8 Nov) says he fits both period houses and mansion flats, so the merged
+     /carpenter-hampstead/ no longer shows this sentence. The key now holds the
+     Hampstead-job question, which he left unanswered: the merged page wraps its
+     lede ("much of our work in Hampstead") in it. The design-led copy still
+     shows the provisional sentence below. */
   areaHampstead1: {
     value: null,
     provisional: "We fit both period houses and mansion-block flats.",
-    about: "C1: does he fit both period houses and mansion-block flats in Hampstead, and which Hampstead jobs and photographs may be named",
+    about: "C1: which jobs has he done in Hampstead (a house, a flat or a mansion block), and may one of the three photos be named as one; until then the merged page's lede claim stays open",
   },
   areaHampstead2: {
     value: null,
@@ -295,6 +301,20 @@ export const ANSWERS = {
     value: null,
     provisional: "A window seat with deep drawers underneath turns a bay into storage as well.",
     about: "D2: does he make window seats with drawers, for a bay or a dormer",
+  },
+
+  /**
+   * The merged Hampstead page, 9 November 2026 (ops PR #32, Step 1 and Step 2).
+   * Kaspar's four rewritten sections (8 Nov) are on the page as he wrote them,
+   * so areaHampstead2 to 4 no longer hold /carpenter-hampstead/ (the design-led
+   * copy still uses them). The new copy around his words is ours: the design
+   * section body under his heading, one line linking Camden's parking page and
+   * one linking the process page. It renders in the open-question brackets
+   * until he approves it, and the page stays noindexed until then.
+   */
+  areaHampsteadMerge: {
+    value: null,
+    about: "Merged page: does he approve the new design section under his heading, the line linking Camden's parking page and the line linking the process page",
   },
 } as const satisfies Record<string, Answer>;
 
