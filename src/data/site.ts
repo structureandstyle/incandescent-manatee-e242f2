@@ -241,7 +241,11 @@ export const SERVICES: Service[] = [
        (engagement-status, "lead with London"; protocol section 2): site copy
        leads with London and the named districts do the local work, as
        Kaspar's own sentence below does for Hampstead. Overturning that is
-       Denis's call, not a build decision. */
+       Denis's call, not a build decision.
+       10 November 2026: a founder overturned it for the heading only, which
+       now says "north London" ("Yes, change it", the same day the Business
+       Profile link was pointed at this page). The title is unchanged and
+       still leads with London and the primary. */
     metaTitle: "Bespoke fitted wardrobes London, made to measure",
     noMinimum: true,
     bandPrice: "Fitted wardrobes from £2,300",
@@ -264,10 +268,15 @@ export const SERVICES: Service[] = [
     madeFrom:
       "Fitted wardrobes are available in painted MR MDF, melamine and decorative boards, or natural wood veneer, with a wide choice of colours and finishes.",
     title: "Fitted wardrobes",
-    heading: "Fitted wardrobes in London, made to measure",
+    heading: "Fitted wardrobes in north London, made to measure",
     primary: "fitted wardrobes london",
+    /* 10 November 2026, a founder's request: the description names Islington
+       and north London (see the intro note in service-copy.ts). "Made to
+       measure" left it to stay within 155 characters; the title and heading
+       both still carry it. The heading says north London since the same day
+       (note above metaTitle). */
     description:
-      "Bespoke fitted and built-in wardrobes made to measure for your room, with storage planned around what you need, across Hampstead, Belsize Park and London.",
+      "Bespoke fitted and built-in wardrobes, with storage planned around what you need, across Hampstead, Belsize Park, Islington and north London.",
     summary:
       "Made-to-measure wardrobes designed around your room and how you use it, with hanging space, shelving, drawers and internal storage planned around what you need.",
     wave: 1,
