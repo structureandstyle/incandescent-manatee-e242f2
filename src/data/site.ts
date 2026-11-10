@@ -266,8 +266,13 @@ export const SERVICES: Service[] = [
     title: "Fitted wardrobes",
     heading: "Fitted wardrobes in London, made to measure",
     primary: "fitted wardrobes london",
+    /* 10 November 2026, a founder's request: the description names Islington
+       and north London (see the intro note in service-copy.ts). "Made to
+       measure" left it to stay within 155 characters; the title and heading
+       both still carry it. The heading still leads with London (Denis's
+       30 August ruling, note above metaTitle). */
     description:
-      "Bespoke fitted and built-in wardrobes made to measure for your room, with storage planned around what you need, across Hampstead, Belsize Park and London.",
+      "Bespoke fitted and built-in wardrobes, with storage planned around what you need, across Hampstead, Belsize Park, Islington and north London.",
     summary:
       "Made-to-measure wardrobes designed around your room and how you use it, with hanging space, shelving, drawers and internal storage planned around what you need.",
     wave: 1,
