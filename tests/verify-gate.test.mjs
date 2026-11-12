@@ -100,14 +100,11 @@ const homeStub = {
   body: `<p>${(Math.round(REVIEWS_DATA.average * 10) / 10).toFixed(1)} out of 5 from ${REVIEWS_DATA.count} Google reviews</p>`,
 };
 
-/* The design-led copy of the Hampstead page (7 Nov 2026) is registered in
-   AREA_PATHS too, so every sandbox carries it as a noindexed stub. The cases
-   below are about the first version. */
-const DESIGN = "/carpenter-hampstead-design/";
-const designStub = { noindex: true, nodes: [webPage(DESIGN), breadcrumb(DESIGN, "Hampstead")] };
-
+/* The design-led copy of the Hampstead page (7 Nov 2026) was registered in
+   AREA_PATHS until it was deleted on 12 Nov 2026, so the sandboxes no longer
+   carry a stub for it. */
 function run(pages) {
-  pages = { "/": homeStub, [DESIGN]: designStub, ...pages };
+  pages = { "/": homeStub, ...pages };
   const root = mkdtempSync(join(tmpdir(), "ss-verify-"));
   try {
     /* verify-build reads src/data/reviews.json from its working directory
