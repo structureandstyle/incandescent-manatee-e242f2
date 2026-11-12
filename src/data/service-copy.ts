@@ -67,10 +67,16 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
        (difficulty 7, the highest CPC on the sheet, a top-three floor at month
        12) and appeared nowhere on the site until 5 Sep. So it ends "...and
        surrounding areas of north London", which is true of all four districts
-       and keeps the term in body copy. Told, not asked. */
+       and keeps the term in body copy. Told, not asked.
+       ISLINGTON ADDED, 10 November 2026, at a founder's request. Four of the
+       first nine real enquiries came from Islington, Angel, EC1V and N19, and
+       Search Console (UK, 11 Oct to 8 Nov) shows "bespoke wardrobes islington"
+       at 36 impressions and "fitted wardrobes islington" at 9. Islington is on
+       his Where we work list and his Business Profile service area. Kaspar's
+       own sentence stays as he wrote it; the new one follows it. */
     intro: [
       "A fitted wardrobe is designed and made specifically for your room, taking into account the available space, the proportions of the room and what you need to store. The interior is planned around how you use it, from hanging space and shelving to drawers and other storage. You don't need to have everything worked out before getting in touch: understanding what you need and helping develop the right layout is part of the service.",
-      "We design and fit wardrobes across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.",
+      "We design and fit wardrobes across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London. We also fit wardrobes in Islington.",
     ],
     /* THE COST AND MADE-FROM LEADS NAME THE WARDROBE THE WAY IT IS SEARCHED,
        27 September 2026. Search Console, 18 Aug to 25 Sep: 45 wardrobe
