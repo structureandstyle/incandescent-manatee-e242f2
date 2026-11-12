@@ -312,7 +312,7 @@ const clientData = {
 
     <div class="bundle-cards" role="list">
       {BUNDLES.map((b) => (
-        <button type="button" class="bundle-card" data-bundle={b.id} aria-pressed="false" role="listitem">
+        <button type="button" class="bundle-card" data-bundle={b.id} aria-haspopup="dialog" role="listitem">
           {/* Larger and in colour (Arthur, 12 Nov): brand tokens only, oak and
               walnut timber, green paint, charcoal for the TV and hangers. Tight
               viewBoxes so each drawing fills its card. */}
@@ -342,32 +342,45 @@ const clientData = {
       ))}
     </div>
 
-    <div class="bundle-panel" data-bundle-panel hidden aria-live="polite">
-      <p class="bundle-panel-title" data-panel-title></p>
-      <div data-step-size class="bundle-step" hidden>
-        <MonoLabel as="p"><span data-size-label>Size</span></MonoLabel>
-        <div class="chips" data-chips-size></div>
+    {/* A pop-up window per unit (Arthur, 12 Nov: "when we press on one product it
+        shouldn't scroll down, it should pop up a window to finish editing what you
+        want inside, then it goes to the basket"). Native <dialog>: Escape, the
+        close button or a tap outside closes it; the page stays where it was. */}
+    <dialog class="bundle-dialog" data-bundle-dialog aria-labelledby="bundle-dialog-title">
+      <div class="bundle-panel" data-bundle-panel>
+        <div class="dialog-head">
+          <p class="bundle-panel-title" id="bundle-dialog-title" data-panel-title></p>
+          <button type="button" class="dialog-close" data-close aria-label="Close">×</button>
+        </div>
+        <div class="dialog-body" data-dialog-body>
+          <div data-step-size class="bundle-step" hidden>
+            <MonoLabel as="p"><span data-size-label>Size</span></MonoLabel>
+            <div class="chips" data-chips-size></div>
+          </div>
+          <div data-step-units class="bundle-step" hidden>
+            <MonoLabel as="p">How many units</MonoLabel>
+            <div data-units-ctrl></div>
+          </div>
+          <div data-step-finish class="bundle-step" hidden>
+            <MonoLabel as="p">Finish</MonoLabel>
+            <div class="finish-tiles" data-chips-finish></div>
+          </div>
+          <p class="bundle-result" data-result></p>
+          <p class="booking-note" data-includes></p>
+          <ul class="bundle-incl panel-incl" data-includes-list hidden></ul>
+          <div data-step-parts class="bundle-step" hidden>
+            <MonoLabel as="p"><span data-parts-label>What goes inside</span></MonoLabel>
+            <p data-typical-wrap hidden><button type="button" class="chip" data-typical>Fill with a typical inside</button></p>
+            <ul class="addon-list" data-parts></ul>
+          </div>
+        </div>
+        <div class="dialog-foot">
+          <p class="bundle-result" data-unit-total hidden></p>
+          <p class="basket-nudge" data-panel-nudge hidden></p>
+          <button type="button" class="bundle-add bundle-add-main" data-add disabled>Add to basket</button>
+        </div>
       </div>
-      <div data-step-units class="bundle-step" hidden>
-        <MonoLabel as="p">How many units</MonoLabel>
-        <div data-units-ctrl></div>
-      </div>
-      <div data-step-finish class="bundle-step" hidden>
-        <MonoLabel as="p">Finish</MonoLabel>
-        <div class="finish-tiles" data-chips-finish></div>
-      </div>
-      <p class="bundle-result" data-result></p>
-      <p class="booking-note" data-includes></p>
-      <ul class="bundle-incl panel-incl" data-includes-list hidden></ul>
-      <div data-step-parts class="bundle-step" hidden>
-        <MonoLabel as="p"><span data-parts-label>What goes inside</span></MonoLabel>
-        <p data-typical-wrap hidden><button type="button" class="chip" data-typical>Fill with a typical inside</button></p>
-        <ul class="addon-list" data-parts></ul>
-      </div>
-      <p class="bundle-result" data-unit-total hidden></p>
-      <p class="basket-nudge" data-panel-nudge hidden></p>
-      <p style="margin-top:var(--space-6)"><button type="button" class="bundle-add" data-add disabled>Add to basket</button></p>
-    </div>
+    </dialog>
 
     {/* The basket (Arthur, 12 Nov: "maybe we should create a basket that sends the
         email, in case someone wants more than one unit"). It already held several
@@ -468,6 +481,13 @@ const clientData = {
     const addonOrder = Object.keys(data.addons);
     const wholeOrder = Object.keys(data.whole);
     const panel = $("[data-bundle-panel]");
+    const dialog = $("[data-bundle-dialog]");
+    const openDialog = () => {
+      if (dialog.open) return;
+      if (dialog.showModal) dialog.showModal(); else dialog.setAttribute("open", "");
+      $("[data-dialog-body]").scrollTop = 0;
+    };
+    const closeDialog = () => { if (dialog.open) { if (dialog.close) dialog.close(); else dialog.removeAttribute("open"); } };
     const basket = $("[data-basket]");
     const state = { b: null, size: null, finish: null, units: 12, parts: {}, list: [], picks: {}, split: null };
     /* The basket bar shows while units are in the basket and neither the basket
@@ -567,8 +587,7 @@ const clientData = {
 
     const renderPanel = () => {
       const b = state.b;
-      if (!b) { panel.hidden = true; return; }
-      panel.hidden = false;
+      if (!b) return;
       $("[data-panel-title]").textContent = b.label;
 
       $("[data-step-size]").hidden = !b.sizes;
@@ -688,7 +707,7 @@ const clientData = {
         addons.append(addonRow(k, state.picks[k] || 0, (m) => { state.picks[k] = Math.max(0, m); renderBasket(); }, "normally "));
       });
       const n = state.list.length;
-      $("[data-basket-bar-text]").textContent = n + " unit" + (n > 1 ? "s" : "") + ", from " + (s.draft ? d(money(s.base)) : money(s.base)) +
+      $("[data-basket-bar-text]").textContent = "In your basket: " + n + " unit" + (n > 1 ? "s" : "") + ", from " + (s.draft ? d(money(s.base)) : money(s.base)) +
         (s.allow ? ", " + d(money(s.allow)) + " on the house" : "");
       showBar();
       $("[data-estimate]").textContent = "Indicative estimate with everything on it: from " + d(money(s.quote)) +
@@ -698,12 +717,15 @@ const clientData = {
     document.querySelectorAll("[data-bundle]").forEach((card) => {
       card.addEventListener("click", () => {
         const b = data.bundles.find((x) => x.id === card.dataset.bundle);
-        document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", c === card ? "true" : "false"));
         state.b = b; state.size = null; state.finish = null; state.units = b.unitsIncluded || 12; state.parts = {};
         renderPanel();
-        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        openDialog();
       });
     });
+
+    $("[data-close]").addEventListener("click", closeDialog);
+    dialog.addEventListener("click", (e) => { if (e.target === dialog) closeDialog(); });
+    dialog.addEventListener("close", () => { state.b = null; state.parts = {}; });
 
     $("[data-typical]").addEventListener("click", () => {
       const b = state.b;
@@ -726,10 +748,9 @@ const clientData = {
         partsText: partsText(state.parts), partsLabel: b.partsLabel, addons: b.addons, included: b.id === "wardrobe" ? [] : b.included,
       });
       state.b = null; state.parts = {};
-      document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", "false"));
-      renderPanel();
+      closeDialog();
       renderBasket();
-      basket.scrollIntoView({ behavior: "smooth", block: "start" });
+      bar.classList.remove("bump"); void bar.offsetWidth; bar.classList.add("bump");
     });
 
     $("[data-send]").addEventListener("click", () => {
@@ -960,12 +981,35 @@ const clientData = {
     letter-spacing: var(--ls-mono-table);
     color: var(--text-quiet);
   }
-  .bundle-panel {
-    margin-top: var(--space-10);
-    padding: clamp(16px, 4vw, 32px);
-    border: var(--rule-structure);
-    max-width: var(--measure);
-    scroll-margin-top: 120px;
+  .bundle-dialog {
+    padding: 0; border: 0; margin: auto;
+    width: min(760px, calc(100vw - 32px)); max-width: none;
+    max-height: calc(100dvh - 48px);
+    background: var(--paper); color: var(--char);
+    box-shadow: 0 30px 80px rgba(0,0,0,.35);
+  }
+  .bundle-dialog::backdrop { background: rgba(34,29,24,.6); }
+  .bundle-dialog[open] { display: block; }
+  html:has(.bundle-dialog[open]) { overflow: hidden; }
+  .bundle-panel { display: flex; flex-direction: column; max-height: calc(100dvh - 48px); }
+  .dialog-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-6); padding: var(--space-6) var(--space-10); border-bottom: var(--rule-hair); }
+  .dialog-head .bundle-panel-title { font-family: var(--font-serif-display); font-size: var(--type-serif-md); font-weight: 400; }
+  .dialog-close { flex-shrink: 0; width: 44px; height: 44px; border: var(--rule-structure); background: var(--paper); color: var(--char); font-size: 26px; line-height: 1; cursor: pointer; }
+  .dialog-body { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--space-10) var(--space-10); }
+  .dialog-foot { display: grid; gap: var(--space-3); padding: var(--space-6) var(--space-10); border-top: var(--rule-structure); background: color-mix(in srgb, var(--oak) 8%, var(--paper)); }
+  .dialog-foot .bundle-result { margin: 0; }
+  .dialog-foot .basket-nudge { margin: 0; font-size: 13px; }
+  .dialog-foot .bundle-add-main { justify-self: start; background: var(--char); color: var(--paper); }
+  .dialog-foot .bundle-add-main:disabled { background: var(--paper); color: var(--char); }
+  .basket-bar.bump { animation: bar-bump .5s ease; }
+  @keyframes bar-bump { 0% { transform: translateY(100%); } 100% { transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .basket-bar.bump { animation: none; } }
+  @media (max-width: 600px) {
+    .bundle-dialog { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; }
+    .bundle-panel { height: 100dvh; max-height: 100dvh; }
+    .dialog-head, .dialog-foot { padding-left: var(--space-8); padding-right: var(--space-8); }
+    .dialog-body { padding: 0 var(--space-8) var(--space-10); }
+    .dialog-foot .bundle-add-main { justify-self: stretch; }
   }
   .bundle-panel-title { font-weight: var(--weight-medium, 500); font-size: var(--type-lede); margin: 0; }
   .bundle-step { margin-top: var(--space-8); }
