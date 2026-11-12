@@ -94,21 +94,14 @@ export const PAGE_GATES = {
      default: add the entry in the same commit as the page. */
   /* Merged 9 Nov 2026: Kaspar's own rewrites replaced the sentences that keys
      2 to 4 held. Later that day a founder ruled not to ask him about Hampstead
-     jobs (key 1), so the lede is no longer held. The page is held only by his
-     approval of the new copy around his words. */
+     jobs (key 1), so the lede is no longer held. The page was held only by his
+     approval of the new copy around his words, which he gave on 10 Nov by
+     rewriting it: released 12 Nov. The design-led copy that shared this search,
+     /carpenter-hampstead-design/, was deleted with its gate entry in the same
+     release, so only one Hampstead page can ever be indexed. */
   "/carpenter-hampstead/": [
     ...BAND_QUESTIONS,
     "areaHampsteadMerge",
-  ],
-  /* The design-led copy of the Hampstead page, 7 Nov 2026, built for the
-     founders to compare with the one above. Both target the same search, so
-     only one may ever be indexed. This one is held by its own two keys as well
-     as the ones it shares. Whichever version loses is deleted, with its gate
-     entry, before the other is released. */
-  "/carpenter-hampstead-design/": [
-    ...BAND_QUESTIONS,
-    "areaHampstead1", "areaHampstead2", "areaHampstead4",
-    "areaHampsteadDesign1", "areaHampsteadDesign2", "areaHampsteadDesign3", "areaHampsteadDesign4",
   ],
 
   // No client dependency.

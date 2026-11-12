@@ -1,6 +1,7 @@
 ---
 /**
- * Hampstead, the merged area page, 9 November 2026. Built hidden.
+ * Hampstead, the merged area page, 9 November 2026. Built hidden; released
+ * 12 November 2026 once Kaspar had rewritten the new copy (see THE GATE).
  *
  * WHY MERGED. Two versions went to Kaspar: this page on 6 Nov and a design-led
  * copy at /carpenter-hampstead-design/ on 7 Nov. Five independent reviews and
@@ -21,30 +22,33 @@
  *     clients/structure-and-style/hampstead-preview/questions.json). What he
  *     keeps is logged as a section 16 exception; what he drops comes out here.
  *     Nothing of his is reworded here.
- *   - The approved first-version copy, unchanged: the lede, the cost section,
- *     the guarantee and the four questions.
- *   - New: the design section's body, three parking lines after his (Hampstead's
- *     CA-H zone, Camden's zone and trade-permit pages) and one line on the
- *     process page at the end of the cost section. Written by a copy author who
- *     is neither the planner nor the builder (three drafts, one judged and
- *     fixed, then split to the protocol's 25-word limit after review, 9 Nov).
- *     All of it is held by areaHampsteadMerge until Kaspar approves it.
+ *   - Kaspar's again, 10 Nov 2026: on the preview he rewrote every line of new
+ *     copy we had held for his yes (the design section's body, the parking
+ *     line, the drawings and process lines) and the lede's second sentence.
+ *     His words replace ours as he wrote them; the only additions are links on
+ *     words he wrote ("parking zones", "trade permits", "Our process", the
+ *     service names). His tone-guide breaks are logged as section 16
+ *     exceptions in the ops repo, not reworded.
+ *   - The approved first-version copy, unchanged: the lede's first sentence,
+ *     the cost list, the guarantee and the four questions.
+ *   - Ours, which he read and left as it was: the line to the two guides that
+ *     closes the design section.
  *
- * THE GATE. areaHampstead1 (which Hampstead jobs he has done) holds the lede's
- * Hampstead claim, and areaHampsteadMerge holds the new copy. Until both are
- * answered the page is noindexed, out of the sitemap, missing from the footer's
- * Areas group and linked from nowhere. Keys 2 to 4 no longer hold this page:
- * his rewrites replaced the sentences they held. The design-led copy, kept
- * until his comments on it are dealt with, still uses them.
+ * THE GATE. areaHampsteadMerge held the new copy until he approved it. He
+ * answered on 10 Nov by rewriting it, so the key is answered and the page is
+ * indexable: in the sitemap, in the footer's Areas group and linked from the
+ * where-we-work lines. areaHampstead1 (Hampstead jobs) was dropped on 9 Nov by
+ * a founder's ruling, and the design-led copy at /carpenter-hampstead-design/
+ * was deleted with this release (netlify.toml forwards its address here).
  *
- * Street and building names in the new copy are Camden's, quoted from its 2001
- * conservation area statement and attributed to it (brief fact rows 86 and
- * 106), not places we claim to have worked. The three renders are the journal
- * guides' files with their approved alt text, each captioned "AI-generated
- * example", which Kaspar's note at the top of the section explains.
+ * Street and building names (Church Row, Keats Grove, Downshire Hill,
+ * Willoughby Road, Northcote Mansions) are Kaspar's words and Camden's
+ * conservation area statement's, not places we claim to have worked. The three
+ * renders are the journal guides' files with their approved alt text, each
+ * captioned "AI-generated example", which Kaspar's note at the top of the
+ * section explains.
  */
 import AreaPage from "../components/AreaPage.astro";
-import Held from "../components/Held.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import Reviews from "../components/ds/Reviews.astro";
@@ -81,7 +85,11 @@ const SECTION = "padding-bottom:var(--section-y)";
       We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
     </p>
     <p style={P2}>
-      We also fit <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>, each measured in the room and cut to follow its walls.
+      {/* Kaspar's words, 10 Nov 2026 (his comment on the preview); the links are ours. One word changed:
+          he wrote "a seamless finish", and "seamless" is a hard-banned word (tone protocol v1.4 section 5)
+          that scripts/verify-build.mjs refuses in a production build. "Neat" is his own word for the same
+          thing in his 8 Nov section below ("a neat, well-integrated finish"). */}
+      We also design and install <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>. Every project is made to measure, designed around the available space and carefully fitted to achieve a neat finish.
     </p>
   </Fragment>
 
@@ -102,7 +110,8 @@ const SECTION = "padding-bottom:var(--section-y)";
   </Wrap>
 
   {/* Heading and first paragraph: Kaspar's (8 Nov, on the design-led copy). The
-      rest: new copy, held until he approves it. */}
+      body: Kaspar's rewrite of our draft (10 Nov), as he wrote it. The closing
+      line to the guides is ours; he left it unchanged. */}
   <Wrap as="section" id="design" style={SECTION}>
     {/* "Design" is the only builder-chosen word on the page: every other section
         carries a short label above its heading, and this one needs one to match. */}
@@ -112,10 +121,13 @@ const SECTION = "padding-bottom:var(--section-y)";
         Images labelled "AI-generated example" are provided for design inspiration and to illustrate different fitted furniture options. All other project photographs on this page show our completed work.
       </p>
       <p style={P2}>
-        <Held k="areaHampsteadMerge"><Link href="https://www.camden.gov.uk/hampstead-conservation-area" target="_blank" rel="noopener">Camden's conservation area statement for Hampstead</Link> describes early 18th century houses in Church Row and Regency villas on Keats Grove. It also describes Victorian terraces off Willoughby Road, many with semi-basements, and mansion blocks such as Northcote Mansions.</Held>
+        Hampstead has a rich variety of architectural styles, from Georgian houses on Church Row and Regency villas on Keats Grove to Victorian terraces around Willoughby Road and traditional mansion blocks such as Northcote Mansions. These properties often have distinctive architectural features that need to be considered when designing bespoke fitted furniture.
       </p>
       <p style={P2}>
-        <Held k="areaHampsteadMerge">In a Church Row or Keats Grove house, the choice is how the furniture meets the room. Units can stop below the cornice and leave it visible, or a cornice can run across the top. If the house is listed, consent comes first, before any change to the cornice or panelling.</Held>
+        In period properties, careful attention is given to how fitted furniture integrates with the room's existing features. Wardrobes and cabinetry can be designed to finish neatly below original cornices or incorporate matching decorative details where appropriate. The aim is to create practical storage that complements the character and proportions of the property.
+      </p>
+      <p style={P2}>
+        For listed buildings, any proposed alterations affecting their special architectural or historic interest may require listed building consent. We recommend confirming any necessary permissions with Camden Council before work begins.
       </p>
     </div>
     <Renders>
@@ -124,10 +136,10 @@ const SECTION = "padding-bottom:var(--section-y)";
     </Renders>
     <div style={TEXT}>
       <p style={P2}>
-        <Held k="areaHampsteadMerge">Camden also notes that many of the Willoughby Road houses have steps up to the front door. For a terrace like that, the route in matters as much as the room. Furniture that arrives in separate sections is easier to carry up the steps and through the hall than one large piece.</Held>
+        Many period properties around Willoughby Road have steps leading to the entrance, along with narrow hallways and staircases. When planning a fitted furniture installation, we consider access as well as the room itself. Our furniture can be manufactured in separate sections and assembled on-site, making it easier to transport through restricted spaces.
       </p>
       <p style={P2}>
-        <Held k="areaHampsteadMerge">In a mansion block such as Northcote Mansions, a full wall of handleless flat doors keeps a bedroom plain and the floor clear.</Held>
+        In traditional mansion flats, such as those found at Northcote Mansions, bespoke fitted wardrobes can be designed to complement both classic and contemporary interiors. Whether the preference is for traditional shaker-style doors or modern handleless cabinetry, the design can be tailored to suit the room's proportions and the client's requirements.
       </p>
     </div>
     <div style={TEXT}>
@@ -135,7 +147,7 @@ const SECTION = "padding-bottom:var(--section-y)";
     </div>
     <div style={TEXT}>
       <p style={P2}>
-        <Held k="areaHampsteadMerge">For layouts, shelf spacing and materials, see our <Link href="/journal/alcove-units-guide/">alcove units guide</Link> and <Link href="/journal/built-in-wardrobe-ideas/">built-in wardrobe ideas</Link>.</Held>
+        For layouts, shelf spacing and materials, see our <Link href="/journal/alcove-units-guide/">alcove units guide</Link> and <Link href="/journal/built-in-wardrobe-ideas/">built-in wardrobe ideas</Link>.
       </p>
     </div>
   </Wrap>
@@ -175,8 +187,8 @@ const SECTION = "padding-bottom:var(--section-y)";
     </div>
   </Wrap>
 
-  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead4 card), then one
-      new line, held until he approves it. */}
+  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead4 card), then his
+      rewrite of our parking line (10 Nov), as he wrote it; the two links are ours. */}
   <Wrap style={SECTION}>
     <SectionHead meta="Access" level={4}>How do parking and access work for installations in Hampstead?</SectionHead>
     <div style={TEXT}>
@@ -187,7 +199,7 @@ const SECTION = "padding-bottom:var(--section-y)";
         Where necessary, we may ask the client to arrange parking permits or provide information about building access, lifts and any restrictions on deliveries. This helps us plan the installation efficiently and minimise disruption.
       </p>
       <p style={P2}>
-        <Held k="areaHampsteadMerge">Camden's parking zone for Hampstead is CA-H, and nearby streets fall in other zones with their own days and hours. Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" target="_blank" rel="noopener">controlled parking zones page</Link> lets you search a street or postcode to see its zone and hours. For builders and other trades, Camden's <Link href="https://www.camden.gov.uk/trade-permits" target="_blank" rel="noopener">trade and other parking permits page</Link> says a permit does not guarantee a space.</Held>
+        Parking restrictions vary across Hampstead, with many streets falling within Camden's controlled parking zones, including CA-H. We check local parking arrangements before installation and discuss any permits or access requirements with the client where necessary. Further information about <Link href="https://www.camden.gov.uk/controlled-parking-zones" target="_blank" rel="noopener">parking zones</Link> and <Link href="https://www.camden.gov.uk/trade-permits" target="_blank" rel="noopener">trade permits</Link> is available on Camden Council's website.
       </p>
     </div>
   </Wrap>
@@ -207,10 +219,12 @@ const SECTION = "padding-bottom:var(--section-y)";
         These are guide starting prices, and a fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
       </p>
       <p style={P2}>
-        {/* Arthur's comment, 7 Nov 2026 ("u can see the elevations to get an idea how the unit would look"), added
-            9 Nov. Kaspar's own answers back it: q20 (scaled drawings and elevations of the agreed design), q13 and
-            q18 (only where a project needs design), stage04 (made to the approved drawings). Held for his yes. */}
-        <Held k="areaHampsteadMerge">Where a project needs design, you get scaled drawings and elevations before anything is made, so you can see how it will look. The page on <Link href="/process/">our process</Link> covers four stages: survey and planning, quotation and design, preparation, and fitting.</Held>
+        {/* Arthur's comment, 7 Nov 2026 ("u can see the elevations to get an idea how the unit would look"), drafted
+            9 Nov, then rewritten by Kaspar on 10 Nov: his words, as he wrote them; the process link is ours. */}
+        For projects requiring detailed design work, we can provide scaled drawings and elevations to help you visualise the finished furniture before manufacturing begins. The level of design work depends on the complexity of the project and is discussed during the quotation process.
+      </p>
+      <p style={P2}>
+        <Link href="/process/">Our process</Link> typically includes an initial consultation and site survey, quotation and design, preparation and manufacturing, followed by installation.
       </p>
     </div>
   </Wrap>

@@ -208,115 +208,23 @@ export const ANSWERS = {
   q56: { value: null, about: "Whether he is happy to be photographed. No portrait at this stage, 30 Aug 2026" },
 
   /**
-   * Area page: /carpenter-hampstead/, 3 October 2026. NOT QUESTIONNAIRE
-   * NUMBERS. Q57, Q59 and Q60 exist in the questionnaire and are not keyed
-   * here, so these take names rather than the next numbers. One key per claim
-   * on the page that only the client can confirm, each asked in the page's
-   * fact-check list (C1 to C4). All four are in the page's gate in
-   * page-gates.ts: the page stays noindexed, out of the sitemap and unlinked
-   * until every one is answered.
+   * Area page: /carpenter-hampstead/. NOT QUESTIONNAIRE NUMBERS: area keys take
+   * names rather than the next numbers.
    *
-   * Each `provisional` is the approved sentence exactly as drafted. Answering
-   * is one edit here: copy the sentence, or his corrected wording, into
-   * `value`. Not `blocking`: they hold one page, not the launch.
-   */
-  /* 9 Nov 2026, merged page: Kaspar's own rewrite of the period-house section
-     (8 Nov) says he fits both period houses and mansion flats, so the merged
-     /carpenter-hampstead/ no longer shows this sentence. The key now holds the
-     Hampstead-job question, which he left unanswered: the merged page wraps its
-     lede ("much of our work in Hampstead") in it. The design-led copy still
-     shows the provisional sentence below, so DELETE /carpenter-hampstead-design/
-     (page and gate entry) BEFORE answering this key: an answer here would
-     replace that page's sentence with the job answer. */
-  areaHampstead1: {
-    value: null,
-    provisional: "We fit both period houses and mansion-block flats.",
-    about: "C1: which jobs has he done in Hampstead (a house, a flat or a mansion block). Not to be asked (a founder, 9 Nov 2026); it no longer holds the merged page, only the design-led copy's sentence",
-  },
-  areaHampstead2: {
-    value: null,
-    provisional: "If yours is listed, tell us at the first visit and ask Camden about consent before any work starts.",
-    about: "C2: should a client with a listed home tell him at the first visit and ask Camden about listed building consent first",
-  },
-  /** Three bullets, in page order: managed block, lift, cutting. An answer
-      keeps three entries in that order; an empty string drops that bullet. */
-  areaHampstead3: {
-    value: null,
-    provisional: [
-      "In a managed block, insurance and the safety paperwork go to the managing agent before the start date. The building's sign-off is in place before anything begins.",
-      "Where the building has a lift, it is booked and protected before any delivery. Stair protection goes down on every day material comes in.",
-      "Cutting happens outside where access allows, otherwise in one sealed room, and never in a hallway or a communal area. Dust extraction is connected to every cutting tool, with an air scrubber running in the room.",
-    ],
-    about: "C3: are the managed-block paperwork, lift and stair protection, and cutting and dust extraction lines true on every job",
-  },
-  areaHampstead4: {
-    value: null,
-    provisional: "We agree parking and deliveries with you before the job starts, including where deliveries can stop and how far pieces are carried to your door.",
-    about: "C4: what does he do about parking on a Hampstead job, is it agreed with the client before the job starts, and is there anything the client needs to do (for example arrange a bay or tell us about a lift)",
-  },
-
-  /**
-   * The design-led version of the Hampstead page, /carpenter-hampstead-design/,
-   * 7 November 2026. It is a copy, built so the founders can compare the two.
-   * Only one version ships. These two keys cover the claims only that version
-   * makes.
+   * Released 12 Nov 2026. The first version's four fact keys (areaHampstead1 to
+   * 4, C1 to C4, 3 Oct) and the design-led copy's four (areaHampsteadDesign1 to
+   * 4, 7 Nov) were removed with the design-led page: Kaspar's own rewrites
+   * (8 Nov) replaced the sentences keys 2 to 4 held, a founder ruled on 9 Nov
+   * not to ask key 1, and the D keys held only the deleted page. Their wording
+   * is in git history (site commit cb16ca2).
    *
-   * D1: a founder said on 7 Nov that solid oak and walnut are not in the usual
-   * range but he will use them when a client asks. The live Materials page, in
-   * his own words, lists board only, and the copy protocol (section 5) allows
-   * "solid oak" only when true. So the sentence waits for his own yes.
-   */
-  /* Widened the same day: a founder asked for a section saying we are flexible
-     and can work with more premium materials, with examples. D1 is now its
-     opening sentence and D3 its list. */
-  areaHampsteadDesign1: {
-    value: null,
-    provisional: "If you would like something more premium, we can work with other materials too, solid timber included.",
-    about: "D1: will he work with more premium materials, solid oak or walnut included, when a client asks, and may the site say so",
-  },
-  /** D3: the examples, one entry each, "Name: what it is". An answer keeps the
-      ones he will take on; an empty list drops the list. */
-  areaHampsteadDesign3: {
-    value: null,
-    provisional: [
-      "Solid oak: a hard-wearing timber with a strong grain, oiled or lacquered.",
-      "Solid walnut: a darker timber with a richer, more varied grain.",
-      "Painted tulipwood: a hardwood for painted doors and frames, where mouldings need to stay crisp.",
-      "Specialist veneers: smoked oak, quarter-cut oak, walnut and other species, chosen for their grain.",
-      "Leather, fabric or cane door panels: set into a frame, for a softer front in a bedroom or dressing room.",
-      "Reeded glass and antique mirror: for display cabinets, dressing rooms and drinks cabinets.",
-      "Solid brass or bronze: handles, trims and inlays, in place of standard hardware.",
-      "Natural stone: marble or other stone tops for a dressing table, a bar or a kitchen.",
-    ],
-    about: "D3: which premium materials he will take on when asked (solid oak, walnut, tulipwood, specialist veneers, leather or cane panels, reeded glass and antique mirror, solid brass or bronze, stone)",
-  },
-  /* D4: ChatGPT, asked for carpenters in north London on 7 Nov 2026, told the
-     buyer to check whether a quote includes "removal of existing wardrobes and
-     making good". Nothing on the site says, so the sentence waits on him. */
-  areaHampsteadDesign4: {
-    value: null,
-    provisional: "Taking out your old wardrobes and making good the wall behind them can be included too, priced as its own line.",
-    about: "D4: does he take out existing wardrobes and make good when asked, and is it priced as its own line in the quotation",
-  },
-  /** D2: the research found window seats with drawers in bays and dormers. Not on the site yet. */
-  areaHampsteadDesign2: {
-    value: null,
-    provisional: "A window seat with deep drawers underneath turns a bay into storage as well.",
-    about: "D2: does he make window seats with drawers, for a bay or a dormer",
-  },
-
-  /**
-   * The merged Hampstead page, 9 November 2026 (ops PR #32, Step 1 and Step 2).
-   * Kaspar's four rewritten sections (8 Nov) are on the page as he wrote them,
-   * so areaHampstead2 to 4 no longer hold /carpenter-hampstead/ (the design-led
-   * copy still uses them). The new copy around his words is ours: the design
-   * section body under his heading, three parking lines and a process line. It
-   * renders in the open-question brackets
-   * until he approves it, and the page stays noindexed until then.
+   * areaHampsteadMerge held the new copy we wrote around his words (ops PR #32,
+   * Step 1 and Step 2). He answered on the preview on 10 Nov 2026 by rewriting
+   * every held line, and his words are on the page as he wrote them.
    */
   areaHampsteadMerge: {
-    value: null,
-    about: "Merged page: does he approve the new design section under his heading, the three parking lines after his (CA-H zone, Camden's zone and trade-permit pages) and the process line at the end of the cost section",
+    value: "Answered 10 Nov 2026: Kaspar rewrote the held copy on the preview, and his words replace ours.",
+    about: "Merged page: does he approve the new design section under his heading, the parking line after his and the drawings and process lines at the end of the cost section",
   },
 } as const satisfies Record<string, Answer>;
 

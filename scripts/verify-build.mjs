@@ -87,7 +87,7 @@ const SERVICE_PATHS = new Set([
 /* The area pages (src/data/areas.ts). Hard-coded like SERVICE_PATHS: this
    script is plain Node and reads nothing from src but the review bank. Add a
    path here in the same commit as its page, or its breadcrumb fails. */
-const AREA_PATHS = new Set(["/carpenter-hampstead/", "/carpenter-hampstead-design/"]);
+const AREA_PATHS = new Set(["/carpenter-hampstead/"]);
 const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, ...AREA_PATHS, "/fitted-wardrobe-cost/"]);
 const isArticle = (page) => page.startsWith("/journal/") && page !== "/journal/";
 /** The pages that own the guide prices an area page repeats. */
