@@ -40,6 +40,7 @@ import Link from "../components/ds/Link.astro";
 
 /** Preview: wrap draft figures in brackets. False once Kaspar's prices are in. */
 const DRAFT = true;
+const draft = (s: string) => (DRAFT ? `[${s}]` : s);
 
 const BANDS: [number, number][] = [[2000, 300], [3000, 450], [5000, 750], [8000, 1000]];
 
@@ -83,8 +84,20 @@ const BUNDLES = [
     finishes: FINISHES,
     sizes: ["2 doors, up to 1.2m", "3 doors, up to 1.8m", "4 doors, up to 2.4m"],
     prices: [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]],
-    includes: "At this price: a made-to-measure wardrobe with a straightforward inside, hanging rails and shelves, soft-close hinges, delivery and fitting. Drawers, lighting and fittings are add-ons, below.",
-    included: ["Hanging rails and shelves", "Soft-close hinges", "Delivery and fitting", "Design, no separate fee"],
+    /* The inside in numbers (Arthur, 12 Nov): four doors is his spec, 2 rails,
+       4 shelves and a set of 4 drawers; two and three doors scale it. All
+       drafts for Kaspar. Rails and shelves are in his published price; the
+       drawers are an add-on, so the Christmas bundle covers them, one per
+       door, or lighting in the same number of sections instead. His published
+       prices do not change, so nothing is discounted. */
+    inside: [
+      { text: "1 hanging rail and 2 shelves", n: 2 },
+      { text: "2 hanging rails and 3 shelves", n: 3 },
+      { text: "2 hanging rails and 4 shelves", n: 4 },
+    ],
+    includes: "At this price: a made-to-measure wardrobe, soft-close hinges, delivery and fitting. Choose a size to see what goes inside.",
+    included: [draft("2 hanging rails and 4 shelves") + " in four doors", "Soft-close hinges", "Delivery and fitting", "Design, no separate fee"],
+    xmas: "Christmas: a set of drawers, one per door, or lighting instead",
     addons: WARDROBE_ADDONS,
   },
   {
@@ -126,7 +139,6 @@ const BUNDLES = [
 
 const allowance = (p: number) => BANDS.reduce((a, [min, v]) => (p >= min ? v : a), 0);
 const money = (n: number) => `£${n.toLocaleString("en-GB")}`;
-const draft = (s: string) => (DRAFT ? `[${s}]` : s);
 
 const BAND_ROWS = [
   ["£2,000 to £2,999", "up to " + draft("£300")],
@@ -143,6 +155,7 @@ const TERMS = [
   "A quotation of [£15,000] or more also includes a library unit, 2.4m high and 1.2m wide, in the same finish as the rest of the job.",
   "The quotation total before add-ons sets how much is included. Prices on this page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements, and it can only be the same as a guide starting price or higher.",
   "Each add-on appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
+  "In a fitted wardrobe, the add-ons start with a set of drawers, one per door, or lighting in the same number of sections instead. Other add-ons can be chosen to the same value.",
   "Prices are unchanged. The quotation is the normal itemised price for the job.",
   "Lighting needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other add-ons of the same value are included.",
   "Add-ons cannot be exchanged for money, swapped for a lower price or moved to another job.",
@@ -267,7 +280,7 @@ const clientData = {
           <span class="bundle-from">{b.fromText}</span>
           <span class="bundle-incl-title">Already included</span>
           <ul class="bundle-incl">{b.included.map((i) => <li>{i}</li>)}</ul>
-          <span class="bundle-allow">Add-ons worth at least {draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from)))}</span>
+          <span class="bundle-allow">{(b as { xmas?: string }).xmas && <span class="bundle-xmas">{(b as { xmas?: string }).xmas}</span>}Add-ons worth at least {draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from)))}</span>
         </button>
       ))}
     </div>
@@ -284,6 +297,11 @@ const clientData = {
       </div>
       <p class="bundle-result" data-result></p>
       <p class="booking-note" data-includes></p>
+      <div data-step-xmas class="bundle-step" hidden>
+        <MonoLabel as="p">Your Christmas add-ons</MonoLabel>
+        <div class="chips" data-chips-xmas></div>
+        <p class="booking-note" data-xmas-note></p>
+      </div>
       <p style="margin-top:var(--space-6)"><button type="button" class="bundle-add" data-add disabled>Add to my bundle</button></p>
     </div>
 
@@ -367,7 +385,7 @@ const clientData = {
     const allowance = (p) => data.bands.reduce((a, [min, v]) => (p >= min ? v : a), 0);
     const panel = $("[data-bundle-panel]");
     const basket = $("[data-basket]");
-    const state = { b: null, finish: null, size: null, units: [], picks: {}, split: null };
+    const state = { b: null, finish: null, size: null, bonus: "drawer", units: [], picks: {}, split: null };
     const addonOrder = Object.keys(data.addons);
 
     const chip = (label, on, click, disabled) => {
@@ -391,6 +409,24 @@ const clientData = {
       if (v === null) return { value: null, text: d("price to come") };
       return { value: v, text: "indicative " + (b.around ? "from around " : "from ") + money(v) };
     };
+
+    /* How a set of units and add-on picks splits: the allowance follows the
+       quotation (units plus any add-ons paid at normal prices). */
+    const split = (units, picks) => {
+      const base = units.reduce((s, u) => s + (u.value || 0), 0);
+      const keys = addonOrder.filter((k) => units.some((u) => u.addons.includes(k)));
+      const used = keys.reduce((s, k) => s + data.addons[k].price * (picks[k] || 0), 0);
+      let allow = allowance(base || 2000);
+      let extra = Math.max(0, used - allow);
+      for (let i = 0; base && i < 4; i++) { allow = allowance(base + extra); extra = Math.max(0, used - allow); }
+      const quote = base + extra;
+      return { base, keys, allow, included: used - extra, extra, quote, library: base > 0 && quote >= data.library.threshold };
+    };
+
+    /* Wardrobes (Arthur, 12 Nov): the inside for the chosen size, and the
+       Christmas add-ons it starts with, a drawer per door or lighting. */
+    const insideOf = (b) => (b && b.inside && state.size !== null ? b.inside[state.size] : null);
+    const bonusLabel = (key, n) => (key === "led" ? "lighting in " + n + " sections" : "a set of " + n + " drawers");
 
     const renderPanel = () => {
       const b = state.b;
@@ -423,7 +459,33 @@ const clientData = {
       res.textContent = p
         ? b.label + ": " + p.text + "."
         : "Choose " + (b.finishes && state.finish === null ? "a finish" : "a size") + " to see an indicative price.";
-      $("[data-includes]").textContent = b.includes || "";
+      const inside = insideOf(b);
+      $("[data-includes]").textContent = inside
+        ? "Inside, at this price: " + d(inside.text) + ". Also included: soft-close hinges, delivery and fitting, and the design, with no separate fee."
+        : b.includes || "";
+      const xs = $("[data-step-xmas]");
+      xs.hidden = !(inside && p);
+      if (inside && p) {
+        const n = inside.n;
+        const xc = $("[data-chips-xmas]"); xc.replaceChildren();
+        xc.append(
+          chip("A set of " + n + " drawers", state.bonus === "drawer", () => { state.bonus = "drawer"; renderPanel(); }),
+          chip("Lighting in " + n + " sections", state.bonus === "led", () => { state.bonus = "led"; renderPanel(); }),
+        );
+        const cost = data.addons[state.bonus].price * n;
+        const before = split(state.units, state.picks);
+        const picks = { ...state.picks, [state.bonus]: (state.picks[state.bonus] || 0) + n };
+        const after = split(state.units.concat([{ value: p.value, addons: b.addons }]), picks);
+        const charged = Math.max(0, after.extra - (state.units.length ? before.extra : 0));
+        const what = state.bonus === "led" ? "Lighting in " + n + " sections" : "A set of " + n + " soft-close drawers";
+        $("[data-xmas-note]").textContent = what + ", normally " + d(money(cost)) + ". " +
+          (charged >= cost
+            ? "Your bundle's add-ons are already chosen, so it would be at the normal price."
+            : charged
+            ? "In your bundle, " + d(money(cost - charged)) + " of it comes at £0 and " + d(money(charged)) + " at the normal price."
+            : "In your bundle it comes at £0, as its own line on the quotation.") +
+          (state.bonus === "led" ? " Lighting needs a power supply that can reach the wardrobe, which we check at the visit." : "");
+      }
       $("[data-add]").disabled = !p;
     };
 
@@ -441,23 +503,26 @@ const clientData = {
           inc.textContent = "Already included: " + u.included.join("; ") + ".";
           t.append(inc);
         }
+        if (u.bonus) {
+          const xm = document.createElement("small");
+          xm.className = "basket-incl";
+          xm.textContent = "Christmas add-ons: " + bonusLabel(u.bonus.key, u.bonus.n) + ", counted below.";
+          t.append(xm);
+        }
         const rm = document.createElement("button");
         rm.type = "button"; rm.className = "basket-remove"; rm.textContent = "Remove";
         rm.setAttribute("aria-label", "Remove " + u.label);
-        rm.addEventListener("click", () => { state.units.splice(i, 1); renderBasket(); });
+        rm.addEventListener("click", () => {
+          if (u.bonus) state.picks[u.bonus.key] = Math.max(0, (state.picks[u.bonus.key] || 0) - u.bonus.n);
+          state.units.splice(i, 1);
+          renderBasket();
+        });
         li.append(t, rm);
         list.append(li);
       });
-      const base = state.units.reduce((s, u) => s + (u.value || 0), 0);
       const keys = addonOrder.filter((k) => state.units.some((u) => u.addons.includes(k)));
       Object.keys(state.picks).forEach((k) => { if (!keys.includes(k)) delete state.picks[k]; });
-      const used = keys.reduce((s, k) => s + data.addons[k].price * (state.picks[k] || 0), 0);
-      let allow = allowance(base || 2000);
-      let extra = Math.max(0, used - allow);
-      for (let i = 0; base && i < 4; i++) { allow = allowance(base + extra); extra = Math.max(0, used - allow); }
-      const included = used - extra;
-      const quote = base + extra;
-      const library = base > 0 && quote >= data.library.threshold;
+      const { base, allow, included, extra, quote, library } = split(state.units, state.picks);
       state.split = { base, allow, included, extra, quote, library };
       const pending = state.units.some((u) => u.value === null);
       $("[data-total]").textContent = base
@@ -508,7 +573,7 @@ const clientData = {
       card.addEventListener("click", () => {
         const b = data.bundles.find((x) => x.id === card.dataset.bundle);
         document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", c === card ? "true" : "false"));
-        state.b = b; state.finish = null; state.size = null;
+        state.b = b; state.finish = null; state.size = null; state.bonus = "drawer";
         renderPanel();
         panel.scrollIntoView({ behavior: "smooth", block: "start" });
       });
@@ -518,7 +583,11 @@ const clientData = {
       const b = state.b; const p = unitPrice();
       if (!b || !p) return;
       const detail = [b.finishes && state.finish !== null ? b.finishes[state.finish].name : "", b.sizes && state.size !== null ? b.sizes[state.size] : ""].filter(Boolean).join(", ");
-      state.units.push({ id: b.id, label: b.label, detail, value: p.value, text: p.text, addons: b.addons, included: b.included });
+      const inside = insideOf(b);
+      const bonus = inside ? { key: state.bonus, n: inside.n } : null;
+      const included = inside ? [d(inside.text), "Soft-close hinges", "Delivery and fitting", "Design, no separate fee"] : b.included;
+      state.units.push({ id: b.id, label: b.label, detail, value: p.value, text: p.text, addons: b.addons, included, bonus });
+      if (bonus) state.picks[bonus.key] = (state.picks[bonus.key] || 0) + bonus.n;
       state.b = null;
       document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", "false"));
       renderPanel();
@@ -702,6 +771,7 @@ const clientData = {
   .bundle-incl { list-style: none; padding: 0 var(--space-5); margin: 0; display: grid; align-content: start; gap: 4px; font-size: 13px; line-height: 1.35; color: var(--char); }
   .bundle-incl li { position: relative; padding-left: 1em; }
   .bundle-incl li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 5px; height: 5px; border-radius: 50%; background: var(--oak); }
+  .bundle-xmas { display: block; margin-bottom: var(--space-2, 6px); font-family: var(--font-sans); font-size: 13px; letter-spacing: normal; line-height: 1.35; color: #8A2E1F; font-weight: var(--weight-medium, 500); }
   .basket-incl { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-soft); }
   .bundle-name { font-weight: var(--weight-medium, 500); }
   .bundle-from,
