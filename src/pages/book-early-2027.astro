@@ -125,9 +125,8 @@ const BUNDLES = [
       { parts: { rail: 2, shelf: 4, drawer: 4 }, text: "2 rails, 4 shelves and 4 drawers" },
     ],
     partsLabel: "What goes inside", parts: WARDROBE_PARTS,
-    includes: "The box: doors and carcass made to measure, Blum soft-close hinges, delivery and fitting, design included. Then choose what goes inside.",
-    included: ["Doors and carcass, made to measure", "Blum soft-close hinges", "Delivery and fitting", "Design included"],
-    xmas: "You build the inside: rails, shelves, drawers, lighting",
+    includes: "The box is the doors and carcass. Then choose what goes inside.",
+    included: ["Choose the doors and the finish", "Then build the inside, part by part"],
     addons: WARDROBE_PARTS,
   },
   {
@@ -137,8 +136,8 @@ const BUNDLES = [
     sizeLabel: "Size", sizes: ["A pair of alcoves", "One alcove"],
     finishes: FINISHES, prices: [[3300, null], [3600, null], [4000, null], [6000, null]],
     partsLabel: "Extras", parts: ["shelf", "drawer", "led"],
-    includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide, delivered and fitted, design included.",
-    included: ["Base cupboard, two doors, each side", "Three open shelves above", "Made to measure and fitted", "Design included"],
+    includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide.",
+    included: ["A base cupboard and three open shelves, each side", "Up to about 1m wide per alcove"],
     addons: ["shelf", "drawer", "led"],
   },
   {
@@ -147,7 +146,7 @@ const BUNDLES = [
     finishes: null, prices: [[5000, 5000, 5000]], around: true,
     partsLabel: "Extras", parts: WARDROBE_PARTS,
     includes: "A walk-in wardrobe is priced per room, by what goes into it, and typically starts from around £5,000. Add the extras you would like below.",
-    included: ["Layout planned around what you store", "Fitted, floors protected", "Design included"],
+    included: ["Layout planned around what you store", "One, two or three walls"],
     addons: WARDROBE_PARTS,
   },
   {
@@ -155,7 +154,7 @@ const BUNDLES = [
     sizes: null, finishes: FINISHES, prices: null, perProject: true,
     partsLabel: "Extras", parts: ["led", "drawer", "shelf"],
     includes: "Built-in TV units are priced per project after one visit, from £3,500.",
-    included: ["Layout set around your TV", "Closed cupboards and open sections", "Design included"],
+    included: ["Layout set around your TV", "Closed cupboards and open sections"],
     addons: ["led", "drawer", "shelf"],
   },
   {
@@ -166,9 +165,9 @@ const BUNDLES = [
     kind: "kitchen", unitsIncluded: 12, perUnit: 850,
     sizes: null, finishes: FINISHES, prices: null,
     partsLabel: "Extras", parts: ["led", "drawer"],
-    includes: "From £10,000 for up to " + draft("12") + " units in melamine board. Each unit beyond that adds about " + draft("£850") + ", and other finishes cost more.",
-    includesList: ["Design included", "Units made to measure and fitted", "Your choice of finish", "Not included: appliances and worktops"],
-    included: ["Design included", "Up to " + draft("12") + " units, made to measure and fitted", "Your choice of finish"],
+    includes: "",
+    includesList: ["From £10,000 for up to " + draft("12") + " units in melamine board", "Each unit beyond that about " + draft("£850") + "; other finishes cost more", "Not included: appliances and worktops"],
+    included: ["Up to " + draft("12") + " units, in your choice of finish", "Appliances and worktops not included"],
     addons: ["led", "drawer"],
   },
 ];
@@ -299,6 +298,18 @@ const clientData = {
       house, each its own line at £0 on the quotation. One button sends the whole basket with your enquiry.
     </p>
 
+    {/* What every unit shares, said once (Arthur, 12 Nov: "whatever is the same
+        across all the products, put it somewhere standard for all of them"). */}
+    <div class="std-strip">
+      <p class="std-strip-title">Every unit comes with</p>
+      <ul class="std-strip-list">
+        <li>Design included</li>
+        <li>Made to measure</li>
+        <li>Delivered and fitted</li>
+        <li>Blum soft-close hardware</li>
+      </ul>
+    </div>
+
     <div class="bundle-cards" role="list">
       {BUNDLES.map((b) => (
         <button type="button" class="bundle-card" data-bundle={b.id} aria-pressed="false" role="listitem">
@@ -324,9 +335,9 @@ const clientData = {
           </span>
           <span class="bundle-name">{b.label}</span>
           <span class="bundle-from">{b.fromText}</span>
-          <span class="bundle-incl-title">Already included</span>
           <ul class="bundle-incl">{b.included.map((i) => <li>{i}</li>)}</ul>
-          <span class="bundle-allow">{(b as { xmas?: string }).xmas && <span class="bundle-xmas">{(b as { xmas?: string }).xmas}</span>}{allowance((b as { cardFloor?: number }).cardFloor ?? b.from) ? "On the house: extras worth at least " + draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from))) : "Extras on the house from a £2,500 basket"}</span>
+          <span class="bundle-allow">{allowance((b as { cardFloor?: number }).cardFloor ?? b.from) ? "On the house: extras worth at least " + draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from))) : "Extras on the house from a £2,500 basket"}</span>
+          <span class="bundle-cta">Build it <span aria-hidden="true">→</span></span>
         </button>
       ))}
     </div>
@@ -368,6 +379,7 @@ const clientData = {
       <p class="bundle-panel-title basket-title"><svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10 L10 4 M17 10 L14 4" /><path d="M3 10 H21 L19 20 H5 Z" /><path d="M9 13 V17 M12 13 V17 M15 13 V17" /></svg>Your basket</p>
       <ul class="basket-list" data-basket-list></ul>
       <p class="bundle-result" data-total></p>
+      <p class="booking-note">Every unit: design included, made to measure, delivered and fitted, Blum soft-close hardware.</p>
       <p class="basket-library" data-library hidden></p>
       <p class="basket-nudge" data-nudge hidden></p>
       <p style="margin-top:var(--space-6)"><a class="bundle-add basket-more" href="#bundles">Add another unit</a></p>
@@ -639,7 +651,7 @@ const clientData = {
         t.textContent = u.label + (u.detail ? ", " + u.detail : "") + ": " + u.text;
         const lines = [];
         if (u.partsText) lines.push(u.partsLabel + ": " + u.partsText + ".");
-        if (u.included && u.included.length) lines.push("Already included: " + u.included.join("; ") + ".");
+        if (u.included && u.included.length) lines.push("Includes: " + u.included.join("; ") + ".");
         lines.forEach((x) => { const sm = document.createElement("small"); sm.className = "basket-incl"; sm.textContent = x; t.append(sm); });
         const rm = document.createElement("button");
         rm.type = "button"; rm.className = "basket-remove"; rm.textContent = "Remove";
@@ -711,7 +723,7 @@ const clientData = {
       state.list.push({
         id: b.id, label: b.label, detail, value: now.total, draft: now.draft,
         text: now.total === null ? now.p.text : "indicative from " + (now.draft ? d(money(now.total)) : money(now.total)),
-        partsText: partsText(state.parts), partsLabel: b.partsLabel, addons: b.addons, included: b.included,
+        partsText: partsText(state.parts), partsLabel: b.partsLabel, addons: b.addons, included: b.id === "wardrobe" ? [] : b.included,
       });
       state.b = null; state.parts = {};
       document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", "false"));
@@ -833,12 +845,15 @@ const clientData = {
     font-size: var(--type-body-sm);
     color: var(--text-quiet);
   }
+  /* Bigger cards with more room (Arthur, 12 Nov): three across on desktop, two
+     on tablets, and on phones one per row with the drawing beside the text. */
   .bundle-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--space-6);
-    margin-top: var(--space-10);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-10) var(--space-8);
+    margin-top: var(--space-12);
   }
+  @media (max-width: 900px) { .bundle-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   /* Each card spans six rows of the shared grid (subgrid), so the drawing,
      name, price, included list and add-ons line sit level across a row
      whatever each card holds (Arthur, 12 Nov). */
@@ -846,10 +861,11 @@ const clientData = {
     display: grid;
     grid-row: span 6;
     grid-template-rows: subgrid;
-    row-gap: var(--space-3);
+    row-gap: var(--space-4);
     align-content: start;
     text-align: left;
-    padding: 0 0 var(--space-5);
+    padding: 0 0 var(--space-8);
+    transition: box-shadow .2s ease, transform .2s ease;
     border: var(--rule-structure);
     background: var(--paper);
     color: inherit;
@@ -857,7 +873,16 @@ const clientData = {
     cursor: pointer;
     overflow: hidden;
   }
-  .bundle-card > span:not(.bundle-drawing) { padding: 0 var(--space-5); }
+  .bundle-card > span:not(.bundle-drawing) { padding: 0 var(--space-8); }
+  .bundle-card:hover { box-shadow: 0 14px 30px rgba(34,29,24,.12); transform: translateY(-3px); }
+  @media (prefers-reduced-motion: reduce) { .bundle-card { transition: none; } .bundle-card:hover { transform: none; } }
+  .bundle-name { font-family: var(--font-serif-display); font-size: var(--type-serif-md); line-height: 1.2; }
+  .bundle-cta { color: var(--green); font-weight: var(--weight-medium, 500); text-decoration: underline; text-underline-offset: 4px; }
+  .std-strip { margin-top: var(--space-10); padding: var(--space-6) var(--space-8); background: color-mix(in srgb, var(--green) 8%, var(--paper)); border-left: 6px solid var(--green); }
+  .std-strip-title { margin: 0 0 var(--space-4); font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--green); }
+  .std-strip-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-10); }
+  .std-strip-list li { position: relative; padding-left: 1.6em; }
+  .std-strip-list li::before { content: ""; position: absolute; left: 0; top: 0.4em; width: 0.8em; height: 0.45em; border-left: 2px solid var(--green); border-bottom: 2px solid var(--green); transform: rotate(-45deg); }
   .bundle-card[aria-pressed="true"] {
     outline: 3px solid var(--char);
     outline-offset: -3px;
@@ -865,13 +890,15 @@ const clientData = {
   .bundle-drawing {
     display: block;
     background: var(--wash-char);
-    padding: var(--space-3);
+    padding: var(--space-8) var(--space-10);
   }
   .bundle-drawing svg {
     display: block;
     width: 100%;
     height: auto;
     aspect-ratio: 16 / 15;
+    max-width: 240px;
+    margin: 0 auto;
     stroke-linejoin: round;
     stroke-linecap: round;
   }
@@ -910,7 +937,7 @@ const clientData = {
   .finish-pic.painted::after { background: color-mix(in srgb, var(--green) 55%, transparent); }
   .finish-pic.sprayed::after { background: color-mix(in srgb, var(--paper) 70%, transparent); }
   .bundle-incl-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--green); margin-top: var(--space-3); }
-  .bundle-incl { list-style: none; padding: 0 var(--space-5); margin: 0; display: grid; align-content: start; gap: 4px; font-size: 13px; line-height: 1.35; color: var(--char); }
+  .bundle-incl { list-style: none; padding: 0 var(--space-8); margin: 0; display: grid; align-content: start; gap: 6px; font-size: var(--type-body-sm); line-height: 1.4; color: var(--char); }
   .bundle-incl li { position: relative; padding-left: 1em; }
   .bundle-incl li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 5px; height: 5px; border-radius: 50%; background: var(--oak); }
   .bundle-xmas { display: block; margin-bottom: var(--space-2, 6px); font-family: var(--font-sans); font-size: 13px; letter-spacing: normal; line-height: 1.35; color: #8A2E1F; font-weight: var(--weight-medium, 500); }
@@ -1028,4 +1055,14 @@ const clientData = {
     gap: var(--space-5);
   }
   .booking-terms { font-size: var(--type-body-sm); color: var(--text-quiet); }
+  @media (max-width: 600px) {
+    .bundle-cards { grid-template-columns: 1fr; gap: var(--space-6); }
+    .bundle-card { grid-row: auto; grid-template-rows: none; grid-template-columns: 116px minmax(0, 1fr); column-gap: var(--space-5); row-gap: var(--space-2); padding: 0; align-content: stretch; }
+    .bundle-card .bundle-drawing { grid-column: 1; grid-row: 1 / span 6; display: flex; align-items: center; padding: var(--space-4); }
+    .bundle-card > span:not(.bundle-drawing), .bundle-card .bundle-incl { grid-column: 2; padding: 0 var(--space-4) 0 0; }
+    .bundle-cards .bundle-card > span.bundle-name { padding-top: var(--space-10); font-size: var(--type-serif-sm); }
+    .bundle-cards .bundle-card > span.bundle-cta { padding-bottom: var(--space-10); }
+    .std-strip { padding: var(--space-5); }
+    .std-strip-list { display: grid; gap: var(--space-3); }
+  }
 </style>
