@@ -349,6 +349,21 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
           ["Oak veneer, stained and lacquered", "from £3,700", "from £5,000", "from £6,300"],
         ],
       },
+      /* PREVIEW, 12 Nov 2026: per metre, worked out from the guide prices
+         above (2 doors to 1.2m, 3 to 1.8m, 4 to 2.4m), floors rounded down
+         to the nearest £50. Not invented figures, but new wording for Kaspar
+         to approve on the preview before it goes live. */
+      {
+        title: "Fitted wardrobes, guide price per metre",
+        note: "The same guide prices, worked out per metre of wardrobe run. The figure is for a four-door run. A shorter run costs more per metre, because the end panels, doors and fitting are shared over less length.",
+        columns: ["Finish", "Per metre of run"],
+        rows: [
+          ["Melamine board", "from £1,650"],
+          ["Hand-painted MDF", "from £1,850"],
+          ["Professionally sprayed MDF", "from £2,250"],
+          ["Oak veneer, stained and lacquered", "from £2,600"],
+        ],
+      },
       {
         title: "Alcove units, guide starting prices for a pair",
         note: "Based on a pair of fitted alcove units either side of a chimney breast. Each is a base cupboard with two doors and three open shelves above, up to about 1m wide per alcove.",
@@ -378,6 +393,21 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
           ["Lined jewellery or accessory tray", "[£150]"],
           ["Full-length mirror inside a door", "[£200]"],
           ["Extra shelf", "[£50]"],
+        ],
+      },
+      /* PREVIEW ONLY: an empty form for one real job, priced line by line.
+         Protocol v1.4 s12: no worked example is invented, so every cell is a
+         blank for Kaspar to fill on the preview. Never merge with brackets. */
+      {
+        title: "A real job, priced line by line",
+        note: "[Which job: the area and the year, for example Belsize Park, 2026. No customer names or addresses.]",
+        columns: ["Line", "Price"],
+        rows: [
+          ["[The wardrobe: length, number of doors and finish]", "[£]"],
+          ["[Drawers: how many]", "[£]"],
+          ["[Lighting: how many sections]", "[£]"],
+          ["[Any other extras]", "[£]"],
+          ["[Total, no VAT added]", "[£]"],
         ],
       },
     ],
