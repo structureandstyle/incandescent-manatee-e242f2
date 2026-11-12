@@ -72,7 +72,11 @@ const LIBRARY = { threshold: 15000, name: "a library unit, 2.4m high and 1.2m wi
 const WARDROBE_ADDONS = ["drawer", "led", "trouser", "shoe", "pulldown", "tray", "mirror", "shelf"];
 
 /* Prices are Kaspar's published guide starting prices (cost guide tables);
-   the per-layout walk-in and one-alcove figures do not exist yet. */
+   the per-layout walk-in and one-alcove figures do not exist yet.
+   included: what each unit price already covers (Arthur, 12 Nov), taken only
+   from his published copy: the cost guide starting specification and alcove
+   note, the walk-in, TV unit and kitchen service pages, and the cost guide
+   FAQ "no separate design fee". */
 const BUNDLES = [
   {
     id: "wardrobe", label: "Fitted wardrobes", from: 2300, fromText: "from £2,300",
@@ -80,6 +84,7 @@ const BUNDLES = [
     sizes: ["2 doors, up to 1.2m", "3 doors, up to 1.8m", "4 doors, up to 2.4m"],
     prices: [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]],
     includes: "At this price: a made-to-measure wardrobe with a straightforward inside, hanging rails and shelves, soft-close hinges, delivery and fitting. Drawers, lighting and fittings are add-ons, below.",
+    included: ["Hanging rails and shelves", "Soft-close hinges", "Delivery and fitting", "Design, no separate fee"],
     addons: WARDROBE_ADDONS,
   },
   {
@@ -90,6 +95,7 @@ const BUNDLES = [
     sizes: ["A pair of alcoves", "One alcove"],
     prices: [[3300, null], [3600, null], [4000, null], [6000, null]],
     includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide, delivered and fitted. Lighting, drawers and extra shelves are add-ons, below.",
+    included: ["Base cupboard, two doors, each side", "Three open shelves above", "Made to measure and fitted", "Design, no separate fee"],
     addons: ["led", "drawer", "shelf"],
   },
   {
@@ -99,18 +105,21 @@ const BUNDLES = [
     prices: [[5000, 5000, 5000]],
     includes: "A walk-in wardrobe is priced per room, by what goes into it, and typically starts from around £5,000. Add the drawers, lighting and fittings you would like below.",
     around: true,
+    included: ["Layout planned around what you store", "Fitted, floors protected", "Design, no separate fee"],
     addons: WARDROBE_ADDONS,
   },
   {
     id: "tv", label: "Built-in TV units", from: 3500, fromText: "from £3,500",
     finishes: null, sizes: null, prices: null, perProject: true,
     includes: "Built-in TV units are priced per project after one visit, from £3,500.",
+    included: ["Layout set around your TV", "Closed cupboards and open sections", "Design, no separate fee"],
     addons: ["led", "drawer", "shelf"],
   },
   {
     id: "kitchen", label: "Bespoke kitchens", from: 10000, fromText: "from £10,000",
     finishes: null, sizes: null, prices: null, perProject: true,
-    includes: "Kitchens are priced per project after one visit, from £10,000.",
+    includes: "Kitchens are priced per project after one visit, from £10,000. Worktops and appliances are itemised separately on the quotation.",
+    included: ["Made-to-measure cabinetry, fitted", "Storage planned with the layout", "Design, no separate fee"],
     addons: ["led", "drawer"],
   },
 ];
@@ -256,6 +265,8 @@ const clientData = {
           </span>
           <span class="bundle-name">{b.label}</span>
           <span class="bundle-from">{b.fromText}</span>
+          <span class="bundle-incl-title">Already included</span>
+          <ul class="bundle-incl">{b.included.map((i) => <li>{i}</li>)}</ul>
           <span class="bundle-allow">Add-ons worth at least {draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from)))}</span>
         </button>
       ))}
@@ -424,6 +435,12 @@ const clientData = {
         const li = document.createElement("li");
         const t = document.createElement("span");
         t.textContent = u.label + (u.detail ? ", " + u.detail : "") + ": " + u.text;
+        if (u.included && u.included.length) {
+          const inc = document.createElement("small");
+          inc.className = "basket-incl";
+          inc.textContent = "Already included: " + u.included.join("; ") + ".";
+          t.append(inc);
+        }
         const rm = document.createElement("button");
         rm.type = "button"; rm.className = "basket-remove"; rm.textContent = "Remove";
         rm.setAttribute("aria-label", "Remove " + u.label);
@@ -501,7 +518,7 @@ const clientData = {
       const b = state.b; const p = unitPrice();
       if (!b || !p) return;
       const detail = [b.finishes && state.finish !== null ? b.finishes[state.finish].name : "", b.sizes && state.size !== null ? b.sizes[state.size] : ""].filter(Boolean).join(", ");
-      state.units.push({ id: b.id, label: b.label, detail, value: p.value, text: p.text, addons: b.addons });
+      state.units.push({ id: b.id, label: b.label, detail, value: p.value, text: p.text, addons: b.addons, included: b.included });
       state.b = null;
       document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", "false"));
       renderPanel();
@@ -611,9 +628,15 @@ const clientData = {
     gap: var(--space-6);
     margin-top: var(--space-10);
   }
+  /* Each card spans six rows of the shared grid (subgrid), so the drawing,
+     name, price, included list and add-ons line sit level across a row
+     whatever each card holds (Arthur, 12 Nov). */
   .bundle-card {
     display: grid;
-    gap: var(--space-3);
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+    row-gap: var(--space-3);
+    align-content: start;
     text-align: left;
     padding: 0 0 var(--space-5);
     border: var(--rule-structure);
@@ -675,6 +698,11 @@ const clientData = {
   .finish-pic.sprayed::after { content: ""; position: absolute; inset: 0; }
   .finish-pic.painted::after { background: color-mix(in srgb, var(--green) 55%, transparent); }
   .finish-pic.sprayed::after { background: color-mix(in srgb, var(--paper) 70%, transparent); }
+  .bundle-incl-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--green); margin-top: var(--space-3); }
+  .bundle-incl { list-style: none; padding: 0 var(--space-5); margin: 0; display: grid; align-content: start; gap: 4px; font-size: 13px; line-height: 1.35; color: var(--char); }
+  .bundle-incl li { position: relative; padding-left: 1em; }
+  .bundle-incl li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 5px; height: 5px; border-radius: 50%; background: var(--oak); }
+  .basket-incl { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-soft); }
   .bundle-name { font-weight: var(--weight-medium, 500); }
   .bundle-from,
   .bundle-allow {
