@@ -405,19 +405,33 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
          publish (ops repo research/extras-pricing-2026-11-12/). Kaspar sets his
          own on the preview link. Never merge this branch with these figures:
          every price on the live site comes from him (protocol v1.4 s12). */
+      /* Split by finish at Arthur's preview comment (12 Nov 2026). No rival
+         prices extras by material, so the finish steps on the drafts are
+         Kaspar's own: the ratios of his four-door wardrobe prices (melamine
+         £4,000, hand-painted £4,500, sprayed £5,400, oak £6,300), applied to
+         the melamine draft and rounded. Blanks where there is no basis. */
       {
-        title: "Extras, guide prices",
-        note: "Fitted prices, each added to the quotation as its own line. A wider drawer or a taller section costs more. No VAT is added: we are not currently VAT registered.",
-        columns: ["Extra", "Guide price"],
+        title: "Extras that follow the finish, guide prices",
+        note: "Fitted prices, each added to the quotation as its own line. A wider drawer costs more. No VAT is added: we are not currently VAT registered.",
+        columns: ["Extra", "Melamine", "Hand-painted", "Sprayed", "Oak veneer"],
         rows: [
-          ["Soft-close drawer inside the wardrobe, each", "[£150]"],
+          ["Soft-close drawer inside the wardrobe, each", "[£150]", "[£170]", "[£200]", "[£240]"],
+          ["Drawer in the front of the wardrobe, each", "[£]", "[£]", "[£]", "[£]"],
+          ["Extra shelf", "[£50]", "[£55]", "[£70]", "[£80]"],
+          ["Cornice, per metre", "[£]", "[£]", "[£]", "[£]"],
+        ],
+      },
+      {
+        title: "Fittings, guide prices",
+        note: "The same price in every finish.",
+        columns: ["Fitting", "Guide price"],
+        rows: [
           ["LED lighting with a door sensor, per hanging section", "[£150]"],
           ["Pull-out trouser rail", "[£150]"],
           ["Pull-out shoe rack", "[£180]"],
           ["Pull-down hanging rail, for a high rail", "[£180]"],
           ["Lined jewellery or accessory tray", "[£150]"],
           ["Full-length mirror inside a door", "[£200]"],
-          ["Extra shelf", "[£50]"],
         ],
       },
       /* PREVIEW ONLY: an empty form for one real job, priced line by line.
