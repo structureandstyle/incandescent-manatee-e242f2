@@ -15,8 +15,27 @@ interface Props {
       modal uses this on service pages: the visitor keeps the ability to add
       related work while the page they opened it from is already selected. */
   preselectedService?: string;
+  /** PREVIEW, 12 Nov 2026: the early-2027 booking page. Narrows the choices
+      to wardrobes, walk-ins and alcoves, adds "Which extras would you choose?"
+      (field `bonus`), an optional tick for future emails (field `updates`)
+      and a hidden `booking` marker. Same Netlify form, so the enquiry log and
+      Make keep working; Make maps only the fields it knows until it is told
+      about these three. */
+  bonusPicker?: boolean;
 }
-const { compact = false, idPrefix = "", service, preselectedService } = Astro.props;
+const { compact = false, idPrefix = "", service, preselectedService, bonusPicker = false } = Astro.props;
+
+/** The extras on the cost guide's lists, in the words the quotation uses. */
+const BONUS_CHOICES = [
+  "LED lighting with a door sensor",
+  "Drawers inside the wardrobe",
+  "Pull-out trouser rail",
+  "Pull-out shoe rack",
+  "Lined jewellery or accessory tray",
+  "Full-length mirror inside a door",
+  "Not sure yet",
+];
+const BOOKING_SLUGS = ["fitted-wardrobes", "walk-in-wardrobes", "alcove-units"];
 const turnstileSiteKey = import.meta.env.PUBLIC_SS_TURNSTILE_SITE_KEY;
 const largeUploadsEnabled = Boolean(turnstileSiteKey);
 
@@ -82,7 +101,9 @@ const CHOICES = [
  * stands, that a room being fitted out rarely needs one thing, and the full
  * list is one click away in the modal on every page including this one.
  */
-const choices = service ? [service, "Something else"] : CHOICES;
+const choices = bonusPicker
+  ? [...SERVICES.filter((s) => BOOKING_SLUGS.includes(s.slug)).map(serviceLabel), "Something else"]
+  : service ? [service, "Something else"] : CHOICES;
 const selectedService = service ?? preselectedService;
 
 /**
@@ -219,6 +240,7 @@ const SOURCES = [
       lives in src/scripts/enquiry-source.mjs, beside the rules for filling
       them. */}
   {SOURCE_FIELDS.map((name) => <input type="hidden" name={name} value="" />)}
+  {bonusPicker && <input type="hidden" name="booking" value="Early 2027 booking page" />}
   <p hidden>
     <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
   </p>
@@ -271,6 +293,24 @@ const SOURCES = [
       ))}
     </div>
   </fieldset>
+
+  {bonusPicker && (
+    <fieldset class="choices-field">
+      <legend>Which extras would you choose?</legend>
+      <p class="help">How much is included depends on your quotation. Tick what you would like most, and we confirm it at the visit.</p>
+      {/* Same Netlify labelling trick as `service` above: an unlabelled,
+          never-ticked first box, so the email line reads "Bonus: ...". */}
+      <p hidden><input type="checkbox" name="bonus" value="" tabindex="-1" /></p>
+      <div class="choices">
+        {BONUS_CHOICES.map((label, i) => (
+          <label class="choice" for={`${idPrefix}bonus-${i}`}>
+            <input id={`${idPrefix}bonus-${i}`} type="checkbox" name="bonus" value={label} />
+            <span>{label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )}
 
   <div>
     <label for={`${idPrefix}area`}>Which area of London?</label>
@@ -370,6 +410,13 @@ const SOURCES = [
     </select>
   </div>
 
+  {bonusPicker && (
+    <label class="choice" for={`${idPrefix}updates`}>
+      <input id={`${idPrefix}updates`} type="checkbox" name="updates" value="Yes" />
+      <span>Email me about new booking dates and extras. I can stop these at any time.</span>
+    </label>
+  )}
+
   <div class="actions">
     <button type="submit">Send enquiry</button>
   </div>
@@ -382,7 +429,7 @@ const SOURCES = [
       remember. The two now say the same thing. (4 Sep 2026) */}
   <p class="help">
     We use your details to reply, to quote, and to carry out the work if you go ahead. We do not add
-    you to a marketing list. See our{" "}
+    you to a marketing list{bonusPicker ? " unless you tick the box above" : ""}. See our{" "}
     <a href="/privacy/">privacy notice</a>.
   </p>
 </form>
