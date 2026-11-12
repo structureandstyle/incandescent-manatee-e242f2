@@ -69,7 +69,7 @@ export const ANSWERS = {
       site. Never rendered; kept as the record of the answer. */
   q01: { value: "No personal name is published. The site presents Structure & Style as a company.", about: "Name as published, and whether the Maker page uses his full name" },
   q02: { value: "Structure and Style Ltd, company number 16822866, incorporated 31 October 2025", about: "Company details" },
-  q03: { value: "Serving homes across London", blocking: true, about: "Business base: any physical base worth naming, or service area only" },
+  q03: { value: "Serving homes across north London", blocking: true, about: "Business base: any physical base worth naming, or service area only" },
   q04: { value: "info@structureandstyle.co.uk", about: "Email" },
   q05: { value: "07309 872555", about: "Phone and WhatsApp, already public" },
   /** Rephrased 31 Aug 2026, two Truth-gate catches: his answer said "through
