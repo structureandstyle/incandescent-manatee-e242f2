@@ -56,7 +56,7 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 const PROMO_OFF = ["/privacy/", "/cookies/", "/book-early-2027/terms/"];
 const here = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : Astro.url.pathname + "/";
 const showPromo = !PROMO_OFF.includes(here);
-const PROMO = ["The Christmas bundle", "Extras worth up to [15%] of your job, on the house", "Book by 31 January 2027", "Build your bundle"];
+const PROMO = ["The Christmas bundle", "From a £2,500 basket, extras on the house", "Worth [10 to 15%] of your job", "Book by 31 January 2027", "Build your bundle"];
 const ogImage = new URL(image, SITE_URL).href;
 const fullTitle = title.includes(BUSINESS.name) ? title : `${title} | ${BUSINESS.name}`;
 
@@ -322,7 +322,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       >Skip to content</a
     >
     {showPromo && (
-      <a class="promo-bar" href="/book-early-2027/" aria-label="The Christmas bundle: extras on the house on jobs booked by 31 January 2027. Build your bundle.">
+      <a class="promo-bar" href="/book-early-2027/" aria-label="The Christmas bundle: from a £2,500 basket, extras on the house on jobs booked by 31 January 2027. Build your bundle.">
         <span class="promo-track" aria-hidden="true">
           {[0, 1].map(() => (
             <span class="promo-run">{PROMO.map((t) => <span class="promo-item">{t}</span>)}</span>
