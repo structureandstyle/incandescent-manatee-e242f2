@@ -42,9 +42,25 @@ import Link from "../components/ds/Link.astro";
 const DRAFT = true;
 const draft = (s: string) => (DRAFT ? `[${s}]` : s);
 
-const BANDS: [number, number][] = [[2000, 300], [3000, 450], [5000, 750], [8000, 1000]];
+const money = (n: number) => `£${n.toLocaleString("en-GB")}`;
 
+/* Extras on the house, rev 14 (Arthur, 12 Nov: "the value has to be 10 to 15%,
+   and we want to upsell, not discount"). Each step is about half again the one
+   below and its allowance is 13 to 15% of the step, so the share never goes
+   above 15% and falls to no less than 10% just before the next step, where it
+   jumps back up: the next step is always close enough to pull one more drawer
+   into the bundle. Below £2,500 (Arthur's first step) nothing is included.
+   Every value is a draft for Kaspar. */
+const BANDS: [number, number][] = [
+  [2500, 350], [3500, 500], [5000, 750], [7500, 1000], [10000, 1500],
+  [15000, 2000], [20000, 3000], [30000, 4500], [45000, 6000],
+];
+
+/* Parts and extras at normal prices: the cost guide preview's drafts, plus a
+   hanging rail, priced here for the first time. All drafts for Kaspar. */
 const ADDONS = {
+  rail: { name: "Hanging rail", price: 50 },
+  shelf: { name: "Shelf", price: 50 },
   drawer: { name: "Soft-close drawer", price: 150 },
   led: { name: "LED lighting with a door sensor, per section", price: 150 },
   trouser: { name: "Pull-out trouser rail", price: 150 },
@@ -52,7 +68,6 @@ const ADDONS = {
   pulldown: { name: "Pull-down hanging rail", price: 180 },
   tray: { name: "Lined jewellery or accessory tray", price: 150 },
   mirror: { name: "Full-length mirror inside a door", price: 200 },
-  shelf: { name: "Extra shelf", price: 50 },
 };
 
 /* Finish pictures from the materials page (public/images/materials/README.md):
@@ -67,117 +82,122 @@ const FINISHES = [
   { name: "Sprayed MDF", img: "/images/materials/mdf-board-400w.webp", wash: "sprayed" },
   { name: "Oak veneer", img: "/images/materials/veneered-board-400w.webp", wash: "" },
 ];
-/* The upsell (Arthur, 12 Nov): bundles reaching the threshold also include a
-   small library unit. Its normal price and the threshold are drafts for Kaspar.
-   Stepped up the same day (Arthur: "spend 15k get a library unit, 20k something
-   else, 25k alcoves, 30k a TV unit, 50k a wardrobe; make it make sense to
-   upsell"): one whole unit per bundle, the one for the highest step reached,
-   each worth more than the one below, in the same finish as the rest of the
-   job. 20k (a 2-door wardrobe) and 50k (four doors, not three, so it is worth
-   more than the TV unit in every finish) are our fill-ins. All drafts. */
-const GIFTS = [
-  { at: 15000, name: "a library unit, 2.4m high and 1.2m wide" },
-  { at: 20000, name: "a 2-door fitted wardrobe, with a hanging rail and shelves inside" },
-  { at: 25000, name: "a pair of alcove units, a base cupboard and three open shelves in each" },
-  { at: 30000, name: "a built-in TV unit, up to " + draft("2.4m") + " wide" },
-  { at: 50000, name: "a 4-door fitted wardrobe, with 2 hanging rails and 4 shelves inside" },
-];
-const WARDROBE_ADDONS = ["drawer", "led", "trouser", "shoe", "pulldown", "tray", "mirror", "shelf"];
 
-/* Prices are Kaspar's published guide starting prices (cost guide tables);
-   the per-layout walk-in and one-alcove figures do not exist yet.
-   included: what each unit price already covers (Arthur, 12 Nov), taken only
-   from his published copy: the cost guide starting specification and alcove
-   note, the walk-in, TV unit and kitchen service pages, and the cost guide
-   FAQ "no separate design fee". */
+/* Arthur's upsell ladder, kept inside the 10 to 15%: from £15,000 what is on
+   the house is enough for a whole unit, picked like any extra and valued at its
+   normal starting price; another finish, or anything past the allowance, at
+   normal prices. The library unit's price is a draft; the others are his
+   published starting prices in melamine. */
+const WHOLE = {
+  library: { name: "Library unit, 2.4m high and 1.2m wide", price: 2000 },
+  wardrobe2: { name: "2-door wardrobe, a rail and 2 shelves inside", price: 2300 },
+  alcoves: { name: "A pair of alcove units", price: 3300 },
+  tvunit: { name: "Built-in TV unit, up to " + draft("2.4m") + " wide", price: 3500 },
+  wardrobe4: { name: "4-door wardrobe, 2 rails and 4 shelves inside", price: 4000 },
+};
+const WHOLE_FROM = 15000;
+
+/* The wardrobe as an empty box (Arthur, 12 Nov): doors and carcass, Blum
+   soft-close hinges, delivery and fitting; then the customer picks the inside
+   part by part. His published prices include a basic inside, so the box is
+   his price less that inside at the draft part prices (2 doors: a rail and 2
+   shelves; 3 doors: 2 rails and 3 shelves; 4 doors: 2 rails and 4 shelves).
+   Drafts until he gives box prices. Rows are finishes, columns door counts. */
+const PUBLISHED = [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]];
+const STD_INSIDE = [{ rail: 1, shelf: 2 }, { rail: 2, shelf: 3 }, { rail: 2, shelf: 4 }];
+const partsValue = (o: Record<string, number>) =>
+  Object.entries(o).reduce((s, [k, n]) => s + (ADDONS as Record<string, { price: number }>)[k].price * n, 0);
+const BOX = PUBLISHED.map((row) => row.map((v, i) => v - partsValue(STD_INSIDE[i])));
+/* Kitchens use his four-door wardrobe's finish steps until he prices them. */
+const FINISH_STEP = PUBLISHED.map((r) => r[2] / PUBLISHED[0][2]);
+const WARDROBE_PARTS = ["rail", "shelf", "drawer", "led", "trouser", "shoe", "pulldown", "tray", "mirror"];
+
+/* included: what each starting price already covers, from his published copy
+   and Arthur's comments (Blum hinges from Kaspar's Q28; "Design included"). */
 const BUNDLES = [
   {
-    id: "wardrobe", label: "Fitted wardrobes", from: 2300, fromText: "from £2,300",
-    finishes: FINISHES,
-    sizes: ["2 doors", "3 doors", "4 doors"], /* widths removed (Arthur, 12 Nov) */
-    prices: [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]],
-    /* The inside in numbers (Arthur, 12 Nov): four doors is his spec, 2 rails,
-       4 shelves and a set of 4 drawers; two and three doors scale it. All
-       drafts for Kaspar. Rails and shelves are in his published price; the
-       drawers are an add-on, so the Christmas bundle covers them, one per
-       door, or lighting in the same number of sections instead. His published
-       prices do not change, so nothing is discounted. */
-    inside: [
-      { text: "1 hanging rail and 2 shelves", n: 2 },
-      { text: "2 hanging rails and 3 shelves", n: 3 },
-      { text: "2 hanging rails and 4 shelves", n: 4 },
+    id: "wardrobe", label: "Fitted wardrobes", from: BOX[0][0], fromText: "box from " + draft(money(BOX[0][0])),
+    sizeLabel: "Doors", sizes: ["2 doors", "3 doors", "4 doors"],
+    finishes: FINISHES, prices: BOX, boxDraft: true, priceLabel: "the box",
+    typical: [
+      { parts: { rail: 1, shelf: 2, drawer: 2 }, text: "a rail, 2 shelves and 2 drawers" },
+      { parts: { rail: 2, shelf: 3, drawer: 3 }, text: "2 rails, 3 shelves and 3 drawers" },
+      { parts: { rail: 2, shelf: 4, drawer: 4 }, text: "2 rails, 4 shelves and 4 drawers" },
     ],
-    includes: "At this price: a made-to-measure wardrobe, Blum soft-close hinges, delivery and fitting. Choose a size to see what goes inside.",
-    included: [draft("2 hanging rails and 4 shelves") + " in four doors", "Blum soft-close hinges", "Delivery and fitting", "Design included"],
-    xmas: "Christmas: a set of drawers, one per door, or lighting instead",
-    addons: WARDROBE_ADDONS,
+    partsLabel: "What goes inside", parts: WARDROBE_PARTS,
+    includes: "The box: doors and carcass made to measure, Blum soft-close hinges, delivery and fitting, design included. Then choose what goes inside.",
+    included: ["Doors and carcass, made to measure", "Blum soft-close hinges", "Delivery and fitting", "Design included"],
+    xmas: "You build the inside: rails, shelves, drawers, lighting",
+    addons: WARDROBE_PARTS,
   },
   {
-    /* cardFloor: one alcove has no price yet and may sit in the lowest band,
-       so the card promises only that band, not the pair's. */
+    /* cardFloor: one alcove has no price yet and may sit below the first step,
+       so the card promises only that, not the pair's step. */
     id: "alcove", label: "Alcove units and shelving", from: 3300, cardFloor: 2000, fromText: "from £3,300 a pair",
-    finishes: FINISHES,
-    sizes: ["A pair of alcoves", "One alcove"],
-    prices: [[3300, null], [3600, null], [4000, null], [6000, null]],
-    includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide, delivered and fitted. Lighting, drawers and extra shelves are add-ons, below.",
+    sizeLabel: "Size", sizes: ["A pair of alcoves", "One alcove"],
+    finishes: FINISHES, prices: [[3300, null], [3600, null], [4000, null], [6000, null]],
+    partsLabel: "Extras", parts: ["shelf", "drawer", "led"],
+    includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide, delivered and fitted, design included.",
     included: ["Base cupboard, two doors, each side", "Three open shelves above", "Made to measure and fitted", "Design included"],
-    addons: ["led", "drawer", "shelf"],
+    addons: ["shelf", "drawer", "led"],
   },
   {
     id: "walkin", label: "Walk-in wardrobes", from: 5000, fromText: "from around £5,000",
-    finishes: null,
-    sizes: ["One wall", "Two walls, L-shaped", "Three walls, U-shaped"],
-    prices: [[5000, 5000, 5000]],
-    includes: "A walk-in wardrobe is priced per room, by what goes into it, and typically starts from around £5,000. Add the drawers, lighting and fittings you would like below.",
-    around: true,
+    sizeLabel: "Layout", sizes: ["One wall", "Two walls, L-shaped", "Three walls, U-shaped"],
+    finishes: null, prices: [[5000, 5000, 5000]], around: true,
+    partsLabel: "Extras", parts: WARDROBE_PARTS,
+    includes: "A walk-in wardrobe is priced per room, by what goes into it, and typically starts from around £5,000. Add the extras you would like below.",
     included: ["Layout planned around what you store", "Fitted, floors protected", "Design included"],
-    addons: WARDROBE_ADDONS,
+    addons: WARDROBE_PARTS,
   },
   {
     id: "tv", label: "Built-in TV units", from: 3500, fromText: "from £3,500",
-    finishes: null, sizes: null, prices: null, perProject: true,
+    sizes: null, finishes: FINISHES, prices: null, perProject: true,
+    partsLabel: "Extras", parts: ["led", "drawer", "shelf"],
     includes: "Built-in TV units are priced per project after one visit, from £3,500.",
     included: ["Layout set around your TV", "Closed cupboards and open sections", "Design included"],
     addons: ["led", "drawer", "shelf"],
   },
   {
+    /* Arthur, 12 Nov: pick how many units, then the finish; design and units
+       included, appliances and worktops not. From £10,000 for up to [12]
+       units in melamine; each unit beyond that a draft [£850]. */
     id: "kitchen", label: "Bespoke kitchens", from: 10000, fromText: "from £10,000",
-    /* Arthur, 12 Nov: bullets; design and up to 12 units, the customer picks
-       the finish; appliances and worktops not included. 12 is a draft for Kaspar. */
-    finishes: FINISHES, sizes: null, prices: null, perProject: true,
-    includes: "Kitchens are priced per project after one visit, from £10,000.",
-    includesList: ["Design included", "Up to " + draft("12") + " units, made to measure and fitted", "Your choice of finish", "Not included: appliances and worktops"],
+    kind: "kitchen", unitsIncluded: 12, perUnit: 850,
+    sizes: null, finishes: FINISHES, prices: null,
+    partsLabel: "Extras", parts: ["led", "drawer"],
+    includes: "From £10,000 for up to " + draft("12") + " units in melamine board. Each unit beyond that adds about " + draft("£850") + ", and other finishes cost more.",
+    includesList: ["Design included", "Units made to measure and fitted", "Your choice of finish", "Not included: appliances and worktops"],
     included: ["Design included", "Up to " + draft("12") + " units, made to measure and fitted", "Your choice of finish"],
     addons: ["led", "drawer"],
   },
 ];
 
 const allowance = (p: number) => BANDS.reduce((a, [min, v]) => (p >= min ? v : a), 0);
-const money = (n: number) => `£${n.toLocaleString("en-GB")}`;
 
-const BAND_ROWS = [
-  ["£2,000 to £2,999", "up to " + draft("£300")],
-  ["£3,000 to £4,999", "up to " + draft("£450")],
-  ["£5,000 to £7,999", "up to " + draft("£750")],
-  ["£8,000 to £14,999", "up to " + draft("£1,000")],
-  ...GIFTS.map((g, i) => [
-    draft(money(g.at)) + (GIFTS[i + 1] ? " to " + draft(money(GIFTS[i + 1].at - 1)) : " and over"),
-    "up to " + draft("£1,000") + ", plus " + g.name,
-  ]),
-];
+const WHOLE_NOTE: Record<number, string> = {
+  15000: ", enough for a library unit",
+  20000: ", enough for a 2-door wardrobe",
+  30000: ", enough for a pair of alcove units, a TV unit or a 4-door wardrobe",
+  45000: ", enough for any of the whole units",
+};
+const BAND_ROWS = BANDS.map(([at, v], i) => {
+  const next = BANDS[i + 1];
+  const t = (n: number) => (n >= WHOLE_FROM ? draft(money(n)) : money(n));
+  return [t(at) + (next ? " to " + t(next[0] - 1) : " and over"), "up to " + draft(money(v)) + (WHOLE_NOTE[at] || "")];
+});
 
 const TERMS = [
   "Booked means the quotation accepted in writing and the [15%] deposit paid by 11.59pm on Sunday 31 January 2027.",
   "The deposit covers your 2D drawings and elevations, which start once it is paid, and books your fitting slot.",
-  "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,000 or more. Several units in one quotation count together.",
-  "A quotation of " + draft("£15,000") + " or more also includes one whole unit, in the same finish as the rest of the job, for the highest step it reaches: " +
-    GIFTS.map((g) => "from " + draft(money(g.at)) + ", " + g.name).join("; ") + ".",
-  "The quotation total before add-ons sets how much is included. Prices on this page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements, and it can only be the same as a guide starting price or higher.",
-  "Each add-on appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
-  "In a fitted wardrobe, the add-ons start with a set of drawers, one per door, or lighting in the same number of sections instead. Other add-ons can be chosen to the same value.",
+  "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,500 or more. Several units in one quotation count together.",
+  "The quotation total at normal prices sets how much is included, as in the table above.",
+  "From " + draft("£15,000") + ", what is included can be a whole unit: a library unit, 2.4m high and 1.2m wide, a 2-door or 4-door wardrobe, a pair of alcove units or a TV unit, valued at its normal starting price. Another finish, or anything beyond what is included, is charged at normal prices.",
+  "Prices on this page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements.",
+  "Each extra on the house appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
   "Prices are unchanged. The quotation is the normal itemised price for the job.",
-  "Lighting needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other add-ons of the same value are included.",
-  "Add-ons and included units cannot be exchanged for money, swapped for a lower price or moved to another job.",
+  "Lighting needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other extras of the same value are included.",
+  "Extras and whole units on the house cannot be exchanged for money, swapped for a lower price or moved to another job.",
   "The fitting date is agreed when the deposit is paid.",
   "Your cancellation rights are not affected.",
   "The closing date will not be extended.",
@@ -188,8 +208,10 @@ const clientData = {
   draft: DRAFT,
   bands: BANDS,
   addons: ADDONS,
+  whole: WHOLE,
+  wholeFrom: WHOLE_FROM,
+  finishStep: FINISH_STEP,
   bundles: BUNDLES.map((b) => ({ ...b })),
-  gifts: GIFTS,
 };
 ---
 
@@ -220,7 +242,7 @@ const clientData = {
             <svg class="holly" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 12 C14 2 6 4 2 8 C7 9 6 14 10 15 C12 11 16 12 20 12 Z" /><path d="M20 12 C26 2 34 4 38 8 C33 9 34 14 30 15 C28 11 24 12 20 12 Z" /><circle cx="17" cy="15" r="3" /><circle cx="23" cy="15" r="3" /><circle cx="20" cy="19" r="3" /></svg>
             Christmas bundles, booking until 31 January 2027
           </p>
-          <h1 class="xmas-h1">The Christmas bundle: add-ons worth from [£300], on the house</h1>
+          <h1 class="xmas-h1">The Christmas bundle: extras worth from [£350], on the house</h1>
           <p class="xmas-lede">
             Fitted wardrobes, walk-ins, alcove units, TV units and kitchens booked by Sunday 31 January 2027
             come with add-ons you choose, at no cost. Plan it over Christmas, and it is fitted in the new year.
@@ -246,13 +268,13 @@ const clientData = {
             <li>Prices unchanged, no VAT added</li>
             <li>A [15%] deposit covers your 2D drawings and elevations, and books your slot</li>
           </ul>
-          <p class="xmas-card-title">Add-ons included, by quotation</p>
+          <p class="xmas-card-title">On the house, by quotation</p>
           <dl class="xmas-ladder">
-            <div><dt>£2,000</dt><dd>up to [£300]</dd></div>
-            <div><dt>£3,000</dt><dd>up to [£450]</dd></div>
+            <div><dt>£2,500</dt><dd>up to [£350]</dd></div>
             <div><dt>£5,000</dt><dd>up to [£750]</dd></div>
-            <div><dt>£8,000</dt><dd>up to [£1,000]</dd></div>
-            <div class="xmas-ladder-top"><dt>[£15,000]+</dt><dd>[£1,000], plus a whole unit, from a library unit to a 4-door wardrobe</dd></div>
+            <div><dt>£10,000</dt><dd>up to [£1,500]</dd></div>
+            <div><dt>[£15,000]</dt><dd>up to [£2,000]</dd></div>
+            <div class="xmas-ladder-top"><dt>[£30,000]</dt><dd>[£4,500]: a whole wardrobe, alcoves or TV unit</dd></div>
           </dl>
         </aside>
       </div>
@@ -262,7 +284,7 @@ const clientData = {
   <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
     <SectionHead level={4}>How it works</SectionHead>
     <ol class="xmas-steps">
-      <li><strong>Build your bundle.</strong> Pick the furniture, the finish and your add-ons below.</li>
+      <li><strong>Build your bundle.</strong> Pick the furniture, its size and finish, then what goes inside. The bundle shows the extras on the house.</li>
       <li><strong>We see the space.</strong> A measured survey at your home, or photos and measurements from you. Then we send an itemised quotation, with your add-ons on it at £0.</li>
       <li><strong>Book by 31 January.</strong> Accept the quotation and pay a [15%] deposit, which covers your 2D drawings and elevations and books your fitting slot. We agree the date then.</li>
     </ol>
@@ -272,8 +294,8 @@ const clientData = {
     <div id="bundles"></div>
     <SectionHead level={4}>Christmas bundles</SectionHead>
     <p class="booking-note">
-      Add each unit you would like made: several units count together. Your bundle shows an indicative
-      total and the add-ons that come with it, each shown on the quotation as its own line at £0.
+      Build each unit you would like made: size and finish first, then what goes inside. Several units
+      count together, and the bundle total sets the extras on the house, each its own line at £0 on the quotation.
     </p>
 
     <div class="bundle-cards" role="list">
@@ -303,29 +325,35 @@ const clientData = {
           <span class="bundle-from">{b.fromText}</span>
           <span class="bundle-incl-title">Already included</span>
           <ul class="bundle-incl">{b.included.map((i) => <li>{i}</li>)}</ul>
-          <span class="bundle-allow">{(b as { xmas?: string }).xmas && <span class="bundle-xmas">{(b as { xmas?: string }).xmas}</span>}Add-ons worth at least {draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from)))}</span>
+          <span class="bundle-allow">{(b as { xmas?: string }).xmas && <span class="bundle-xmas">{(b as { xmas?: string }).xmas}</span>}{allowance((b as { cardFloor?: number }).cardFloor ?? b.from) ? "On the house: extras worth at least " + draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from))) : "Extras on the house from a £2,500 bundle"}</span>
         </button>
       ))}
     </div>
 
     <div class="bundle-panel" data-bundle-panel hidden aria-live="polite">
       <p class="bundle-panel-title" data-panel-title></p>
+      <div data-step-size class="bundle-step" hidden>
+        <MonoLabel as="p"><span data-size-label>Size</span></MonoLabel>
+        <div class="chips" data-chips-size></div>
+      </div>
+      <div data-step-units class="bundle-step" hidden>
+        <MonoLabel as="p">How many units</MonoLabel>
+        <div data-units-ctrl></div>
+      </div>
       <div data-step-finish class="bundle-step" hidden>
         <MonoLabel as="p">Finish</MonoLabel>
         <div class="finish-tiles" data-chips-finish></div>
       </div>
-      <div data-step-size class="bundle-step" hidden>
-        <MonoLabel as="p">Size</MonoLabel>
-        <div class="chips" data-chips-size></div>
-      </div>
       <p class="bundle-result" data-result></p>
       <p class="booking-note" data-includes></p>
       <ul class="bundle-incl panel-incl" data-includes-list hidden></ul>
-      <div data-step-xmas class="bundle-step" hidden>
-        <MonoLabel as="p">Your Christmas add-ons</MonoLabel>
-        <div class="chips" data-chips-xmas></div>
-        <p class="booking-note" data-xmas-note></p>
+      <div data-step-parts class="bundle-step" hidden>
+        <MonoLabel as="p"><span data-parts-label>What goes inside</span></MonoLabel>
+        <p data-typical-wrap hidden><button type="button" class="chip" data-typical>Fill with a typical inside</button></p>
+        <ul class="addon-list" data-parts></ul>
       </div>
+      <p class="bundle-result" data-unit-total hidden></p>
+      <p class="basket-nudge" data-panel-nudge hidden></p>
       <p style="margin-top:var(--space-6)"><button type="button" class="bundle-add" data-add disabled>Add to my bundle</button></p>
     </div>
 
@@ -336,7 +364,7 @@ const clientData = {
       <p class="basket-library" data-library hidden></p>
       <p class="basket-nudge" data-nudge hidden></p>
       <div class="bundle-step">
-        <MonoLabel as="p">Fill it with add-ons</MonoLabel>
+        <MonoLabel as="p">On the house</MonoLabel>
         <p class="bundle-meter" data-meter></p>
         <ul class="addon-list" data-addons></ul>
         <p class="bundle-estimate" data-estimate></p>
@@ -351,10 +379,10 @@ const clientData = {
       <thead><tr><th>Your quotation</th><th>What is included</th></tr></thead>
       <tbody>{BAND_ROWS.map(([a, b]) => <tr><td>{a}</td><td class="num">{b}</td></tr>)}</tbody>
     </table>
-    <p class="booking-note">{draft("For example, a £2,500 wardrobe could include lighting in two sections, or two drawers.")}</p>
+    <p class="booking-note">{draft("For example, a wardrobe that comes to £2,600 brings two more soft-close drawers at £0, or lighting in two sections.")}</p>
     <p class="booking-note">
       Normal prices are on our <Link href="/fitted-wardrobe-cost/" variant="inline">cost guide</Link>. Lighting
-      needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other add-ons
+      needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other extras
       of the same value are included.
     </p>
   </Wrap>
@@ -397,20 +425,26 @@ const clientData = {
 </Base>
 
 <script is:inline define:vars={{ data: clientData }}>
-  /* The bundle builder, rev 6 (Arthur, 12 Nov): several units in one bundle.
-     Configure a unit on its card, add it, repeat. The bundle total sets the
-     add-on allowance (always a floor: each unit's guide starting price), the
-     library unit at the threshold, and a nudge to the next milestone, stated
-     as a fact ("At £X ... Your bundle is £Y away"), never "if you do X". */
+  /* The bundle builder, rev 14 (Arthur, 12 Nov). Each unit is built up: its
+     size (doors, layout or number of units) and finish give the starting price
+     (for a wardrobe, the empty box); then the parts and extras the customer
+     wants, at normal prices, give the unit total. Units add up in the bundle,
+     and the bundle total sets the extras on the house, 10 to 15% of it, picked
+     as items at £0 (from £15,000 a whole unit can be one of them). The panel
+     states, as a fact, what the bundle brings on the house with this unit and
+     how far the next step is: the upsell, one more drawer and it is included. */
   (() => {
     const $ = (s, r = document) => r.querySelector(s);
     const money = (n) => "£" + n.toLocaleString("en-GB");
     const d = (s) => (data.draft ? "[" + s + "]" : s);
     const allowance = (p) => data.bands.reduce((a, [min, v]) => (p >= min ? v : a), 0);
+    const nextBand = (p) => data.bands.find(([min]) => min > p) || null;
+    const all = Object.assign({}, data.addons, data.whole);
+    const addonOrder = Object.keys(data.addons);
+    const wholeOrder = Object.keys(data.whole);
     const panel = $("[data-bundle-panel]");
     const basket = $("[data-basket]");
-    const state = { b: null, finish: null, size: null, bonus: "drawer", units: [], picks: {}, split: null };
-    const addonOrder = Object.keys(data.addons);
+    const state = { b: null, size: null, finish: null, units: 12, parts: {}, list: [], picks: {}, split: null };
 
     const chip = (label, on, click, disabled) => {
       const el = document.createElement("button");
@@ -422,45 +456,93 @@ const clientData = {
       el.addEventListener("click", click);
       return el;
     };
+    const stepper = (n, set, label, min, max) => {
+      const ctrl = document.createElement("span");
+      ctrl.className = "addon-ctrl";
+      const minus = chip("−", false, () => set(n - 1), n <= min);
+      minus.setAttribute("aria-label", "One fewer: " + label);
+      const count = document.createElement("span");
+      count.className = "addon-count";
+      count.textContent = String(n);
+      const plus = chip("+", false, () => set(n + 1), n >= max);
+      plus.setAttribute("aria-label", "One more: " + label);
+      ctrl.append(minus, count, plus);
+      return ctrl;
+    };
+    const addonRow = (k, n, set, suffix) => {
+      const a = all[k];
+      const li = document.createElement("li");
+      li.className = "addon";
+      const name = document.createElement("span");
+      name.className = "addon-name";
+      name.textContent = a.name + ", " + suffix + d(money(a.price));
+      li.append(name, stepper(n, set, a.name, 0, 20));
+      return li;
+    };
 
-    const unitPrice = () => {
+    const partsValue = (parts) => Object.keys(parts).reduce((s, k) => s + all[k].price * (parts[k] || 0), 0);
+    const partsText = (parts) => Object.keys(parts).filter((k) => parts[k] > 0).map((k) => all[k].name + " × " + parts[k]).join("; ");
+
+    /* The starting price as configured, before parts and extras. */
+    const basePrice = () => {
       const b = state.b;
       if (!b) return null;
-      if (b.perProject) return b.finishes && state.finish === null ? null : { value: b.from, text: "indicative, priced per project " + b.fromText };
-      const row = b.finishes ? state.finish : 0;
-      if (row === null || state.size === null) return null;
-      const v = b.prices[row][state.size];
-      if (v === null) return { value: null, text: d("price to come") };
-      return { value: v, text: "indicative " + (b.around ? "from around " : "from ") + money(v) };
+      if (b.sizes && state.size === null) return null;
+      if (b.finishes && state.finish === null) return null;
+      if (b.kind === "kitchen") {
+        const v = Math.round((data.finishStep[state.finish] * (b.from + Math.max(0, state.units - b.unitsIncluded) * b.perUnit)) / 50) * 50;
+        const published = state.finish === 0 && state.units <= b.unitsIncluded;
+        return { value: v, draft: !published, text: "indicative from " + (published ? money(v) : d(money(v))) };
+      }
+      if (b.perProject) return { value: b.from, draft: false, text: "indicative, priced per project " + b.fromText };
+      const v = b.prices[b.finishes ? state.finish : 0][state.size];
+      if (v === null) return { value: null, draft: true, text: d("price to come") };
+      return {
+        value: v, draft: !!b.boxDraft,
+        text: (b.priceLabel ? b.priceLabel + ", " : "") + "indicative " + (b.around ? "from around " : "from ") + (b.boxDraft ? d(money(v)) : money(v)),
+      };
+    };
+    const unitNow = () => {
+      const p = basePrice();
+      if (!p) return null;
+      const extras = partsValue(state.parts);
+      return { p, extras, total: p.value === null ? null : p.value + extras, draft: p.draft || extras > 0 };
     };
 
-    /* How a set of units and add-on picks splits: the allowance follows the
-       quotation (units plus any add-ons paid at normal prices). */
-    const split = (units, picks) => {
-      const base = units.reduce((s, u) => s + (u.value || 0), 0);
-      const keys = addonOrder.filter((k) => units.some((u) => u.addons.includes(k)));
-      const used = keys.reduce((s, k) => s + data.addons[k].price * (picks[k] || 0), 0);
-      let allow = allowance(base || 2000);
+    /* How a list of units and the picks on the house split: the allowance
+       follows the quotation, units plus anything picked past the allowance. */
+    const split = (list, picks) => {
+      const base = list.reduce((s, u) => s + (u.value || 0), 0);
+      const keys = addonOrder.filter((k) => list.some((u) => u.addons.includes(k))).concat(base >= data.wholeFrom ? wholeOrder : []);
+      const used = keys.reduce((s, k) => s + all[k].price * (picks[k] || 0), 0);
+      let allow = allowance(base);
       let extra = Math.max(0, used - allow);
       for (let i = 0; base && i < 4; i++) { allow = allowance(base + extra); extra = Math.max(0, used - allow); }
-      const quote = base + extra;
-      return { base, keys, allow, included: used - extra, extra, quote, library: base > 0 ? data.gifts.filter((g) => quote >= g.at).pop() || null : null };
+      return { base, keys, allow, included: used - extra, extra, quote: base + extra, draft: list.some((u) => u.draft) };
     };
-
-    /* Wardrobes (Arthur, 12 Nov): the inside for the chosen size, and the
-       Christmas add-ons it starts with, a drawer per door or lighting. */
-    const insideOf = (b) => (b && b.inside && state.size !== null ? b.inside[state.size] : null);
-    const bonusLabel = (key, n) => (key === "led" ? "lighting in " + n + " sections" : "a set of " + n + " drawers");
+    const nextLine = (quote) => {
+      const nb = nextBand(quote);
+      if (!nb) return "";
+      return "At " + money(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house" +
+        (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your bundle is " + money(nb[0] - quote) + " away.";
+    };
 
     const renderPanel = () => {
       const b = state.b;
       if (!b) { panel.hidden = true; return; }
       panel.hidden = false;
       $("[data-panel-title]").textContent = b.label;
-      const fin = $("[data-chips-finish]"); fin.replaceChildren();
-      const siz = $("[data-chips-size]"); siz.replaceChildren();
-      $("[data-step-finish]").hidden = !b.finishes;
+
       $("[data-step-size]").hidden = !b.sizes;
+      $("[data-size-label]").textContent = b.sizeLabel || "Size";
+      const siz = $("[data-chips-size]"); siz.replaceChildren();
+      (b.sizes || []).forEach((s, i) => siz.append(chip(s, state.size === i, () => { state.size = i; renderPanel(); })));
+
+      $("[data-step-units]").hidden = b.kind !== "kitchen";
+      if (b.kind === "kitchen") $("[data-units-ctrl]").replaceChildren(stepper(state.units, (n) => { state.units = n; renderPanel(); }, "kitchen unit", 4, 40));
+
+      $("[data-step-finish]").hidden = !b.finishes;
+      const fin = $("[data-chips-finish]"); fin.replaceChildren();
       (b.finishes || []).forEach((f, i) => {
         const t = document.createElement("button");
         t.type = "button";
@@ -477,145 +559,131 @@ const clientData = {
         t.addEventListener("click", () => { state.finish = i; renderPanel(); });
         fin.append(t);
       });
-      (b.sizes || []).forEach((s, i) => siz.append(chip(s, state.size === i, () => { state.size = i; renderPanel(); })));
-      const p = unitPrice();
-      const res = $("[data-result]");
-      res.textContent = p
-        ? b.label + ": " + p.text + "."
-        : "Choose " + (b.finishes && state.finish === null ? "a finish" : "a size") + " to see an indicative price.";
-      const inside = insideOf(b);
-      $("[data-includes]").textContent = inside
-        ? "Inside, at this price: " + d(inside.text) + ". Also included: Blum soft-close hinges, delivery and fitting, and the design."
-        : b.includes || "";
+
+      const now = unitNow();
+      const need = b.sizes && state.size === null
+        ? (b.sizeLabel === "Doors" ? "how many doors" : "a " + (b.sizeLabel || "size").toLowerCase())
+        : "a finish";
+      $("[data-result]").textContent = now ? b.label + ": " + now.p.text + "." : "Choose " + need + " to see an indicative price.";
+      $("[data-includes]").textContent = b.includes || "";
       const il = $("[data-includes-list]"); il.replaceChildren();
       (b.includesList || []).forEach((t) => { const li = document.createElement("li"); li.textContent = t; il.append(li); });
       il.hidden = !b.includesList;
-      const xs = $("[data-step-xmas]");
-      xs.hidden = !(inside && p);
-      if (inside && p) {
-        const n = inside.n;
-        const xc = $("[data-chips-xmas]"); xc.replaceChildren();
-        xc.append(
-          chip("A set of " + n + " drawers", state.bonus === "drawer", () => { state.bonus = "drawer"; renderPanel(); }),
-          chip("Lighting in " + n + " sections", state.bonus === "led", () => { state.bonus = "led"; renderPanel(); }),
-        );
-        const cost = data.addons[state.bonus].price * n;
-        const before = split(state.units, state.picks);
-        const picks = { ...state.picks, [state.bonus]: (state.picks[state.bonus] || 0) + n };
-        const after = split(state.units.concat([{ value: p.value, addons: b.addons }]), picks);
-        const charged = Math.max(0, after.extra - (state.units.length ? before.extra : 0));
-        const what = state.bonus === "led" ? "Lighting in " + n + " sections" : "A set of " + n + " soft-close drawers";
-        $("[data-xmas-note]").textContent = what + ", normally " + d(money(cost)) + ". " +
-          (charged >= cost
-            ? "Your bundle's add-ons are already chosen, so it would be at the normal price."
-            : charged
-            ? "In your bundle, " + d(money(cost - charged)) + " of it comes at £0 and " + d(money(charged)) + " at the normal price."
-            : "In your bundle it comes at £0, as its own line on the quotation.") +
-          (state.bonus === "led" ? " Lighting needs a power supply that can reach the wardrobe, which we check at the visit." : "");
+
+      const ps = $("[data-step-parts]");
+      ps.hidden = !(now && b.parts);
+      if (now && b.parts) {
+        $("[data-parts-label]").textContent = b.partsLabel;
+        const typ = b.typical && state.size !== null ? b.typical[state.size] : null;
+        $("[data-typical-wrap]").hidden = !typ;
+        if (typ) $("[data-typical]").textContent = "Fill with a typical inside: " + typ.text;
+        const list = $("[data-parts]"); list.replaceChildren();
+        b.parts.forEach((k) => list.append(addonRow(k, state.parts[k] || 0, (m) => { state.parts[k] = Math.max(0, m); renderPanel(); }, "")));
       }
-      $("[data-add]").disabled = !p;
+
+      const ut = $("[data-unit-total]");
+      const pn = $("[data-panel-nudge]");
+      ut.hidden = !(now && now.total !== null);
+      pn.hidden = true;
+      if (now && now.total !== null) {
+        ut.textContent = "This unit: indicative from " + (now.draft ? d(money(now.total)) : money(now.total)) +
+          (now.extras ? ", with " + d(money(now.extras)) + " of parts and extras" : "") + ".";
+        const s = split(state.list.concat([{ value: now.total, addons: b.addons, draft: now.draft }]), state.picks);
+        const k = Math.floor(s.allow / data.addons.drawer.price);
+        const pl = (n, w) => n + " " + w + (n > 1 ? "s" : "");
+        const t = (s.allow
+          ? "With this unit your bundle comes to " + (s.draft ? d(money(s.quote)) : money(s.quote)) + ", and extras worth " + d(money(s.allow)) + " come on the house" +
+            (s.base >= data.wholeFrom ? ", enough for a whole unit. "
+              : k <= 6 ? ": that is " + pl(k, "more soft-close drawer") + " at £0, or lighting in " + pl(k, "section") + ". "
+              : ": you pick them in your bundle. ")
+          : "") + nextLine(s.quote);
+        pn.textContent = t.trim();
+        pn.hidden = !t.trim();
+      }
+      $("[data-add]").disabled = !now;
     };
 
     const renderBasket = () => {
-      if (!state.units.length) { basket.hidden = true; return; }
+      if (!state.list.length) { basket.hidden = true; return; }
       basket.hidden = false;
-      const list = $("[data-basket-list]"); list.replaceChildren();
-      state.units.forEach((u, i) => {
+      const ul = $("[data-basket-list]"); ul.replaceChildren();
+      state.list.forEach((u, i) => {
         const li = document.createElement("li");
         const t = document.createElement("span");
         t.textContent = u.label + (u.detail ? ", " + u.detail : "") + ": " + u.text;
-        if (u.included && u.included.length) {
-          const inc = document.createElement("small");
-          inc.className = "basket-incl";
-          inc.textContent = "Already included: " + u.included.join("; ") + ".";
-          t.append(inc);
-        }
-        if (u.bonus) {
-          const xm = document.createElement("small");
-          xm.className = "basket-incl";
-          xm.textContent = "Christmas add-ons: " + bonusLabel(u.bonus.key, u.bonus.n) + ", counted below.";
-          t.append(xm);
-        }
+        const lines = [];
+        if (u.partsText) lines.push(u.partsLabel + ": " + u.partsText + ".");
+        if (u.included && u.included.length) lines.push("Already included: " + u.included.join("; ") + ".");
+        lines.forEach((x) => { const sm = document.createElement("small"); sm.className = "basket-incl"; sm.textContent = x; t.append(sm); });
         const rm = document.createElement("button");
         rm.type = "button"; rm.className = "basket-remove"; rm.textContent = "Remove";
         rm.setAttribute("aria-label", "Remove " + u.label);
-        rm.addEventListener("click", () => {
-          if (u.bonus) state.picks[u.bonus.key] = Math.max(0, (state.picks[u.bonus.key] || 0) - u.bonus.n);
-          state.units.splice(i, 1);
-          renderBasket();
-        });
+        rm.addEventListener("click", () => { state.list.splice(i, 1); renderBasket(); });
         li.append(t, rm);
-        list.append(li);
+        ul.append(li);
       });
-      const keys = addonOrder.filter((k) => state.units.some((u) => u.addons.includes(k)));
+      const keys = split(state.list, {}).keys;
       Object.keys(state.picks).forEach((k) => { if (!keys.includes(k)) delete state.picks[k]; });
-      const { base, allow, included, extra, quote, library } = split(state.units, state.picks);
-      state.split = { base, allow, included, extra, quote, library };
-      const pending = state.units.some((u) => u.value === null);
-      $("[data-total]").textContent = base
-        ? "Indicative total: from " + money(base) + (pending ? ", plus a unit with its price to come" : "") +
-          ". Your bundle includes add-ons worth at least " + d(money(allow)) + "."
-        : "A quotation of £2,000 or more includes add-ons worth at least " + d(money(allow)) + ".";
-      const libEl = $("[data-library]");
-      libEl.hidden = !library;
-      libEl.textContent = library ? "Included as well: " + library.name + ", in the same finish as the rest of the job." : "";
+      const s = split(state.list, state.picks);
+      state.split = s;
+      const pending = state.list.some((u) => u.value === null);
+      $("[data-total]").textContent = "Indicative total: from " + (s.draft ? d(money(s.base)) : money(s.base)) +
+        (pending ? ", plus a unit with its price to come" : "") + "." + (s.allow ? " Extras worth " + d(money(s.allow)) + " come on the house." : "");
+      const wh = $("[data-library]");
+      wh.hidden = s.base < data.wholeFrom;
+      wh.textContent = "Your bundle is past " + d(money(data.wholeFrom)) + ", so what is on the house can be a whole unit: pick one below, at its normal starting price.";
       const nudge = $("[data-nudge]");
-      const milestones = data.bands.map(([min, v]) => ({ at: min, what: "add-ons grow to " + d(money(v)) }))
-        .concat(data.gifts.map((g) => ({ at: g.at, what: library ? "the unit included becomes " + g.name : g.name + " is included as well" })))
-        .filter((m) => base && m.at > quote)
-        .sort((a, b) => a.at - b.at);
-      const next = milestones[0];
-      nudge.hidden = !next;
-      nudge.textContent = next ? "At " + d(money(next.at)) + ", " + next.what + ". Your bundle is " + money(next.at - quote) + " away." : "";
-      $("[data-meter]").textContent = "Included at no cost: " + d(money(included)) + " of " + d(money(allow)) +
-        (extra ? ". Beyond your bundle, at normal prices: " + d(money(extra)) + "." : ".");
+      const nl = nextLine(s.quote);
+      nudge.hidden = !nl;
+      nudge.textContent = nl;
+      $("[data-meter]").textContent = s.allow
+        ? "On the house: " + d(money(s.included)) + " of " + d(money(s.allow)) + " chosen" + (s.extra ? ". Beyond that, at normal prices: " + d(money(s.extra)) : "") + "."
+        : "Extras come on the house from a bundle of " + money(data.bands[0][0]) + ".";
       const addons = $("[data-addons]"); addons.replaceChildren();
-      keys.forEach((k) => {
-        const a = data.addons[k];
-        const n = state.picks[k] || 0;
-        const li = document.createElement("li");
-        li.className = "addon";
-        const name = document.createElement("span");
-        name.className = "addon-name";
-        name.textContent = a.name + ", normally " + d(money(a.price));
-        const ctrl = document.createElement("span");
-        ctrl.className = "addon-ctrl";
-        const minus = chip("−", false, () => { state.picks[k] = Math.max(0, n - 1); renderBasket(); }, n === 0);
-        minus.setAttribute("aria-label", "One fewer " + a.name);
-        const count = document.createElement("span");
-        count.className = "addon-count";
-        count.textContent = String(n);
-        const plus = chip("+", false, () => { state.picks[k] = n + 1; renderBasket(); }, n >= 20);
-        plus.setAttribute("aria-label", "One more " + a.name);
-        ctrl.append(minus, count, plus);
-        li.append(name, ctrl);
-        addons.append(li);
+      s.keys.forEach((k) => {
+        if (k === wholeOrder[0]) {
+          const h = document.createElement("li");
+          h.className = "addon-group";
+          h.textContent = "Or a whole unit";
+          addons.append(h);
+        }
+        addons.append(addonRow(k, state.picks[k] || 0, (m) => { state.picks[k] = Math.max(0, m); renderBasket(); }, "normally "));
       });
-      $("[data-estimate]").textContent = base
-        ? "Indicative estimate with your add-ons: from " + d(money(quote)) + ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements."
-        : "";
+      $("[data-estimate]").textContent = "Indicative estimate with everything on it: from " + d(money(s.quote)) +
+        ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements.";
     };
 
     document.querySelectorAll("[data-bundle]").forEach((card) => {
       card.addEventListener("click", () => {
         const b = data.bundles.find((x) => x.id === card.dataset.bundle);
         document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", c === card ? "true" : "false"));
-        state.b = b; state.finish = null; state.size = null; state.bonus = "drawer";
+        state.b = b; state.size = null; state.finish = null; state.units = b.unitsIncluded || 12; state.parts = {};
         renderPanel();
         panel.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
+    $("[data-typical]").addEventListener("click", () => {
+      const b = state.b;
+      if (!b || !b.typical || state.size === null) return;
+      state.parts = Object.assign({}, b.typical[state.size].parts);
+      renderPanel();
+    });
+
     $("[data-add]").addEventListener("click", () => {
-      const b = state.b; const p = unitPrice();
-      if (!b || !p) return;
-      const detail = [b.finishes && state.finish !== null ? b.finishes[state.finish].name : "", b.sizes && state.size !== null ? b.sizes[state.size] : ""].filter(Boolean).join(", ");
-      const inside = insideOf(b);
-      const bonus = inside ? { key: state.bonus, n: inside.n } : null;
-      const included = inside ? [d(inside.text), "Blum soft-close hinges", "Delivery and fitting", "Design included"] : b.included;
-      state.units.push({ id: b.id, label: b.label, detail, value: p.value, text: p.text, addons: b.addons, included, bonus });
-      if (bonus) state.picks[bonus.key] = (state.picks[bonus.key] || 0) + bonus.n;
-      state.b = null;
+      const b = state.b; const now = unitNow();
+      if (!b || !now) return;
+      const detail = [
+        b.kind === "kitchen" ? state.units + " units" : "",
+        b.sizes && state.size !== null ? b.sizes[state.size] : "",
+        b.finishes && state.finish !== null ? b.finishes[state.finish].name : "",
+      ].filter(Boolean).join(", ");
+      state.list.push({
+        id: b.id, label: b.label, detail, value: now.total, draft: now.draft,
+        text: now.total === null ? now.p.text : "indicative from " + (now.draft ? d(money(now.total)) : money(now.total)),
+        partsText: partsText(state.parts), partsLabel: b.partsLabel, addons: b.addons, included: b.included,
+      });
+      state.b = null; state.parts = {};
       document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", "false"));
       renderPanel();
       renderBasket();
@@ -624,19 +692,18 @@ const clientData = {
 
     $("[data-send]").addEventListener("click", () => {
       const sp = state.split;
-      if (!state.units.length || !sp) return;
-      const units = state.units.map((u) => u.label + (u.detail ? " (" + u.detail + ")" : "") + ": " + u.text).join("; ");
-      const quick = units + (sp.base ? ". Indicative total from " + money(sp.base) + (sp.extra ? ", with add-ons from " + money(sp.quote) : "") : "") +
-        (sp.library ? ". Includes " + sp.library.name : "");
-      const picks = Object.entries(state.picks).filter(([, n]) => n > 0).map(([k, n]) => n + " x " + data.addons[k].name).join("; ");
+      if (!state.list.length || !sp) return;
+      const units = state.list.map((u) => u.label + (u.detail ? " (" + u.detail + ")" : "") + ": " + u.text + (u.partsText ? "; " + u.partsText : "")).join(" | ");
+      const quick = units + ". Indicative total from " + money(sp.base) + (sp.extra ? ", with extras beyond the bundle from " + money(sp.quote) : "");
+      const picks = Object.entries(state.picks).filter(([, n]) => n > 0).map(([k, n]) => n + " x " + all[k].name).join("; ");
       const form = document.querySelector("#booking-form form");
       form.querySelector("[data-quick-price]").value = quick;
       form.querySelector("[data-bonus-picks]").value = picks
-        ? picks + " (" + money(sp.included) + " included at no cost" + (sp.extra ? ", " + money(sp.extra) + " beyond the bundle at normal prices" : "") + ")"
+        ? picks + " (" + money(sp.included) + " on the house" + (sp.extra ? ", " + money(sp.extra) + " beyond at normal prices" : "") + ")"
         : "";
-      form.querySelectorAll("input[name=service]").forEach((box) => { if (state.units.some((u) => u.label === box.value)) box.checked = true; });
+      form.querySelectorAll("input[name=service]").forEach((box) => { if (state.list.some((u) => u.label === box.value)) box.checked = true; });
       const summary = $("[data-bundle-summary]");
-      summary.textContent = "Your bundle: " + quick + "." + (picks ? " Add-ons: " + picks + "." : "");
+      summary.textContent = "Your bundle: " + quick + "." + (picks ? " On the house: " + picks + "." : "");
       summary.hidden = false;
       document.getElementById("booking-form").scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -818,6 +885,8 @@ const clientData = {
   .bundle-incl li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 5px; height: 5px; border-radius: 50%; background: var(--oak); }
   .bundle-xmas { display: block; margin-bottom: var(--space-2, 6px); font-family: var(--font-sans); font-size: 13px; letter-spacing: normal; line-height: 1.35; color: #8A2E1F; font-weight: var(--weight-medium, 500); }
   .panel-incl { padding: 0; margin-top: var(--space-4); font-size: var(--type-body-sm); gap: var(--space-2, 6px); }
+  .addon-group { list-style: none; margin-top: var(--space-4); font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--green); }
+  [data-typical] { margin-bottom: var(--space-4); text-align: left; }
   .basket-incl { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-soft); }
   .bundle-name { font-weight: var(--weight-medium, 500); }
   .bundle-from,
