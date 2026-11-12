@@ -33,7 +33,7 @@ import Base from "../layouts/Base.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
-import Kicker from "../components/ds/Kicker.astro";
+import FormProof from "../components/FormProof.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
@@ -118,12 +118,6 @@ const BAND_ROWS = [
   ["£8,000 and over", "up to " + draft("£1,000")],
 ];
 
-const STEPS = [
-  "Build your bundle above, or tell us what you would like made in the form below.",
-  "We visit, measure, and send a fixed, itemised quotation with your add-ons on it.",
-  "The booking is made when the quotation is accepted and the [20%] deposit is paid, by Sunday 31 January 2027. The fitting date is agreed then.",
-];
-
 const TERMS = [
   "Booked means the quotation accepted in writing and the [20%] deposit paid by 11.59pm on Sunday 31 January 2027.",
   "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,000 or more.",
@@ -147,37 +141,72 @@ const clientData = {
 ---
 
 <Base
-  title="Bonus add-ons until 31 January"
-  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with add-ons at no cost. Prices unchanged, no VAT added."
+  title="The Christmas bundle"
+  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with add-ons you choose, at no cost. Prices unchanged, no VAT added."
   noindex={true}
 >
-  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
-    <Kicker scribe>Early 2027</Kicker>
-    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
-      Bonus add-ons with every booking until 31 January
-    </Display>
-    <div class="booking-hero">
-      <div class="booking-photo">
-        <Plate
-          photo="/images/fitted-wardrobes/fitted-wardrobes-05.webp"
-          alt="A fitted wardrobe with its white doors open, showing a light wood-grain interior: a hanging rail under a shelf on the left, and a stack of seven drawers with long bar handles below an open shelf on the right."
-          width={1400}
-          height={1867}
-          label="Fitted wardrobes"
-          eager
-        />
+  {/* LANDING PAGE, rev 4 (Arthur, 12 Nov: "make it a landing page, hero
+      explains the offer then the options, Hormozi technique, Christmassy").
+      Hormozi's value equation, kept inside protocol v1.4 and the pricing law:
+      - a named bundle (The Christmas bundle) with the add-ons as named things;
+      - dream outcome and time: plan it over Christmas, fitted in the new year;
+      - low effort: three steps, one visit, a fixed itemised quotation;
+      - likelihood: the live Google rating, two whole reviews, his real
+        guarantee (Q35), nothing invented;
+      - the value stack shown at normal prices from the cost guide, never a
+        "you save" or a struck-out price;
+      - urgency and scarcity only where true: the closing date, never
+        extended, and a slot count only once Kaspar gives a real one.
+      Christmas in the brand palette: the site's green, a berry ribbon in the
+      brand's deep red, a drawn holly sprig. No snow, no countdown. */}
+  <section class="xmas-hero">
+    <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+      <div class="xmas-hero-grid">
+        <div class="xmas-hero-copy">
+          <p class="xmas-kicker">
+            <svg class="holly" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 12 C14 2 6 4 2 8 C7 9 6 14 10 15 C12 11 16 12 20 12 Z" /><path d="M20 12 C26 2 34 4 38 8 C33 9 34 14 30 15 C28 11 24 12 20 12 Z" /><circle cx="17" cy="15" r="3" /><circle cx="23" cy="15" r="3" /><circle cx="20" cy="19" r="3" /></svg>
+            Christmas bundles, booking until 31 January 2027
+          </p>
+          <Display level={1} as="h1" style="margin:var(--space-10) 0 var(--space-10);color:var(--paper)">
+            The Christmas bundle: add-ons worth from [£300], on the house
+          </Display>
+          <p class="xmas-lede">
+            Fitted wardrobes, walk-ins, alcove units, TV units and kitchens booked by Sunday 31 January 2027
+            come with add-ons you choose, at no cost. Plan it over Christmas, and it is fitted in the new year.
+          </p>
+          <ul class="xmas-inclusions">
+            <li>Add-ons you choose: LED lighting, drawers, rails, racks, trays</li>
+            <li>Prices unchanged, and no VAT added</li>
+            <li>One visit, then a fixed, itemised quotation</li>
+          </ul>
+          <p class="xmas-ctas">
+            <a class="xmas-btn" href="#bundles">Build your bundle</a>
+            <a class="xmas-link" href="#stack">See an example</a>
+          </p>
+          <p class="xmas-small">Booking closes on Sunday 31 January 2027, and the date will not move.</p>
+        </div>
+        <div class="xmas-hero-photo">
+          <Plate
+            photo="/images/fitted-wardrobes/fitted-wardrobes-05.webp"
+            alt="A fitted wardrobe with its white doors open, showing a light wood-grain interior: a hanging rail under a shelf on the left, and a stack of seven drawers with long bar handles below an open shelf on the right."
+            width={1400}
+            height={1867}
+            label="Fitted wardrobes"
+            eager
+          />
+          <span class="xmas-tag" aria-hidden="true">Add-ons from [£300] included</span>
+        </div>
       </div>
-      <div class="booking-lede">
-        <p style="font-size:var(--type-lede);color:var(--text-quiet);margin:0">
-          Fitted wardrobes, walk-ins, alcove units, TV units and kitchens booked by Sunday 31 January 2027
-          come with add-ons at no cost. The larger the job, the more is included. Prices are unchanged, and
-          no VAT is added: we are not currently VAT registered.
-        </p>
-        <p style="margin-top:var(--space-10)">
-          <Link href="#bundles" variant="nav" chamfer>Build your bundle</Link>
-        </p>
-      </div>
-    </div>
+    </Wrap>
+  </section>
+
+  <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
+    <SectionHead level={4}>How it works</SectionHead>
+    <ol class="xmas-steps">
+      <li><strong>Build your bundle.</strong> Pick the furniture, the finish and your add-ons below.</li>
+      <li><strong>One visit.</strong> We measure and send a fixed, itemised quotation, with your add-ons on it at £0.</li>
+      <li><strong>Book by 31 January.</strong> Accept the quotation and pay the [20%] deposit. We agree your fitting date then.</li>
+    </ol>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
@@ -252,12 +281,49 @@ const clientData = {
     </p>
   </Wrap>
 
+  {/* THE VALUE STACK. One example bundle at normal prices, as a gift list.
+      His published guide starting price; the add-ons at their cost guide
+      prices (drafts until his are live). No "you save", no struck-out price:
+      the price line says the price does not change. */}
   <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead level={4}>How booking works</SectionHead>
-    <ol class="booking-steps">{STEPS.map((s) => <li>{s}</li>)}</ol>
+    <div id="stack"></div>
+    <SectionHead level={4}>What a bundle looks like</SectionHead>
+    <div class="xmas-stack">
+      <p class="xmas-stack-head">A three-door wardrobe in sprayed MDF, from £4,300</p>
+      <ul class="xmas-stack-list">
+        <li><span>Two soft-close drawers</span><span>normally [£300]</span></li>
+        <li><span>LED lighting with a door sensor, one section</span><span>normally [£150]</span></li>
+        <li class="xmas-stack-total"><span>Add-ons included</span><span>[£450] at normal prices</span></li>
+        <li class="xmas-stack-price"><span>Your price</span><span>unchanged, no VAT added</span></li>
+      </ul>
+      <p class="booking-note" style="margin-top:var(--space-6)">An example. Your quotation sets your own add-ons.</p>
+    </div>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead level={4}>What stands behind it</SectionHead>
+    <div class="xmas-proof">
+      <div>
+        <FormProof quotes={["lorenzo", "ozge"]} keep={1} />
+      </div>
+      <ul class="xmas-guarantee">
+        <li><strong>2 years</strong> on installation and workmanship.</li>
+        <li><strong>10 years</strong> on the structure of the joinery.</li>
+        <li><strong>Hardware</strong> under its maker's warranty.</li>
+        <li><strong>Your cancellation rights</strong> are not affected.</li>
+      </ul>
+    </div>
+  </Wrap>
+
+  <section class="xmas-ribbon">
+    <Wrap style="padding-top:var(--space-12);padding-bottom:var(--space-12)">
+      <p class="xmas-ribbon-main">Booking closes on Sunday 31 January 2027.</p>
+      <p class="xmas-ribbon-sub">[Number] fitting slots between February and April. The date will not be extended.</p>
+      <p style="margin-top:var(--space-8)"><a class="xmas-btn xmas-btn-light" href="#bundles">Build your bundle</a></p>
+    </Wrap>
+  </section>
+
+  <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
     <div id="booking-form" class="booking-form" style="border:var(--rule-structure);padding:clamp(20px,4vw,40px);background:var(--paper)">
       <MonoLabel as="p" style="margin-bottom:var(--space-10)">Send an enquiry</MonoLabel>
       <p class="booking-note" data-bundle-summary hidden></p>
@@ -398,6 +464,46 @@ const clientData = {
 </script>
 
 <style is:global>
+
+  /* CHRISTMAS, in the brand palette (rev 4). --berry is the brand deep red
+     (the --error token value), used as ribbon only, never for text on paper. */
+  .xmas-hero { --berry: #8A2E1F; background: var(--green); color: var(--paper); }
+  .xmas-hero-grid { display: grid; gap: var(--gap-xl); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; }
+  @media (max-width: 820px) { .xmas-hero-grid { grid-template-columns: 1fr; } }
+  .xmas-kicker { display: flex; align-items: center; gap: var(--space-4); margin: 0; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--ink-rev-soft); }
+  .holly { width: 40px; height: 24px; flex-shrink: 0; }
+  .holly path { fill: color-mix(in srgb, var(--paper) 18%, var(--green)); stroke: var(--paper); stroke-width: 1.2; }
+  .holly circle { fill: #8A2E1F; stroke: var(--paper); stroke-width: 1; }
+  .xmas-lede { font-size: var(--type-lede); color: var(--ink-rev-soft); max-width: var(--measure); margin: 0; }
+  .xmas-inclusions { list-style: none; padding: 0; margin: var(--space-9) 0 0; display: grid; gap: var(--space-4); max-width: var(--measure); }
+  .xmas-inclusions li { position: relative; padding-left: 1.8em; color: var(--paper); }
+  .xmas-inclusions li::before { content: ""; position: absolute; left: 0; top: 0.35em; width: 0.9em; height: 0.55em; border-left: 2px solid var(--oak); border-bottom: 2px solid var(--oak); transform: rotate(-45deg); }
+  .xmas-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-8); margin-top: var(--space-10); }
+  .xmas-btn { display: inline-block; padding: 14px 22px; background: var(--paper); color: var(--char); text-decoration: none; font-weight: var(--weight-medium, 500); border-left: 6px solid #8A2E1F; }
+  .xmas-btn-light { background: var(--paper); }
+  .xmas-link { color: var(--paper); text-underline-offset: 4px; }
+  .xmas-small { margin-top: var(--space-8); font-size: var(--type-body-sm); color: var(--ink-rev-quiet); }
+  .xmas-hero-photo { position: relative; }
+  .xmas-tag { position: absolute; top: var(--space-6); left: calc(-1 * var(--space-4)); background: #8A2E1F; color: var(--paper); padding: 8px 14px; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; box-shadow: 0 2px 0 rgba(0,0,0,.15); }
+  @media (max-width: 820px) { .xmas-tag { left: 0; } .xmas-hero-photo { max-width: 300px; } }
+  .xmas-steps { list-style: none; counter-reset: step; padding: 0; margin: var(--space-9) 0 0; display: grid; gap: var(--space-8); grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
+  .xmas-steps li { counter-increment: step; position: relative; padding-top: var(--space-12); border-top: var(--rule-structure); }
+  .xmas-steps li::before { content: counter(step); position: absolute; top: var(--space-4); left: 0; font-family: var(--font-mono); font-size: var(--type-mono); color: var(--green); }
+  .xmas-stack { max-width: var(--measure); margin-top: var(--space-9); padding: clamp(16px, 4vw, 32px); border: var(--rule-structure); background: var(--paper); position: relative; border-top: 6px solid var(--green); }
+  .xmas-stack-head { margin: 0; font-size: var(--type-lede); }
+  .xmas-stack-list { list-style: none; padding: 0; margin: var(--space-8) 0 0; display: grid; }
+  .xmas-stack-list li { display: flex; justify-content: space-between; gap: var(--space-6); padding: var(--space-5) 0; border-bottom: var(--rule-hair); }
+  .xmas-stack-list li span:last-child { font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-align: right; white-space: nowrap; }
+  .xmas-stack-total { font-weight: var(--weight-medium, 500); color: var(--green); }
+  .xmas-stack-price { border-bottom: 0 !important; }
+  .xmas-proof { display: grid; gap: var(--gap-xl); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); margin-top: var(--space-9); align-items: start; }
+  @media (max-width: 820px) { .xmas-proof { grid-template-columns: 1fr; } }
+  .xmas-guarantee { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-5); }
+  .xmas-guarantee li { padding-bottom: var(--space-5); border-bottom: var(--rule-hair); }
+  .xmas-ribbon { background: #8A2E1F; color: var(--paper); }
+  .xmas-ribbon-main { margin: 0; font-size: var(--type-lede); font-weight: var(--weight-medium, 500); }
+  .xmas-ribbon-sub { margin: var(--space-4) 0 0; color: var(--ink-rev-soft); }
+  @media (max-width: 480px) { .xmas-stack-list li { flex-direction: column; gap: var(--space-2); } .xmas-stack-list li span:last-child { text-align: left; } }
   .booking-hero {
     display: grid;
     gap: var(--gap-xl);
