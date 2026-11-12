@@ -35,7 +35,8 @@ const BONUS_CHOICES = [
   "Full-length mirror inside a door",
   "Not sure yet",
 ];
-const BOOKING_SLUGS = ["fitted-wardrobes", "walk-in-wardrobes", "alcove-units"];
+/* Every service he offers (Arthur's comment, 12 Nov 2026). */
+const BOOKING_SLUGS = ["fitted-wardrobes", "walk-in-wardrobes", "alcove-units", "media-walls", "bespoke-kitchens"];
 const turnstileSiteKey = import.meta.env.PUBLIC_SS_TURNSTILE_SITE_KEY;
 const largeUploadsEnabled = Boolean(turnstileSiteKey);
 
@@ -241,6 +242,11 @@ const SOURCES = [
       them. */}
   {SOURCE_FIELDS.map((name) => <input type="hidden" name={name} value="" />)}
   {bonusPicker && <input type="hidden" name="booking" value="Early 2027 booking page" />}
+  {/* Filled by the bundle builder on the booking page: the quick price it
+      showed and the add-ons picked against the allowance. Real markup, so
+      Netlify registers them. Empty when the visitor skips the builder. */}
+  {bonusPicker && <input type="hidden" name="quick-price" value="" data-quick-price />}
+  {bonusPicker && <input type="hidden" name="bonus-picks" value="" data-bonus-picks />}
   <p hidden>
     <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
   </p>

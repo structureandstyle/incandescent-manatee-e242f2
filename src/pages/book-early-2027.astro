@@ -3,14 +3,26 @@
  * PREVIEW ONLY, 12 Nov 2026 (branch flowtoform/booking-2027-preview): the
  * early-2027 booking page, where the Google post, the site band and the
  * quotations send people. Arthur's brief: one page for every service, the
- * visitor ticks what they want made and which extras they would choose, no
+ * visitor ticks what they want made and which add-ons they would choose, no
  * project value asked.
  *
+ * Rev 2 (Arthur's preview comments, 12 Nov): every service he offers; a
+ * catchier headline (three versions offered, the first here); "What is
+ * included" becomes "Christmas bundles" with five service cards drawn in 2D.
+ * Quick prices on three cards first (wardrobes, alcoves, walk-ins), as agreed;
+ * TV units and kitchens show their published "from" figure and go straight
+ * to the add-ons.
+ *
+ * THE QUICK PRICE IS ALWAYS A FLOOR. It is the guide starting price from the
+ * cost guide, and the quotation can only be the same or higher, so "add-ons
+ * worth at least £Y" never promises more than the band the quotation lands in.
+ *
  * Every figure in [brackets] is a draft waiting on Kaspar: the band values and
- * normal prices come from the cost guide preview (ss-cost-extras-preview) and
+ * add-on prices come from the cost guide preview (ss-cost-extras-preview) and
  * go live only once his real prices are live there first, so "normally £300"
- * has a real price behind it (CAP 3.7; DMCCA 2024 Sch 20 para 23). The deposit
- * is open: his schedule says 20%, Arthur floated 5 to 20% (12 Nov voice note).
+ * has a real price behind it (CAP 3.7; DMCCA 2024 Sch 20 para 23). His own
+ * published wardrobe, alcove pair, walk-in, TV unit and kitchen "from" figures
+ * are shown as they are. The deposit is open (20%, or 5 to 20% per Arthur).
  *
  * Copy to protocol v1.4: no "offer", "deal", "discount", "limited time" or
  * "free"; facts, not the promise formula; the closing date stated once and
@@ -27,52 +39,112 @@ import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
 import Plate from "../components/ds/Plate.astro";
 
-const BANDS = [
-  ["£2,000 to £2,999", "up to [£300]"],
-  ["£3,000 to £4,999", "up to [£450]"],
-  ["£5,000 to £7,999", "up to [£750]"],
-  ["£8,000 and over", "up to [£1,000]"],
+/** Preview: wrap draft figures in brackets. False once Kaspar's prices are in. */
+const DRAFT = true;
+
+const BANDS: [number, number][] = [[2000, 300], [3000, 450], [5000, 750], [8000, 1000]];
+
+const ADDONS = {
+  drawer: { name: "Soft-close drawer", price: 150 },
+  led: { name: "LED lighting with a door sensor, per section", price: 150 },
+  trouser: { name: "Pull-out trouser rail", price: 150 },
+  shoe: { name: "Pull-out shoe rack", price: 180 },
+  pulldown: { name: "Pull-down hanging rail", price: 180 },
+  tray: { name: "Lined jewellery or accessory tray", price: 150 },
+  mirror: { name: "Full-length mirror inside a door", price: 200 },
+  shelf: { name: "Extra shelf", price: 50 },
+};
+
+const FINISHES = ["Melamine board", "Hand-painted MDF", "Sprayed MDF", "Oak veneer"];
+const WARDROBE_ADDONS = ["drawer", "led", "trouser", "shoe", "pulldown", "tray", "mirror", "shelf"];
+
+/* Prices are Kaspar's published guide starting prices (cost guide tables);
+   the per-layout walk-in and one-alcove figures do not exist yet. */
+const BUNDLES = [
+  {
+    id: "wardrobe", label: "Fitted wardrobes", from: 2300, fromText: "from £2,300",
+    finishes: FINISHES,
+    sizes: ["2 doors, up to 1.2m", "3 doors, up to 1.8m", "4 doors, up to 2.4m"],
+    prices: [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]],
+    addons: WARDROBE_ADDONS,
+  },
+  {
+    /* cardFloor: one alcove has no price yet and may sit in the lowest band,
+       so the card promises only that band, not the pair's. */
+    id: "alcove", label: "Alcove units and shelving", from: 3300, cardFloor: 2000, fromText: "from £3,300 a pair",
+    finishes: FINISHES,
+    sizes: ["A pair of alcoves", "One alcove"],
+    prices: [[3300, null], [3600, null], [4000, null], [6000, null]],
+    addons: ["led", "drawer", "shelf"],
+  },
+  {
+    id: "walkin", label: "Walk-in wardrobes", from: 5000, fromText: "from around £5,000",
+    finishes: null,
+    sizes: ["One wall", "Two walls, L-shaped", "Three walls, U-shaped"],
+    prices: [[5000, 5000, 5000]],
+    around: true,
+    addons: WARDROBE_ADDONS,
+  },
+  {
+    id: "tv", label: "Built-in TV units", from: 3500, fromText: "from £3,500",
+    finishes: null, sizes: null, prices: null, perProject: true,
+    addons: ["led", "drawer", "shelf"],
+  },
+  {
+    id: "kitchen", label: "Bespoke kitchens", from: 10000, fromText: "from £10,000",
+    finishes: null, sizes: null, prices: null, perProject: true,
+    addons: ["led", "drawer"],
+  },
 ];
 
-const EXTRAS = [
-  ["LED lighting with a door sensor, per hanging section", "[£150]"],
-  ["Soft-close drawer inside the wardrobe, each", "[£150]"],
-  ["Pull-out trouser rail", "[£150]"],
-  ["Pull-out shoe rack", "[£180]"],
-  ["Lined jewellery or accessory tray", "[£150]"],
-  ["Full-length mirror inside a door", "[£200]"],
+const allowance = (p: number) => BANDS.reduce((a, [min, v]) => (p >= min ? v : a), 0);
+const money = (n: number) => `£${n.toLocaleString("en-GB")}`;
+const draft = (s: string) => (DRAFT ? `[${s}]` : s);
+
+const BAND_ROWS = [
+  ["£2,000 to £2,999", "up to " + draft("£300")],
+  ["£3,000 to £4,999", "up to " + draft("£450")],
+  ["£5,000 to £7,999", "up to " + draft("£750")],
+  ["£8,000 and over", "up to " + draft("£1,000")],
 ];
 
 const STEPS = [
-  "Tell us what you would like made and which extras you would choose, using the form below.",
-  "We visit, measure, and send a fixed, itemised quotation with your extras on it.",
+  "Build your bundle above, or tell us what you would like made in the form below.",
+  "We visit, measure, and send a fixed, itemised quotation with your add-ons on it.",
   "The booking is made when the quotation is accepted and the [20%] deposit is paid, by Sunday 31 January 2027. The fitting date is agreed then.",
 ];
 
 const TERMS = [
   "Booked means the quotation accepted in writing and the [20%] deposit paid by 11.59pm on Sunday 31 January 2027.",
-  "Applies to fitted wardrobe, walk-in wardrobe and alcove jobs with a quotation of £2,000 or more.",
-  "The quotation total before extras sets how much is included.",
-  "Each extra appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
+  "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,000 or more.",
+  "The quotation total before add-ons sets how much is included. A quick price on this page is a guide starting price; the quotation after the visit is the firm figure, and can only be the same or higher.",
+  "Each add-on appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
   "Prices are unchanged. The quotation is the normal itemised price for the job.",
-  "Lighting needs a power supply that can reach the wardrobe, which we check at the visit. Where it cannot, other extras of the same value are included.",
-  "Extras cannot be exchanged for money, swapped for a lower price or moved to another job.",
+  "Lighting needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other add-ons of the same value are included.",
+  "Add-ons cannot be exchanged for money, swapped for a lower price or moved to another job.",
   "The fitting date is agreed when the deposit is paid.",
   "Your cancellation rights are not affected.",
   "The closing date will not be extended.",
   "No VAT is added: we are not currently VAT registered.",
 ];
+
+const clientData = {
+  draft: DRAFT,
+  bands: BANDS,
+  addons: ADDONS,
+  bundles: BUNDLES.map((b) => ({ ...b })),
+};
 ---
 
 <Base
-  title="Booking for early 2027"
-  description="Fitted wardrobe, walk-in and alcove jobs booked by 31 January 2027 include extras at no cost, chosen from our price list. Prices unchanged, no VAT added."
+  title="Bonus add-ons until 31 January"
+  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with add-ons at no cost. Prices unchanged, no VAT added."
   noindex={true}
 >
   <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
     <Kicker scribe>Early 2027</Kicker>
     <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
-      Booking now for early 2027
+      Bonus add-ons with every booking until 31 January
     </Display>
     <div class="booking-hero">
       <div class="booking-photo">
@@ -87,43 +159,83 @@ const TERMS = [
       </div>
       <div class="booking-lede">
         <p style="font-size:var(--type-lede);color:var(--text-quiet);margin:0">
-          Fitted wardrobe, walk-in wardrobe and alcove jobs booked by Sunday 31 January 2027 include
-          extras at no cost. The larger the job, the more is included. Prices are unchanged, and no VAT
-          is added: we are not currently VAT registered.
+          Fitted wardrobes, walk-ins, alcove units, TV units and kitchens booked by Sunday 31 January 2027
+          come with add-ons at no cost. The larger the job, the more is included. Prices are unchanged, and
+          no VAT is added: we are not currently VAT registered.
         </p>
         <p style="margin-top:var(--space-10)">
-          <Link href="#booking-form" variant="nav" chamfer>Tell us about your room</Link>
+          <Link href="#bundles" variant="nav" chamfer>Build your bundle</Link>
         </p>
       </div>
     </div>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead level={4}>What is included</SectionHead>
+    <div id="bundles"></div>
+    <SectionHead level={4}>Christmas bundles</SectionHead>
     <p class="booking-note">
-      Each extra appears on the quotation as its own line at £0, beside its normal price. How much is
-      included depends on the quotation.
+      Pick what you would like made. A few taps give a guide starting price and the add-ons that come
+      with it. Each add-on appears on the quotation as its own line at £0, beside its normal price.
     </p>
-    <table class="booking-table">
-      <thead><tr><th>Your quotation</th><th>Extras included, at normal prices</th></tr></thead>
-      <tbody>{BANDS.map(([a, b]) => <tr><td>{a}</td><td class="num">{b}</td></tr>)}</tbody>
-    </table>
-    <p class="booking-note">[For example, a £2,500 wardrobe could include lighting in two sections, or two drawers.]</p>
-  </Wrap>
 
-  <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead level={4}>What you can choose</SectionHead>
-    <p class="booking-note">
-      Normal prices in melamine board, from our <Link href="/fitted-wardrobe-cost/" variant="inline">cost guide</Link>.
-      Painted and veneered drawers follow the same steps as the wardrobe prices.
-    </p>
+    <div class="bundle-cards" role="list">
+      {BUNDLES.map((b) => (
+        <button type="button" class="bundle-card" data-bundle={b.id} aria-pressed="false" role="listitem">
+          <span class="bundle-drawing" aria-hidden="true">
+            {b.id === "wardrobe" && (
+              <svg viewBox="0 0 200 140"><rect x="40" y="10" width="120" height="116" /><line x1="80" y1="10" x2="80" y2="126" /><line x1="120" y1="10" x2="120" y2="126" /><line x1="40" y1="22" x2="160" y2="22" /><line x1="36" y1="126" x2="164" y2="126" /><line x1="74" y1="62" x2="74" y2="78" /><line x1="86" y1="62" x2="86" y2="78" /><line x1="114" y1="62" x2="114" y2="78" /><line x1="126" y1="62" x2="126" y2="78" /><line x1="44" y1="132" x2="156" y2="132" /></svg>
+            )}
+            {b.id === "alcove" && (
+              <svg viewBox="0 0 200 140"><rect x="78" y="10" width="44" height="122" /><rect x="66" y="56" width="68" height="6" /><rect x="22" y="84" width="52" height="48" /><line x1="48" y1="84" x2="48" y2="132" /><line x1="22" y1="40" x2="74" y2="40" /><line x1="22" y1="58" x2="74" y2="58" /><line x1="22" y1="72" x2="74" y2="72" /><rect x="126" y="84" width="52" height="48" /><line x1="152" y1="84" x2="152" y2="132" /><line x1="126" y1="40" x2="178" y2="40" /><line x1="126" y1="58" x2="178" y2="58" /><line x1="126" y1="72" x2="178" y2="72" /></svg>
+            )}
+            {b.id === "walkin" && (
+              <svg viewBox="0 0 200 140"><rect x="20" y="10" width="160" height="120" /><line x1="20" y1="24" x2="180" y2="24" /><line x1="110" y1="10" x2="110" y2="130" /><line x1="26" y1="40" x2="104" y2="40" /><path d="M36 40 l-8 12 h16 z M54 40 l-8 12 h16 z M72 40 l-8 12 h16 z M90 40 l-8 12 h16 z" /><line x1="26" y1="80" x2="104" y2="80" /><line x1="116" y1="70" x2="174" y2="70" /><line x1="116" y1="85" x2="174" y2="85" /><line x1="116" y1="100" x2="174" y2="100" /><line x1="116" y1="115" x2="174" y2="115" /><line x1="140" y1="77" x2="150" y2="77" /><line x1="140" y1="92" x2="150" y2="92" /><line x1="140" y1="107" x2="150" y2="107" /><line x1="140" y1="122" x2="150" y2="122" /></svg>
+            )}
+            {b.id === "tv" && (
+              <svg viewBox="0 0 200 140"><rect x="14" y="10" width="172" height="120" /><rect x="60" y="34" width="80" height="46" /><line x1="56" y1="10" x2="56" y2="130" /><line x1="144" y1="10" x2="144" y2="130" /><line x1="14" y1="36" x2="56" y2="36" /><line x1="14" y1="62" x2="56" y2="62" /><line x1="144" y1="36" x2="186" y2="36" /><line x1="144" y1="62" x2="186" y2="62" /><line x1="14" y1="96" x2="186" y2="96" /><line x1="56" y1="96" x2="56" y2="130" /><line x1="100" y1="96" x2="100" y2="130" /><line x1="144" y1="96" x2="144" y2="130" /></svg>
+            )}
+            {b.id === "kitchen" && (
+              <svg viewBox="0 0 200 140"><rect x="14" y="10" width="172" height="40" /><line x1="57" y1="10" x2="57" y2="50" /><line x1="100" y1="10" x2="100" y2="50" /><line x1="143" y1="10" x2="143" y2="50" /><rect x="10" y="78" width="180" height="6" /><rect x="14" y="84" width="172" height="44" /><line x1="57" y1="84" x2="57" y2="128" /><line x1="100" y1="84" x2="100" y2="128" /><line x1="143" y1="84" x2="143" y2="128" /><line x1="100" y1="100" x2="143" y2="100" /><line x1="100" y1="114" x2="143" y2="114" /><line x1="70" y1="72" x2="88" y2="72" /></svg>
+            )}
+          </span>
+          <span class="bundle-name">{b.label}</span>
+          <span class="bundle-from">{b.fromText}</span>
+          <span class="bundle-allow">Add-ons worth at least {draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from)))}</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="bundle-panel" data-bundle-panel hidden aria-live="polite">
+      <p class="bundle-panel-title" data-panel-title></p>
+      <div data-step-finish class="bundle-step" hidden>
+        <MonoLabel as="p">Finish</MonoLabel>
+        <div class="chips" data-chips-finish></div>
+      </div>
+      <div data-step-size class="bundle-step" hidden>
+        <MonoLabel as="p">Size</MonoLabel>
+        <div class="chips" data-chips-size></div>
+      </div>
+      <p class="bundle-result" data-result></p>
+      <div data-step-addons class="bundle-step" hidden>
+        <MonoLabel as="p">Choose your add-ons</MonoLabel>
+        <p class="bundle-meter" data-meter></p>
+        <ul class="addon-list" data-addons></ul>
+        <p style="margin-top:var(--space-8)">
+          <button type="button" class="bundle-send" data-send>Send this bundle with my enquiry</button>
+        </p>
+      </div>
+    </div>
+
+    <SectionHead level={5} style="margin-top:var(--space-14)">How much is included</SectionHead>
     <table class="booking-table">
-      <thead><tr><th>Extra</th><th>Normal price</th></tr></thead>
-      <tbody>{EXTRAS.map(([a, b]) => <tr><td>{a}</td><td class="num">{b}</td></tr>)}</tbody>
+      <thead><tr><th>Your quotation</th><th>Add-ons, at normal prices</th></tr></thead>
+      <tbody>{BAND_ROWS.map(([a, b]) => <tr><td>{a}</td><td class="num">{b}</td></tr>)}</tbody>
     </table>
+    <p class="booking-note">{draft("For example, a £2,500 wardrobe could include lighting in two sections, or two drawers.")}</p>
     <p class="booking-note">
-      Lighting needs a power supply that can reach the wardrobe, which we check at the visit. Where it
-      cannot, other extras of the same value are included.
+      Normal prices are on our <Link href="/fitted-wardrobe-cost/" variant="inline">cost guide</Link>. Lighting
+      needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other add-ons
+      of the same value are included.
     </p>
   </Wrap>
 
@@ -135,6 +247,7 @@ const TERMS = [
   <Wrap style="padding-bottom:var(--section-y)">
     <div id="booking-form" class="booking-form" style="border:var(--rule-structure);padding:clamp(20px,4vw,40px);background:var(--paper)">
       <MonoLabel as="p" style="margin-bottom:var(--space-10)">Send an enquiry</MonoLabel>
+      <p class="booking-note" data-bundle-summary hidden></p>
       <EnquiryForm bonusPicker idPrefix="booking-" />
     </div>
   </Wrap>
@@ -144,6 +257,117 @@ const TERMS = [
     <ul class="booking-terms">{TERMS.map((t) => <li>{t}</li>)}</ul>
   </Wrap>
 </Base>
+
+<script is:inline define:vars={{ data: clientData }}>
+  (() => {
+    const $ = (s, r = document) => r.querySelector(s);
+    const money = (n) => "£" + n.toLocaleString("en-GB");
+    const d = (s) => (data.draft ? "[" + s + "]" : s);
+    const allowance = (p) => data.bands.reduce((a, [min, v]) => (p >= min ? v : a), 0);
+    const panel = $("[data-bundle-panel]");
+    const state = { b: null, finish: null, size: null, picks: {} };
+
+    const chip = (label, on, click, disabled) => {
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = "chip";
+      el.textContent = label;
+      el.setAttribute("aria-pressed", on ? "true" : "false");
+      if (disabled) el.disabled = true;
+      el.addEventListener("click", click);
+      return el;
+    };
+
+    const price = () => {
+      const b = state.b;
+      if (!b) return null;
+      if (b.perProject) return { value: b.from, text: "Priced per project, " + b.fromText };
+      const row = b.finishes ? state.finish : 0;
+      if (row === null || state.size === null) return null;
+      const v = b.prices[row][state.size];
+      if (v === null) return { value: null, text: d("Price to come") };
+      return { value: v, text: (b.around ? "From around " : "From ") + money(v) };
+    };
+
+    const spent = () => Object.entries(state.picks).reduce((s, [k, n]) => s + data.addons[k].price * n, 0);
+
+    const render = () => {
+      const b = state.b;
+      if (!b) { panel.hidden = true; return; }
+      panel.hidden = false;
+      $("[data-panel-title]").textContent = b.label;
+      const fin = $("[data-chips-finish]"); fin.replaceChildren();
+      const siz = $("[data-chips-size]"); siz.replaceChildren();
+      $("[data-step-finish]").hidden = !b.finishes;
+      $("[data-step-size]").hidden = !b.sizes;
+      (b.finishes || []).forEach((f, i) => fin.append(chip(f, state.finish === i, () => { state.finish = i; render(); })));
+      (b.sizes || []).forEach((s, i) => siz.append(chip(s, state.size === i, () => { state.size = i; render(); })));
+      const p = price();
+      const res = $("[data-result]");
+      const addonsStep = $("[data-step-addons]");
+      if (!p) { res.textContent = "Choose " + (b.finishes && state.finish === null ? "a finish" : "a size") + " to see a guide price."; addonsStep.hidden = true; return; }
+      /* No price yet (one alcove, until Kaspar sets it): fall back to the
+         lowest band, the floor every qualifying quotation reaches. */
+      const allow = p.value ? allowance(p.value) : allowance(b.perProject ? b.from : 2000);
+      res.textContent = p.value
+        ? p.text + ". Your booking includes add-ons worth at least " + d(money(allow)) + "."
+        : p.text + ". A quotation of £2,000 or more includes add-ons worth at least " + d(money(allow)) + ".";
+      addonsStep.hidden = false;
+      const used = spent();
+      $("[data-meter]").textContent = d(money(used)) + " of " + d(money(allow)) + " chosen";
+      const list = $("[data-addons]"); list.replaceChildren();
+      b.addons.forEach((k) => {
+        const a = data.addons[k];
+        const n = state.picks[k] || 0;
+        const li = document.createElement("li");
+        li.className = "addon";
+        const name = document.createElement("span");
+        name.className = "addon-name";
+        name.textContent = a.name + ", normally " + d(money(a.price));
+        const ctrl = document.createElement("span");
+        ctrl.className = "addon-ctrl";
+        const minus = chip("−", false, () => { state.picks[k] = Math.max(0, n - 1); render(); }, n === 0);
+        minus.setAttribute("aria-label", "One fewer " + a.name);
+        const count = document.createElement("span");
+        count.className = "addon-count";
+        count.textContent = String(n);
+        const plus = chip("+", false, () => { state.picks[k] = n + 1; render(); }, used + a.price > allow);
+        plus.setAttribute("aria-label", "One more " + a.name);
+        ctrl.append(minus, count, plus);
+        li.append(name, ctrl);
+        list.append(li);
+      });
+    };
+
+    document.querySelectorAll("[data-bundle]").forEach((card) => {
+      card.addEventListener("click", () => {
+        const b = data.bundles.find((x) => x.id === card.dataset.bundle);
+        document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", c === card ? "true" : "false"));
+        state.b = b; state.finish = null; state.size = null; state.picks = {};
+        render();
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    $("[data-send]").addEventListener("click", () => {
+      const b = state.b; const p = price();
+      if (!b || !p) return;
+      const finish = b.finishes && state.finish !== null ? b.finishes[state.finish] + ", " : "";
+      const size = b.sizes && state.size !== null ? b.sizes[state.size] + ", " : "";
+      const quick = b.label + ": " + finish + size + p.text;
+      const picks = Object.entries(state.picks).filter(([, n]) => n > 0)
+        .map(([k, n]) => n + " x " + data.addons[k].name).join("; ");
+      const form = document.querySelector("#booking-form form");
+      form.querySelector("[data-quick-price]").value = quick;
+      form.querySelector("[data-bonus-picks]").value = picks ? picks + " (" + money(spent()) + " at normal prices)" : "";
+      form.querySelectorAll('input[name="service"]').forEach((box) => { if (box.value === b.label) box.checked = true; });
+      const summary = $("[data-bundle-summary]");
+      summary.textContent = "Your bundle: " + quick + (picks ? ". Add-ons: " + picks + "." : ".");
+      summary.hidden = false;
+      document.getElementById("booking-form").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  })();
+</script>
 
 <style>
   .booking-hero {
@@ -160,6 +384,93 @@ const TERMS = [
     margin-top: var(--space-6);
     font-size: var(--type-body-sm);
     color: var(--text-quiet);
+  }
+  .bundle-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-6);
+    margin-top: var(--space-10);
+  }
+  .bundle-card {
+    display: grid;
+    gap: var(--space-3);
+    text-align: left;
+    padding: var(--space-6);
+    border: var(--rule-structure);
+    background: var(--paper);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .bundle-card[aria-pressed="true"] {
+    outline: 2px solid var(--ink);
+    outline-offset: -2px;
+  }
+  .bundle-drawing svg {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    color: var(--ink-soft);
+  }
+  .bundle-name { font-weight: var(--weight-medium, 500); }
+  .bundle-from,
+  .bundle-allow {
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+    color: var(--text-quiet);
+  }
+  .bundle-panel {
+    margin-top: var(--space-10);
+    padding: clamp(16px, 4vw, 32px);
+    border: var(--rule-structure);
+    max-width: var(--measure);
+    scroll-margin-top: 120px;
+  }
+  .bundle-panel-title { font-weight: var(--weight-medium, 500); font-size: var(--type-lede); margin: 0; }
+  .bundle-step { margin-top: var(--space-8); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-4); }
+  .chip {
+    font: inherit;
+    font-size: var(--type-body-sm);
+    padding: 8px 12px;
+    min-height: 40px;
+    border: var(--rule-structure);
+    background: var(--paper);
+    color: inherit;
+    cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .chip:disabled { opacity: 0.35; cursor: not-allowed; }
+  .bundle-result { margin-top: var(--space-8); font-size: var(--type-lede); }
+  .bundle-meter {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--type-mono);
+    letter-spacing: var(--ls-mono-table);
+  }
+  .addon-list { list-style: none; padding: 0; margin: var(--space-6) 0 0; display: grid; gap: var(--space-4); }
+  .addon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: var(--rule-hair);
+  }
+  .addon-name { font-size: var(--type-body-sm); }
+  .addon-ctrl { display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0; }
+  .addon-ctrl .chip { min-width: 40px; padding: 6px 10px; }
+  .addon-count { min-width: 1.5em; text-align: center; font-family: var(--font-mono); }
+  .bundle-send {
+    font: inherit;
+    padding: 12px 18px;
+    border: 0;
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
   }
   .booking-table {
     width: 100%;
