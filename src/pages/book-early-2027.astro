@@ -22,7 +22,7 @@
  * go live only once his real prices are live there first, so "normally £300"
  * has a real price behind it (CAP 3.7; DMCCA 2024 Sch 20 para 23). His own
  * published wardrobe, alcove pair, walk-in, TV unit and kitchen "from" figures
- * are shown as they are. The deposit is open (20%, or 5 to 20% per Arthur).
+ * are shown as they are. Deposit: Arthur set a draft [15%] on 12 Nov, covering the 2D drawings and elevations (Kaspar confirms). Prices are marked indicative, and a quotation follows a measured survey or the customer's photos and measurements (Arthur, 12 Nov; Kaspar confirms the photo route).
  *
  * Copy to protocol v1.4: no "offer", "deal", "discount", "limited time" or
  * "free"; facts, not the promise formula; the closing date stated once and
@@ -76,6 +76,7 @@ const BUNDLES = [
     finishes: FINISHES,
     sizes: ["2 doors, up to 1.2m", "3 doors, up to 1.8m", "4 doors, up to 2.4m"],
     prices: [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]],
+    includes: "At this price: a made-to-measure wardrobe with a straightforward inside, hanging rails and shelves, soft-close hinges, delivery and fitting. Drawers, lighting and fittings are add-ons, below.",
     addons: WARDROBE_ADDONS,
   },
   {
@@ -85,6 +86,7 @@ const BUNDLES = [
     finishes: FINISHES,
     sizes: ["A pair of alcoves", "One alcove"],
     prices: [[3300, null], [3600, null], [4000, null], [6000, null]],
+    includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide, delivered and fitted. Lighting, drawers and extra shelves are add-ons, below.",
     addons: ["led", "drawer", "shelf"],
   },
   {
@@ -92,17 +94,20 @@ const BUNDLES = [
     finishes: null,
     sizes: ["One wall", "Two walls, L-shaped", "Three walls, U-shaped"],
     prices: [[5000, 5000, 5000]],
+    includes: "A walk-in wardrobe is priced per room, by what goes into it, and typically starts from around £5,000. Add the drawers, lighting and fittings you would like below.",
     around: true,
     addons: WARDROBE_ADDONS,
   },
   {
     id: "tv", label: "Built-in TV units", from: 3500, fromText: "from £3,500",
     finishes: null, sizes: null, prices: null, perProject: true,
+    includes: "Built-in TV units are priced per project after one visit, from £3,500.",
     addons: ["led", "drawer", "shelf"],
   },
   {
     id: "kitchen", label: "Bespoke kitchens", from: 10000, fromText: "from £10,000",
     finishes: null, sizes: null, prices: null, perProject: true,
+    includes: "Kitchens are priced per project after one visit, from £10,000.",
     addons: ["led", "drawer"],
   },
 ];
@@ -119,9 +124,10 @@ const BAND_ROWS = [
 ];
 
 const TERMS = [
-  "Booked means the quotation accepted in writing and the [20%] deposit paid by 11.59pm on Sunday 31 January 2027.",
+  "Booked means the quotation accepted in writing and the [15%] deposit paid by 11.59pm on Sunday 31 January 2027.",
+  "The deposit covers your 2D drawings and elevations, which start once it is paid.",
   "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,000 or more.",
-  "The quotation total before add-ons sets how much is included. A quick price on this page is a guide starting price; the quotation after the visit is the firm figure, and can only be the same or higher.",
+  "The quotation total before add-ons sets how much is included. Prices on this page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements, and it can only be the same as a guide starting price or higher.",
   "Each add-on appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
   "Prices are unchanged. The quotation is the normal itemised price for the job.",
   "Lighting needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other add-ons of the same value are included.",
@@ -177,7 +183,7 @@ const clientData = {
           <ul class="xmas-inclusions">
             <li>Add-ons you choose: LED lighting, drawers, rails, racks, trays</li>
             <li>Prices unchanged, and no VAT added</li>
-            <li>One visit, then a fixed, itemised quotation</li>
+            <li>A [15%] deposit books your date and covers your 2D drawings and elevations</li>
           </ul>
           <p class="xmas-ctas">
             <a class="xmas-btn" href="#bundles">Build your bundle</a>
@@ -204,8 +210,8 @@ const clientData = {
     <SectionHead level={4}>How it works</SectionHead>
     <ol class="xmas-steps">
       <li><strong>Build your bundle.</strong> Pick the furniture, the finish and your add-ons below.</li>
-      <li><strong>One visit.</strong> We measure and send a fixed, itemised quotation, with your add-ons on it at £0.</li>
-      <li><strong>Book by 31 January.</strong> Accept the quotation and pay the [20%] deposit. We agree your fitting date then.</li>
+      <li><strong>We see the space.</strong> A measured survey at your home, or photos and measurements from you. Then we send an itemised quotation, with your add-ons on it at £0.</li>
+      <li><strong>Book by 31 January.</strong> Accept the quotation and pay a [15%] deposit, which covers your 2D drawings and elevations. We agree your fitting date then.</li>
     </ol>
   </Wrap>
 
@@ -258,10 +264,12 @@ const clientData = {
         <div class="chips" data-chips-size></div>
       </div>
       <p class="bundle-result" data-result></p>
+      <p class="booking-note" data-includes></p>
       <div data-step-addons class="bundle-step" hidden>
-        <MonoLabel as="p">Choose your add-ons</MonoLabel>
+        <MonoLabel as="p">Fill it with add-ons</MonoLabel>
         <p class="bundle-meter" data-meter></p>
         <ul class="addon-list" data-addons></ul>
+        <p class="bundle-estimate" data-estimate></p>
         <p style="margin-top:var(--space-8)">
           <button type="button" class="bundle-send" data-send>Send this bundle with my enquiry</button>
         </p>
@@ -296,7 +304,7 @@ const clientData = {
         <li class="xmas-stack-total"><span>Add-ons included</span><span>[£450] at normal prices</span></li>
         <li class="xmas-stack-price"><span>Your price</span><span>unchanged, no VAT added</span></li>
       </ul>
-      <p class="booking-note" style="margin-top:var(--space-6)">An example. Your quotation sets your own add-ons.</p>
+      <p class="booking-note" style="margin-top:var(--space-6)">An example at indicative prices. Your quotation sets your own add-ons.</p>
     </div>
   </Wrap>
 
@@ -360,12 +368,12 @@ const clientData = {
     const price = () => {
       const b = state.b;
       if (!b) return null;
-      if (b.perProject) return { value: b.from, text: "Priced per project, " + b.fromText };
+      if (b.perProject) return { value: b.from, text: "Indicative: priced per project, " + b.fromText };
       const row = b.finishes ? state.finish : 0;
       if (row === null || state.size === null) return null;
       const v = b.prices[row][state.size];
       if (v === null) return { value: null, text: d("Price to come") };
-      return { value: v, text: (b.around ? "From around " : "From ") + money(v) };
+      return { value: v, text: "Indicative guide price: " + (b.around ? "from around " : "from ") + money(v) };
     };
 
     const spent = () => Object.entries(state.picks).reduce((s, [k, n]) => s + data.addons[k].price * n, 0);
@@ -402,13 +410,26 @@ const clientData = {
       if (!p) { res.textContent = "Choose " + (b.finishes && state.finish === null ? "a finish" : "a size") + " to see a guide price."; addonsStep.hidden = true; return; }
       /* No price yet (one alcove, until Kaspar sets it): fall back to the
          lowest band, the floor every qualifying quotation reaches. */
-      const allow = p.value ? allowance(p.value) : allowance(b.perProject ? b.from : 2000);
+      /* Add-ons past the bundle are paid extras at normal prices. They raise
+         the quotation, which can lift it into a higher band, so the allowance
+         is worked out from the base plus the paid extras, settled in a loop. */
+      const used = spent();
+      const base = p.value;
+      let allow = base ? allowance(base) : allowance(b.perProject ? b.from : 2000);
+      let extra = Math.max(0, used - allow);
+      for (let i = 0; base && i < 4; i++) { allow = allowance(base + extra); extra = Math.max(0, used - allow); }
+      const included = used - extra;
+      state.split = { allow, included, extra, base };
       res.textContent = p.value
         ? p.text + ". Your booking includes add-ons worth at least " + d(money(allow)) + "."
         : p.text + ". A quotation of £2,000 or more includes add-ons worth at least " + d(money(allow)) + ".";
+      $("[data-includes]").textContent = b.includes || "";
       addonsStep.hidden = false;
-      const used = spent();
-      $("[data-meter]").textContent = d(money(used)) + " of " + d(money(allow)) + " chosen";
+      $("[data-meter]").textContent = "Included at no cost: " + d(money(included)) + " of " + d(money(allow)) +
+        (extra ? ". Beyond your bundle, at normal prices: " + d(money(extra)) + "." : ".");
+      $("[data-estimate]").textContent = base
+        ? "Indicative estimate with your choices: from " + d(money(base + extra)) + ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements."
+        : (extra ? "Add-ons beyond your bundle are added to the quotation at their normal prices." : "");
       const list = $("[data-addons]"); list.replaceChildren();
       b.addons.forEach((k) => {
         const a = data.addons[k];
@@ -425,7 +446,7 @@ const clientData = {
         const count = document.createElement("span");
         count.className = "addon-count";
         count.textContent = String(n);
-        const plus = chip("+", false, () => { state.picks[k] = n + 1; render(); }, used + a.price > allow);
+        const plus = chip("+", false, () => { state.picks[k] = n + 1; render(); }, n >= 10);
         plus.setAttribute("aria-label", "One more " + a.name);
         ctrl.append(minus, count, plus);
         li.append(name, ctrl);
@@ -448,12 +469,15 @@ const clientData = {
       if (!b || !p) return;
       const finish = b.finishes && state.finish !== null ? b.finishes[state.finish].name + ", " : "";
       const size = b.sizes && state.size !== null ? b.sizes[state.size] + ", " : "";
-      const quick = b.label + ": " + finish + size + p.text;
+      const sp = state.split || { included: 0, extra: 0, base: null };
+      const quick = b.label + ": " + finish + size + p.text + (sp.base && sp.extra ? "; guide estimate with add-ons from " + money(sp.base + sp.extra) : "");
       const picks = Object.entries(state.picks).filter(([, n]) => n > 0)
         .map(([k, n]) => n + " x " + data.addons[k].name).join("; ");
       const form = document.querySelector("#booking-form form");
       form.querySelector("[data-quick-price]").value = quick;
-      form.querySelector("[data-bonus-picks]").value = picks ? picks + " (" + money(spent()) + " at normal prices)" : "";
+      form.querySelector("[data-bonus-picks]").value = picks
+        ? picks + " (" + money(sp.included) + " included at no cost" + (sp.extra ? ", " + money(sp.extra) + " beyond the bundle at normal prices" : "") + ")"
+        : "";
       form.querySelectorAll('input[name="service"]').forEach((box) => { if (box.value === b.label) box.checked = true; });
       const summary = $("[data-bundle-summary]");
       summary.textContent = "Your bundle: " + quick + (picks ? ". Add-ons: " + picks + "." : ".");
@@ -639,6 +663,7 @@ const clientData = {
   .addon-ctrl { display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0; }
   .addon-ctrl .chip { min-width: 40px; padding: 6px 10px; }
   .addon-count { min-width: 1.5em; text-align: center; font-family: var(--font-mono); }
+  .bundle-estimate { margin-top: var(--space-6); font-size: var(--type-body-sm); color: var(--green); font-weight: var(--weight-medium, 500); }
   .bundle-send {
     font: inherit;
     padding: 12px 18px;
