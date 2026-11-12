@@ -82,7 +82,7 @@ const BUNDLES = [
   {
     id: "wardrobe", label: "Fitted wardrobes", from: 2300, fromText: "from £2,300",
     finishes: FINISHES,
-    sizes: ["2 doors, up to 1.2m", "3 doors, up to 1.8m", "4 doors, up to 2.4m"],
+    sizes: ["2 doors", "3 doors", "4 doors"], /* widths removed (Arthur, 12 Nov) */
     prices: [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]],
     /* The inside in numbers (Arthur, 12 Nov): four doors is his spec, 2 rails,
        4 shelves and a set of 4 drawers; two and three doors scale it. All
@@ -150,7 +150,7 @@ const BAND_ROWS = [
 
 const TERMS = [
   "Booked means the quotation accepted in writing and the [15%] deposit paid by 11.59pm on Sunday 31 January 2027.",
-  "The deposit covers your 2D drawings and elevations, which start once it is paid.",
+  "The deposit covers your 2D drawings and elevations, which start once it is paid, and books your fitting slot.",
   "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,000 or more. Several units in one quotation count together.",
   "A quotation of [£15,000] or more also includes a library unit, 2.4m high and 1.2m wide, in the same finish as the rest of the job.",
   "The quotation total before add-ons sets how much is included. Prices on this page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements, and it can only be the same as a guide starting price or higher.",
@@ -217,11 +217,13 @@ const clientData = {
             add-ons by quotation, ending with the library unit. Text, not a
             picture; brackets mark the drafts. */}
         <aside class="xmas-card" aria-label="What is in the Christmas bundle">
-          <p class="xmas-card-title">In every bundle</p>
+          {/* A red ribbon across the tag, crossing the one down its side, with a bow
+              where they meet (Arthur, 12 Nov: "like a red ribbon, something festive"). */}
+          <p class="xmas-card-title xmas-card-ribbon">In every bundle<svg class="xmas-bow" viewBox="0 0 48 34" aria-hidden="true"><path d="M22 18 L13 32 L18 30.5 L21 33 L24 19 Z" /><path d="M26 18 L35 32 L30 30.5 L27 33 L24 19 Z" /><path d="M24 16 C15 3 2 5 4 13 C6 21 16 20 24 16 Z" /><path d="M24 16 C33 3 46 5 44 13 C42 21 32 20 24 16 Z" /><rect x="20" y="12" width="8" height="8" rx="2.5" /></svg></p>
           <ul class="xmas-card-list">
             <li>Add-ons you choose: lighting, drawers, rails, racks</li>
             <li>Prices unchanged, no VAT added</li>
-            <li>A [15%] deposit covers your 2D drawings and elevations</li>
+            <li>A [15%] deposit covers your 2D drawings and elevations, and books your slot</li>
           </ul>
           <p class="xmas-card-title">Add-ons included, by quotation</p>
           <dl class="xmas-ladder">
@@ -241,7 +243,7 @@ const clientData = {
     <ol class="xmas-steps">
       <li><strong>Build your bundle.</strong> Pick the furniture, the finish and your add-ons below.</li>
       <li><strong>We see the space.</strong> A measured survey at your home, or photos and measurements from you. Then we send an itemised quotation, with your add-ons on it at £0.</li>
-      <li><strong>Book by 31 January.</strong> Accept the quotation and pay a [15%] deposit, which covers your 2D drawings and elevations. We agree your fitting date then.</li>
+      <li><strong>Book by 31 January.</strong> Accept the quotation and pay a [15%] deposit, which covers your 2D drawings and elevations and books your fitting slot. We agree the date then.</li>
     </ol>
   </Wrap>
 
@@ -633,7 +635,22 @@ const clientData = {
   .xmas-ladder { margin: 0; padding-right: 28px; display: grid; }
   .xmas-ladder div { display: flex; justify-content: space-between; gap: var(--space-6); padding: var(--space-3) 0; border-bottom: var(--rule-hair); font-size: var(--type-body-sm); }
   .xmas-ladder dt { font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); white-space: nowrap; }
-  .xmas-ladder dd { margin: 0; text-align: right; }
+  .xmas-ladder dd { margin: 0; text-align: right; white-space: nowrap; }
+  .xmas-ladder-top dd { white-space: normal; }
+  .xmas-card-ribbon {
+    --pad: clamp(20px, 3vw, 32px);
+    position: relative; z-index: 1;
+    margin: 0 calc(-1 * var(--pad) - 12px) var(--space-6);
+    padding: 12px calc(var(--pad) + 64px) 12px calc(var(--pad) + 12px);
+    background: #8A2E1F; color: var(--paper);
+    box-shadow: 0 3px 6px rgba(0,0,0,.18);
+  }
+  .xmas-card-ribbon::before, .xmas-card-ribbon::after { content: ""; position: absolute; bottom: -10px; width: 0; height: 0; border-top: 10px solid #551A11; }
+  .xmas-card-ribbon::before { left: 0; border-left: 12px solid transparent; }
+  .xmas-card-ribbon::after { right: 0; border-right: 12px solid transparent; }
+  .xmas-bow { position: absolute; top: 50%; right: calc(var(--pad) - 11px); width: 56px; height: 40px; transform: translateY(-50%); overflow: visible; }
+  .xmas-bow path, .xmas-bow rect { fill: #A8402C; stroke: #551A11; stroke-width: 1.5; stroke-linejoin: round; }
+  .xmas-bow rect { fill: #8A2E1F; }
   .xmas-ladder-top { border-bottom: 0 !important; color: var(--green); font-weight: var(--weight-medium, 500); }
   @media (max-width: 820px) { .xmas-hero-grid { grid-template-columns: 1fr; } }
   .xmas-kicker { display: flex; align-items: center; gap: var(--space-4); margin: 0; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--ink-rev-soft); }
