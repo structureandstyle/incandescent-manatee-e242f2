@@ -37,7 +37,6 @@ import FormProof from "../components/FormProof.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
-import Plate from "../components/ds/Plate.astro";
 
 /** Preview: wrap draft figures in brackets. False once Kaspar's prices are in. */
 const DRAFT = true;
@@ -59,13 +58,17 @@ const ADDONS = {
    melamine is his own work, MDF and oak veneer are the supplier samples Denis
    kept on 2 Sep 2026. Hand-painted and sprayed are both MDF, so they share the
    MDF photograph under a colour wash that tells them apart. Decorative beside
-   their labels, so alt="" (rule 7). */
+   their labels, so alt="" (rule 7). Arthur, 12 Nov: the hero photo goes, the
+   material pictures stay. */
 const FINISHES = [
   { name: "Melamine board", img: "/images/materials/melamine-board-400w.webp", wash: "" },
   { name: "Hand-painted MDF", img: "/images/materials/mdf-board-400w.webp", wash: "painted" },
   { name: "Sprayed MDF", img: "/images/materials/mdf-board-400w.webp", wash: "sprayed" },
   { name: "Oak veneer", img: "/images/materials/veneered-board-400w.webp", wash: "" },
 ];
+/* The upsell (Arthur, 12 Nov): bundles reaching the threshold also include a
+   small library unit. Its normal price and the threshold are drafts for Kaspar. */
+const LIBRARY = { threshold: 15000, name: "a library unit, 2.4m high and 1.2m wide" };
 const WARDROBE_ADDONS = ["drawer", "led", "trouser", "shoe", "pulldown", "tray", "mirror", "shelf"];
 
 /* Prices are Kaspar's published guide starting prices (cost guide tables);
@@ -120,13 +123,15 @@ const BAND_ROWS = [
   ["£2,000 to £2,999", "up to " + draft("£300")],
   ["£3,000 to £4,999", "up to " + draft("£450")],
   ["£5,000 to £7,999", "up to " + draft("£750")],
-  ["£8,000 and over", "up to " + draft("£1,000")],
+  ["£8,000 to £14,999", "up to " + draft("£1,000")],
+  [draft("£15,000") + " and over", "up to " + draft("£1,000") + ", plus a library unit 2.4m high and 1.2m wide"],
 ];
 
 const TERMS = [
   "Booked means the quotation accepted in writing and the [15%] deposit paid by 11.59pm on Sunday 31 January 2027.",
   "The deposit covers your 2D drawings and elevations, which start once it is paid.",
-  "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,000 or more.",
+  "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,000 or more. Several units in one quotation count together.",
+  "A quotation of [£15,000] or more also includes a library unit, 2.4m high and 1.2m wide, in the same finish as the rest of the job.",
   "The quotation total before add-ons sets how much is included. Prices on this page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements, and it can only be the same as a guide starting price or higher.",
   "Each add-on appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
   "Prices are unchanged. The quotation is the normal itemised price for the job.",
@@ -143,6 +148,7 @@ const clientData = {
   bands: BANDS,
   addons: ADDONS,
   bundles: BUNDLES.map((b) => ({ ...b })),
+  library: LIBRARY,
 };
 ---
 
@@ -181,26 +187,15 @@ const clientData = {
             come with add-ons you choose, at no cost. Plan it over Christmas, and it is fitted in the new year.
           </p>
           <ul class="xmas-inclusions">
-            <li>Add-ons you choose: LED lighting, drawers, rails, racks, trays</li>
-            <li>Prices unchanged, and no VAT added</li>
-            <li>A [15%] deposit books your date and covers your 2D drawings and elevations</li>
+            <li>Add-ons you choose: lighting, drawers, rails, racks</li>
+            <li>Prices unchanged, no VAT added</li>
+            <li>A [15%] deposit covers your 2D drawings and elevations</li>
+            <li>From [£15,000], a library unit is included too</li>
           </ul>
           <p class="xmas-ctas">
             <a class="xmas-btn" href="#bundles">Build your bundle</a>
-            <a class="xmas-link" href="#stack">See an example</a>
           </p>
           <p class="xmas-small">Booking closes on Sunday 31 January 2027, and the date will not move.</p>
-        </div>
-        <div class="xmas-hero-photo">
-          <Plate
-            photo="/images/fitted-wardrobes/fitted-wardrobes-05.webp"
-            alt="A fitted wardrobe with its white doors open, showing a light wood-grain interior: a hanging rail under a shelf on the left, and a stack of seven drawers with long bar handles below an open shelf on the right."
-            width={1400}
-            height={1867}
-            label="Fitted wardrobes"
-            eager
-          />
-          <span class="xmas-tag" aria-hidden="true">Add-ons from [£300] included</span>
         </div>
       </div>
     </Wrap>
@@ -219,8 +214,8 @@ const clientData = {
     <div id="bundles"></div>
     <SectionHead level={4}>Christmas bundles</SectionHead>
     <p class="booking-note">
-      Pick what you would like made. A few taps give a guide starting price and the add-ons that come
-      with it. Each add-on appears on the quotation as its own line at £0, beside its normal price.
+      Add each unit you would like made: several units count together. Your bundle shows an indicative
+      total and the add-ons that come with it, each shown on the quotation as its own line at £0.
     </p>
 
     <div class="bundle-cards" role="list">
@@ -265,7 +260,16 @@ const clientData = {
       </div>
       <p class="bundle-result" data-result></p>
       <p class="booking-note" data-includes></p>
-      <div data-step-addons class="bundle-step" hidden>
+      <p style="margin-top:var(--space-6)"><button type="button" class="bundle-add" data-add disabled>Add to my bundle</button></p>
+    </div>
+
+    <div class="basket" data-basket hidden aria-live="polite">
+      <p class="bundle-panel-title">Your bundle</p>
+      <ul class="basket-list" data-basket-list></ul>
+      <p class="bundle-result" data-total></p>
+      <p class="basket-library" data-library hidden></p>
+      <p class="basket-nudge" data-nudge hidden></p>
+      <div class="bundle-step">
         <MonoLabel as="p">Fill it with add-ons</MonoLabel>
         <p class="bundle-meter" data-meter></p>
         <ul class="addon-list" data-addons></ul>
@@ -287,25 +291,6 @@ const clientData = {
       needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other add-ons
       of the same value are included.
     </p>
-  </Wrap>
-
-  {/* THE VALUE STACK. One example bundle at normal prices, as a gift list.
-      His published guide starting price; the add-ons at their cost guide
-      prices (drafts until his are live). No "you save", no struck-out price:
-      the price line says the price does not change. */}
-  <Wrap style="padding-bottom:var(--section-y)">
-    <div id="stack"></div>
-    <SectionHead level={4}>What a bundle looks like</SectionHead>
-    <div class="xmas-stack">
-      <p class="xmas-stack-head">A three-door wardrobe in sprayed MDF, from £4,300</p>
-      <ul class="xmas-stack-list">
-        <li><span>Two soft-close drawers</span><span>normally [£300]</span></li>
-        <li><span>LED lighting with a door sensor, one section</span><span>normally [£150]</span></li>
-        <li class="xmas-stack-total"><span>Add-ons included</span><span>[£450] at normal prices</span></li>
-        <li class="xmas-stack-price"><span>Your price</span><span>unchanged, no VAT added</span></li>
-      </ul>
-      <p class="booking-note" style="margin-top:var(--space-6)">An example at indicative prices. Your quotation sets your own add-ons.</p>
-    </div>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
@@ -346,13 +331,20 @@ const clientData = {
 </Base>
 
 <script is:inline define:vars={{ data: clientData }}>
+  /* The bundle builder, rev 6 (Arthur, 12 Nov): several units in one bundle.
+     Configure a unit on its card, add it, repeat. The bundle total sets the
+     add-on allowance (always a floor: each unit's guide starting price), the
+     library unit at the threshold, and a nudge to the next milestone, stated
+     as a fact ("At £X ... Your bundle is £Y away"), never "if you do X". */
   (() => {
     const $ = (s, r = document) => r.querySelector(s);
     const money = (n) => "£" + n.toLocaleString("en-GB");
     const d = (s) => (data.draft ? "[" + s + "]" : s);
     const allowance = (p) => data.bands.reduce((a, [min, v]) => (p >= min ? v : a), 0);
     const panel = $("[data-bundle-panel]");
-    const state = { b: null, finish: null, size: null, picks: {} };
+    const basket = $("[data-basket]");
+    const state = { b: null, finish: null, size: null, units: [], picks: {}, split: null };
+    const addonOrder = Object.keys(data.addons);
 
     const chip = (label, on, click, disabled) => {
       const el = document.createElement("button");
@@ -365,20 +357,18 @@ const clientData = {
       return el;
     };
 
-    const price = () => {
+    const unitPrice = () => {
       const b = state.b;
       if (!b) return null;
-      if (b.perProject) return { value: b.from, text: "Indicative: priced per project, " + b.fromText };
+      if (b.perProject) return { value: b.from, text: "indicative, priced per project " + b.fromText };
       const row = b.finishes ? state.finish : 0;
       if (row === null || state.size === null) return null;
       const v = b.prices[row][state.size];
-      if (v === null) return { value: null, text: d("Price to come") };
-      return { value: v, text: "Indicative guide price: " + (b.around ? "from around " : "from ") + money(v) };
+      if (v === null) return { value: null, text: d("price to come") };
+      return { value: v, text: "indicative " + (b.around ? "from around " : "from ") + money(v) };
     };
 
-    const spent = () => Object.entries(state.picks).reduce((s, [k, n]) => s + data.addons[k].price * n, 0);
-
-    const render = () => {
+    const renderPanel = () => {
       const b = state.b;
       if (!b) { panel.hidden = true; return; }
       panel.hidden = false;
@@ -400,38 +390,65 @@ const clientData = {
         const name = document.createElement("span");
         name.textContent = f.name;
         t.append(pic, name);
-        t.addEventListener("click", () => { state.finish = i; render(); });
+        t.addEventListener("click", () => { state.finish = i; renderPanel(); });
         fin.append(t);
       });
-      (b.sizes || []).forEach((s, i) => siz.append(chip(s, state.size === i, () => { state.size = i; render(); })));
-      const p = price();
+      (b.sizes || []).forEach((s, i) => siz.append(chip(s, state.size === i, () => { state.size = i; renderPanel(); })));
+      const p = unitPrice();
       const res = $("[data-result]");
-      const addonsStep = $("[data-step-addons]");
-      if (!p) { res.textContent = "Choose " + (b.finishes && state.finish === null ? "a finish" : "a size") + " to see a guide price."; addonsStep.hidden = true; return; }
-      /* No price yet (one alcove, until Kaspar sets it): fall back to the
-         lowest band, the floor every qualifying quotation reaches. */
-      /* Add-ons past the bundle are paid extras at normal prices. They raise
-         the quotation, which can lift it into a higher band, so the allowance
-         is worked out from the base plus the paid extras, settled in a loop. */
-      const used = spent();
-      const base = p.value;
-      let allow = base ? allowance(base) : allowance(b.perProject ? b.from : 2000);
+      res.textContent = p
+        ? b.label + ": " + p.text + "."
+        : "Choose " + (b.finishes && state.finish === null ? "a finish" : "a size") + " to see an indicative price.";
+      $("[data-includes]").textContent = b.includes || "";
+      $("[data-add]").disabled = !p;
+    };
+
+    const renderBasket = () => {
+      if (!state.units.length) { basket.hidden = true; return; }
+      basket.hidden = false;
+      const list = $("[data-basket-list]"); list.replaceChildren();
+      state.units.forEach((u, i) => {
+        const li = document.createElement("li");
+        const t = document.createElement("span");
+        t.textContent = u.label + (u.detail ? ", " + u.detail : "") + ": " + u.text;
+        const rm = document.createElement("button");
+        rm.type = "button"; rm.className = "basket-remove"; rm.textContent = "Remove";
+        rm.setAttribute("aria-label", "Remove " + u.label);
+        rm.addEventListener("click", () => { state.units.splice(i, 1); renderBasket(); });
+        li.append(t, rm);
+        list.append(li);
+      });
+      const base = state.units.reduce((s, u) => s + (u.value || 0), 0);
+      const keys = addonOrder.filter((k) => state.units.some((u) => u.addons.includes(k)));
+      Object.keys(state.picks).forEach((k) => { if (!keys.includes(k)) delete state.picks[k]; });
+      const used = keys.reduce((s, k) => s + data.addons[k].price * (state.picks[k] || 0), 0);
+      let allow = allowance(base || 2000);
       let extra = Math.max(0, used - allow);
       for (let i = 0; base && i < 4; i++) { allow = allowance(base + extra); extra = Math.max(0, used - allow); }
       const included = used - extra;
-      state.split = { allow, included, extra, base };
-      res.textContent = p.value
-        ? p.text + ". Your booking includes add-ons worth at least " + d(money(allow)) + "."
-        : p.text + ". A quotation of £2,000 or more includes add-ons worth at least " + d(money(allow)) + ".";
-      $("[data-includes]").textContent = b.includes || "";
-      addonsStep.hidden = false;
+      const quote = base + extra;
+      const library = base > 0 && quote >= data.library.threshold;
+      state.split = { base, allow, included, extra, quote, library };
+      const pending = state.units.some((u) => u.value === null);
+      $("[data-total]").textContent = base
+        ? "Indicative total: from " + money(base) + (pending ? ", plus a unit with its price to come" : "") +
+          ". Your bundle includes add-ons worth at least " + d(money(allow)) + "."
+        : "A quotation of £2,000 or more includes add-ons worth at least " + d(money(allow)) + ".";
+      const libEl = $("[data-library]");
+      libEl.hidden = !library;
+      libEl.textContent = library ? "Included as well: " + data.library.name + ", in the same finish as the rest of the job." : "";
+      const nudge = $("[data-nudge]");
+      const milestones = data.bands.map(([min, v]) => ({ at: min, what: "add-ons grow to " + d(money(v)) }))
+        .concat([{ at: data.library.threshold, what: data.library.name + " is included as well" }])
+        .filter((m) => base && m.at > quote)
+        .sort((a, b) => a.at - b.at);
+      const next = milestones[0];
+      nudge.hidden = !next;
+      nudge.textContent = next ? "At " + d(money(next.at)) + ", " + next.what + ". Your bundle is " + money(next.at - quote) + " away." : "";
       $("[data-meter]").textContent = "Included at no cost: " + d(money(included)) + " of " + d(money(allow)) +
         (extra ? ". Beyond your bundle, at normal prices: " + d(money(extra)) + "." : ".");
-      $("[data-estimate]").textContent = base
-        ? "Indicative estimate with your choices: from " + d(money(base + extra)) + ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements."
-        : (extra ? "Add-ons beyond your bundle are added to the quotation at their normal prices." : "");
-      const list = $("[data-addons]"); list.replaceChildren();
-      b.addons.forEach((k) => {
+      const addons = $("[data-addons]"); addons.replaceChildren();
+      keys.forEach((k) => {
         const a = data.addons[k];
         const n = state.picks[k] || 0;
         const li = document.createElement("li");
@@ -441,46 +458,59 @@ const clientData = {
         name.textContent = a.name + ", normally " + d(money(a.price));
         const ctrl = document.createElement("span");
         ctrl.className = "addon-ctrl";
-        const minus = chip("−", false, () => { state.picks[k] = Math.max(0, n - 1); render(); }, n === 0);
+        const minus = chip("−", false, () => { state.picks[k] = Math.max(0, n - 1); renderBasket(); }, n === 0);
         minus.setAttribute("aria-label", "One fewer " + a.name);
         const count = document.createElement("span");
         count.className = "addon-count";
         count.textContent = String(n);
-        const plus = chip("+", false, () => { state.picks[k] = n + 1; render(); }, n >= 10);
+        const plus = chip("+", false, () => { state.picks[k] = n + 1; renderBasket(); }, n >= 20);
         plus.setAttribute("aria-label", "One more " + a.name);
         ctrl.append(minus, count, plus);
         li.append(name, ctrl);
-        list.append(li);
+        addons.append(li);
       });
+      $("[data-estimate]").textContent = base
+        ? "Indicative estimate with your add-ons: from " + d(money(quote)) + ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements."
+        : "";
     };
 
     document.querySelectorAll("[data-bundle]").forEach((card) => {
       card.addEventListener("click", () => {
         const b = data.bundles.find((x) => x.id === card.dataset.bundle);
         document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", c === card ? "true" : "false"));
-        state.b = b; state.finish = null; state.size = null; state.picks = {};
-        render();
+        state.b = b; state.finish = null; state.size = null;
+        renderPanel();
         panel.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     });
 
-    $("[data-send]").addEventListener("click", () => {
-      const b = state.b; const p = price();
+    $("[data-add]").addEventListener("click", () => {
+      const b = state.b; const p = unitPrice();
       if (!b || !p) return;
-      const finish = b.finishes && state.finish !== null ? b.finishes[state.finish].name + ", " : "";
-      const size = b.sizes && state.size !== null ? b.sizes[state.size] + ", " : "";
-      const sp = state.split || { included: 0, extra: 0, base: null };
-      const quick = b.label + ": " + finish + size + p.text + (sp.base && sp.extra ? "; guide estimate with add-ons from " + money(sp.base + sp.extra) : "");
-      const picks = Object.entries(state.picks).filter(([, n]) => n > 0)
-        .map(([k, n]) => n + " x " + data.addons[k].name).join("; ");
+      const detail = [b.finishes && state.finish !== null ? b.finishes[state.finish].name : "", b.sizes && state.size !== null ? b.sizes[state.size] : ""].filter(Boolean).join(", ");
+      state.units.push({ id: b.id, label: b.label, detail, value: p.value, text: p.text, addons: b.addons });
+      state.b = null;
+      document.querySelectorAll("[data-bundle]").forEach((c) => c.setAttribute("aria-pressed", "false"));
+      renderPanel();
+      renderBasket();
+      basket.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    $("[data-send]").addEventListener("click", () => {
+      const sp = state.split;
+      if (!state.units.length || !sp) return;
+      const units = state.units.map((u) => u.label + (u.detail ? " (" + u.detail + ")" : "") + ": " + u.text).join("; ");
+      const quick = units + (sp.base ? ". Indicative total from " + money(sp.base) + (sp.extra ? ", with add-ons from " + money(sp.quote) : "") : "") +
+        (sp.library ? ". Includes " + data.library.name : "");
+      const picks = Object.entries(state.picks).filter(([, n]) => n > 0).map(([k, n]) => n + " x " + data.addons[k].name).join("; ");
       const form = document.querySelector("#booking-form form");
       form.querySelector("[data-quick-price]").value = quick;
       form.querySelector("[data-bonus-picks]").value = picks
         ? picks + " (" + money(sp.included) + " included at no cost" + (sp.extra ? ", " + money(sp.extra) + " beyond the bundle at normal prices" : "") + ")"
         : "";
-      form.querySelectorAll('input[name="service"]').forEach((box) => { if (box.value === b.label) box.checked = true; });
+      form.querySelectorAll("input[name=service]").forEach((box) => { if (state.units.some((u) => u.label === box.value)) box.checked = true; });
       const summary = $("[data-bundle-summary]");
-      summary.textContent = "Your bundle: " + quick + (picks ? ". Add-ons: " + picks + "." : ".");
+      summary.textContent = "Your bundle: " + quick + "." + (picks ? " Add-ons: " + picks + "." : "");
       summary.hidden = false;
       document.getElementById("booking-form").scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -506,6 +536,12 @@ const clientData = {
   .xmas-btn { display: inline-block; padding: 14px 22px; background: var(--paper); color: var(--char); text-decoration: none; font-weight: var(--weight-medium, 500); border-left: 6px solid #8A2E1F; }
   .xmas-btn-light { background: var(--paper); }
   .xmas-link { color: var(--paper); text-underline-offset: 4px; }
+  @media (max-width: 600px) {
+    .xmas-hero > * { padding-top: var(--space-12) !important; }
+    .xmas-hero h1 { margin: var(--space-6) 0 var(--space-6) !important; }
+    .xmas-inclusions { margin-top: var(--space-6); gap: var(--space-3); }
+    .xmas-ctas { margin-top: var(--space-8); }
+  }
   .xmas-small { margin-top: var(--space-8); font-size: var(--type-body-sm); color: var(--ink-rev-quiet); }
   .xmas-hero-photo { position: relative; }
   .xmas-tag { position: absolute; top: var(--space-6); left: calc(-1 * var(--space-4)); background: #8A2E1F; color: var(--paper); padding: 8px 14px; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; box-shadow: 0 2px 0 rgba(0,0,0,.15); }
@@ -664,6 +700,14 @@ const clientData = {
   .addon-ctrl .chip { min-width: 40px; padding: 6px 10px; }
   .addon-count { min-width: 1.5em; text-align: center; font-family: var(--font-mono); }
   .bundle-estimate { margin-top: var(--space-6); font-size: var(--type-body-sm); color: var(--green); font-weight: var(--weight-medium, 500); }
+  .bundle-add { font: inherit; padding: 12px 18px; border: 2px solid var(--char); background: var(--paper); color: var(--char); cursor: pointer; }
+  .bundle-add:disabled { opacity: 0.4; cursor: not-allowed; }
+  .basket { margin-top: var(--space-10); padding: clamp(16px, 4vw, 32px); border: var(--rule-structure); border-top: 6px solid var(--green); max-width: var(--measure); scroll-margin-top: 120px; }
+  .basket-list { list-style: none; padding: 0; margin: var(--space-6) 0 0; display: grid; gap: var(--space-4); }
+  .basket-list li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-6); padding-bottom: var(--space-4); border-bottom: var(--rule-hair); font-size: var(--type-body-sm); }
+  .basket-remove { font: inherit; font-size: var(--type-body-sm); background: none; border: 0; padding: 4px 0; color: var(--ink-soft); text-decoration: underline; cursor: pointer; flex-shrink: 0; }
+  .basket-library { margin-top: var(--space-6); padding: var(--space-5) var(--space-6); background: color-mix(in srgb, var(--green) 12%, var(--paper)); border-left: 6px solid #8A2E1F; font-weight: var(--weight-medium, 500); }
+  .basket-nudge { margin-top: var(--space-6); font-size: var(--type-body-sm); color: var(--walnut); }
   .bundle-send {
     font: inherit;
     padding: 12px 18px;
@@ -697,7 +741,7 @@ const clientData = {
     font-family: var(--font-mono);
     font-size: var(--type-mono);
     letter-spacing: var(--ls-mono-table);
-    white-space: nowrap;
+    white-space: normal;
   }
   .booking-steps,
   .booking-terms {
