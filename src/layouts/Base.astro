@@ -49,6 +49,14 @@ const {
 // on one page and Google overrode it anyway, because the Business Profile was
 // pointing somewhere else.
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+
+/* PREVIEW ONLY, 12 Nov 2026 (Denis): a looping red bar above the nav on every
+   page except the legal ones, pointing at the Christmas bundle. Comes down with
+   the booking page on 1 February 2027. */
+const PROMO_OFF = ["/privacy/", "/cookies/", "/book-early-2027/terms/"];
+const here = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : Astro.url.pathname + "/";
+const showPromo = !PROMO_OFF.includes(here);
+const PROMO = ["The Christmas bundle", "Extras worth up to [15%] of your job, on the house", "Book by 31 January 2027", "Build your bundle"];
 const ogImage = new URL(image, SITE_URL).href;
 const fullTitle = title.includes(BUSINESS.name) ? title : `${title} | ${BUSINESS.name}`;
 
@@ -313,6 +321,15 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-2 focus:text-bone"
       >Skip to content</a
     >
+    {showPromo && (
+      <a class="promo-bar" href="/book-early-2027/" aria-label="The Christmas bundle: extras on the house on jobs booked by 31 January 2027. Build your bundle.">
+        <span class="promo-track" aria-hidden="true">
+          {[0, 1].map(() => (
+            <span class="promo-run">{PROMO.map((t) => <span class="promo-item">{t}</span>)}</span>
+          ))}
+        </span>
+      </a>
+    )}
     <Header />
     <main id="main" class="flex-1">
       <slot />
@@ -715,5 +732,15 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         openBox(img);
       });
     </script>
-  </body>
+      <style is:global>
+      .promo-bar { display: block; overflow: hidden; background: #8A2E1F; color: var(--paper); text-decoration: none; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+      .promo-track { display: flex; width: max-content; animation: promo-loop 38s linear infinite; }
+      .promo-run { display: flex; flex-shrink: 0; }
+      .promo-item { padding: 10px 28px; white-space: nowrap; }
+      .promo-item::after { content: "\2726"; margin-left: 56px; opacity: 0.7; }
+      .promo-bar:hover .promo-track, .promo-bar:focus-visible .promo-track { animation-play-state: paused; }
+      @keyframes promo-loop { to { transform: translateX(-50%); } }
+      @media (prefers-reduced-motion: reduce) { .promo-track { animation: none; } }
+    </style>
+</body>
 </html>

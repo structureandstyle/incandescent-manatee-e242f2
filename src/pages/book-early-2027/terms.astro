@@ -1,0 +1,43 @@
+---
+/**
+ * PREVIEW ONLY, 12 Nov 2026: the Christmas bundle's booking terms and the table
+ * of what is included, moved off the booking page (Denis: "this has to go from
+ * this page into the terms page"; the table "should be backend info").
+ * noindex, and no promotion bar (it is a legal page). Comes down with the
+ * booking page on 1 February 2027.
+ */
+import Base from "../../layouts/Base.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import { BAND_ROWS, TERMS } from "../../data/booking-2027";
+---
+
+<Base
+  title="Christmas bundle booking terms"
+  description="The terms for the Christmas bundle on jobs booked by 31 January 2027, and how much is included at each quotation."
+  noindex={true}
+>
+  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+    <p class="terms-back"><a href="/book-early-2027/">Back to the Christmas bundle</a></p>
+    <h1 class="terms-h1">Christmas bundle: booking terms</h1>
+
+    <SectionHead level={5} style="margin-top:var(--space-12)">How much is included</SectionHead>
+    <table class="terms-table">
+      <thead><tr><th>Your quotation</th><th>What is included</th></tr></thead>
+      <tbody>{BAND_ROWS.map(([a, b]) => <tr><td>{a}</td><td class="num">{b}</td></tr>)}</tbody>
+    </table>
+
+    <SectionHead level={5} style="margin-top:var(--space-12)">Terms</SectionHead>
+    <ul class="terms-list">{TERMS.map((t) => <li>{t}</li>)}</ul>
+  </Wrap>
+</Base>
+
+<style>
+  .terms-back a { color: var(--green); }
+  .terms-h1 { margin-top: var(--space-8); font-family: var(--font-serif-display); font-size: var(--type-display-4); line-height: 1.1; font-weight: 400; }
+  .terms-table { width: 100%; max-width: var(--measure); margin-top: var(--space-8); border-collapse: collapse; }
+  .terms-table th { text-align: left; padding: var(--space-4) var(--space-6) var(--space-4) 0; border-bottom: var(--rule-structure); text-transform: uppercase; letter-spacing: var(--ls-mono-table); font-size: var(--type-mono); font-weight: var(--weight-regular); color: var(--ink-soft); }
+  .terms-table td { padding: var(--space-5) var(--space-6) var(--space-5) 0; border-bottom: var(--rule-hair); vertical-align: top; }
+  .terms-table td.num { font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); }
+  .terms-list { max-width: var(--measure); margin-top: var(--space-8); padding-left: 1.2em; display: grid; gap: var(--space-5); font-size: var(--type-body-sm); color: var(--text-quiet); }
+</style>

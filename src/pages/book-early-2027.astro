@@ -37,24 +37,10 @@ import FormProof from "../components/FormProof.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
+import { DRAFT, draft, money, BANDS, WHOLE_FROM } from "../data/booking-2027";
 
-/** Preview: wrap draft figures in brackets. False once Kaspar's prices are in. */
-const DRAFT = true;
-const draft = (s: string) => (DRAFT ? `[${s}]` : s);
 
-const money = (n: number) => `£${n.toLocaleString("en-GB")}`;
 
-/* Extras on the house, rev 14 (Arthur, 12 Nov: "the value has to be 10 to 15%,
-   and we want to upsell, not discount"). Each step is about half again the one
-   below and its allowance is 13 to 15% of the step, so the share never goes
-   above 15% and falls to no less than 10% just before the next step, where it
-   jumps back up: the next step is always close enough to pull one more drawer
-   into the bundle. Below £2,500 (Arthur's first step) nothing is included.
-   Every value is a draft for Kaspar. */
-const BANDS: [number, number][] = [
-  [2500, 350], [3500, 500], [5000, 750], [7500, 1000], [10000, 1500],
-  [15000, 2000], [20000, 3000], [30000, 4500], [45000, 6000],
-];
 
 /* Parts and extras at normal prices: the cost guide preview's drafts, plus a
    hanging rail, priced here for the first time. All drafts for Kaspar. */
@@ -80,7 +66,9 @@ const FINISHES = [
   { name: "Melamine board", img: "/images/materials/melamine-board-400w.webp", wash: "" },
   { name: "Hand-painted MDF", img: "/images/materials/mdf-board-400w.webp", wash: "painted" },
   { name: "Sprayed MDF", img: "/images/materials/mdf-board-400w.webp", wash: "sprayed" },
-  { name: "Oak veneer", img: "/images/materials/veneered-board-400w.webp", wash: "" },
+  /* Arthur, 12 Nov: "veneered wood (their choice)", the customer picks the
+     wood; priced at his oak veneer figures until he says otherwise. */
+  { name: "Veneered wood (your choice)", img: "/images/materials/veneered-board-400w.webp", wash: "" },
 ];
 
 /* Arthur's upsell ladder, kept inside the 10 to 15%: from £15,000 what is on
@@ -95,7 +83,6 @@ const WHOLE = {
   tvunit: { name: "Built-in TV unit, up to " + draft("2.4m") + " wide", price: 3500 },
   wardrobe4: { name: "4-door wardrobe, 2 rails and 4 shelves inside", price: 4000 },
 };
-const WHOLE_FROM = 15000;
 
 /* The wardrobe as an empty box (Arthur, 12 Nov): doors and carcass, Blum
    soft-close hinges, delivery and fitting; then the customer picks the inside
@@ -103,8 +90,11 @@ const WHOLE_FROM = 15000;
    his price less that inside at the draft part prices (2 doors: a rail and 2
    shelves; 3 doors: 2 rails and 3 shelves; 4 doors: 2 rails and 4 shelves).
    Drafts until he gives box prices. Rows are finishes, columns door counts. */
-const PUBLISHED = [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]];
-const STD_INSIDE = [{ rail: 1, shelf: 2 }, { rail: 2, shelf: 3 }, { rail: 2, shelf: 4 }];
+/* 6 and 8 doors (Denis, 12 Nov): his four-door price times 1.5 and 2, rounded
+   to £50. Drafts until he prices them. */
+const PUBLISHED = [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]]
+  .map((r) => [...r, Math.round((r[2] * 1.5) / 50) * 50, r[2] * 2]);
+const STD_INSIDE = [{ rail: 1, shelf: 2 }, { rail: 2, shelf: 3 }, { rail: 2, shelf: 4 }, { rail: 3, shelf: 6 }, { rail: 4, shelf: 8 }];
 const partsValue = (o: Record<string, number>) =>
   Object.entries(o).reduce((s, [k, n]) => s + (ADDONS as Record<string, { price: number }>)[k].price * n, 0);
 const BOX = PUBLISHED.map((row) => row.map((v, i) => v - partsValue(STD_INSIDE[i])));
@@ -117,12 +107,14 @@ const WARDROBE_PARTS = ["rail", "shelf", "drawer", "led", "trouser", "shoe", "pu
 const BUNDLES = [
   {
     id: "wardrobe", label: "Fitted wardrobes", from: BOX[0][0], fromText: "box from " + draft(money(BOX[0][0])),
-    sizeLabel: "Doors", sizes: ["2 doors", "3 doors", "4 doors"],
+    sizeLabel: "Doors", sizes: ["2 doors", "3 doors", "4 doors", "6 doors", "8 doors"],
     finishes: FINISHES, prices: BOX, boxDraft: true, priceLabel: "the box",
     typical: [
       { parts: { rail: 1, shelf: 2, drawer: 2 }, text: "a rail, 2 shelves and 2 drawers" },
       { parts: { rail: 2, shelf: 3, drawer: 3 }, text: "2 rails, 3 shelves and 3 drawers" },
       { parts: { rail: 2, shelf: 4, drawer: 4 }, text: "2 rails, 4 shelves and 4 drawers" },
+      { parts: { rail: 3, shelf: 6, drawer: 6 }, text: "3 rails, 6 shelves and 6 drawers" },
+      { parts: { rail: 4, shelf: 8, drawer: 8 }, text: "4 rails, 8 shelves and 8 drawers" },
     ],
     partsLabel: "What goes inside", parts: WARDROBE_PARTS,
     includes: "The box is the doors and carcass. Then choose what goes inside.",
@@ -174,34 +166,7 @@ const BUNDLES = [
 
 const allowance = (p: number) => BANDS.reduce((a, [min, v]) => (p >= min ? v : a), 0);
 
-const WHOLE_NOTE: Record<number, string> = {
-  15000: ", enough for a library unit",
-  20000: ", enough for a 2-door wardrobe",
-  30000: ", enough for a pair of alcove units, a TV unit or a 4-door wardrobe",
-  45000: ", enough for any of the whole units",
-};
-const BAND_ROWS = BANDS.map(([at, v], i) => {
-  const next = BANDS[i + 1];
-  const t = (n: number) => (n >= WHOLE_FROM ? draft(money(n)) : money(n));
-  return [t(at) + (next ? " to " + t(next[0] - 1) : " and over"), "up to " + draft(money(v)) + (WHOLE_NOTE[at] || "")];
-});
 
-const TERMS = [
-  "Booked means the quotation accepted in writing and the [15%] deposit paid by 11.59pm on Sunday 31 January 2027.",
-  "The deposit covers your 2D drawings and elevations, which start once it is paid, and books your fitting slot.",
-  "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,500 or more. Several units in one quotation count together.",
-  "The quotation total at normal prices sets how much is included, as in the table above.",
-  "From " + draft("£15,000") + ", what is included can be a whole unit: a library unit, 2.4m high and 1.2m wide, a 2-door or 4-door wardrobe, a pair of alcove units or a TV unit, valued at its normal starting price. Another finish, or anything beyond what is included, is charged at normal prices.",
-  "Prices on this page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements.",
-  "Each extra on the house appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
-  "Prices are unchanged. The quotation is the normal itemised price for the job.",
-  "Lighting needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other extras of the same value are included.",
-  "Extras and whole units on the house cannot be exchanged for money, swapped for a lower price or moved to another job.",
-  "The fitting date is agreed when the deposit is paid.",
-  "Your cancellation rights are not affected.",
-  "The closing date will not be extended.",
-  "No VAT is added: we are not currently VAT registered.",
-];
 
 const clientData = {
   draft: DRAFT,
@@ -216,7 +181,7 @@ const clientData = {
 
 <Base
   title="The Christmas bundle"
-  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with add-ons you choose, at no cost. Prices unchanged, no VAT added."
+  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with extras you choose, on the house. Prices unchanged."
   noindex={true}
 >
   {/* LANDING PAGE, rev 4 (Arthur, 12 Nov: "make it a landing page, hero
@@ -241,7 +206,7 @@ const clientData = {
             <svg class="holly" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 12 C14 2 6 4 2 8 C7 9 6 14 10 15 C12 11 16 12 20 12 Z" /><path d="M20 12 C26 2 34 4 38 8 C33 9 34 14 30 15 C28 11 24 12 20 12 Z" /><circle cx="17" cy="15" r="3" /><circle cx="23" cy="15" r="3" /><circle cx="20" cy="19" r="3" /></svg>
             Christmas bundles, booking until 31 January 2027
           </p>
-          <h1 class="xmas-h1">The Christmas bundle: extras worth from [£350], on the house</h1>
+          <h1 class="xmas-h1">The Christmas bundle: extras worth up to [15%] of your job, on the house</h1>
           <p class="xmas-lede">
             Fitted wardrobes, walk-ins, alcove units, TV units and kitchens booked by Sunday 31 January 2027
             come with add-ons you choose, at no cost. Plan it over Christmas, and it is fitted in the new year.
@@ -263,40 +228,33 @@ const clientData = {
           <svg class="xmas-bow" viewBox="0 0 80 56" aria-hidden="true"><path d="M37 31 L25 54 L31.5 51.5 L35 55 L40 32 Z" /><path d="M43 31 L55 54 L48.5 51.5 L45 55 L40 32 Z" /><path d="M40 28 C27 4 3 3 6 19 C9 33 28 33 40 28 Z" /><path d="M40 28 C53 4 77 3 74 19 C71 33 52 33 40 28 Z" /><path class="crease" d="M40 28 C31 16 18 12 13 18" /><path class="crease" d="M40 28 C49 16 62 12 67 18" /><rect x="33" y="21" width="14" height="14" rx="4" /></svg>
           <p class="xmas-card-title xmas-card-ribbon">In every bundle</p>
           <ul class="xmas-card-list">
-            <li>Add-ons you choose: lighting, drawers, rails, racks</li>
-            <li>Prices unchanged, no VAT added</li>
+            <li>Extras you choose, on the house</li>
+            <li>Prices unchanged</li>
             <li>A [15%] deposit covers your 2D drawings and elevations, and books your slot</li>
           </ul>
-          <p class="xmas-card-title">On the house, by quotation</p>
-          <dl class="xmas-ladder">
-            <div><dt>£2,500</dt><dd>up to [£350]</dd></div>
-            <div><dt>£5,000</dt><dd>up to [£750]</dd></div>
-            <div><dt>£10,000</dt><dd>up to [£1,500]</dd></div>
-            <div><dt>[£15,000]</dt><dd>up to [£2,000]</dd></div>
-            <div class="xmas-ladder-top"><dt>[£30,000]</dt><dd>[£4,500]: a whole wardrobe, alcoves or TV unit</dd></div>
-          </dl>
+          {/* No prices first thing (Denis, 12 Nov): the ladder became what people pick. */}
+          <p class="xmas-card-title">Pick your extras</p>
+          <ul class="xmas-card-list">
+            <li>Soft-close drawers and shelves</li>
+            <li>LED lighting with door sensors</li>
+            <li>Shoe racks, trouser rails and mirrors</li>
+            <li>On bigger jobs, a whole unit, like a library unit</li>
+          </ul>
         </aside>
       </div>
     </Wrap>
   </section>
 
   <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
-    <SectionHead level={4}>How it works</SectionHead>
-    <ol class="xmas-steps">
-      <li><strong>Build your bundle.</strong> Pick the furniture, its size and finish, then what goes inside, and add as many units to your basket as you like. Send it with one enquiry.</li>
-      <li><strong>We see the space.</strong> A measured survey at your home, or photos and measurements from you. Then we send an itemised quotation, with your add-ons on it at £0.</li>
-      <li><strong>Book by 31 January.</strong> Accept the quotation and pay a [15%] deposit, which covers your 2D drawings and elevations and books your fitting slot. We agree the date then.</li>
-    </ol>
-  </Wrap>
-
-  <Wrap style="padding-bottom:var(--section-y)">
     <div id="bundles"></div>
     <SectionHead level={4}>Christmas bundles</SectionHead>
-    <p class="booking-note">
-      Build each unit you would like made, size and finish first, then what goes inside, and add it to your
-      basket. Add as many units as you like: they count together, and the basket total sets the extras on the
-      house, each its own line at £0 on the quotation. One button sends the whole basket with your enquiry.
-    </p>
+    {/* Three short steps instead of a "How it works" section and a paragraph
+        (Denis, 12 Nov). Step 3 in Arthur's words (12 Nov comment). */}
+    <ol class="mini-steps">
+      <li><span class="mini-n" aria-hidden="true">1</span><span><strong>Build your bundle.</strong> Pick a unit, then what goes inside.</span></li>
+      <li><span class="mini-n" aria-hidden="true">2</span><span><strong>We see the space.</strong> A visit, or your photos and measurements, then your quotation.</span></li>
+      <li><span class="mini-n" aria-hidden="true">3</span><span><strong>Book by 31 January.</strong> We collect a [15%] deposit for your 2D drawings and elevations, and book your fitting slot.</span></li>
+    </ol>
 
     {/* What every unit shares, said once (Arthur, 12 Nov: "whatever is the same
         across all the products, put it somewhere standard for all of them"). */}
@@ -382,47 +340,53 @@ const clientData = {
       </div>
     </dialog>
 
-    {/* The basket (Arthur, 12 Nov: "maybe we should create a basket that sends the
-        email, in case someone wants more than one unit"). It already held several
-        units; now it is named a basket, has "Add another unit", and a bar keeps
-        the count and total on screen while people build. "Send" fills the
-        enquiry form's hidden fields, so the units reach Kaspar in the enquiry
-        email (and the sheet, once Make maps the fields). */}
-    <div class="basket" id="basket" data-basket hidden aria-live="polite">
-      <p class="bundle-panel-title basket-title"><svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10 L10 4 M17 10 L14 4" /><path d="M3 10 H21 L19 20 H5 Z" /><path d="M9 13 V17 M12 13 V17 M15 13 V17" /></svg>Your basket</p>
-      <ul class="basket-list" data-basket-list></ul>
-      <p class="bundle-result" data-total></p>
-      <p class="booking-note">Every unit: design included, made to measure, delivered and fitted, Blum soft-close hardware.</p>
-      <p class="basket-library" data-library hidden></p>
-      <p class="basket-nudge" data-nudge hidden></p>
-      <p style="margin-top:var(--space-6)"><a class="bundle-add basket-more" href="#bundles">Add another unit</a></p>
-      <div class="bundle-step">
-        <MonoLabel as="p">On the house</MonoLabel>
-        <p class="bundle-meter" data-meter></p>
-        <ul class="addon-list" data-addons></ul>
-        <p class="bundle-estimate" data-estimate></p>
-        <p style="margin-top:var(--space-8)">
-          <button type="button" class="bundle-send" data-send>Send my basket with an enquiry</button>
-        </p>
+    {/* The basket lives behind an icon that is always on screen (Denis, 12 Nov):
+        right-hand side on desktop, top right under the header on phones. It opens
+        a drawer with the units, what is on the house, and the send button. */}
+    <button type="button" class="basket-fab" data-basket-open aria-label="Open your basket, 0 units">
+      <svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10 L10 4 M17 10 L14 4" /><path d="M3 10 H21 L19 20 H5 Z" /><path d="M9 13 V17 M12 13 V17 M15 13 V17" /></svg><span class="basket-fab-count" data-basket-count>0</span>
+    </button>
+    <div class="basket-toast" data-toast role="status" hidden></div>
+
+    <dialog class="basket-drawer" data-basket-drawer aria-labelledby="basket-title">
+      <div class="drawer-panel">
+        <div class="dialog-head">
+          <p class="bundle-panel-title basket-title" id="basket-title"><svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10 L10 4 M17 10 L14 4" /><path d="M3 10 H21 L19 20 H5 Z" /><path d="M9 13 V17 M12 13 V17 M15 13 V17" /></svg>Your basket</p>
+          <button type="button" class="dialog-close" data-basket-close aria-label="Close">×</button>
+        </div>
+        <div class="dialog-body drawer-body">
+          <p class="booking-note" data-basket-empty>Your basket is empty. Pick a unit to start.</p>
+          <div class="basket-inner" data-basket hidden>
+            <ul class="basket-list" data-basket-list></ul>
+            <p class="bundle-result" data-total></p>
+            <p class="booking-note">Every unit: design included, made to measure, delivered and fitted, Blum soft-close hardware.</p>
+            <p class="basket-nudge" data-nudge hidden></p>
+            {/* On the house (Denis, 12 Nov): a big headline, a meter that stays in
+                view while picking, and two groups that open on a tap. */}
+            <section class="onhouse">
+              <p class="onhouse-title">On the house</p>
+              <p class="onhouse-sub">Choose from below.</p>
+              <div class="onhouse-meter" data-meter></div>
+              <details class="onhouse-group">
+                <summary>Parts and extras</summary>
+                <ul class="addon-list" data-addons></ul>
+                <p class="booking-note">Normal prices, as on our <Link href="/fitted-wardrobe-cost/" variant="inline">cost guide</Link>. Lighting needs a power supply that can reach the unit, which we check at the visit.</p>
+              </details>
+              <details class="onhouse-group">
+                <summary>Whole units <span class="onhouse-lock" data-whole-lock></span></summary>
+                <p class="booking-note" data-whole-note></p>
+                <ul class="addon-list" data-addons-whole></ul>
+              </details>
+            </section>
+            <p class="bundle-estimate" data-estimate></p>
+          </div>
+        </div>
+        <div class="dialog-foot">
+          <button type="button" class="bundle-send berry" data-send disabled>Send my basket with an enquiry</button>
+          <p class="drawer-links"><button type="button" class="linklike" data-basket-close>Add another unit</button><a href="/book-early-2027/terms/">Booking terms</a></p>
+        </div>
       </div>
-    </div>
-
-    <div class="basket-bar" data-basket-bar hidden>
-      <span class="basket-bar-text"><svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10 L10 4 M17 10 L14 4" /><path d="M3 10 H21 L19 20 H5 Z" /><path d="M9 13 V17 M12 13 V17 M15 13 V17" /></svg><span data-basket-bar-text></span></span>
-      <a class="basket-bar-btn" href="#basket">View basket</a>
-    </div>
-
-    <SectionHead level={5} style="margin-top:var(--space-14)">How much is included</SectionHead>
-    <table class="booking-table">
-      <thead><tr><th>Your quotation</th><th>What is included</th></tr></thead>
-      <tbody>{BAND_ROWS.map(([a, b]) => <tr><td>{a}</td><td class="num">{b}</td></tr>)}</tbody>
-    </table>
-    <p class="booking-note">{draft("For example, a wardrobe that comes to £2,600 brings two more soft-close drawers at £0, or lighting in two sections.")}</p>
-    <p class="booking-note">
-      Normal prices are on our <Link href="/fitted-wardrobe-cost/" variant="inline">cost guide</Link>. Lighting
-      needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other extras
-      of the same value are included.
-    </p>
+    </dialog>
   </Wrap>
 
   <Wrap style="padding-bottom:var(--section-y)">
@@ -449,17 +413,16 @@ const clientData = {
   </section>
 
   <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
-    <div id="booking-form" class="booking-form" style="border:var(--rule-structure);padding:clamp(20px,4vw,40px);background:var(--paper)">
-      <MonoLabel as="p" style="margin-bottom:var(--space-10)">Send an enquiry</MonoLabel>
-      <p class="booking-note" data-bundle-summary hidden></p>
-      <EnquiryForm bonusPicker idPrefix="booking-" />
+    {/* A small form (Denis, 12 Nov): the basket arrives organised above it, so
+        nobody chooses twice; people who skip the builder can still just ask. */}
+    <div id="booking-form" class="booking-form">
+      <p class="booking-form-title">Send your basket, or just ask</p>
+      <div class="basket-summary" data-bundle-summary hidden></div>
+      <EnquiryForm bonusPicker compact idPrefix="booking-" />
+      <p class="booking-note">Read the <a href="/book-early-2027/terms/">booking terms</a>.</p>
     </div>
   </Wrap>
 
-  <Wrap style="padding-bottom:var(--section-y)">
-    <SectionHead level={4}>Terms</SectionHead>
-    <ul class="booking-terms">{TERMS.map((t) => <li>{t}</li>)}</ul>
-  </Wrap>
 </Base>
 
 <script is:inline define:vars={{ data: clientData }}>
@@ -490,19 +453,35 @@ const clientData = {
     const closeDialog = () => { if (dialog.open) { if (dialog.close) dialog.close(); else dialog.removeAttribute("open"); } };
     const basket = $("[data-basket]");
     const state = { b: null, size: null, finish: null, units: 12, parts: {}, list: [], picks: {}, split: null };
-    /* The basket bar shows while units are in the basket and neither the basket
-       nor the enquiry form is on screen. */
-    const bar = $("[data-basket-bar]");
-    const seen = new Set();
-    const showBar = () => { bar.hidden = !state.list.length || seen.size > 0; };
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
-        showBar();
-      });
-      io.observe(basket);
-      io.observe(document.getElementById("booking-form"));
-    }
+    const drawer = $("[data-basket-drawer]");
+    const fab = $("[data-basket-open]");
+    const toast = $("[data-toast]");
+    const openDrawer = () => {
+      closeDialog();
+      toast.hidden = true;
+      if (!drawer.open) { if (drawer.showModal) drawer.showModal(); else drawer.setAttribute("open", ""); }
+    };
+    const closeDrawer = () => { if (drawer.open) { if (drawer.close) drawer.close(); else drawer.removeAttribute("open"); } };
+    /* On phones the icon sits top right, just under the sticky header. */
+    const header = document.querySelector("header");
+    const placeFab = () => {
+      fab.style.top = matchMedia("(max-width: 600px)").matches
+        ? Math.max(12, (header ? header.getBoundingClientRect().bottom : 0) + 8) + "px" : "";
+    };
+    addEventListener("scroll", placeFab, { passive: true });
+    addEventListener("resize", placeFab);
+    placeFab();
+    let toastTimer = 0;
+    const showToast = (text) => {
+      toast.replaceChildren();
+      const t = document.createElement("span"); t.textContent = text;
+      const v = document.createElement("button"); v.type = "button"; v.textContent = "View basket";
+      v.addEventListener("click", openDrawer);
+      toast.append(t, v);
+      toast.hidden = false;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
+    };
 
     const chip = (label, on, click, disabled) => {
       const el = document.createElement("button");
@@ -661,8 +640,14 @@ const clientData = {
     };
 
     const renderBasket = () => {
-      if (!state.list.length) { basket.hidden = true; showBar(); return; }
-      basket.hidden = false;
+      const n = state.list.length;
+      $("[data-basket-count]").textContent = String(n);
+      fab.setAttribute("aria-label", "Open your basket, " + n + " unit" + (n === 1 ? "" : "s"));
+      fab.classList.toggle("has-items", n > 0);
+      $("[data-basket-empty]").hidden = n > 0;
+      basket.hidden = !n;
+      $("[data-send]").disabled = !n;
+      if (!n) { state.split = null; return; }
       const ul = $("[data-basket-list]"); ul.replaceChildren();
       state.list.forEach((u, i) => {
         const li = document.createElement("li");
@@ -686,30 +671,32 @@ const clientData = {
       const pending = state.list.some((u) => u.value === null);
       $("[data-total]").textContent = "Indicative total: from " + (s.draft ? d(money(s.base)) : money(s.base)) +
         (pending ? ", plus a unit with its price to come" : "") + "." + (s.allow ? " Extras worth " + d(money(s.allow)) + " come on the house." : "");
-      const wh = $("[data-library]");
-      wh.hidden = s.base < data.wholeFrom;
-      wh.textContent = "Your basket is past " + d(money(data.wholeFrom)) + ", so what is on the house can be a whole unit: pick one below, at its normal starting price.";
       const nudge = $("[data-nudge]");
-      const nl = nextLine(s.quote);
+      const nl = s.allow ? nextLine(s.quote) : "";
       nudge.hidden = !nl;
       nudge.textContent = nl;
-      $("[data-meter]").textContent = s.allow
-        ? "On the house: " + d(money(s.included)) + " of " + d(money(s.allow)) + " chosen" + (s.extra ? ". Beyond that, at normal prices: " + d(money(s.extra)) : "") + "."
-        : "Extras come on the house from a basket of " + money(data.bands[0][0]) + ".";
-      const addons = $("[data-addons]"); addons.replaceChildren();
-      s.keys.forEach((k) => {
-        if (k === wholeOrder[0]) {
-          const h = document.createElement("li");
-          h.className = "addon-group";
-          h.textContent = "Or a whole unit";
-          addons.append(h);
-        }
-        addons.append(addonRow(k, state.picks[k] || 0, (m) => { state.picks[k] = Math.max(0, m); renderBasket(); }, "normally "));
-      });
-      const n = state.list.length;
-      $("[data-basket-bar-text]").textContent = "In your basket: " + n + " unit" + (n > 1 ? "s" : "") + ", from " + (s.draft ? d(money(s.base)) : money(s.base)) +
-        (s.allow ? ", " + d(money(s.allow)) + " on the house" : "");
-      showBar();
+      /* The meter: big, and it stays in view while picking (Denis). */
+      const meter = $("[data-meter]"); meter.replaceChildren();
+      const big = document.createElement("strong");
+      const small = document.createElement("span");
+      if (s.allow) {
+        big.textContent = d(money(s.included)) + " of " + d(money(s.allow)) + " chosen";
+        small.textContent = s.extra ? d(money(s.extra)) + " beyond that, at normal prices" : d(money(s.allow - s.included)) + " left to choose";
+      } else {
+        big.textContent = "From a " + money(data.bands[0][0]) + " basket";
+        small.textContent = "Your basket is " + money(data.bands[0][0] - s.quote) + " away.";
+      }
+      meter.append(big, small);
+      const row = (k) => addonRow(k, state.picks[k] || 0, (m) => { state.picks[k] = Math.max(0, m); renderBasket(); }, "");
+      const parts = $("[data-addons]"); parts.replaceChildren();
+      s.keys.filter((k) => addonOrder.includes(k)).forEach((k) => parts.append(row(k)));
+      const whole = $("[data-addons-whole]"); whole.replaceChildren();
+      const canWhole = s.base >= data.wholeFrom;
+      $("[data-whole-lock]").textContent = canWhole ? "" : "from " + d(money(data.wholeFrom));
+      $("[data-whole-note]").textContent = canWhole
+        ? "One of these instead of extras, at its normal starting price."
+        : "Your basket reaches whole units at " + d(money(data.wholeFrom)) + ": " + money(data.wholeFrom - s.quote) + " away.";
+      if (canWhole) wholeOrder.forEach((k) => whole.append(row(k)));
       $("[data-estimate]").textContent = "Indicative estimate with everything on it: from " + d(money(s.quote)) +
         ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements.";
     };
@@ -750,24 +737,54 @@ const clientData = {
       state.b = null; state.parts = {};
       closeDialog();
       renderBasket();
-      bar.classList.remove("bump"); void bar.offsetWidth; bar.classList.add("bump");
+      fab.classList.remove("bump"); void fab.offsetWidth; fab.classList.add("bump");
+      showToast("Added to your basket: " + b.label + ".");
     });
 
+    fab.addEventListener("click", openDrawer);
+    document.querySelectorAll("[data-basket-close]").forEach((el) => el.addEventListener("click", closeDrawer));
+    drawer.addEventListener("click", (e) => { if (e.target === drawer) closeDrawer(); });
+
+    /* Send: the hidden fields carry the basket to Kaspar, and the form shows it
+       organised as units, parts and what is on the house (Denis, 12 Nov). The
+       services question hides, because the basket already answers it. */
     $("[data-send]").addEventListener("click", () => {
       const sp = state.split;
       if (!state.list.length || !sp) return;
-      const units = state.list.map((u) => u.label + (u.detail ? " (" + u.detail + ")" : "") + ": " + u.text + (u.partsText ? "; " + u.partsText : "")).join(" | ");
-      const quick = units + ". Indicative total from " + money(sp.base) + (sp.extra ? ", with extras beyond what is included from " + money(sp.quote) : "");
-      const picks = Object.entries(state.picks).filter(([, n]) => n > 0).map(([k, n]) => n + " x " + all[k].name).join("; ");
+      const unitsTxt = state.list.map((u) => u.label + (u.detail ? " (" + u.detail + ")" : "") + ": " + u.text).join("; ");
+      const partsTxt = state.list.filter((u) => u.partsText).map((u) => u.label + ": " + u.partsText).join(" | ");
+      const quick = "Units: " + unitsTxt + (partsTxt ? ". Parts: " + partsTxt : "") + ". Indicative total from " + money(sp.base) +
+        (sp.extra ? ", with extras beyond what is included from " + money(sp.quote) : "");
+      const picked = Object.entries(state.picks).filter(([, n]) => n > 0);
+      const picks = picked.map(([k, n]) => n + " x " + all[k].name).join("; ");
       const form = document.querySelector("#booking-form form");
       form.querySelector("[data-quick-price]").value = quick;
       form.querySelector("[data-bonus-picks]").value = picks
         ? picks + " (" + money(sp.included) + " on the house" + (sp.extra ? ", " + money(sp.extra) + " beyond at normal prices" : "") + ")"
         : "";
-      form.querySelectorAll("input[name=service]").forEach((box) => { if (state.list.some((u) => u.label === box.value)) box.checked = true; });
-      const summary = $("[data-bundle-summary]");
-      summary.textContent = "Your basket: " + quick + "." + (picks ? " On the house: " + picks + "." : "");
+      form.querySelectorAll("input[name=service]").forEach((box) => { box.checked = state.list.some((u) => u.label === box.value); });
+      const sf = form.querySelector("[data-services-field]");
+      if (sf) sf.hidden = true;
+
+      const summary = $("[data-bundle-summary]"); summary.replaceChildren();
+      const group = (title, items, cls) => {
+        const g = document.createElement("div"); if (cls) g.className = cls;
+        const h = document.createElement("p"); h.className = "summary-h"; h.textContent = title;
+        const list = document.createElement("ul");
+        items.forEach((x) => { const li = document.createElement("li"); li.textContent = x; list.append(li); });
+        g.append(h, list); summary.append(g);
+      };
+      group("Units", state.list.map((u) => u.label + (u.detail ? ", " + u.detail : "") + ": " + u.text));
+      const partLines = state.list.filter((u) => u.partsText).map((u) => u.label + ": " + u.partsText);
+      if (partLines.length) group("Parts", partLines);
+      if (picked.length) {
+        group("On the house, worth " + d(money(sp.included)) + " at £0", picked.map(([k, n]) => all[k].name + " × " + n + ", worth " + d(money(all[k].price * n))), "summary-bonus");
+      }
+      const tot = document.createElement("p"); tot.className = "summary-total";
+      tot.textContent = "Indicative total from " + money(sp.base) + (sp.extra ? ", with extras beyond what is included from " + money(sp.quote) : "") + ".";
+      summary.append(tot);
       summary.hidden = false;
+      closeDrawer();
       document.getElementById("booking-form").scrollIntoView({ behavior: "smooth", block: "start" });
     });
   })();
@@ -904,10 +921,8 @@ const clientData = {
   .std-strip-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-10); }
   .std-strip-list li { position: relative; padding-left: 1.6em; }
   .std-strip-list li::before { content: ""; position: absolute; left: 0; top: 0.4em; width: 0.8em; height: 0.45em; border-left: 2px solid var(--green); border-bottom: 2px solid var(--green); transform: rotate(-45deg); }
-  .bundle-card[aria-pressed="true"] {
-    outline: 3px solid var(--char);
-    outline-offset: -3px;
-  }
+  .bundle-card:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+  .bundle-card:focus:not(:focus-visible) { outline: none; }
   .bundle-drawing {
     display: block;
     background: var(--wash-char);
@@ -938,6 +953,7 @@ const clientData = {
   .finish-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: var(--space-4); margin-top: var(--space-4); }
   .finish-tile {
     display: grid;
+    align-content: start;
     gap: var(--space-3);
     padding: 0 0 var(--space-4);
     border: var(--rule-structure);
@@ -951,8 +967,11 @@ const clientData = {
   }
   .finish-tile[aria-pressed="true"] { outline: 3px solid var(--char); outline-offset: -3px; }
   .finish-tile > span { padding: 0 var(--space-4); }
-  .finish-pic { position: relative; display: block; aspect-ratio: 4 / 3; }
-  .finish-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Every photo the same size whatever the label's length, and the MDF sample's
+     pale edges cropped off so the painted wash reads as one colour. */
+  .finish-pic { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; }
+  .finish-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .finish-pic.painted img, .finish-pic.sprayed img { transform: scale(1.25); }
   .finish-pic.painted::after,
   .finish-pic.sprayed::after { content: ""; position: absolute; inset: 0; }
   .finish-pic.painted::after { background: color-mix(in srgb, var(--green) 55%, transparent); }
@@ -968,10 +987,6 @@ const clientData = {
   .basket-title { display: flex; align-items: center; gap: var(--space-3); }
   .basket-icon { width: 22px; height: 22px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .basket-more { display: inline-block; text-decoration: none; }
-  .basket-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--green); color: var(--paper); box-shadow: 0 -6px 16px rgba(0,0,0,.18); font-size: var(--type-body-sm); }
-  .basket-bar[hidden] { display: none; }
-  .basket-bar-text { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
-  .basket-bar-btn { flex-shrink: 0; padding: 10px 16px; background: var(--paper); color: var(--char); text-decoration: none; font-weight: var(--weight-medium, 500); }
   .basket-incl { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-soft); }
   .bundle-name { font-weight: var(--weight-medium, 500); }
   .bundle-from,
@@ -1001,9 +1016,6 @@ const clientData = {
   .dialog-foot .basket-nudge { margin: 0; font-size: 13px; }
   .dialog-foot .bundle-add-main { justify-self: start; background: var(--char); color: var(--paper); }
   .dialog-foot .bundle-add-main:disabled { background: var(--paper); color: var(--char); }
-  .basket-bar.bump { animation: bar-bump .5s ease; }
-  @keyframes bar-bump { 0% { transform: translateY(100%); } 100% { transform: translateY(0); } }
-  @media (prefers-reduced-motion: reduce) { .basket-bar.bump { animation: none; } }
   @media (max-width: 600px) {
     .bundle-dialog { width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; }
     .bundle-panel { height: 100dvh; max-height: 100dvh; }
@@ -1049,7 +1061,6 @@ const clientData = {
   .bundle-estimate { margin-top: var(--space-6); font-size: var(--type-body-sm); color: var(--green); font-weight: var(--weight-medium, 500); }
   .bundle-add { font: inherit; padding: 12px 18px; border: 2px solid var(--char); background: var(--paper); color: var(--char); cursor: pointer; }
   .bundle-add:disabled { opacity: 0.4; cursor: not-allowed; }
-  .basket { margin-top: var(--space-10); padding: clamp(16px, 4vw, 32px); border: var(--rule-structure); border-top: 6px solid var(--green); max-width: var(--measure); scroll-margin-top: 120px; }
   .basket-list { list-style: none; padding: 0; margin: var(--space-6) 0 0; display: grid; gap: var(--space-4); }
   .basket-list li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-6); padding-bottom: var(--space-4); border-bottom: var(--rule-hair); font-size: var(--type-body-sm); }
   .basket-remove { font: inherit; font-size: var(--type-body-sm); background: none; border: 0; padding: 4px 0; color: var(--ink-soft); text-decoration: underline; cursor: pointer; flex-shrink: 0; }
@@ -1109,4 +1120,62 @@ const clientData = {
     .std-strip { padding: var(--space-5); }
     .std-strip-list { display: grid; gap: var(--space-3); }
   }
+  /* rev 18 (Denis's review, 12 Nov) */
+  .mini-steps { list-style: none; margin: var(--space-8) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
+  .mini-steps li { display: flex; gap: var(--space-4); align-items: flex-start; font-size: var(--type-body-sm); }
+  .mini-n { flex-shrink: 0; width: 32px; height: 32px; display: grid; place-items: center; background: var(--green); color: var(--paper); font-family: var(--font-mono); }
+  @media (max-width: 900px) { .mini-steps { grid-template-columns: 1fr; gap: var(--space-5); } }
+  .basket-fab { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 24; width: 56px; height: 56px; border: 0; background: #8A2E1F; color: var(--paper); box-shadow: 0 10px 24px rgba(0,0,0,.25); cursor: pointer; display: grid; place-items: center; }
+  .basket-fab .basket-icon { width: 26px; height: 26px; }
+  .basket-fab-count { position: absolute; top: -8px; right: -8px; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 12px; background: var(--paper); color: var(--char); border: 2px solid #8A2E1F; font-size: 12px; font-weight: 600; display: grid; place-items: center; }
+  .basket-fab.bump { animation: fab-bump .5s ease; }
+  @keyframes fab-bump { 50% { transform: translateY(-50%) scale(1.15); } }
+  .basket-toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 26; display: flex; align-items: center; gap: var(--space-5); width: max-content; max-width: calc(100vw - 32px); padding: 12px 16px; background: var(--char); color: var(--paper); box-shadow: 0 10px 24px rgba(0,0,0,.25); font-size: var(--type-body-sm); }
+  .basket-toast[hidden] { display: none; }
+  .basket-toast button { font: inherit; background: none; border: 0; color: var(--paper); text-decoration: underline; cursor: pointer; flex-shrink: 0; }
+  .basket-drawer { padding: 0; border: 0; margin: 0 0 0 auto; width: min(480px, 100vw); max-width: none; height: 100dvh; max-height: 100dvh; background: var(--paper); color: var(--char); box-shadow: -20px 0 60px rgba(0,0,0,.3); }
+  .basket-drawer::backdrop { background: rgba(34,29,24,.55); }
+  .basket-drawer[open] { display: block; }
+  html:has(.basket-drawer[open]) { overflow: hidden; }
+  .drawer-panel { display: flex; flex-direction: column; height: 100dvh; }
+  .drawer-body { padding-top: var(--space-6); }
+  .basket-inner .basket-list { margin-top: 0; }
+  .drawer-links { display: flex; justify-content: space-between; gap: var(--space-6); margin: 0; font-size: var(--type-body-sm); }
+  .drawer-links a, .linklike { color: var(--ink-soft); text-decoration: underline; }
+  .linklike { font: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  .bundle-send.berry { background: #8A2E1F; color: var(--paper); }
+  .bundle-send:disabled { opacity: .45; cursor: not-allowed; }
+  .onhouse { margin-top: var(--space-10); }
+  .onhouse-title { margin: 0; font-family: var(--font-serif-display); font-size: var(--type-display-5); line-height: 1.1; color: var(--green); }
+  .onhouse-sub { margin: 4px 0 0; color: var(--ink-soft); }
+  .onhouse-meter { position: sticky; top: 0; z-index: 2; margin-top: var(--space-6); padding: var(--space-5) 0; background: var(--paper); border-bottom: var(--rule-structure); display: grid; gap: 2px; }
+  .onhouse-meter strong { font-family: var(--font-serif-display); font-size: var(--type-serif-md); font-weight: 400; color: var(--green); }
+  .onhouse-meter span { font-size: var(--type-body-sm); color: var(--ink-soft); }
+  .onhouse-group { margin-top: var(--space-6); border: var(--rule-structure); }
+  .onhouse-group > summary { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5) var(--space-6); cursor: pointer; list-style: none; font-weight: var(--weight-medium, 500); }
+  .onhouse-group > summary::-webkit-details-marker { display: none; }
+  .onhouse-group > summary::after { content: "+"; margin-left: auto; font-size: 22px; line-height: 1; }
+  .onhouse-group[open] > summary::after { content: "\2212"; }
+  .onhouse-lock { font-family: var(--font-mono); font-size: 12px; font-weight: 400; color: var(--ink-soft); }
+  .onhouse-group > :not(summary) { margin-left: var(--space-6); margin-right: var(--space-6); }
+  .onhouse-group .addon-list { margin-top: 0; padding-bottom: var(--space-4); }
+  .onhouse-group > .booking-note { margin-bottom: var(--space-5); }
+  .booking-form { max-width: 640px; margin: 0 auto; padding: clamp(20px, 4vw, 32px); border: var(--rule-structure); background: var(--paper); }
+  .booking-form .booking-note a { color: var(--green); text-decoration: underline; }
+  .booking-form-title { margin: 0 0 var(--space-8); font-family: var(--font-serif-display); font-size: var(--type-serif-md); }
+  [data-services-field][hidden] { display: none !important; }
+  .basket-summary { margin-bottom: var(--space-10); padding: var(--space-6); border: var(--rule-structure); background: color-mix(in srgb, var(--oak) 6%, var(--paper)); display: grid; gap: var(--space-5); font-size: var(--type-body-sm); }
+  .basket-summary[hidden] { display: none; }
+  .summary-h { margin: 0; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--ink-soft); }
+  .basket-summary ul { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 4px; }
+  .summary-bonus { padding: var(--space-4) var(--space-5); background: color-mix(in srgb, var(--green) 12%, var(--paper)); border-left: 6px solid var(--green); color: var(--green); }
+  .summary-bonus .summary-h { color: var(--green); }
+  .summary-total { margin: 0; font-weight: var(--weight-medium, 500); }
+  @media (max-width: 600px) {
+    .basket-fab { right: 12px; transform: none; width: 50px; height: 50px; }
+    @keyframes fab-bump-m { 50% { transform: scale(1.15); } }
+    .basket-fab.bump { animation-name: fab-bump-m; }
+    .drawer-body { padding-left: var(--space-8); padding-right: var(--space-8); }
+  }
+  @media (prefers-reduced-motion: reduce) { .basket-fab.bump { animation: none; } }
 </style>

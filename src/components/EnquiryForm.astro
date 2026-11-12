@@ -191,6 +191,13 @@ const SOURCES = [
   { value: "Referral", label: "Someone recommended you" },
   { value: "Something else", label: "Something else" },
 ];
+/* Booking page only, 12 Nov 2026 (Denis: "add Google Maps and AI search or
+   ChatGPT"). PREVIEW: the shared log's Channel list and the Make mapping must
+   carry these two values before the booking page goes live, and the same two
+   would suit every form once the log is ready. */
+const sources = bonusPicker
+  ? [SOURCES[0], { value: "Google Maps", label: "Google Maps" }, { value: "AI assistant", label: "ChatGPT or another AI assistant" }, SOURCES[1], SOURCES[2]]
+  : SOURCES;
 
 /**
  * Netlify Forms. The site is already on Netlify so this costs nothing and adds
@@ -267,7 +274,7 @@ const SOURCES = [
     <input id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" />
   </div>
 
-  <fieldset class="choices-field">
+  <fieldset class="choices-field" data-services-field>
     <legend>What do you need?</legend>
     <p class="help">
       {selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
@@ -300,24 +307,6 @@ const SOURCES = [
     </div>
   </fieldset>
 
-  {bonusPicker && (
-    <fieldset class="choices-field">
-      <legend>Which extras would you choose?</legend>
-      <p class="help">How much is included depends on your quotation. Tick what you would like most, and we confirm it at the visit.</p>
-      {/* Same Netlify labelling trick as `service` above: an unlabelled,
-          never-ticked first box, so the email line reads "Bonus: ...". */}
-      <p hidden><input type="checkbox" name="bonus" value="" tabindex="-1" /></p>
-      <div class="choices">
-        {BONUS_CHOICES.map((label, i) => (
-          <label class="choice" for={`${idPrefix}bonus-${i}`}>
-            <input id={`${idPrefix}bonus-${i}`} type="checkbox" name="bonus" value={label} />
-            <span>{label}</span>
-          </label>
-        ))}
-      </div>
-    </fieldset>
-  )}
-
   <div>
     <label for={`${idPrefix}area`}>Which area of London?</label>
     <input
@@ -327,13 +316,13 @@ const SOURCES = [
   </div>
 
   <div>
-    <label for={`${idPrefix}detail`}>Tell us about the job</label>
-    <p class="help">The room, rough sizes, and what it needs to hold is plenty.</p>
+    <label for={`${idPrefix}detail`}>{bonusPicker ? "Anything we should know?" : "Tell us about the job"}</label>
+    {!bonusPicker && <p class="help">The room, rough sizes, and what it needs to hold is plenty.</p>}
     <textarea
       id={`${idPrefix}detail`}
       name="detail"
       rows={compact ? 3 : 5}
-      placeholder={jobExample}
+      placeholder={bonusPicker ? "The room, rough sizes, and what it needs to hold." : jobExample}
       aria-describedby={`${idPrefix}link-limit`}
     ></textarea>
     {/* 19 Oct 2026. Netlify drops an enquiry that carries too many links, and
@@ -396,7 +385,7 @@ const SOURCES = [
     <div>
       <label for={`${idPrefix}attachment`}>A photo or drawing (optional)</label>
       <p class="help" id={`${idPrefix}attachment-help`}>
-        One file, up to 8 MB. PDF, Word and photographs work. Send anything else when we reply.
+        {bonusPicker ? "One file, up to 8 MB." : "One file, up to 8 MB. PDF, Word and photographs work. Send anything else when we reply."}
       </p>
       <input
         id={`${idPrefix}attachment`}
@@ -412,16 +401,9 @@ const SOURCES = [
     <label for={`${idPrefix}source`}>How did you hear about us?</label>
     <select id={`${idPrefix}source`} name="source">
       <option value="" selected>Choose one</option>
-      {SOURCES.map((o) => <option value={o.value}>{o.label}</option>)}
+      {sources.map((o) => <option value={o.value}>{o.label}</option>)}
     </select>
   </div>
-
-  {bonusPicker && (
-    <label class="choice" for={`${idPrefix}updates`}>
-      <input id={`${idPrefix}updates`} type="checkbox" name="updates" value="Yes" />
-      <span>Email me about new booking dates and extras. I can stop these at any time.</span>
-    </label>
-  )}
 
   <div class="actions">
     <button type="submit">Send enquiry</button>
@@ -435,7 +417,7 @@ const SOURCES = [
       remember. The two now say the same thing. (4 Sep 2026) */}
   <p class="help">
     We use your details to reply, to quote, and to carry out the work if you go ahead. We do not add
-    you to a marketing list{bonusPicker ? " unless you tick the box above" : ""}. See our{" "}
+    you to a marketing list. See our{" "}
     <a href="/privacy/">privacy notice</a>.
   </p>
 </form>
