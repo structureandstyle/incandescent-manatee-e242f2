@@ -132,8 +132,12 @@ const BUNDLES = [
     id: "alcove", label: "Alcove units and shelving", from: 3300, cardFloor: 2000, fromText: "from £3,300 a pair",
     sizeLabel: "Size", sizes: ["A pair of alcoves", "One alcove"],
     finishes: FINISHES, prices: [[3300, null], [3600, null], [4000, null], [6000, null]],
-    partsLabel: "Extras", parts: ["shelf", "drawer", "led"],
+    partsLabel: "Paid extras, at normal prices", parts: ["shelf", "drawer", "led"],
     includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide.",
+    includesBySizeText: [
+      "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide.",
+      "For one alcove: a base cupboard with two doors and three open shelves above, up to about 1m wide.",
+    ],
     included: ["A base cupboard and three open shelves, each side", "Up to about 1m wide per alcove"],
     includedBySize: [
       ["A base cupboard and three open shelves, each side", "Up to about 1m wide per alcove"],
@@ -145,15 +149,15 @@ const BUNDLES = [
     id: "walkin", label: "Walk-in wardrobes", from: 5000, fromText: "from around £5,000",
     sizeLabel: "Layout", sizes: ["One wall", "Two walls, L-shaped", "Three walls, U-shaped"],
     finishes: null, prices: [[5000, 5000, 5000]], around: true,
-    partsLabel: "Extras", parts: WARDROBE_PARTS,
-    includes: "A walk-in wardrobe is priced per room, by what goes into it, and typically starts from around £5,000. Add the extras you would like below.",
+    partsLabel: "Paid extras, at normal prices", parts: WARDROBE_PARTS,
+    includes: "A walk-in wardrobe is priced per room, by what goes into it, and typically starts from around £5,000. Add any paid extras below.",
     included: ["Layout planned around what you store", "One, two or three walls"],
     addons: WARDROBE_PARTS,
   },
   {
     id: "tv", label: "Built-in TV units", from: 3500, fromText: "from £3,500",
     sizes: null, finishes: FINISHES, prices: null, perProject: true,
-    partsLabel: "Extras", parts: ["led", "drawer", "shelf"],
+    partsLabel: "Paid extras, at normal prices", parts: ["led", "drawer", "shelf"],
     includes: "Built-in TV units are priced per project after one visit, from £3,500.",
     included: ["Layout set around your TV", "Closed cupboards and open sections"],
     addons: ["led", "drawer", "shelf"],
@@ -165,11 +169,11 @@ const BUNDLES = [
     id: "kitchen", label: "Bespoke kitchens", from: 10000, fromText: "from £10,000",
     kind: "kitchen", unitsIncluded: 12, perUnit: 850,
     sizes: null, finishes: FINISHES, prices: null,
-    partsLabel: "Extras", parts: ["led", "drawer"],
+    partsLabel: "Paid extras, at normal prices", parts: ["led", "drawer"],
     includes: "",
     includesList: ["From £10,000 for up to " + draft("12") + " units in melamine board", "Each unit beyond that about " + draft("£850") + "; other finishes cost more", "Not included: appliances and worktops"],
     included: ["Up to " + draft("12") + " units in melamine board; other finishes cost more", "Appliances and worktops not included"],
-    basketIncluded: ["Appliances and worktops not included"],
+    basketIncluded: [], notIncluded: "appliances and worktops",
     addons: ["led", "drawer"],
   },
 ];
@@ -191,7 +195,7 @@ const clientData = {
 
 <Base
   title="The Christmas bundle"
-  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with extras on the house that you pick, from a £2,500 basket. Prices unchanged."
+  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with extras on the house from a £2,500 basket. Prices unchanged."
   noindex={true}
 >
   {/* LANDING PAGE, rev 4 (Arthur, 12 Nov: "make it a landing page, hero
@@ -219,7 +223,7 @@ const clientData = {
           <h1 class="xmas-h1">The Christmas bundle: extras worth up to [15%] of your job, on the house</h1>
           <p class="xmas-lede">
             Fitted wardrobes, walk-ins, alcove units, TV units and kitchens booked by Sunday 31 January 2027
-            come with extras on the house that you pick, once your basket reaches £2,500. Plan it over Christmas, and it is fitted in the new year.
+            come with extras on the house that you pick. They start once your basket reaches £2,500. Plan it over Christmas, and it is fitted in the new year.
           </p>
           <p class="xmas-ctas">
             <a class="xmas-btn" href="#bundles">Build your bundle</a>
@@ -340,6 +344,7 @@ const clientData = {
           <ul class="bundle-incl panel-incl" data-includes-list hidden></ul>
           <div data-step-parts class="bundle-step" hidden>
             <MonoLabel as="p"><span data-parts-label>What goes inside</span></MonoLabel>
+            <p class="booking-note parts-note">Added to your quotation at normal prices, and counted towards what comes on the house. Extras on the house are picked in your basket.</p>
             <p data-typical-wrap hidden><button type="button" class="chip" data-typical>Fill with a typical inside</button></p>
             <ul class="addon-list" data-parts></ul>
           </div>
@@ -377,10 +382,10 @@ const clientData = {
                 view while picking, and two groups that open on a tap. */}
             <section class="onhouse">
               <p class="onhouse-title">On the house</p>
-              <p class="onhouse-sub">Choose from below.</p>
+              <p class="onhouse-sub">Each pick here is £0 and fills what is left. To add more at normal prices, add parts inside a unit.</p>
               <div class="onhouse-meter" data-meter></div>
               <details class="onhouse-group">
-                <summary>Parts and extras</summary>
+                <summary>Extras</summary>
                 <ul class="addon-list" data-addons></ul>
                 <p class="booking-note">Normal prices, as on our <Link href="/fitted-wardrobe-cost/" variant="inline">cost guide</Link>. Lighting needs a power supply that can reach the unit, which we check at the visit.</p>
               </details>
@@ -519,6 +524,7 @@ const clientData = {
       count.className = "addon-count";
       count.textContent = String(n);
       const plus = chip("+", false, () => set(n + 1), n >= max || !!noMore);
+      if (noMore && typeof noMore === "string") plus.title = noMore;
       plus.setAttribute("aria-label", "One more: " + label);
       ctrl.append(minus, count, plus);
       return ctrl;
@@ -574,30 +580,35 @@ const clientData = {
     };
 
     /* What comes on the house. The units and their parts set the step, and that
-       is the whole quotation, because extras picked here are £0 lines. Picks fill
-       the allowance in the order they were made and can never go past it, so an
-       extra is either on the house or not added; paid extras go inside a unit. */
-    const split = (list, picks, order) => {
+       is the whole quotation, because extras picked here are £0 lines. Picks are
+       kept as single items in the order they were made; they can never go past
+       the allowance, and a smaller basket drops the latest ones first. */
+    const split = (list, order) => {
       const base = list.reduce((s, u) => s + (u.value || 0), 0);
       const keys = addonOrder.filter((k) => list.some((u) => u.addons.includes(k))).concat(base >= data.wholeFrom ? wholeOrder : []);
       const allow = allowance(base);
-      let room = allow;
+      const items = (order || []).filter((k) => keys.includes(k));
+      let used = items.reduce((t, k) => t + pickPrice(k, list), 0);
+      while (used > allow && items.length) used -= pickPrice(items.pop(), list);
       const lines = [];
-      (order || []).filter((k) => keys.includes(k) && (picks[k] || 0) > 0).forEach((k) => {
-        const p = pickPrice(k, list);
-        const n = Math.min(picks[k], Math.floor(room / p));
-        if (n > 0) { room -= n * p; lines.push({ k, p, n }); }
+      items.forEach((k) => {
+        const l = lines.find((x) => x.k === k);
+        if (l) l.n += 1; else lines.push({ k, p: pickPrice(k, list), n: 1 });
       });
+      const room = allow - used;
+      const cheapest = keys.length ? Math.min(...keys.filter((k) => !(wholeOrder.includes(k) && items.some((x) => wholeOrder.includes(x)))).map((k) => pickPrice(k, list))) : Infinity;
       return {
-        base, keys, allow, room, lines, included: allow - room,
+        base, keys, allow, room, lines, items, included: used, spendable: room >= cheapest,
         pending: list.some((u) => u.pending), around: list.some((u) => u.around), draft: list.some((u) => u.draft),
       };
     };
+    const step = (n) => (n >= data.wholeFrom ? d(money(n)) : money(n));
+    const about = (s) => (s.around ? "about " : "");
     const nextLine = (s) => {
       if (s.pending) return "A unit with its price to come is priced at the quotation, and counts towards what comes on the house.";
       const nb = nextBand(s.base);
       if (!nb) return "";
-      return "At " + money(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house" +
+      return "At " + step(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house" +
         (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your basket is " + money(nb[0] - s.base) + " away.";
     };
     const totalLabel = (s) => "Indicative total, from" + (s.around ? " around" : "");
@@ -640,7 +651,7 @@ const clientData = {
         ? (b.sizeLabel === "Doors" ? "how many doors" : "a " + (b.sizeLabel || "size").toLowerCase())
         : "a finish";
       $("[data-result]").textContent = now ? b.label + ": " + now.p.text + "." : "Choose " + need + " to see an indicative price.";
-      $("[data-includes]").textContent = b.includes || "";
+      $("[data-includes]").textContent = (b.includesBySizeText && state.size !== null ? b.includesBySizeText[state.size] : b.includes) || "";
       const il = $("[data-includes-list]"); il.replaceChildren();
       (b.includesList || []).forEach((t) => { const li = document.createElement("li"); li.textContent = t; il.append(li); });
       il.hidden = !b.includesList;
@@ -659,21 +670,29 @@ const clientData = {
 
       const ut = $("[data-unit-total]");
       const pn = $("[data-panel-nudge]");
-      ut.hidden = !(now && now.total !== null);
+      ut.hidden = !(now && (now.total !== null || now.extras));
       pn.hidden = true;
-      if (now && now.total !== null) {
-        ut.textContent = "This unit: indicative from " + (b.around ? "around " : "") + (now.draft ? d(money(now.total)) : money(now.total)) +
-          (now.extras ? ", with " + d(money(now.extras)) + " of parts and extras" : "") + ".";
-        const hypo = state.list.concat([{ value: now.total, addons: b.addons, draft: now.draft, finishIdx: b.finishes ? state.finish : 0, around: !!b.around }]);
-        const s = split(hypo, {}, []);
-        const kd = Math.floor(s.allow / pickPrice("drawer", hypo));
-        const kl = b.addons.includes("led") ? Math.floor(s.allow / pickPrice("led", hypo)) : 0;
+      if (now && (now.total !== null || now.extras)) {
+        ut.textContent = now.total === null
+          ? "This unit: " + d("price to come") + ", with " + d(money(now.extras)) + " of parts and extras."
+          : "This unit: indicative from " + (b.around ? "around " : "") + (now.draft ? d(money(now.total)) : money(now.total)) +
+            (now.extras ? ", with " + d(money(now.extras)) + " of parts and extras" : "") + ".";
+        const hypo = state.list.concat([{
+          value: now.total === null ? now.extras : now.total, pending: now.total === null,
+          addons: b.addons, draft: now.draft, finishIdx: b.finishes ? state.finish : 0, around: !!b.around,
+        }]);
+        const s = split(hypo, state.order);
+        const kd = Math.floor(s.room / pickPrice("drawer", hypo));
+        const kl = b.addons.includes("led") ? Math.floor(s.room / pickPrice("led", hypo)) : 0;
+        const hasWhole = s.items.some((k) => wholeOrder.includes(k));
         const pl = (n, w) => n + " " + w + (n > 1 ? "s" : "");
-        const t = (s.allow
-          ? "With this unit your basket comes to " + (s.around ? "around " : "") + price(s.base, s.draft) + (s.pending ? ", plus a unit with its price to come" : "") +
-            ", and extras worth " + d(money(s.allow)) + " come on the house" +
-            (s.base >= data.wholeFrom ? ", enough for a whole unit. "
-              : kd >= 1 && kd <= 6 ? ": that is " + pl(kd, "more soft-close drawer") + " at £0" + (kl ? ", or lighting in " + pl(kl, "section") : "") + ". "
+        const t = (s.allow && !s.pending
+          ? "With this unit your basket comes to " + (s.around ? "around " : "") + price(s.base, s.draft) +
+            ", and extras worth " + about(s) + d(money(s.allow)) + " come on the house" + (s.around ? ", set by your quotation" : "") +
+            (s.included ? ", " + d(money(s.included)) + " of it already picked" : "") +
+            (!s.spendable ? ". " :
+              s.base >= data.wholeFrom && !hasWhole && s.room >= pickPrice("library", hypo) ? ": room for a whole unit. "
+              : kd >= 1 && kd <= 6 ? ": room for " + pl(kd, "more soft-close drawer") + " at £0" + (kl ? ", or lighting in " + pl(kl, "section") : "") + ". "
               : ": you pick them in your basket. ")
           : "") + nextLine(s);
         pn.textContent = t.trim();
@@ -682,11 +701,13 @@ const clientData = {
       $("[data-add]").disabled = !now;
     };
 
+    /* One entry per item, in the order picked; a minus takes off the latest of
+       that extra. Whole units: one per basket. */
     const setPick = (k, m) => {
-      const n = Math.max(0, m);
-      if (n > 0 && !state.order.includes(k)) state.order.push(k);
-      if (!n) state.order = state.order.filter((x) => x !== k);
-      state.picks[k] = n;
+      const have = state.order.filter((x) => x === k).length;
+      const want = Math.max(0, m);
+      for (let i = have; i < want; i++) state.order.push(k);
+      for (let i = want; i < have; i++) state.order.splice(state.order.lastIndexOf(k), 1);
       renderBasket();
     };
 
@@ -717,6 +738,11 @@ const clientData = {
           inc.textContent = "Includes: " + u.included.join("; ") + ".";
           li.append(inc);
         }
+        if (u.notIncluded) {
+          const ni = document.createElement("small"); ni.className = "basket-incl";
+          ni.textContent = "Not included: " + u.notIncluded + ".";
+          li.append(ni);
+        }
         const rm = document.createElement("button");
         rm.type = "button"; rm.className = "basket-remove"; rm.textContent = "Remove";
         rm.setAttribute("aria-label", "Remove " + u.label);
@@ -725,13 +751,12 @@ const clientData = {
         ul.append(li);
       });
 
-      /* Keep the picks to what fits; a smaller basket can mean fewer. */
-      const s = split(state.list, state.picks, state.order);
-      const fitted = {};
-      s.lines.forEach((l) => { fitted[l.k] = l.n; });
-      const trimmed = Object.keys(state.picks).some((k) => (state.picks[k] || 0) > (fitted[k] || 0));
-      state.picks = fitted;
-      state.order = state.order.filter((k) => fitted[k]);
+      /* Keep the picks to what fits; a smaller basket drops the latest first. */
+      const s = split(state.list, state.order);
+      const trimmed = s.items.length < state.order.length;
+      state.order = s.items.slice();
+      state.picks = {};
+      s.items.forEach((k) => { state.picks[k] = (state.picks[k] || 0) + 1; });
       state.split = s;
 
       const tot = $("[data-total]"); tot.replaceChildren();
@@ -741,7 +766,7 @@ const clientData = {
       }
       if (trimmed) tot.append(line("Some extras on the house no longer fit your basket and came off.", "", "rcpt-left"));
       if (s.included) tot.append(line("Extras on the house, worth", d(money(s.included)), "rcpt-worth"));
-      if (s.allow && s.room) tot.append(line("Still to choose, on the house", d(money(s.room)), "rcpt-left"));
+      if (s.allow && s.room && s.spendable) tot.append(line("Still to choose, on the house", d(money(s.room)), "rcpt-left"));
       if (!s.allow && s.base && !s.pending) tot.append(line("Extras on the house from a " + money(data.bands[0][0]) + " basket", money(data.bands[0][0] - s.base) + " away", "rcpt-left"));
       tot.append(line(totalLabel(s), totalAmount(s), "rcpt-total"));
       if (s.pending && s.base) tot.append(line("Plus a unit with its price to come", "", "rcpt-left"));
@@ -755,8 +780,8 @@ const clientData = {
       const big = document.createElement("strong");
       const small = document.createElement("span");
       if (s.allow) {
-        big.textContent = d(money(s.included)) + " of " + d(money(s.allow)) + " chosen";
-        small.textContent = s.room ? d(money(s.room)) + " left to choose" : "All chosen";
+        big.textContent = d(money(s.included)) + " of " + about(s) + d(money(s.allow)) + " chosen";
+        small.textContent = (s.room && s.spendable ? d(money(s.room)) + " left to choose" : "All chosen") + (s.around ? "; the amount is set by your quotation" : "");
       } else {
         big.textContent = "From a " + money(data.bands[0][0]) + " basket";
         small.textContent = s.pending ? "Set once your quotation prices the unit."
@@ -764,9 +789,13 @@ const clientData = {
       }
       meter.append(big, small);
 
+      const hasWhole = s.items.some((k) => wholeOrder.includes(k));
       const row = (k) => {
         const pp = pickPrice(k, state.list);
-        return addonRow(k, state.picks[k] || 0, (m) => setPick(k, m), "", pp, pp > s.room);
+        const isWhole = wholeOrder.includes(k);
+        const why = isWhole && hasWhole ? "One whole unit per basket" : pp > s.room ? "More than is left on the house" : "";
+        const r = addonRow(k, state.picks[k] || 0, (m) => setPick(k, m), "", pp, why || false);
+        return r;
       };
       const parts = $("[data-addons]"); parts.replaceChildren();
       s.keys.filter((k) => addonOrder.includes(k)).forEach((k) => parts.append(row(k)));
@@ -774,7 +803,7 @@ const clientData = {
       const canWhole = s.base >= data.wholeFrom;
       $("[data-whole-lock]").textContent = canWhole ? "" : "from " + d(money(data.wholeFrom));
       $("[data-whole-note]").textContent = canWhole
-        ? "One of these instead of extras, at its normal starting price."
+        ? "One whole unit per basket, at its normal starting price, and extras with whatever is left."
         : s.pending ? "Whole units come from " + d(money(data.wholeFrom)) + "."
         : "Your basket reaches whole units at " + d(money(data.wholeFrom)) + ": " + money(data.wholeFrom - s.base) + " away.";
       if (canWhole) wholeOrder.forEach((k) => whole.append(row(k)));
@@ -818,6 +847,7 @@ const clientData = {
         text: now.total === null ? now.p.text : "indicative from " + (b.around ? "around " : "") + (now.draft ? d(money(now.total)) : money(now.total)),
         partsText: partsText(state.parts), partsLabel: b.partsLabel, addons: b.addons,
         included: b.id === "wardrobe" ? [] : b.includedBySize ? b.includedBySize[state.size] : b.basketIncluded || b.included,
+        notIncluded: b.notIncluded || "",
         parts: Object.assign({}, state.parts), baseValue: now.p.value, baseDraft: now.p.draft,
         baseLabel: b.priceLabel ? "The box" : b.perProject ? "Starting price, priced per project" : b.around ? "Starting price, around" : "Starting price",
       });
