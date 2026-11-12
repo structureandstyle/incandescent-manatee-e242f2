@@ -284,7 +284,7 @@ const clientData = {
   <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
     <SectionHead level={4}>How it works</SectionHead>
     <ol class="xmas-steps">
-      <li><strong>Build your bundle.</strong> Pick the furniture, its size and finish, then what goes inside. The bundle shows the extras on the house.</li>
+      <li><strong>Build your bundle.</strong> Pick the furniture, its size and finish, then what goes inside, and add as many units to your basket as you like. Send it with one enquiry.</li>
       <li><strong>We see the space.</strong> A measured survey at your home, or photos and measurements from you. Then we send an itemised quotation, with your add-ons on it at £0.</li>
       <li><strong>Book by 31 January.</strong> Accept the quotation and pay a [15%] deposit, which covers your 2D drawings and elevations and books your fitting slot. We agree the date then.</li>
     </ol>
@@ -294,8 +294,9 @@ const clientData = {
     <div id="bundles"></div>
     <SectionHead level={4}>Christmas bundles</SectionHead>
     <p class="booking-note">
-      Build each unit you would like made: size and finish first, then what goes inside. Several units
-      count together, and the bundle total sets the extras on the house, each its own line at £0 on the quotation.
+      Build each unit you would like made, size and finish first, then what goes inside, and add it to your
+      basket. Add as many units as you like: they count together, and the basket total sets the extras on the
+      house, each its own line at £0 on the quotation. One button sends the whole basket with your enquiry.
     </p>
 
     <div class="bundle-cards" role="list">
@@ -325,7 +326,7 @@ const clientData = {
           <span class="bundle-from">{b.fromText}</span>
           <span class="bundle-incl-title">Already included</span>
           <ul class="bundle-incl">{b.included.map((i) => <li>{i}</li>)}</ul>
-          <span class="bundle-allow">{(b as { xmas?: string }).xmas && <span class="bundle-xmas">{(b as { xmas?: string }).xmas}</span>}{allowance((b as { cardFloor?: number }).cardFloor ?? b.from) ? "On the house: extras worth at least " + draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from))) : "Extras on the house from a £2,500 bundle"}</span>
+          <span class="bundle-allow">{(b as { xmas?: string }).xmas && <span class="bundle-xmas">{(b as { xmas?: string }).xmas}</span>}{allowance((b as { cardFloor?: number }).cardFloor ?? b.from) ? "On the house: extras worth at least " + draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from))) : "Extras on the house from a £2,500 basket"}</span>
         </button>
       ))}
     </div>
@@ -354,24 +355,36 @@ const clientData = {
       </div>
       <p class="bundle-result" data-unit-total hidden></p>
       <p class="basket-nudge" data-panel-nudge hidden></p>
-      <p style="margin-top:var(--space-6)"><button type="button" class="bundle-add" data-add disabled>Add to my bundle</button></p>
+      <p style="margin-top:var(--space-6)"><button type="button" class="bundle-add" data-add disabled>Add to basket</button></p>
     </div>
 
-    <div class="basket" data-basket hidden aria-live="polite">
-      <p class="bundle-panel-title">Your bundle</p>
+    {/* The basket (Arthur, 12 Nov: "maybe we should create a basket that sends the
+        email, in case someone wants more than one unit"). It already held several
+        units; now it is named a basket, has "Add another unit", and a bar keeps
+        the count and total on screen while people build. "Send" fills the
+        enquiry form's hidden fields, so the units reach Kaspar in the enquiry
+        email (and the sheet, once Make maps the fields). */}
+    <div class="basket" id="basket" data-basket hidden aria-live="polite">
+      <p class="bundle-panel-title basket-title"><svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10 L10 4 M17 10 L14 4" /><path d="M3 10 H21 L19 20 H5 Z" /><path d="M9 13 V17 M12 13 V17 M15 13 V17" /></svg>Your basket</p>
       <ul class="basket-list" data-basket-list></ul>
       <p class="bundle-result" data-total></p>
       <p class="basket-library" data-library hidden></p>
       <p class="basket-nudge" data-nudge hidden></p>
+      <p style="margin-top:var(--space-6)"><a class="bundle-add basket-more" href="#bundles">Add another unit</a></p>
       <div class="bundle-step">
         <MonoLabel as="p">On the house</MonoLabel>
         <p class="bundle-meter" data-meter></p>
         <ul class="addon-list" data-addons></ul>
         <p class="bundle-estimate" data-estimate></p>
         <p style="margin-top:var(--space-8)">
-          <button type="button" class="bundle-send" data-send>Send this bundle with my enquiry</button>
+          <button type="button" class="bundle-send" data-send>Send my basket with an enquiry</button>
         </p>
       </div>
+    </div>
+
+    <div class="basket-bar" data-basket-bar hidden>
+      <span class="basket-bar-text"><svg class="basket-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10 L10 4 M17 10 L14 4" /><path d="M3 10 H21 L19 20 H5 Z" /><path d="M9 13 V17 M12 13 V17 M15 13 V17" /></svg><span data-basket-bar-text></span></span>
+      <a class="basket-bar-btn" href="#basket">View basket</a>
     </div>
 
     <SectionHead level={5} style="margin-top:var(--space-14)">How much is included</SectionHead>
@@ -445,6 +458,19 @@ const clientData = {
     const panel = $("[data-bundle-panel]");
     const basket = $("[data-basket]");
     const state = { b: null, size: null, finish: null, units: 12, parts: {}, list: [], picks: {}, split: null };
+    /* The basket bar shows while units are in the basket and neither the basket
+       nor the enquiry form is on screen. */
+    const bar = $("[data-basket-bar]");
+    const seen = new Set();
+    const showBar = () => { bar.hidden = !state.list.length || seen.size > 0; };
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+        showBar();
+      });
+      io.observe(basket);
+      io.observe(document.getElementById("booking-form"));
+    }
 
     const chip = (label, on, click, disabled) => {
       const el = document.createElement("button");
@@ -524,7 +550,7 @@ const clientData = {
       const nb = nextBand(quote);
       if (!nb) return "";
       return "At " + money(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house" +
-        (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your bundle is " + money(nb[0] - quote) + " away.";
+        (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your basket is " + money(nb[0] - quote) + " away.";
     };
 
     const renderPanel = () => {
@@ -592,10 +618,10 @@ const clientData = {
         const k = Math.floor(s.allow / data.addons.drawer.price);
         const pl = (n, w) => n + " " + w + (n > 1 ? "s" : "");
         const t = (s.allow
-          ? "With this unit your bundle comes to " + (s.draft ? d(money(s.quote)) : money(s.quote)) + ", and extras worth " + d(money(s.allow)) + " come on the house" +
+          ? "With this unit your basket comes to " + (s.draft ? d(money(s.quote)) : money(s.quote)) + ", and extras worth " + d(money(s.allow)) + " come on the house" +
             (s.base >= data.wholeFrom ? ", enough for a whole unit. "
               : k <= 6 ? ": that is " + pl(k, "more soft-close drawer") + " at £0, or lighting in " + pl(k, "section") + ". "
-              : ": you pick them in your bundle. ")
+              : ": you pick them in your basket. ")
           : "") + nextLine(s.quote);
         pn.textContent = t.trim();
         pn.hidden = !t.trim();
@@ -604,7 +630,7 @@ const clientData = {
     };
 
     const renderBasket = () => {
-      if (!state.list.length) { basket.hidden = true; return; }
+      if (!state.list.length) { basket.hidden = true; showBar(); return; }
       basket.hidden = false;
       const ul = $("[data-basket-list]"); ul.replaceChildren();
       state.list.forEach((u, i) => {
@@ -631,14 +657,14 @@ const clientData = {
         (pending ? ", plus a unit with its price to come" : "") + "." + (s.allow ? " Extras worth " + d(money(s.allow)) + " come on the house." : "");
       const wh = $("[data-library]");
       wh.hidden = s.base < data.wholeFrom;
-      wh.textContent = "Your bundle is past " + d(money(data.wholeFrom)) + ", so what is on the house can be a whole unit: pick one below, at its normal starting price.";
+      wh.textContent = "Your basket is past " + d(money(data.wholeFrom)) + ", so what is on the house can be a whole unit: pick one below, at its normal starting price.";
       const nudge = $("[data-nudge]");
       const nl = nextLine(s.quote);
       nudge.hidden = !nl;
       nudge.textContent = nl;
       $("[data-meter]").textContent = s.allow
         ? "On the house: " + d(money(s.included)) + " of " + d(money(s.allow)) + " chosen" + (s.extra ? ". Beyond that, at normal prices: " + d(money(s.extra)) : "") + "."
-        : "Extras come on the house from a bundle of " + money(data.bands[0][0]) + ".";
+        : "Extras come on the house from a basket of " + money(data.bands[0][0]) + ".";
       const addons = $("[data-addons]"); addons.replaceChildren();
       s.keys.forEach((k) => {
         if (k === wholeOrder[0]) {
@@ -649,6 +675,10 @@ const clientData = {
         }
         addons.append(addonRow(k, state.picks[k] || 0, (m) => { state.picks[k] = Math.max(0, m); renderBasket(); }, "normally "));
       });
+      const n = state.list.length;
+      $("[data-basket-bar-text]").textContent = n + " unit" + (n > 1 ? "s" : "") + ", from " + (s.draft ? d(money(s.base)) : money(s.base)) +
+        (s.allow ? ", " + d(money(s.allow)) + " on the house" : "");
+      showBar();
       $("[data-estimate]").textContent = "Indicative estimate with everything on it: from " + d(money(s.quote)) +
         ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements.";
     };
@@ -694,7 +724,7 @@ const clientData = {
       const sp = state.split;
       if (!state.list.length || !sp) return;
       const units = state.list.map((u) => u.label + (u.detail ? " (" + u.detail + ")" : "") + ": " + u.text + (u.partsText ? "; " + u.partsText : "")).join(" | ");
-      const quick = units + ". Indicative total from " + money(sp.base) + (sp.extra ? ", with extras beyond the bundle from " + money(sp.quote) : "");
+      const quick = units + ". Indicative total from " + money(sp.base) + (sp.extra ? ", with extras beyond what is included from " + money(sp.quote) : "");
       const picks = Object.entries(state.picks).filter(([, n]) => n > 0).map(([k, n]) => n + " x " + all[k].name).join("; ");
       const form = document.querySelector("#booking-form form");
       form.querySelector("[data-quick-price]").value = quick;
@@ -703,7 +733,7 @@ const clientData = {
         : "";
       form.querySelectorAll("input[name=service]").forEach((box) => { if (state.list.some((u) => u.label === box.value)) box.checked = true; });
       const summary = $("[data-bundle-summary]");
-      summary.textContent = "Your bundle: " + quick + "." + (picks ? " On the house: " + picks + "." : "");
+      summary.textContent = "Your basket: " + quick + "." + (picks ? " On the house: " + picks + "." : "");
       summary.hidden = false;
       document.getElementById("booking-form").scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -887,6 +917,13 @@ const clientData = {
   .panel-incl { padding: 0; margin-top: var(--space-4); font-size: var(--type-body-sm); gap: var(--space-2, 6px); }
   .addon-group { list-style: none; margin-top: var(--space-4); font-family: var(--font-mono); font-size: 11px; letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--green); }
   [data-typical] { margin-bottom: var(--space-4); text-align: left; }
+  .basket-title { display: flex; align-items: center; gap: var(--space-3); }
+  .basket-icon { width: 22px; height: 22px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .basket-more { display: inline-block; text-decoration: none; }
+  .basket-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--green); color: var(--paper); box-shadow: 0 -6px 16px rgba(0,0,0,.18); font-size: var(--type-body-sm); }
+  .basket-bar[hidden] { display: none; }
+  .basket-bar-text { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+  .basket-bar-btn { flex-shrink: 0; padding: 10px 16px; background: var(--paper); color: var(--char); text-decoration: none; font-weight: var(--weight-medium, 500); }
   .basket-incl { display: block; margin-top: 4px; font-size: 13px; color: var(--ink-soft); }
   .bundle-name { font-weight: var(--weight-medium, 500); }
   .bundle-from,
