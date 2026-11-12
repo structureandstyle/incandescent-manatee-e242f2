@@ -365,14 +365,39 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         ],
       },
       {
-        title: "Alcove units, guide starting prices for a pair",
-        note: "Based on a pair of fitted alcove units either side of a chimney breast. Each is a base cupboard with two doors and three open shelves above, up to about 1m wide per alcove.",
-        columns: ["Finish", "Pair of alcove units"],
+        /* PREVIEW, 12 Nov 2026: "One alcove" column added as blanks for
+           Kaspar; his pair prices are unchanged. */
+        title: "Alcove units, guide starting prices",
+        note: "Fitted alcove units either side of a chimney breast. Each unit is a base cupboard with two doors and three open shelves above, up to about 1m wide.",
+        columns: ["Finish", "One alcove", "Pair"],
         rows: [
-          ["Melamine board", "from £3,300"],
-          ["Hand-painted MDF", "from £3,600"],
-          ["Professionally sprayed MDF", "from £4,000"],
-          ["Oak veneer, stained and lacquered", "from £6,000"],
+          ["Melamine board", "[from £]", "from £3,300"],
+          ["Hand-painted MDF", "[from £]", "from £3,600"],
+          ["Professionally sprayed MDF", "[from £]", "from £4,000"],
+          ["Oak veneer, stained and lacquered", "[from £]", "from £6,000"],
+        ],
+      },
+      /* PREVIEW ONLY: blanks for Kaspar to fill. Never merge with brackets. */
+      {
+        title: "Alcove units, other layouts",
+        note: "Per alcove, in melamine board, up to about 1m wide. Painted and veneered finishes follow the same steps as the table above.",
+        columns: ["Layout", "Per alcove"],
+        rows: [
+          ["Full-height cupboards, floor to ceiling", "[from £]"],
+          ["Open bookcase, floor to ceiling", "[from £]"],
+        ],
+      },
+      /* PREVIEW ONLY: walk-in layouts as blanks. "From around £5,000" is
+         Kaspar's own figure (6 Sep 2026); every layout price is his to set. */
+      {
+        title: "Walk-in wardrobes, guide starting prices",
+        note: "A walk-in wardrobe is priced per room, by what goes into it rather than by door count, and typically starts from around £5,000. Starting prices by layout, in melamine board:",
+        columns: ["Layout", "Guide price"],
+        rows: [
+          ["One wall of hanging, drawers and shelves, up to about 2.5m", "[from £]"],
+          ["Two walls, L-shaped", "[from £]"],
+          ["Three walls, U-shaped", "[from £]"],
+          ["Island unit with drawers, added to any layout", "[from £]"],
         ],
       },
       /* PREVIEW ONLY, 12 Nov 2026 (branch flowtoform/cost-guide-extras-preview).
@@ -422,7 +447,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
          generally start at £2,000 of value", which put a £2,000 start beside a
          service whose own page says £5,000 (Kaspar, 6 Sep). Now the walk-in
          page's own figure. */
-      "These tables cover fitted wardrobes and alcove units. Walk-in wardrobe cost is worked out per room instead, because a dressing room is priced by what goes into it rather than by door count; walk-in wardrobes typically start from around £5,000.",
+      "Walk-in wardrobe cost is worked out per room, because a dressing room is priced by what goes into it rather than by door count; the layouts above are where it usually starts.",
     ],
     leads: {
       "cost": "This page is the whole answer: the range, what moves it, and what the number includes.",
