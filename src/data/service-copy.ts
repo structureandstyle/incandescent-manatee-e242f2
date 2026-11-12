@@ -360,9 +360,29 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
           ["Oak veneer, stained and lacquered", "from £6,000"],
         ],
       },
+      /* PREVIEW ONLY, 12 Nov 2026 (branch flowtoform/cost-guide-extras-preview).
+         The bracketed figures are DRAFTS set from what other London makers
+         publish (ops repo research/extras-pricing-2026-11-12/). Kaspar sets his
+         own on the preview link. Never merge this branch with these figures:
+         every price on the live site comes from him (protocol v1.4 s12). */
+      {
+        title: "Extras, guide prices",
+        note: "Fitted prices, each added to the quotation as its own line. A wider drawer or a taller section costs more. No VAT is added: we are not currently VAT registered.",
+        columns: ["Extra", "Guide price"],
+        rows: [
+          ["Soft-close drawer inside the wardrobe, each", "[£150]"],
+          ["LED lighting with a door sensor, per hanging section", "[£150]"],
+          ["Pull-out trouser rail", "[£150]"],
+          ["Pull-out shoe rack", "[£180]"],
+          ["Pull-down hanging rail, for a high rail", "[£180]"],
+          ["Lined jewellery or accessory tray", "[£150]"],
+          ["Full-length mirror inside a door", "[£200]"],
+          ["Extra shelf", "[£50]"],
+        ],
+      },
     ],
     priceNotes: [
-      "Drawers, integrated lighting, mirrors, shoe storage, pull-out accessories and extra shelving are priced separately to the specification. So are premium hardware, decorative door details, cornices, specialist backing panels, TV and media integration and other bespoke options.",
+      "The extras above are priced per item. Premium hardware, decorative door details, cornices, specialist backing panels, TV and media integration and other bespoke options are priced to the specification.",
       "These are guide starting prices rather than fixed quotations. The final figure depends on exact dimensions, internal layout, materials and finish, design details, access and site conditions. A detailed, itemised quotation follows the measured survey.",
       /* Added 5 Sep 2026. The page offers walk-in wardrobes twice and never
          said whether these tables price them, which the 4 Sep read flagged and
