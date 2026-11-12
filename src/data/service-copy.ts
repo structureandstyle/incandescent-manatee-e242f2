@@ -38,7 +38,7 @@ export type ServiceCopy = {
    */
   leads?: Record<string, string>;
   /** Extra sections. Set `after` to place one after a named shared section. */
-  sections: { meta: string; heading: string; body: string[]; after?: string }[];
+  sections: { id?: string; meta: string; heading: string; body: string[]; after?: string }[];
   /**
    * Guide-price tables, rendered directly after the cost section. Source:
    * the client's pricing document, 31 Aug 2026 (ops repo,
@@ -392,6 +392,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         ],
       },
       {
+        id: "quotation",
         meta: "The process",
         heading: "How the quotation works",
         body: [

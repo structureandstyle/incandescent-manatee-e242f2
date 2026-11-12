@@ -92,11 +92,17 @@ const others = Array.from(
  * alcove units, and it carries the walk-in answer in prose, so it belongs on
  * those three. On media walls and kitchens it prices nothing, and pointing a
  * reader at a wardrobe price list is worse than pointing them nowhere.
+ *
+ * 4 Nov 2026: Kaspar was told on 28 Oct that these two pages would link to the
+ * cost guide. That still holds without breaking the reasoning above: they link
+ * to its section on how the quotation works, which applies to every service,
+ * and never to its price tables.
  */
 const guide = SERVICES.find((s) => s.guide);
 const GUIDE_APPLIES = ["fitted-wardrobes", "walk-in-wardrobes", "alcove-units"];
 const showGuide = Boolean(guide) && GUIDE_APPLIES.includes(service.slug);
 const showGuideAtPrice = Boolean(guide) && ["fitted-wardrobes", "alcove-units"].includes(service.slug);
+const showQuotationLink = Boolean(guide) && ["media-walls", "bespoke-kitchens"].includes(service.slug);
 
 /**
  * Wave-one body copy and FAQs, where written (src/data/service-copy.ts).
@@ -390,6 +396,13 @@ const SECTIONS: Section[] = [
                     </Link>
                   </p>
                 )}
+                {section.id === "cost" && showQuotationLink && guide && (
+                  <p style="max-width:var(--measure);margin-top:var(--space-8)">
+                    <Link href={`${servicePath(guide)}#quotation`} variant="nav" chamfer>
+                      See how our quotation works
+                    </Link>
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -460,7 +473,7 @@ const SECTIONS: Section[] = [
 
         {copy?.sections.filter((sec) => sec.after === section.id).map((sec) => (
           <Wrap style="padding-bottom:var(--section-y)">
-            <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
+            <SectionHead id={sec.id} meta={sec.meta} level={4}>{sec.heading}</SectionHead>
             <div style="max-width:var(--measure)">
               {sec.body.map((p, i) => (
                 <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
@@ -473,7 +486,7 @@ const SECTIONS: Section[] = [
 
     {copy && copy.sections.filter((sec) => !sec.after).map((sec) => (
       <Wrap style="padding-bottom:var(--section-y)">
-        <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
+        <SectionHead id={sec.id} meta={sec.meta} level={4}>{sec.heading}</SectionHead>
         <div style="max-width:var(--measure)">
           {sec.body.map((p, i) => (
             <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
