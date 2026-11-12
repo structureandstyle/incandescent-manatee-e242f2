@@ -39,15 +39,15 @@ import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
 import { DRAFT, draft, money, BANDS, WHOLE_FROM } from "../data/booking-2027";
 
-
-
-
 /* Parts and extras at normal prices: the cost guide preview's drafts, plus a
-   hanging rail, priced here for the first time. All drafts for Kaspar. */
+   hanging rail, priced here for the first time. All drafts for Kaspar.
+   byFinish: drawers and shelves follow the finish, exactly as the cost guide
+   preview's "Extras that follow the finish" table (melamine, hand-painted,
+   sprayed, veneered wood); price is the melamine figure. */
 const ADDONS = {
   rail: { name: "Hanging rail", price: 50 },
-  shelf: { name: "Shelf", price: 50 },
-  drawer: { name: "Soft-close drawer", price: 150 },
+  shelf: { name: "Shelf", price: 50, byFinish: [50, 55, 70, 80] },
+  drawer: { name: "Soft-close drawer", price: 150, byFinish: [150, 170, 200, 240] },
   led: { name: "LED lighting with a door sensor, per section", price: 150 },
   trouser: { name: "Pull-out trouser rail", price: 150 },
   shoe: { name: "Pull-out shoe rack", price: 180 },
@@ -95,9 +95,14 @@ const WHOLE = {
 const PUBLISHED = [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]]
   .map((r) => [...r, Math.round((r[2] * 1.5) / 50) * 50, r[2] * 2]);
 const STD_INSIDE = [{ rail: 1, shelf: 2 }, { rail: 2, shelf: 3 }, { rail: 2, shelf: 4 }, { rail: 3, shelf: 6 }, { rail: 4, shelf: 8 }];
-const partsValue = (o: Record<string, number>) =>
-  Object.entries(o).reduce((s, [k, n]) => s + (ADDONS as Record<string, { price: number }>)[k].price * n, 0);
-const BOX = PUBLISHED.map((row) => row.map((v, i) => v - partsValue(STD_INSIDE[i])));
+/* The basic inside is taken off at the finish's own part prices, so the box
+   plus that inside comes back to his published price in every finish. */
+const partsValue = (o: Record<string, number>, f: number) =>
+  Object.entries(o).reduce((s, [k, n]) => {
+    const a = (ADDONS as Record<string, { price: number; byFinish?: number[] }>)[k];
+    return s + (a.byFinish ? a.byFinish[f] : a.price) * n;
+  }, 0);
+const BOX = PUBLISHED.map((row, f) => row.map((v, i) => v - partsValue(STD_INSIDE[i], f)));
 /* Kitchens use his four-door wardrobe's finish steps until he prices them. */
 const FINISH_STEP = PUBLISHED.map((r) => r[2] / PUBLISHED[0][2]);
 const WARDROBE_PARTS = ["rail", "shelf", "drawer", "led", "trouser", "shoe", "pulldown", "tray", "mirror"];
@@ -130,6 +135,10 @@ const BUNDLES = [
     partsLabel: "Extras", parts: ["shelf", "drawer", "led"],
     includes: "At this price: in each alcove, a base cupboard with two doors and three open shelves above, up to about 1m wide.",
     included: ["A base cupboard and three open shelves, each side", "Up to about 1m wide per alcove"],
+    includedBySize: [
+      ["A base cupboard and three open shelves, each side", "Up to about 1m wide per alcove"],
+      ["A base cupboard and three open shelves", "Up to about 1m wide"],
+    ],
     addons: ["shelf", "drawer", "led"],
   },
   {
@@ -159,7 +168,8 @@ const BUNDLES = [
     partsLabel: "Extras", parts: ["led", "drawer"],
     includes: "",
     includesList: ["From £10,000 for up to " + draft("12") + " units in melamine board", "Each unit beyond that about " + draft("£850") + "; other finishes cost more", "Not included: appliances and worktops"],
-    included: ["Up to " + draft("12") + " units, in your choice of finish", "Appliances and worktops not included"],
+    included: ["Up to " + draft("12") + " units in melamine board; other finishes cost more", "Appliances and worktops not included"],
+    basketIncluded: ["Appliances and worktops not included"],
     addons: ["led", "drawer"],
   },
 ];
@@ -181,7 +191,7 @@ const clientData = {
 
 <Base
   title="The Christmas bundle"
-  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with extras you choose, on the house. Prices unchanged."
+  description="Wardrobes, walk-ins, alcove units, TV units and kitchens booked by 31 January 2027 come with extras on the house that you pick, from a £2,500 basket. Prices unchanged."
   noindex={true}
 >
   {/* LANDING PAGE, rev 4 (Arthur, 12 Nov: "make it a landing page, hero
@@ -209,7 +219,7 @@ const clientData = {
           <h1 class="xmas-h1">The Christmas bundle: extras worth up to [15%] of your job, on the house</h1>
           <p class="xmas-lede">
             Fitted wardrobes, walk-ins, alcove units, TV units and kitchens booked by Sunday 31 January 2027
-            come with add-ons you choose, at no cost. Plan it over Christmas, and it is fitted in the new year.
+            come with extras on the house that you pick, once your basket reaches £2,500. Plan it over Christmas, and it is fitted in the new year.
           </p>
           <p class="xmas-ctas">
             <a class="xmas-btn" href="#bundles">Build your bundle</a>
@@ -228,7 +238,9 @@ const clientData = {
           <svg class="xmas-bow" viewBox="0 0 80 56" aria-hidden="true"><path d="M37 31 L25 54 L31.5 51.5 L35 55 L40 32 Z" /><path d="M43 31 L55 54 L48.5 51.5 L45 55 L40 32 Z" /><path d="M40 28 C27 4 3 3 6 19 C9 33 28 33 40 28 Z" /><path d="M40 28 C53 4 77 3 74 19 C71 33 52 33 40 28 Z" /><path class="crease" d="M40 28 C31 16 18 12 13 18" /><path class="crease" d="M40 28 C49 16 62 12 67 18" /><rect x="33" y="21" width="14" height="14" rx="4" /></svg>
           <p class="xmas-card-title xmas-card-ribbon">In every bundle</p>
           <ul class="xmas-card-list">
-            <li>Extras you choose, on the house</li>
+            {/* Arthur, 12 Nov: the first line read as if every bundle got extras.
+                It now says when they start. */}
+            <li>From a £2,500 basket, extras on the house that you pick</li>
             <li>Prices unchanged</li>
             <li>A [15%] deposit covers your 2D drawings and elevations, and books your slot</li>
           </ul>
@@ -294,7 +306,7 @@ const clientData = {
           <span class="bundle-name">{b.label}</span>
           <span class="bundle-from">{b.fromText}</span>
           <ul class="bundle-incl">{b.included.map((i) => <li>{i}</li>)}</ul>
-          <span class="bundle-allow">{allowance((b as { cardFloor?: number }).cardFloor ?? b.from) ? "On the house: extras worth at least " + draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from))) : "Extras on the house from a £2,500 basket"}</span>
+          <span class="bundle-allow">{(b as { around?: boolean }).around ? "Extras on the house, set by your quotation" : allowance((b as { cardFloor?: number }).cardFloor ?? b.from) ? "On the house: extras worth at least " + draft(money(allowance((b as { cardFloor?: number }).cardFloor ?? b.from))) : "Extras on the house from a £2,500 basket"}</span>
           <span class="bundle-cta">Build it <span aria-hidden="true">→</span></span>
         </button>
       ))}
@@ -358,7 +370,7 @@ const clientData = {
           <p class="booking-note" data-basket-empty>Your basket is empty. Pick a unit to start.</p>
           <div class="basket-inner" data-basket hidden>
             <ul class="basket-list" data-basket-list></ul>
-            <p class="bundle-result" data-total></p>
+            <div class="rcpt-totals" data-total></div>
             <p class="booking-note">Every unit: design included, made to measure, delivered and fitted, Blum soft-close hardware.</p>
             <p class="basket-nudge" data-nudge hidden></p>
             {/* On the house (Denis, 12 Nov): a big headline, a meter that stays in
@@ -426,20 +438,25 @@ const clientData = {
 </Base>
 
 <script is:inline define:vars={{ data: clientData }}>
-  /* The bundle builder, rev 14 (Arthur, 12 Nov). Each unit is built up: its
-     size (doors, layout or number of units) and finish give the starting price
-     (for a wardrobe, the empty box); then the parts and extras the customer
-     wants, at normal prices, give the unit total. Units add up in the bundle,
-     and the bundle total sets the extras on the house, 10 to 15% of it, picked
-     as items at £0 (from £15,000 a whole unit can be one of them). The panel
-     states, as a fact, what the bundle brings on the house with this unit and
-     how far the next step is: the upsell, one more drawer and it is included. */
+  /* Bundle builder. A unit's size and finish give its starting price; the parts
+     chosen inside it, at normal prices, give the unit total. Units add up in the
+     basket; the basket total sets how much comes on the house, picked as items
+     at £0. */
   (() => {
     const $ = (s, r = document) => r.querySelector(s);
     const money = (n) => "£" + n.toLocaleString("en-GB");
     const d = (s) => (data.draft ? "[" + s + "]" : s);
     const allowance = (p) => data.bands.reduce((a, [min, v]) => (p >= min ? v : a), 0);
     const nextBand = (p) => data.bands.find(([min]) => min > p) || null;
+    const price = (v, dr) => (v === null ? d("price to come") : dr ? d(money(v)) : money(v));
+    const line = (label, amount, cls) => {
+      const r = document.createElement("div");
+      r.className = "rcpt-line" + (cls ? " " + cls : "");
+      const l = document.createElement("span"); l.className = "rcpt-label"; l.textContent = label;
+      const v = document.createElement("span"); v.className = "rcpt-amt"; v.textContent = amount;
+      r.append(l, v);
+      return r;
+    };
     const all = Object.assign({}, data.addons, data.whole);
     const addonOrder = Object.keys(data.addons);
     const wholeOrder = Object.keys(data.whole);
@@ -452,7 +469,7 @@ const clientData = {
     };
     const closeDialog = () => { if (dialog.open) { if (dialog.close) dialog.close(); else dialog.removeAttribute("open"); } };
     const basket = $("[data-basket]");
-    const state = { b: null, size: null, finish: null, units: 12, parts: {}, list: [], picks: {}, split: null };
+    const state = { b: null, size: null, finish: null, units: 12, parts: {}, list: [], picks: {}, order: [], split: null, sent: false };
     const drawer = $("[data-basket-drawer]");
     const fab = $("[data-basket-open]");
     const toast = $("[data-toast]");
@@ -493,7 +510,7 @@ const clientData = {
       el.addEventListener("click", click);
       return el;
     };
-    const stepper = (n, set, label, min, max) => {
+    const stepper = (n, set, label, min, max, noMore) => {
       const ctrl = document.createElement("span");
       ctrl.className = "addon-ctrl";
       const minus = chip("−", false, () => set(n - 1), n <= min);
@@ -501,24 +518,34 @@ const clientData = {
       const count = document.createElement("span");
       count.className = "addon-count";
       count.textContent = String(n);
-      const plus = chip("+", false, () => set(n + 1), n >= max);
+      const plus = chip("+", false, () => set(n + 1), n >= max || !!noMore);
       plus.setAttribute("aria-label", "One more: " + label);
       ctrl.append(minus, count, plus);
       return ctrl;
     };
-    const addonRow = (k, n, set, suffix) => {
+    const addonRow = (k, n, set, suffix, price, noMore) => {
       const a = all[k];
       const li = document.createElement("li");
       li.className = "addon";
       const name = document.createElement("span");
       name.className = "addon-name";
-      name.textContent = a.name + ", " + suffix + d(money(a.price));
-      li.append(name, stepper(n, set, a.name, 0, 20));
+      name.textContent = a.name + ", " + suffix + d(money(price === undefined ? a.price : price));
+      li.append(name, stepper(n, set, a.name, 0, 20, noMore));
       return li;
     };
 
-    const partsValue = (parts) => Object.keys(parts).reduce((s, k) => s + all[k].price * (parts[k] || 0), 0);
-    const partsText = (parts) => Object.keys(parts).filter((k) => parts[k] > 0).map((k) => all[k].name + " × " + parts[k]).join("; ");
+    /* Drawers and shelves follow the finish, as on the cost guide. A unit with
+       no finish choice uses the first column. */
+    const priceOf = (k, f) => (all[k].byFinish ? all[k].byFinish[f || 0] : all[k].price);
+    const partsValue = (parts, f) => Object.keys(parts).reduce((s, k) => s + priceOf(k, f) * (parts[k] || 0), 0);
+    const partsText = (parts) => Object.keys(parts).filter((k) => parts[k] > 0).map((k) => parts[k] + " × " + all[k].name).join("; ");
+    /* An extra on the house is valued at the lowest finish among the units it
+       can go in, so "worth" never overstates it. */
+    const pickPrice = (k, list) => {
+      if (!all[k].byFinish) return all[k].price;
+      const fs = list.filter((u) => u.addons.includes(k)).map((u) => u.finishIdx || 0);
+      return priceOf(k, fs.length ? Math.min(...fs) : 0);
+    };
 
     /* The starting price as configured, before parts and extras. */
     const basePrice = () => {
@@ -542,27 +569,39 @@ const clientData = {
     const unitNow = () => {
       const p = basePrice();
       if (!p) return null;
-      const extras = partsValue(state.parts);
+      const extras = partsValue(state.parts, state.b.finishes ? state.finish : 0);
       return { p, extras, total: p.value === null ? null : p.value + extras, draft: p.draft || extras > 0 };
     };
 
-    /* How a list of units and the picks on the house split: the allowance
-       follows the quotation, units plus anything picked past the allowance. */
-    const split = (list, picks) => {
+    /* What comes on the house. The units and their parts set the step, and that
+       is the whole quotation, because extras picked here are £0 lines. Picks fill
+       the allowance in the order they were made and can never go past it, so an
+       extra is either on the house or not added; paid extras go inside a unit. */
+    const split = (list, picks, order) => {
       const base = list.reduce((s, u) => s + (u.value || 0), 0);
       const keys = addonOrder.filter((k) => list.some((u) => u.addons.includes(k))).concat(base >= data.wholeFrom ? wholeOrder : []);
-      const used = keys.reduce((s, k) => s + all[k].price * (picks[k] || 0), 0);
-      let allow = allowance(base);
-      let extra = Math.max(0, used - allow);
-      for (let i = 0; base && i < 4; i++) { allow = allowance(base + extra); extra = Math.max(0, used - allow); }
-      return { base, keys, allow, included: used - extra, extra, quote: base + extra, draft: list.some((u) => u.draft) };
+      const allow = allowance(base);
+      let room = allow;
+      const lines = [];
+      (order || []).filter((k) => keys.includes(k) && (picks[k] || 0) > 0).forEach((k) => {
+        const p = pickPrice(k, list);
+        const n = Math.min(picks[k], Math.floor(room / p));
+        if (n > 0) { room -= n * p; lines.push({ k, p, n }); }
+      });
+      return {
+        base, keys, allow, room, lines, included: allow - room,
+        pending: list.some((u) => u.pending), around: list.some((u) => u.around), draft: list.some((u) => u.draft),
+      };
     };
-    const nextLine = (quote) => {
-      const nb = nextBand(quote);
+    const nextLine = (s) => {
+      if (s.pending) return "A unit with its price to come is priced at the quotation, and counts towards what comes on the house.";
+      const nb = nextBand(s.base);
       if (!nb) return "";
       return "At " + money(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house" +
-        (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your basket is " + money(nb[0] - quote) + " away.";
+        (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your basket is " + money(nb[0] - s.base) + " away.";
     };
+    const totalLabel = (s) => "Indicative total, from" + (s.around ? " around" : "");
+    const totalAmount = (s) => (!s.base && s.pending ? d("price to come") : price(s.base, s.draft));
 
     const renderPanel = () => {
       const b = state.b;
@@ -614,7 +653,8 @@ const clientData = {
         $("[data-typical-wrap]").hidden = !typ;
         if (typ) $("[data-typical]").textContent = "Fill with a typical inside: " + typ.text;
         const list = $("[data-parts]"); list.replaceChildren();
-        b.parts.forEach((k) => list.append(addonRow(k, state.parts[k] || 0, (m) => { state.parts[k] = Math.max(0, m); renderPanel(); }, "")));
+        const fi = b.finishes ? state.finish : 0;
+        b.parts.forEach((k) => list.append(addonRow(k, state.parts[k] || 0, (m) => { state.parts[k] = Math.max(0, m); renderPanel(); }, "", priceOf(k, fi))));
       }
 
       const ut = $("[data-unit-total]");
@@ -622,21 +662,32 @@ const clientData = {
       ut.hidden = !(now && now.total !== null);
       pn.hidden = true;
       if (now && now.total !== null) {
-        ut.textContent = "This unit: indicative from " + (now.draft ? d(money(now.total)) : money(now.total)) +
+        ut.textContent = "This unit: indicative from " + (b.around ? "around " : "") + (now.draft ? d(money(now.total)) : money(now.total)) +
           (now.extras ? ", with " + d(money(now.extras)) + " of parts and extras" : "") + ".";
-        const s = split(state.list.concat([{ value: now.total, addons: b.addons, draft: now.draft }]), state.picks);
-        const k = Math.floor(s.allow / data.addons.drawer.price);
+        const hypo = state.list.concat([{ value: now.total, addons: b.addons, draft: now.draft, finishIdx: b.finishes ? state.finish : 0, around: !!b.around }]);
+        const s = split(hypo, {}, []);
+        const kd = Math.floor(s.allow / pickPrice("drawer", hypo));
+        const kl = b.addons.includes("led") ? Math.floor(s.allow / pickPrice("led", hypo)) : 0;
         const pl = (n, w) => n + " " + w + (n > 1 ? "s" : "");
         const t = (s.allow
-          ? "With this unit your basket comes to " + (s.draft ? d(money(s.quote)) : money(s.quote)) + ", and extras worth " + d(money(s.allow)) + " come on the house" +
+          ? "With this unit your basket comes to " + (s.around ? "around " : "") + price(s.base, s.draft) + (s.pending ? ", plus a unit with its price to come" : "") +
+            ", and extras worth " + d(money(s.allow)) + " come on the house" +
             (s.base >= data.wholeFrom ? ", enough for a whole unit. "
-              : k <= 6 ? ": that is " + pl(k, "more soft-close drawer") + " at £0, or lighting in " + pl(k, "section") + ". "
+              : kd >= 1 && kd <= 6 ? ": that is " + pl(kd, "more soft-close drawer") + " at £0" + (kl ? ", or lighting in " + pl(kl, "section") : "") + ". "
               : ": you pick them in your basket. ")
-          : "") + nextLine(s.quote);
+          : "") + nextLine(s);
         pn.textContent = t.trim();
         pn.hidden = !t.trim();
       }
       $("[data-add]").disabled = !now;
+    };
+
+    const setPick = (k, m) => {
+      const n = Math.max(0, m);
+      if (n > 0 && !state.order.includes(k)) state.order.push(k);
+      if (!n) state.order = state.order.filter((x) => x !== k);
+      state.picks[k] = n;
+      renderBasket();
     };
 
     const renderBasket = () => {
@@ -647,47 +698,76 @@ const clientData = {
       $("[data-basket-empty]").hidden = n > 0;
       basket.hidden = !n;
       $("[data-send]").disabled = !n;
-      if (!n) { state.split = null; return; }
+      if (!n) { state.split = null; state.picks = {}; state.order = []; fillForm(null); return; }
+
+      /* The basket as a receipt: prices on the right, then what is on the house
+         at £0 with its value, then the total. */
       const ul = $("[data-basket-list]"); ul.replaceChildren();
       state.list.forEach((u, i) => {
         const li = document.createElement("li");
-        const t = document.createElement("span");
-        t.textContent = u.label + (u.detail ? ", " + u.detail : "") + ": " + u.text;
-        const lines = [];
-        if (u.partsText) lines.push(u.partsLabel + ": " + u.partsText + ".");
-        if (u.included && u.included.length) lines.push("Includes: " + u.included.join("; ") + ".");
-        lines.forEach((x) => { const sm = document.createElement("small"); sm.className = "basket-incl"; sm.textContent = x; t.append(sm); });
+        li.className = "rcpt-unit";
+        const name = document.createElement("p");
+        name.className = "rcpt-name";
+        name.textContent = u.label + (u.detail ? ", " + u.detail : "");
+        li.append(name, line(u.baseLabel, price(u.baseValue, u.baseDraft), "rcpt-part"));
+        Object.keys(u.parts || {}).filter((k) => u.parts[k] > 0)
+          .forEach((k) => li.append(line(u.parts[k] + " × " + all[k].name, d(money(priceOf(k, u.finishIdx) * u.parts[k])), "rcpt-part")));
+        if (u.included && u.included.length) {
+          const inc = document.createElement("small"); inc.className = "basket-incl";
+          inc.textContent = "Includes: " + u.included.join("; ") + ".";
+          li.append(inc);
+        }
         const rm = document.createElement("button");
         rm.type = "button"; rm.className = "basket-remove"; rm.textContent = "Remove";
         rm.setAttribute("aria-label", "Remove " + u.label);
         rm.addEventListener("click", () => { state.list.splice(i, 1); renderBasket(); });
-        li.append(t, rm);
+        li.append(rm);
         ul.append(li);
       });
-      const keys = split(state.list, {}).keys;
-      Object.keys(state.picks).forEach((k) => { if (!keys.includes(k)) delete state.picks[k]; });
-      const s = split(state.list, state.picks);
+
+      /* Keep the picks to what fits; a smaller basket can mean fewer. */
+      const s = split(state.list, state.picks, state.order);
+      const fitted = {};
+      s.lines.forEach((l) => { fitted[l.k] = l.n; });
+      const trimmed = Object.keys(state.picks).some((k) => (state.picks[k] || 0) > (fitted[k] || 0));
+      state.picks = fitted;
+      state.order = state.order.filter((k) => fitted[k]);
       state.split = s;
-      const pending = state.list.some((u) => u.value === null);
-      $("[data-total]").textContent = "Indicative total: from " + (s.draft ? d(money(s.base)) : money(s.base)) +
-        (pending ? ", plus a unit with its price to come" : "") + "." + (s.allow ? " Extras worth " + d(money(s.allow)) + " come on the house." : "");
+
+      const tot = $("[data-total]"); tot.replaceChildren();
+      if (s.lines.length) {
+        tot.append(line("On the house", "", "rcpt-oh-head"));
+        s.lines.forEach((l) => tot.append(line(l.n + " × " + all[l.k].name + ", worth " + d(money(l.p * l.n)), "£0", "rcpt-oh")));
+      }
+      if (trimmed) tot.append(line("Some extras on the house no longer fit your basket and came off.", "", "rcpt-left"));
+      if (s.included) tot.append(line("Extras on the house, worth", d(money(s.included)), "rcpt-worth"));
+      if (s.allow && s.room) tot.append(line("Still to choose, on the house", d(money(s.room)), "rcpt-left"));
+      if (!s.allow && s.base && !s.pending) tot.append(line("Extras on the house from a " + money(data.bands[0][0]) + " basket", money(data.bands[0][0] - s.base) + " away", "rcpt-left"));
+      tot.append(line(totalLabel(s), totalAmount(s), "rcpt-total"));
+      if (s.pending && s.base) tot.append(line("Plus a unit with its price to come", "", "rcpt-left"));
+
       const nudge = $("[data-nudge]");
-      const nl = s.allow ? nextLine(s.quote) : "";
+      const nl = s.allow || s.pending ? nextLine(s) : "";
       nudge.hidden = !nl;
       nudge.textContent = nl;
-      /* The meter: big, and it stays in view while picking (Denis). */
+
       const meter = $("[data-meter]"); meter.replaceChildren();
       const big = document.createElement("strong");
       const small = document.createElement("span");
       if (s.allow) {
         big.textContent = d(money(s.included)) + " of " + d(money(s.allow)) + " chosen";
-        small.textContent = s.extra ? d(money(s.extra)) + " beyond that, at normal prices" : d(money(s.allow - s.included)) + " left to choose";
+        small.textContent = s.room ? d(money(s.room)) + " left to choose" : "All chosen";
       } else {
         big.textContent = "From a " + money(data.bands[0][0]) + " basket";
-        small.textContent = "Your basket is " + money(data.bands[0][0] - s.quote) + " away.";
+        small.textContent = s.pending ? "Set once your quotation prices the unit."
+          : "Your basket is " + money(data.bands[0][0] - s.base) + " away. Parts you add inside a unit count towards it.";
       }
       meter.append(big, small);
-      const row = (k) => addonRow(k, state.picks[k] || 0, (m) => { state.picks[k] = Math.max(0, m); renderBasket(); }, "");
+
+      const row = (k) => {
+        const pp = pickPrice(k, state.list);
+        return addonRow(k, state.picks[k] || 0, (m) => setPick(k, m), "", pp, pp > s.room);
+      };
       const parts = $("[data-addons]"); parts.replaceChildren();
       s.keys.filter((k) => addonOrder.includes(k)).forEach((k) => parts.append(row(k)));
       const whole = $("[data-addons-whole]"); whole.replaceChildren();
@@ -695,10 +775,11 @@ const clientData = {
       $("[data-whole-lock]").textContent = canWhole ? "" : "from " + d(money(data.wholeFrom));
       $("[data-whole-note]").textContent = canWhole
         ? "One of these instead of extras, at its normal starting price."
-        : "Your basket reaches whole units at " + d(money(data.wholeFrom)) + ": " + money(data.wholeFrom - s.quote) + " away.";
+        : s.pending ? "Whole units come from " + d(money(data.wholeFrom)) + "."
+        : "Your basket reaches whole units at " + d(money(data.wholeFrom)) + ": " + money(data.wholeFrom - s.base) + " away.";
       if (canWhole) wholeOrder.forEach((k) => whole.append(row(k)));
-      $("[data-estimate]").textContent = "Indicative estimate with everything on it: from " + d(money(s.quote)) +
-        ". The firm figure is the itemised quotation, after a measured survey or from your photos and measurements.";
+      $("[data-estimate]").textContent = "Indicative guide prices. The firm figure is the itemised quotation, after a measured survey or from your photos and measurements.";
+      if (state.sent) fillForm(s);
     };
 
     document.querySelectorAll("[data-bundle]").forEach((card) => {
@@ -730,9 +811,15 @@ const clientData = {
         b.finishes && state.finish !== null ? b.finishes[state.finish].name : "",
       ].filter(Boolean).join(", ");
       state.list.push({
-        id: b.id, label: b.label, detail, value: now.total, draft: now.draft,
-        text: now.total === null ? now.p.text : "indicative from " + (now.draft ? d(money(now.total)) : money(now.total)),
-        partsText: partsText(state.parts), partsLabel: b.partsLabel, addons: b.addons, included: b.id === "wardrobe" ? [] : b.included,
+        id: b.id, label: b.label, detail, draft: now.draft,
+        value: now.total === null ? now.extras : now.total, pending: now.total === null,
+        finishIdx: b.finishes ? state.finish : 0,
+        around: !!b.around,
+        text: now.total === null ? now.p.text : "indicative from " + (b.around ? "around " : "") + (now.draft ? d(money(now.total)) : money(now.total)),
+        partsText: partsText(state.parts), partsLabel: b.partsLabel, addons: b.addons,
+        included: b.id === "wardrobe" ? [] : b.includedBySize ? b.includedBySize[state.size] : b.basketIncluded || b.included,
+        parts: Object.assign({}, state.parts), baseValue: now.p.value, baseDraft: now.p.draft,
+        baseLabel: b.priceLabel ? "The box" : b.perProject ? "Starting price, priced per project" : b.around ? "Starting price, around" : "Starting price",
       });
       state.b = null; state.parts = {};
       closeDialog();
@@ -745,28 +832,34 @@ const clientData = {
     document.querySelectorAll("[data-basket-close]").forEach((el) => el.addEventListener("click", closeDrawer));
     drawer.addEventListener("click", (e) => { if (e.target === drawer) closeDrawer(); });
 
-    /* Send: the hidden fields carry the basket to Kaspar, and the form shows it
-       organised as units, parts and what is on the house (Denis, 12 Nov). The
-       services question hides, because the basket already answers it. */
-    $("[data-send]").addEventListener("click", () => {
-      const sp = state.split;
-      if (!state.list.length || !sp) return;
+    /* Puts the basket into the enquiry form: the hidden fields for the email,
+       and a summary above the form of units, parts and what is on the house.
+       Runs on Send and again after every change once sent; an empty basket
+       clears it and brings the services question back. */
+    const fillForm = (sp) => {
+      const form = document.querySelector("#booking-form form");
+      const summary = $("[data-bundle-summary]");
+      const sf = form.querySelector("[data-services-field]");
+      if (!sp || !state.list.length) {
+        form.querySelector("[data-quick-price]").value = "";
+        form.querySelector("[data-bonus-picks]").value = "";
+        if (state.sent) form.querySelectorAll("input[name=service]").forEach((box) => { box.checked = false; });
+        if (sf) sf.hidden = false;
+        summary.replaceChildren();
+        summary.hidden = true;
+        state.sent = false;
+        return;
+      }
+      const totalTxt = totalLabel(sp) + " " + totalAmount(sp) + (sp.pending && sp.base ? ", plus a unit with its price to come" : "");
       const unitsTxt = state.list.map((u) => u.label + (u.detail ? " (" + u.detail + ")" : "") + ": " + u.text).join("; ");
       const partsTxt = state.list.filter((u) => u.partsText).map((u) => u.label + ": " + u.partsText).join(" | ");
-      const quick = "Units: " + unitsTxt + (partsTxt ? ". Parts: " + partsTxt : "") + ". Indicative total from " + money(sp.base) +
-        (sp.extra ? ", with extras beyond what is included from " + money(sp.quote) : "");
-      const picked = Object.entries(state.picks).filter(([, n]) => n > 0);
-      const picks = picked.map(([k, n]) => n + " x " + all[k].name).join("; ");
-      const form = document.querySelector("#booking-form form");
-      form.querySelector("[data-quick-price]").value = quick;
-      form.querySelector("[data-bonus-picks]").value = picks
-        ? picks + " (" + money(sp.included) + " on the house" + (sp.extra ? ", " + money(sp.extra) + " beyond at normal prices" : "") + ")"
-        : "";
+      form.querySelector("[data-quick-price]").value = "Units: " + unitsTxt + (partsTxt ? ". Parts: " + partsTxt : "") + ". " + totalTxt;
+      const picks = sp.lines.map((l) => l.n + " x " + all[l.k].name).join("; ");
+      form.querySelector("[data-bonus-picks]").value = picks ? picks + " (on the house, worth " + d(money(sp.included)) + ")" : "";
       form.querySelectorAll("input[name=service]").forEach((box) => { box.checked = state.list.some((u) => u.label === box.value); });
-      const sf = form.querySelector("[data-services-field]");
       if (sf) sf.hidden = true;
 
-      const summary = $("[data-bundle-summary]"); summary.replaceChildren();
+      summary.replaceChildren();
       const group = (title, items, cls) => {
         const g = document.createElement("div"); if (cls) g.className = cls;
         const h = document.createElement("p"); h.className = "summary-h"; h.textContent = title;
@@ -777,13 +870,17 @@ const clientData = {
       group("Units", state.list.map((u) => u.label + (u.detail ? ", " + u.detail : "") + ": " + u.text));
       const partLines = state.list.filter((u) => u.partsText).map((u) => u.label + ": " + u.partsText);
       if (partLines.length) group("Parts", partLines);
-      if (picked.length) {
-        group("On the house, worth " + d(money(sp.included)) + " at £0", picked.map(([k, n]) => all[k].name + " × " + n + ", worth " + d(money(all[k].price * n))), "summary-bonus");
-      }
+      if (sp.lines.length) group("On the house, worth " + d(money(sp.included)) + " at £0", sp.lines.map((l) => l.n + " × " + all[l.k].name + ", worth " + d(money(l.p * l.n))), "summary-bonus");
       const tot = document.createElement("p"); tot.className = "summary-total";
-      tot.textContent = "Indicative total from " + money(sp.base) + (sp.extra ? ", with extras beyond what is included from " + money(sp.quote) : "") + ".";
+      tot.textContent = totalTxt + ".";
       summary.append(tot);
       summary.hidden = false;
+    };
+
+    $("[data-send]").addEventListener("click", () => {
+      if (!state.list.length || !state.split) return;
+      state.sent = true;
+      fillForm(state.split);
       closeDrawer();
       document.getElementById("booking-form").scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -1178,4 +1275,22 @@ const clientData = {
     .drawer-body { padding-left: var(--space-8); padding-right: var(--space-8); }
   }
   @media (prefers-reduced-motion: reduce) { .basket-fab.bump { animation: none; } }
+  /* rev 19: the basket as a receipt */
+  .basket-list li.rcpt-unit { display: grid; gap: 6px; justify-content: stretch; align-items: stretch; }
+  .rcpt-name { margin: 0 0 2px; font-weight: var(--weight-medium, 500); font-size: var(--type-body-sm); }
+  .rcpt-line { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-5); }
+  .rcpt-label { min-width: 0; }
+  .rcpt-amt { flex-shrink: 0; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+  .rcpt-part { font-size: 13px; color: var(--ink-soft); padding-left: var(--space-4); }
+  .rcpt-unit .basket-remove { justify-self: start; }
+  .rcpt-unit .basket-incl { padding-left: var(--space-4); }
+  .rcpt-totals { margin-top: var(--space-6); display: grid; gap: var(--space-3); }
+  .rcpt-total { padding-top: var(--space-4); border-top: var(--rule-structure); font-size: var(--type-lede); font-weight: var(--weight-medium, 500); }
+  .rcpt-total .rcpt-amt { font-size: var(--type-lede); }
+  .rcpt-oh-head { margin-top: var(--space-3); color: var(--green); font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; }
+  .rcpt-oh { font-size: 13px; color: var(--green); padding-left: var(--space-4); }
+  .rcpt-worth { padding: var(--space-4) var(--space-5); background: color-mix(in srgb, var(--green) 12%, var(--paper)); border-left: 6px solid var(--green); color: var(--green); font-weight: var(--weight-medium, 500); }
+  .rcpt-left { font-size: var(--type-body-sm); color: var(--ink-soft); }
+  .rcpt-sub { padding-top: var(--space-4); border-top: var(--rule-hair); font-size: var(--type-body-sm); }
+  .rcpt-paid-head { margin-top: var(--space-3); color: var(--ink-soft); font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; }
 </style>

@@ -46,7 +46,7 @@ export const TERMS = [
   "We collect the deposit to cover your 2D drawings and elevations, which start once it is paid, and we book your fitting slot.",
   "You can cancel within 14 days of accepting the quotation and get the deposit back in full. If you ask us to start the drawings within those 14 days and then cancel, we keep only the part that covers the drawing work already done. After that the deposit pays for the drawings. [CONFIRM]",
   "Applies to fitted wardrobe, walk-in wardrobe, alcove unit, TV unit and kitchen jobs with a quotation of £2,500 or more. Several units in one quotation count together.",
-  "The quotation total at normal prices sets how much is included, as in the table above.",
+  "Your quotation total, the units and their parts at normal prices, sets how much is included, as in the table above. Extras on the house are £0 lines and do not add to it.",
   "From " + draft("£15,000") + ", what is included can be a whole unit: a library unit, 2.4m high and 1.2m wide, a 2-door or 4-door wardrobe, a pair of alcove units or a TV unit, valued at its normal starting price. Another finish, or anything beyond what is included, is charged at normal prices.",
   "Prices on the booking page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements.",
   "Each extra on the house appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
