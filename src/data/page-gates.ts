@@ -92,9 +92,16 @@ export const PAGE_GATES = {
      Areas group and unlinked from the where-we-work lines (AreaList). An area
      page missing from this list would be ungated and so reach the sitemap by
      default: add the entry in the same commit as the page. */
+  /* Merged 9 Nov 2026: Kaspar's own rewrites replaced the sentences that keys
+     2 to 4 held. Later that day a founder ruled not to ask him about Hampstead
+     jobs (key 1), so the lede is no longer held. The page was held only by his
+     approval of the new copy around his words, which he gave on 10 Nov by
+     rewriting it: released 12 Nov. The design-led copy that shared this search,
+     /carpenter-hampstead-design/, was deleted with its gate entry in the same
+     release, so only one Hampstead page can ever be indexed. */
   "/carpenter-hampstead/": [
     ...BAND_QUESTIONS,
-    "areaHampstead1", "areaHampstead2", "areaHampstead3", "areaHampstead4",
+    "areaHampsteadMerge",
   ],
 
   // No client dependency.

@@ -69,7 +69,7 @@ export const ANSWERS = {
       site. Never rendered; kept as the record of the answer. */
   q01: { value: "No personal name is published. The site presents Structure & Style as a company.", about: "Name as published, and whether the Maker page uses his full name" },
   q02: { value: "Structure and Style Ltd, company number 16822866, incorporated 31 October 2025", about: "Company details" },
-  q03: { value: "Serving homes across London", blocking: true, about: "Business base: any physical base worth naming, or service area only" },
+  q03: { value: "Serving homes across north London", blocking: true, about: "Business base: any physical base worth naming, or service area only" },
   q04: { value: "info@structureandstyle.co.uk", about: "Email" },
   q05: { value: "07309 872555", about: "Phone and WhatsApp, already public" },
   /** Rephrased 31 Aug 2026, two Truth-gate catches: his answer said "through
@@ -208,43 +208,23 @@ export const ANSWERS = {
   q56: { value: null, about: "Whether he is happy to be photographed. No portrait at this stage, 30 Aug 2026" },
 
   /**
-   * Area page: /carpenter-hampstead/, 3 October 2026. NOT QUESTIONNAIRE
-   * NUMBERS. Q57, Q59 and Q60 exist in the questionnaire and are not keyed
-   * here, so these take names rather than the next numbers. One key per claim
-   * on the page that only the client can confirm, each asked in the page's
-   * fact-check list (C1 to C4). All four are in the page's gate in
-   * page-gates.ts: the page stays noindexed, out of the sitemap and unlinked
-   * until every one is answered.
+   * Area page: /carpenter-hampstead/. NOT QUESTIONNAIRE NUMBERS: area keys take
+   * names rather than the next numbers.
    *
-   * Each `provisional` is the approved sentence exactly as drafted. Answering
-   * is one edit here: copy the sentence, or his corrected wording, into
-   * `value`. Not `blocking`: they hold one page, not the launch.
+   * Released 12 Nov 2026. The first version's four fact keys (areaHampstead1 to
+   * 4, C1 to C4, 3 Oct) and the design-led copy's four (areaHampsteadDesign1 to
+   * 4, 7 Nov) were removed with the design-led page: Kaspar's own rewrites
+   * (8 Nov) replaced the sentences keys 2 to 4 held, a founder ruled on 9 Nov
+   * not to ask key 1, and the D keys held only the deleted page. Their wording
+   * is in git history (site commit cb16ca2).
+   *
+   * areaHampsteadMerge held the new copy we wrote around his words (ops PR #32,
+   * Step 1 and Step 2). He answered on the preview on 10 Nov 2026 by rewriting
+   * every held line, and his words are on the page as he wrote them.
    */
-  areaHampstead1: {
-    value: null,
-    provisional: "We fit both period houses and mansion-block flats.",
-    about: "C1: does he fit both period houses and mansion-block flats in Hampstead, and which Hampstead jobs and photographs may be named",
-  },
-  areaHampstead2: {
-    value: null,
-    provisional: "If yours is listed, tell us at the first visit and ask Camden about consent before any work starts.",
-    about: "C2: should a client with a listed home tell him at the first visit and ask Camden about listed building consent first",
-  },
-  /** Three bullets, in page order: managed block, lift, cutting. An answer
-      keeps three entries in that order; an empty string drops that bullet. */
-  areaHampstead3: {
-    value: null,
-    provisional: [
-      "In a managed block, insurance and the safety paperwork go to the managing agent before the start date. The building's sign-off is in place before anything begins.",
-      "Where the building has a lift, it is booked and protected before any delivery. Stair protection goes down on every day material comes in.",
-      "Cutting happens outside where access allows, otherwise in one sealed room, and never in a hallway or a communal area. Dust extraction is connected to every cutting tool, with an air scrubber running in the room.",
-    ],
-    about: "C3: are the managed-block paperwork, lift and stair protection, and cutting and dust extraction lines true on every job",
-  },
-  areaHampstead4: {
-    value: null,
-    provisional: "We agree parking and deliveries with you before the job starts, including where deliveries can stop and how far pieces are carried to your door.",
-    about: "C4: what does he do about parking on a Hampstead job, is it agreed with the client before the job starts, and is there anything the client needs to do (for example arrange a bay or tell us about a lift)",
+  areaHampsteadMerge: {
+    value: "Answered 10 Nov 2026: Kaspar rewrote the held copy on the preview, and his words replace ours.",
+    about: "Merged page: does he approve the new design section under his heading, the parking line after his and the drawings and process lines at the end of the cost section",
   },
 } as const satisfies Record<string, Answer>;
 

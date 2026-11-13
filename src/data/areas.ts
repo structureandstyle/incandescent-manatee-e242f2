@@ -43,6 +43,9 @@ export const AREAS: Area[] = [
     name: "Hampstead",
     titleProp: "Hampstead carpenter, bespoke wardrobes",
     h1: "Fitted wardrobes and bespoke carpentry in Hampstead",
+    /* Kept 9 Nov 2026 (a founder), after a comment asking for "Fitted wardrobes in Hampstead": carpenter
+       hampstead is the search with measured demand and the map result he wins, and the h1 already leads
+       with fitted wardrobes (ops briefs/carpenter-hampstead.md, section 1). */
     kicker: "Carpenter in Hampstead",
     description:
       "Carpenter for Hampstead homes: fitted wardrobes, walk-in wardrobes, alcove units and built-in TV units, measured in the room and cut to follow the walls.",
