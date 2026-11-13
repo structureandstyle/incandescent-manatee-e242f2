@@ -30,6 +30,7 @@
  */
 import Base from "../layouts/Base.astro";
 import EnquiryForm from "./EnquiryForm.astro";
+import FormProof from "./FormProof.astro";
 import Value from "./Value.astro";
 import Wrap from "./ds/Wrap.astro";
 import Display from "./ds/Display.astro";
@@ -158,6 +159,13 @@ const breadcrumb = {
           quote opens the global modal, WhatsApp opens in a new tab. No Call
           button (founders, 6 Nov 2026). */}
       <EnquiryActions style="margin-top:var(--space-15)" />
+
+      {/* The Google rating under the two actions, 13 November 2026 (a founder,
+          after a page review found it sat about 70% of the way down). The rating
+          line alone from FormProof: the same live count, stars and profile link
+          as the enquiry band, no quotes, no new CSS. No Call button is added
+          here: the 6 Nov decision above stands. */}
+      <FormProof style="margin-top:var(--space-6)" />
     </Wrap>
 
     <slot />
