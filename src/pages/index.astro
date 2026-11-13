@@ -51,6 +51,7 @@ import { HOMEPAGE_FAQS, PROCESS, REVIEWS, BAND, CONTACT, ENQUIRE_HREF } from "..
 import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import { questionLabel } from "../data/answers";
+import { photoAlt } from "../data/work-gallery";
 import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/");
@@ -213,7 +214,7 @@ const siteSchema = {
       <div style="margin-top:var(--plate-y)">
         <Plate
           photo={hero.file}
-          alt={`Bespoke kitchen, completed installation by ${BUSINESS.legalName}`}
+          alt={photoAlt(hero.file, "Bespoke kitchen")}
           width={hero.w}
           height={hero.h}
           label="Bespoke kitchens"
@@ -308,7 +309,7 @@ const siteSchema = {
         <Plate
           href={s.href}
           photo={s.file}
-          alt={`${s.type}, completed installation by ${BUSINESS.legalName}`}
+          alt={s.alt}
           width={s.w}
           height={s.h}
           ratio="4 / 3"

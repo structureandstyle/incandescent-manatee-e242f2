@@ -34,7 +34,6 @@ import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 import AreaList from "../components/AreaList.astro";
 
-import { BUSINESS } from "../data/site";
 import { BAND, CONTACT } from "../data/site-content";
 import { indexable } from "../data/page-gates";
 
@@ -119,7 +118,7 @@ const isIndexable = indexable("/about/");
     <div style="margin-top:var(--plate-y)">
       <Plate
         photo="/images/about/living-room-alcoves-kitchen.webp"
-        alt={`Lit alcove shelving and built-in cupboards either side of a fireplace, opening through to a bespoke kitchen, completed installation by ${BUSINESS.legalName}`}
+        alt="Lit alcove shelving and built-in cupboards either side of a fireplace, opening through to a bespoke kitchen"
         width={1552}
         height={912}
         label="Alcove units"

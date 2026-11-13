@@ -45,6 +45,7 @@ import { SITE_URL, BUSINESS } from "../data/site";
 import { BAND } from "../data/site-content";
 import { indexable } from "../data/page-gates";
 import { areaPath, type Area } from "../data/areas";
+import { photoAlt } from "../data/work-gallery";
 import selection from "../../public/images/_selection.json";
 
 interface Props {
@@ -68,10 +69,9 @@ const plates = area.plates.map((p) => {
   return { ...p, w: found.w, h: found.h };
 });
 
-/* The /work/ alt pattern without the photograph number: the type of work,
-   that it is finished, and whose it is. No place: none is a recorded job in
-   the district. */
-const altFor = (type: string) => `${type}, completed installation by ${BUSINESS.legalName}`;
+/* Each photograph's own description from work-gallery.ts (6 Nov 2026), the
+   same words it has on /work/. No place in it: none is a recorded job in the
+   district. */
 
 /* Schema. The site-wide HomeAndConstructionBusiness node comes from Base on
    every page, with this district in its areaServed: no second business node.
@@ -136,7 +136,8 @@ const breadcrumb = {
         {plates.map((p, i) => (
           <Plate
             photo={p.file}
-            alt={altFor(p.type)}
+            alt={photoAlt(p.file, p.type)}
+            label={p.type}
             width={p.w}
             height={p.h}
             ratio="3 / 2"

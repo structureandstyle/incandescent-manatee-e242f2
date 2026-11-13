@@ -43,7 +43,7 @@ import Link from "../components/ds/Link.astro";
 import Value from "../components/Value.astro";
 
 import { BAND } from "../data/site-content";
-import { BUSINESS, SERVICES, servicePath, serviceLabel } from "../data/site";
+import { SERVICES, servicePath, serviceLabel } from "../data/site";
 import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import selection from "../../public/images/_selection.json";
@@ -93,8 +93,10 @@ const frameRatio = (p: { w: number; h: number }) =>
  * one is the failure the journal draft was blocked on. Q44 to Q49 are what
  * make real captions possible.
  */
-const altFor = (type: string, n: number) =>
-  `${type}, completed installation by ${BUSINESS.legalName}, photograph ${n}`;
+/* Each photograph's alt is its own description from work-gallery.ts (6 Nov
+   2026). It was "<type>, completed installation by Structure and Style Ltd,
+   photograph N" for all thirty: the same words thirty times, numbered, and
+   naming a company that did not exist yet when most were taken. */
 
 /* The services with a page of their own, for the row under the gallery. The
    cost guide is excluded by its flag: it is a guide, not something a visitor
@@ -140,7 +142,7 @@ const services = SERVICES.filter((s) => !s.guide);
       {shots.map((s, i) => (
         <Plate
           photo={s.file}
-          alt={altFor(s.type, i + 1)}
+          alt={s.alt}
           width={s.w}
           height={s.h}
           ratio={frameRatio(s)}
