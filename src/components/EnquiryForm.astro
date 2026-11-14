@@ -35,8 +35,6 @@ const BONUS_CHOICES = [
   "Full-length mirror inside a door",
   "Not sure yet",
 ];
-/* Every service he offers (Arthur's comment, 12 Nov 2026). */
-const BOOKING_SLUGS = ["fitted-wardrobes", "walk-in-wardrobes", "alcove-units", "media-walls", "bespoke-kitchens"];
 const turnstileSiteKey = import.meta.env.PUBLIC_SS_TURNSTILE_SITE_KEY;
 const largeUploadsEnabled = Boolean(turnstileSiteKey);
 
@@ -102,8 +100,10 @@ const CHOICES = [
  * stands, that a room being fitted out rarely needs one thing, and the full
  * list is one click away in the modal on every page including this one.
  */
+/* The booking page offers every service (Arthur, 14 Nov: "add all the
+   services"), so a basket of any of them ticks its own box. */
 const choices = bonusPicker
-  ? [...SERVICES.filter((s) => BOOKING_SLUGS.includes(s.slug)).map(serviceLabel), "Something else"]
+  ? CHOICES
   : service ? [service, "Something else"] : CHOICES;
 const selectedService = service ?? preselectedService;
 

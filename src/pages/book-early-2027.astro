@@ -354,7 +354,7 @@ const clientData = {
         <li>Design included</li>
         <li>Made to measure</li>
         <li>Delivered and fitted</li>
-        <li>Blum soft-close hardware</li>
+        <li>Blum soft-close hardware on cabinets</li>
       </ul>
     </div>
 
@@ -460,7 +460,7 @@ const clientData = {
           <div class="basket-inner" data-basket hidden>
             <ul class="basket-list" data-basket-list></ul>
             <div class="rcpt-totals" data-total></div>
-            <p class="booking-note">Every unit: design included, made to measure, delivered and fitted, Blum soft-close hardware.</p>
+            <p class="booking-note">Every unit: design included, made to measure, delivered and fitted; Blum soft-close hardware on cabinets.</p>
             <p class="basket-nudge" data-nudge hidden></p>
             {/* On the house (Denis, 12 Nov): a big headline, a meter that stays in
                 view while picking, and two groups that open on a tap. */}
@@ -721,8 +721,8 @@ const clientData = {
       return "At " + step(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house" +
         (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your basket is " + money(nb[0] - s.base) + " away.";
     };
-    const totalLabel = (s) => "Indicative total, from" + (s.around ? " around" : "");
-    const totalAmount = (s) => (!s.base && s.pending ? d("price to come") : price(s.base, s.draft));
+    const totalLabel = (s) => (!s.base && s.pending ? "Total" : "Indicative total, from" + (s.around ? " around" : ""));
+    const totalAmount = (s) => (!s.base && s.pending ? "priced at the quotation" : price(s.base, s.draft));
     const pendingNote = () => {
       const np = state.list.filter((u) => u.pending).length;
       return np === 1 ? "Plus a unit with its price to come" : "Plus " + np + " units with their price to come";
@@ -800,8 +800,8 @@ const clientData = {
         const kl = b.addons.includes("led") ? Math.floor(s.room / pickPrice("led", hypo)) : 0;
         const hasWhole = s.items.some((k) => wholeOrder.includes(k));
         const pl = (n, w) => n + " " + w + (n > 1 ? "s" : "");
-        const t = (s.allow && !s.pending
-          ? "With this unit your basket comes to " + (s.around ? "around " : "") + price(s.base, s.draft) +
+        const t = (s.allow
+          ? "With this unit your basket comes to " + (s.around ? "around " : "") + price(s.base, s.draft) + (s.pending ? ", plus a unit with its price to come" : "") +
             ", and extras worth up to " + about(s) + d(money(s.allow)) + " come on the house" + (s.around ? ", set by your quotation" : "") +
             (s.included ? ", " + d(money(s.included)) + " of it already picked" : "") +
             (!s.spendable ? ". " :
@@ -833,7 +833,7 @@ const clientData = {
       $("[data-basket-empty]").hidden = n > 0;
       basket.hidden = !n;
       $("[data-send]").disabled = !n;
-      if (!n) { state.split = null; state.picks = {}; state.order = []; $("[data-basket-list]").replaceChildren(); $("[data-total]").replaceChildren(); fillForm(null); $("[data-send]").textContent = "Send my basket"; saveBasket(); return; }
+      if (!n) { state.split = null; state.picks = {}; state.order = []; $("[data-basket-list]").replaceChildren(); $("[data-total]").replaceChildren(); fillForm(null); $("[data-send]").textContent = "Send my basket"; keepBasket(); return; }
 
       /* The basket as a receipt: prices on the right, then what is on the house
          at £0 with its value, then the total. */
@@ -925,7 +925,7 @@ const clientData = {
       $("[data-estimate]").textContent = "Indicative guide prices. The firm figure is the itemised quotation, after a measured survey or from your photos and measurements.";
       fillForm(s);
       $("[data-send]").textContent = !s.base && s.pending ? "Send my basket" : "Send my basket, from " + (s.around ? "around " : "") + totalAmount(s);
-      saveBasket();
+      keepBasket();
     };
 
     document.querySelectorAll("[data-bundle]").forEach((card) => {
@@ -948,9 +948,11 @@ const clientData = {
       renderPanel();
     });
 
-    $("[data-add]").addEventListener("click", () => {
+    /* Builds a basket unit from the choices in state (the pop-up, or a kept
+       basket being rebuilt), always at today's prices. */
+    const addUnit = () => {
       const b = state.b; const now = unitNow();
-      if (!b || !now) return;
+      if (!b || !now) return null;
       const detail = [
         b.kind === "kitchen" ? state.units + " units" : "",
         b.sizes && state.size !== null ? b.sizes[state.size] : "",
@@ -967,8 +969,15 @@ const clientData = {
         notIncluded: b.notIncluded || "",
         parts: Object.assign({}, state.parts), baseValue: now.p.value, baseDraft: now.p.draft,
         baseLabel: b.from === null ? "Priced at the quotation" : b.priceLabel ? "The box" : b.perProject ? "Starting price, priced per project" : b.around ? "Starting price, around" : "Starting price",
+        choice: { id: b.id, size: state.size, finish: state.finish, units: state.units, parts: Object.assign({}, state.parts) },
       });
       state.b = null; state.parts = {};
+      return b;
+    };
+
+    $("[data-add]").addEventListener("click", () => {
+      const b = addUnit();
+      if (!b) return;
       closeDialog();
       renderBasket();
       fab.classList.remove("bump"); void fab.offsetWidth; fab.classList.add("bump");
@@ -1041,20 +1050,21 @@ const clientData = {
     if (enquiry) enquiry.addEventListener("submit", () => { if (state.list.length && state.split) fillForm(state.split); }, true);
 
     const sendDialog = $("[data-send-dialog]");
-    const openSend = (withBasket) => {
+    const openSend = (withBasket, asMessage) => {
       closeDialog();
       closeDrawer();
       const useBasket = !!(withBasket && state.list.length && state.split);
       if (useBasket) { state.sent = true; fillForm(state.split); }
-      sendDialog.classList.toggle("has-basket", useBasket);
-      $("[data-send-lead]").textContent = useBasket
-        ? "Your basket is ready. Add your details and it comes with them."
-        : "Tell us what you need, and we will get back to you.";
+      sendDialog.classList.toggle("has-basket", useBasket && !asMessage);
+      $("#send-title").textContent = asMessage ? "Send a message" : "Send your basket";
+      $("[data-send-lead]").textContent = asMessage
+        ? (useBasket ? "Your basket comes with your message." : "Tell us what you need, and we will get back to you.")
+        : "Your basket is ready. Add your details and it comes with them.";
       if (!sendDialog.open) { if (sendDialog.showModal) sendDialog.showModal(); else sendDialog.setAttribute("open", ""); }
     };
     const closeSend = () => { if (sendDialog.open) { if (sendDialog.close) sendDialog.close(); else sendDialog.removeAttribute("open"); } };
     $("[data-send]").addEventListener("click", () => openSend(true));
-    document.querySelectorAll("[data-open-send]").forEach((el) => el.addEventListener("click", () => openSend(state.list.length > 0)));
+    document.querySelectorAll("[data-open-send]").forEach((el) => el.addEventListener("click", () => openSend(state.list.length > 0, true)));
     $("[data-send-close]").addEventListener("click", closeSend);
     sendDialog.addEventListener("click", (e) => { if (e.target === sendDialog) closeSend(); });
 
@@ -1064,24 +1074,45 @@ const clientData = {
       if (card) card.click();
     }));
 
-    /* The basket is kept in this browser between visits (no personal details),
-       and cleared once the enquiry is sent. */
+    /* The basket is kept in this browser between visits as the choices only
+       (no personal details, no prices), rebuilt from today's prices on return,
+       and cleared once the enquiry is sent. Anything unreadable is dropped. */
     const KEY = "ss_bundle_2027";
-    function saveBasket() {
+    function keepBasket() {
       try {
-        if (state.list.length) localStorage.setItem(KEY, JSON.stringify({ v: 1, list: state.list, order: state.order }));
+        if (state.list.length) localStorage.setItem(KEY, JSON.stringify({ v: 2, units: state.list.map((u) => u.choice), order: state.order }));
         else localStorage.removeItem(KEY);
       } catch (e) { /* storage off: the page still works */ }
     }
     if (enquiry) enquiry.addEventListener("submit", () => { try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ } });
     try {
-      const saved = JSON.parse(localStorage.getItem(KEY) || "null");
-      if (saved && saved.v === 1 && Array.isArray(saved.list) && saved.list.length) {
-        state.list = saved.list.filter((u) => u && data.bundles.some((x) => x.id === u.id));
-        state.order = Array.isArray(saved.order) ? saved.order : [];
+      const stored = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (stored && stored.v === 2 && Array.isArray(stored.units)) {
+        stored.units.forEach((c) => {
+          try {
+            const bb = c && data.bundles.find((x) => x.id === c.id);
+            if (!bb) return;
+            state.b = bb;
+            state.size = bb.sizes && Number.isInteger(c.size) && c.size >= 0 && c.size < bb.sizes.length ? c.size : null;
+            state.finish = bb.finishes && Number.isInteger(c.finish) && c.finish >= 0 && c.finish < bb.finishes.length ? c.finish : null;
+            state.units = Number.isInteger(c.units) && c.units >= 4 && c.units <= 40 ? c.units : bb.unitsIncluded || 12;
+            state.parts = {};
+            if (c.parts && typeof c.parts === "object") {
+              Object.keys(c.parts).forEach((k) => { const n = c.parts[k]; if (bb.parts && bb.parts.includes(k) && Number.isInteger(n) && n > 0 && n <= 20) state.parts[k] = n; });
+            }
+            addUnit();
+          } catch (e) { /* skip a unit that cannot be rebuilt */ }
+        });
+        state.b = null; state.parts = {};
+        state.order = Array.isArray(stored.order) ? stored.order.filter((k) => typeof k === "string" && all[k]) : [];
         if (state.list.length) { renderBasket(); showToast("Your basket from earlier is still here."); }
+        else localStorage.removeItem(KEY);
+      } else if (stored) {
+        localStorage.removeItem(KEY);
       }
-    } catch (e) { /* storage off or unreadable */ }
+    } catch (e) {
+      try { localStorage.removeItem(KEY); } catch (e2) { /* ignore */ }
+    }
   })();
 </script>
 
@@ -1233,7 +1264,6 @@ const clientData = {
     stroke-linejoin: round;
     stroke-linecap: round;
   }
-  .bundle-drawing svg * { stroke: var(--walnut); stroke-width: 2.5; }
   .bundle-drawing .f-oak { fill: color-mix(in srgb, var(--oak) 45%, var(--paper)); }
   .bundle-drawing .f-oak2 { fill: color-mix(in srgb, var(--oak) 70%, var(--paper)); }
   .bundle-drawing .f-wal { fill: var(--walnut); }
@@ -1503,6 +1533,7 @@ const clientData = {
   @keyframes orn-sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
   @keyframes star-twinkle { from { opacity: .2; } to { opacity: .75; } }
   @media (max-width: 700px) { .orn-m { display: none; } }
+  @media (max-width: 600px) { .xmas-kicker { padding-right: 64px; } }
   @media (prefers-reduced-motion: reduce) { .orn, .star { animation: none; } }
   .xmas-hero .xmas-hero-grid { position: relative; }
   .xmas-holly-lid { position: absolute; top: -34px; left: 2px; width: 46px; height: 28px; z-index: 5; }
@@ -1516,22 +1547,21 @@ const clientData = {
   .steps-note { margin: var(--space-6) 0 0; font-size: var(--type-body-sm); color: var(--ink-soft); }
   .bundle-drawing { --ec-ink: var(--char); --ec-accent: var(--green); --ec-paper: var(--paper); }
   .bundle-drawing svg { aspect-ratio: 3 / 2; max-width: 220px; }
-  .ecd-k, .ecd-t, .ecd-h, .ecd-g, .ecd-gt, .ecd-w, .ecd-r, .ecd-s, .ecd-rl { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  .bundle-drawing svg * { stroke-width: initial; }
-  .ecd-k { stroke: var(--ec-ink); stroke-width: 1.6; }
-  .ecd-t { stroke: var(--ec-ink); stroke-opacity: 0.55; stroke-width: 1; }
-  .ecd-h { stroke: var(--ec-ink); stroke-opacity: 0.24; stroke-width: 1; }
-  .ecd-g { stroke: var(--ec-accent); stroke-width: 1.8; }
-  .ecd-gt { stroke: var(--ec-accent); stroke-width: 1; }
-  .ecd-f { fill: var(--ec-ink); stroke: none; }
-  .ecd-pf { fill: var(--ec-paper); stroke: none; }
-  .ecd-gw { fill: var(--ec-accent); fill-opacity: 0.14; stroke: none; }
-  .ecd-gd { fill: var(--ec-accent); fill-opacity: 0.34; stroke: none; }
-  .ecd-w { stroke: var(--ec-accent); stroke-width: 2.6; }
-  .ecd-r { stroke: var(--ec-ink); stroke-width: 2.4; }
-  .ecd-s { stroke: var(--ec-ink); stroke-opacity: 0.45; stroke-width: 1; }
-  .ecd-rl { stroke: var(--ec-ink); stroke-opacity: 0.7; stroke-width: 1.2; stroke-dasharray: 4 2.5; stroke-linecap: butt; }
-  .ecd-m { fill: var(--ec-accent); stroke: none; }
+  .bundle-drawing :is(.ecd-k, .ecd-t, .ecd-h, .ecd-g, .ecd-gt, .ecd-w, .ecd-r, .ecd-s, .ecd-rl) { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .bundle-drawing .ecd-k { stroke: var(--ec-ink); stroke-width: 1.6; }
+  .bundle-drawing .ecd-t { stroke: var(--ec-ink); stroke-opacity: 0.55; stroke-width: 1; }
+  .bundle-drawing .ecd-h { stroke: var(--ec-ink); stroke-opacity: 0.24; stroke-width: 1; }
+  .bundle-drawing .ecd-g { stroke: var(--ec-accent); stroke-width: 1.8; }
+  .bundle-drawing .ecd-gt { stroke: var(--ec-accent); stroke-width: 1; }
+  .bundle-drawing .ecd-f { fill: var(--ec-ink); stroke: none; }
+  .bundle-drawing .ecd-pf { fill: var(--ec-paper); stroke: none; }
+  .bundle-drawing .ecd-gw { fill: var(--ec-accent); fill-opacity: 0.14; stroke: none; }
+  .bundle-drawing .ecd-gd { fill: var(--ec-accent); fill-opacity: 0.34; stroke: none; }
+  .bundle-drawing .ecd-w { stroke: var(--ec-accent); stroke-width: 2.6; }
+  .bundle-drawing .ecd-r { stroke: var(--ec-ink); stroke-width: 2.4; }
+  .bundle-drawing .ecd-s { stroke: var(--ec-ink); stroke-opacity: 0.45; stroke-width: 1; }
+  .bundle-drawing .ecd-rl { stroke: var(--ec-ink); stroke-opacity: 0.7; stroke-width: 1.2; stroke-dasharray: 4 2.5; stroke-linecap: butt; }
+  .bundle-drawing .ecd-m { fill: var(--ec-accent); stroke: none; }
   .recent-work { margin-top: var(--space-12); }
   .rw-list { list-style: none; margin: var(--space-6) 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-5); }
   .rw-item { margin: 0; }
