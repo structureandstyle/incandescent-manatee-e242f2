@@ -64,6 +64,20 @@ export function chosenName(label, value) {
   return label === OTHER_AREA && value && value !== OTHER_AREA ? `${OTHER_AREA}: ${value}` : label;
 }
 
+/**
+ * What "What do you need?" sends: the ticked services as one plain line,
+ * "Fitted wardrobes, Alcove units and shelving", in the cards' order, each
+ * once. Sent as one value since 14 Nov 2026 because Netlify shows a field
+ * sent several times as code in the notification email, ["Fitted wardrobes",
+ * "Alcove units and shelving"]; a founder's test read that as the units not
+ * coming through. Make scenario 7361484 already takes one line as well as a
+ * list (its mapping is ifempty(join(service); service)), so the log is
+ * unchanged.
+ */
+export function servicesLine(values) {
+  return [...new Set(values.map((v) => String(v ?? "").trim()).filter(Boolean))].join(", ");
+}
+
 /** "Fitted wardrobes, Alcove units and shelving" under a row of cards, or "". */
 export function chosenLine(labels) {
   const list = labels.filter(Boolean);

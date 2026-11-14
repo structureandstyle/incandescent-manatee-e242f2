@@ -20,6 +20,7 @@ import {
   chosenName,
   dropEmptyStarters,
   otherAreaValue,
+  servicesLine,
 } from "../src/scripts/enquiry-cards.mjs";
 import { SERVICE_ART } from "../src/components/enquiry-cards/art/services.ts";
 import { AREA_ART } from "../src/components/enquiry-cards/art/areas.ts";
@@ -50,6 +51,15 @@ test("a prompt tapped and never finished is not sent", () => {
   assert.equal(dropEmptyStarters("Room: main bedroom\nRough sizes: ", starters), "Room: main bedroom");
   assert.equal(dropEmptyStarters("Rough sizes:\nTiming: May", starters), "Timing: May");
   assert.equal(dropEmptyStarters("Two alcoves, 1m each.", starters), "Two alcoves, 1m each.");
+});
+
+test("the ticked services go as one plain line, each once, in order", () => {
+  assert.equal(servicesLine(["Fitted wardrobes", "Alcove units and shelving"]), "Fitted wardrobes, Alcove units and shelving");
+  assert.equal(servicesLine(["Flooring"]), "Flooring");
+  assert.equal(servicesLine([]), "");
+  assert.equal(servicesLine(["", "  Flooring ", "Flooring"]), "Flooring");
+  // Never the code-style list Netlify prints for a repeated field.
+  assert.doesNotMatch(servicesLine(["Fitted wardrobes", "Flooring"]), /[[\]"]/);
 });
 
 test("the chosen line names what is ticked", () => {
@@ -89,6 +99,11 @@ test("each card question keeps its field name and its email heading", () => {
   }
   // The heading input is the group's own type, named as the field, with no value.
   assert.match(cardGroup, /<p hidden><input type=\{type\} name=\{name\} value="" tabindex="-1" \/><\/p>/);
+  // Each card keeps its field in data-field: the services line and the
+  // subject find the service cards by it once their name has moved.
+  assert.match(cardGroup, /data-field=\{name\}/);
+  // The heading input has none, so it never joins the services line.
+  assert.doesNotMatch(cardGroup.match(/<p hidden><input[^>]*>/)[0], /data-field/);
 });
 
 test("the Somewhere else box has no name, so it is never sent on its own", () => {
