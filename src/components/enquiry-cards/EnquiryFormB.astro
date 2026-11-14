@@ -1,0 +1,227 @@
+---
+/**
+ * ENQUIRY FORM, OPTION B: one question at a time, with picture cards. A
+ * preview for a founder to compare with option A (14 Nov 2026); the live form
+ * is src/components/EnquiryForm.astro and is unchanged.
+ *
+ * What is new against the live form:
+ *   - five short steps with a progress line: what you need, where, the job,
+ *     how you heard, then your details. Name, phone and email come last,
+ *     after the easy questions, so nobody is asked for their number first;
+ *   - cards wrap into a grid on a laptop and swipe in two rows on a phone;
+ *   - "Tell us about the job" has a rough-width picker of six drawings.
+ *     Picking one writes "Rough width: 2 to 3m" at the top of the one box,
+ *     where it can be seen and changed, so the job still arrives as one
+ *     field (the picker itself is never sent);
+ *   - "Somewhere else" and the five "How did you hear" answers as in A.
+ *
+ * Without JavaScript every step shows, one under another, ending in Send:
+ * the same complete form, just long.
+ *
+ * Field names and values are the live form's, apart from two new source
+ * values (Google Maps, ChatGPT): the pull request lists the mapping.
+ *
+ * PREVIEW, NOT WIRED, as option A: no data-netlify, no form-name, and Send
+ * shows what the enquiry would carry instead of sending it (./client.ts).
+ */
+import CardGroup from "./CardGroup.astro";
+import {
+  AREA_CHOICES,
+  JOB_EXAMPLE_DEFAULT,
+  JOB_EXAMPLES,
+  SOURCE_CHOICES,
+  WIDTH_CHOICES,
+  serviceChoicesFor,
+} from "./choices";
+import { FIELD_NAMES as SOURCE_FIELDS } from "../../scripts/enquiry-source.mjs";
+import "./enquiry-cards.css";
+
+interface Props {
+  compact?: boolean;
+  idPrefix?: string;
+  service?: string;
+  preselectedService?: string;
+}
+const { compact = false, idPrefix = "", service, preselectedService } = Astro.props;
+
+const selectedService = service ?? preselectedService;
+const jobExample = (selectedService && JOB_EXAMPLES[selectedService]) || JOB_EXAMPLE_DEFAULT;
+const q = (n: number) => `${idPrefix}step-${n}`;
+---
+
+<form
+  name="enquiry-preview"
+  method="post"
+  action="#enquiry-preview"
+  class:list={["ecf", "ecf-b", compact && "is-compact"]}
+  data-ec-form
+  data-ec-steps
+  data-variant="b"
+>
+  <input type="hidden" name="subject" value="Website enquiry (%{submissionId})" />
+  {SOURCE_FIELDS.map((name) => <input type="hidden" name={name} value="" />)}
+  <p hidden>
+    <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="ecb-progress" data-ec-progress hidden>
+    <p class="ecb-count" id={`${idPrefix}step-count`} data-ec-count>Step one of five</p>
+    <div class="ecb-bar" aria-hidden="true"><span></span></div>
+  </div>
+
+  <section class="ecb-step is-current" data-ec-panel tabindex="-1" aria-labelledby={q(1)} aria-describedby={`${idPrefix}step-count`}>
+    <CardGroup
+      legend="What do you need?"
+      legendId={q(1)}
+      legendStyle="question"
+      help={selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
+      name="service"
+      type="checkbox"
+      choices={serviceChoicesFor(service)}
+      idPrefix={idPrefix}
+      checked={selectedService ? [selectedService] : []}
+      layout="grid"
+      emailHeading
+      showChosen
+    />
+    <div class="ecb-nav" data-ec-nav hidden>
+      <button type="button" class="ecb-back" data-ec-back hidden>Back</button>
+      <button type="button" class="ecb-next" data-ec-next>Next</button>
+    </div>
+  </section>
+
+  <section class="ecb-step" data-ec-panel tabindex="-1" aria-labelledby={q(2)} aria-describedby={`${idPrefix}step-count`}>
+    <CardGroup
+      legend="Which area of north London?"
+      legendId={q(2)}
+      legendStyle="question"
+      help="Pick the nearest."
+      name="area"
+      type="radio"
+      choices={AREA_CHOICES}
+      idPrefix={idPrefix}
+      layout="grid"
+      role="area"
+    >
+      <p class="ecf-help ec-nojs">Somewhere else? Say where in the job box.</p>
+      <div class="ec-other" data-ec-other hidden>
+        <label class="ecf-label" for={`${idPrefix}area-other`}>Your area or postcode</label>
+        <input
+          class="ecf-input"
+          id={`${idPrefix}area-other`}
+          type="text"
+          data-ec-other-input
+          placeholder="Finchley, or your postcode"
+        />
+      </div>
+    </CardGroup>
+    <div class="ecb-nav" data-ec-nav hidden>
+      <button type="button" class="ecb-back" data-ec-back hidden>Back</button>
+      <button type="button" class="ecb-next" data-ec-next>Next</button>
+    </div>
+  </section>
+
+  <section class="ecb-step" data-ec-panel tabindex="-1" aria-labelledby={q(3)} aria-describedby={`${idPrefix}step-count`}>
+    <p class="ecb-q" id={q(3)}>Tell us about the job</p>
+    <div data-ec-js-only hidden>
+      <CardGroup
+        legend="Roughly how wide is it?"
+        help="Picking one adds it to the box below."
+        name="width"
+        type="radio"
+        choices={WIDTH_CHOICES}
+        idPrefix={idPrefix}
+        layout="grid"
+        role="width"
+        formless
+      />
+    </div>
+    <div>
+      <label class="ecf-label" for={`${idPrefix}detail`}>Anything else about the job?</label>
+      <p class="ecf-help">The room and what it needs to hold is plenty.</p>
+      <textarea
+        class="ecf-input"
+        id={`${idPrefix}detail`}
+        name="detail"
+        rows={compact ? 4 : 5}
+        placeholder={jobExample}
+      ></textarea>
+    </div>
+    <fieldset>
+      <legend class="ecf-label">Photos or drawings (optional)</legend>
+      <p class="ecf-help">
+        Add up to six photos, plans or documents, up to 15 MB each and 60 MB together. Choose several
+        at once or add them one at a time. They upload when you send the enquiry.
+      </p>
+      <div class="ecf-files">
+        <input
+          id={`${idPrefix}files`}
+          class="ecf-file-input"
+          type="file"
+          multiple
+          data-ec-files
+          accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
+        />
+        <label for={`${idPrefix}files`} class="ecf-file-button">Add files</label>
+        <p class="ecf-help" data-ec-file-count aria-live="polite">Nothing added yet.</p>
+      </div>
+    </fieldset>
+    <div class="ecb-nav" data-ec-nav hidden>
+      <button type="button" class="ecb-back" data-ec-back hidden>Back</button>
+      <button type="button" class="ecb-next" data-ec-next>Next</button>
+    </div>
+  </section>
+
+  <section class="ecb-step" data-ec-panel tabindex="-1" aria-labelledby={q(4)} aria-describedby={`${idPrefix}step-count`}>
+    <CardGroup
+      legend="How did you hear about us?"
+      legendId={q(4)}
+      legendStyle="question"
+      name="source"
+      type="radio"
+      choices={SOURCE_CHOICES}
+      idPrefix={idPrefix}
+      layout="grid"
+    />
+    <div class="ecb-nav" data-ec-nav hidden>
+      <button type="button" class="ecb-back" data-ec-back hidden>Back</button>
+      <button type="button" class="ecb-next" data-ec-next>Next</button>
+    </div>
+  </section>
+
+  <section class="ecb-step" data-ec-panel tabindex="-1" aria-labelledby={q(5)} aria-describedby={`${idPrefix}step-count`}>
+    <p class="ecb-q" id={q(5)}>Your details</p>
+    <div class="ecf-row">
+      <div>
+        <label class="ecf-label" for={`${idPrefix}name`}>Your name</label>
+        <input class="ecf-input" id={`${idPrefix}name`} name="name" type="text" required autocomplete="name" />
+      </div>
+      <div>
+        <label class="ecf-label" for={`${idPrefix}phone`}>Phone</label>
+        <input class="ecf-input" id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel" />
+      </div>
+    </div>
+    <div>
+      <label class="ecf-label" for={`${idPrefix}email`}>Email</label>
+      <input class="ecf-input" id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" />
+    </div>
+    <div class="ecb-nav">
+      <button type="button" class="ecb-back" data-ec-back hidden>Back</button>
+      <button type="submit" class="ecf-send" data-ec-send disabled>Send enquiry</button>
+    </div>
+    <p class="ecf-help">
+      Preview only: Send shows what the enquiry would carry, and nothing leaves this page.
+    </p>
+    <div class="ec-dry" data-ec-dry tabindex="-1" role="region" aria-label="What this enquiry would send" hidden></div>
+    <p class="ecf-help">
+      We use your details to reply, to quote, and to carry out the work if you go ahead. We do not add
+      you to a marketing list. See our{" "}
+      <a href="/privacy/">privacy notice</a>.
+    </p>
+  </section>
+</form>
+
+<script>
+  import { initEnquiryCards } from "./client";
+  initEnquiryCards();
+</script>

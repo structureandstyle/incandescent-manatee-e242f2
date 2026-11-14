@@ -1,0 +1,19 @@
+---
+/**
+ * Hidden preview: enquiry form option B (14 Nov 2026), for a founder to
+ * compare with option A before either replaces the live form. Noindexed and out
+ * of the sitemap by its gate in src/data/page-gates.ts; nothing links here.
+ * The page body is src/components/enquiry-cards/FormPreviewPage.astro.
+ */
+import Base from "../layouts/Base.astro";
+import FormPreviewPage from "../components/enquiry-cards/FormPreviewPage.astro";
+import { indexable } from "../data/page-gates";
+---
+
+<Base
+  title="Enquiry form preview B"
+  description="Internal preview of a picture-card enquiry form, option B. Not linked from the site and not indexed."
+  noindex={!indexable("/form-preview-b/")}
+>
+  <FormPreviewPage variant="b" />
+</Base>

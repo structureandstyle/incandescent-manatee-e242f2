@@ -226,6 +226,16 @@ export const ANSWERS = {
     value: "Answered 10 Nov 2026: Kaspar rewrote the held copy on the preview, and his words replace ours.",
     about: "Merged page: does he approve the new design section under his heading, the parking line after his and the drawings and process lines at the end of the cost section",
   },
+  /**
+   * Not a question for Kaspar: the gate on the two enquiry form previews
+   * (/form-preview-a/ and /form-preview-b/, 14 Nov 2026). It stays null so
+   * both pages stay noindexed and out of the sitemap. When a founder picks an
+   * option, the key goes with the two pages; it is never answered here.
+   */
+  formPick: {
+    value: null,
+    about: "Founders: which enquiry form preview replaces the live form, option A (one page) or option B (one question at a time)",
+  },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;
