@@ -48,8 +48,12 @@ interface Props {
   contact?: readonly (FooterLink & { lead?: boolean })[];
   /** Opening hours, one line per range, under the contact routes. */
   hours?: readonly string[];
-  /** Page navigation, in groups. Two columns on a phone; an odd last group spans both. */
-  nav?: readonly { heading: string; links: readonly FooterLink[] }[];
+  /**
+   * Page navigation, in groups. Two columns on a phone; an odd last group spans both.
+   * `columns: 2` sets a long group's links in two columns, the group itself two columns wide
+   * (the full width on a phone), so it reads as a block rather than one long stack.
+   */
+  nav?: readonly { heading: string; links: readonly FooterLink[]; columns?: 2 }[];
   /** Policy links, at the right of the small-print bar. */
   legal?: readonly FooterLink[];
   /** The legal identity, at the left of the small-print bar. Each string wraps as a unit. */
@@ -158,9 +162,9 @@ const bind = (s: string) => s.replace(/ · /g, " · ");
            appears on its own the day its gate clears. See Footer.astro. */
         <nav class="ftr-nav" aria-label="Footer">
           {nav.map((group) => (
-            <div class="ftr-group">
+            <div class:list={["ftr-group", group.columns === 2 && "ftr-group-wide"]}>
               <p class="ftr-label">{group.heading}</p>
-              <ul class="ftr-list">
+              <ul class:list={["ftr-list", group.columns === 2 && "ftr-list-two"]}>
                 {group.links.map((l) => (
                   <li><a class="ftr-link" href={l.href}>{l.label}</a></li>
                 ))}
@@ -281,6 +285,22 @@ const bind = (s: string) => s.replace(/ · /g, " · ");
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  /* A long group in two columns, read down the first and then the second, so
+     an alphabetical list stays in order (the Areas list, 14 Nov 2026: Arthur,
+     "make two columns instead of one continues"). Each link keeps its 44px. */
+  .ftr-group-wide {
+    grid-column: span 2;
+  }
+
+  .ftr-list-two {
+    columns: 2;
+    column-gap: var(--space-14);
+  }
+
+  .ftr-list-two li {
+    break-inside: avoid;
   }
 
   /* The things a reader clicks, in the body face at the small body size and
@@ -430,8 +450,13 @@ const bind = (s: string) => s.replace(/ · /g, " · ");
       gap: var(--space-14) var(--space-10);
     }
 
-    .ftr-group:last-child:nth-child(odd) {
+    .ftr-group:last-child:nth-child(odd),
+    .ftr-group-wide {
       grid-column: 1 / -1;
+    }
+
+    .ftr-list-two {
+      column-gap: var(--space-10);
     }
 
     .ftr-base {

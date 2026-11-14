@@ -97,7 +97,8 @@ export const AREAS: Area[] = [
        remain the page's scope, not the borough (brief section 14, option a). */
     titleProp: "Bespoke fitted wardrobes in Camden",
     h1: "Bespoke fitted wardrobes and alcove units in Camden",
-    kicker: "Bespoke joinery in Camden",
+    /* "Bespoke carpentry", Arthur's comment on the review link, 14 Nov 2026; the footer tagline's words. */
+    kicker: "Bespoke carpentry in Camden",
     description:
       "Bespoke fitted wardrobes and alcove units for Camden homes: terraced houses and flats, measured in the room and cut to walls that are rarely straight.",
     /* Search Console, 11 Oct to 8 Nov: fitted wardrobes camden 20 and bespoke wardrobes camden 20
@@ -154,19 +155,26 @@ export const AREAS: Area[] = [
   {
     slug: "carpenter-islington",
     name: "Islington",
-    titleProp: "Islington carpenter, bespoke wardrobes",
-    h1: "Carpenter in Islington for bespoke wardrobes and fitted furniture",
-    kicker: "Carpenter in Islington",
+    /* "Bespoke carpentry" in the heading and the kicker (Arthur's comments on the review link, 14 Nov
+       2026), and so in the title and description too, as Camden went product-led the same day (see
+       `slug`). The address stays /carpenter-islington/ until the page's turn to move. */
+    titleProp: "Bespoke carpentry and wardrobes in Islington",
+    h1: "Bespoke carpentry in Islington for wardrobes and fitted furniture",
+    kicker: "Bespoke carpentry in Islington",
     description:
-      "Carpenter in Islington: bespoke wardrobes, alcove units and shelving for Georgian and Victorian houses and flats, measured in the room and cut to fit.",
+      "Bespoke carpentry in Islington: wardrobes, alcove units and shelving for Georgian and Victorian houses and flats, measured in the room and cut to fit.",
     /* carpenter islington cluster (carpenter islington, carpenters islington, islington
        carpenter) 40 a month, peak 70 (Keyword Planner, London, 14 Nov 2026): the largest
        area figure. Search Console: bespoke wardrobes islington 36, carpentry islington 24,
-       bespoke furniture islington 22 impressions, 11 Oct to 8 Nov. */
-    primary: "carpenter islington",
+       bespoke furniture islington 22 impressions, 11 Oct to 8 Nov. The carpenter cluster is the larger
+       search; the page gives it up for the enquiries the product words bring (14 Nov 2026). */
+    primary: "bespoke carpentry islington",
     plates: [
       { file: "/images/doors-panelling/doors-panelling-02.webp", type: "Doors and panelling" },
-      { file: "/images/alcove-units/alcove-units-10.webp", type: "Alcove units" },
+      /* fitted-wardrobes-02 in place of alcove-units-10 (14 Nov 2026): that photo is portrait, and
+         the 3:2 plate cut it to a strip of ceiling (Arthur's comment: "looks weird"). This one is
+         landscape, on /work/ already and on no other area page. */
+      { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
       { file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp", type: "Bespoke kitchens" },
     ],
     summary: "Late Georgian squares and terraces, Victorian villas and flats in converted houses.",
