@@ -1,5 +1,5 @@
 /**
- * Service cards and option B's rough-width picker: front elevations.
+ * Service cards: front elevations.
  * Format and classes: ./README.md.
  */
 export const SERVICE_ART: Record<string, string> = {
@@ -86,60 +86,4 @@ export const SERVICE_ART: Record<string, string> = {
     '<polygon class="k" points="106.1 18.1 101.9 13.9 76.3 39.5 72 48 80.5 43.7"/>' +
     '<path class="t" d="M102.9 21.3L98.7 17.1"/>' +
     '<polygon class="m" points="72 48 73.5 45 75 46.5"/>',
-  /* Width picker, about 1 m: one alcove unit beside the door, green dimension line over it. */
-  "width-1":
-    '<path class="h" d="M6 70H114"/>' +
-    '<rect class="k" x="8" y="34" width="14" height="36"/>' +
-    '<circle class="f" cx="19" cy="53" r="1"/>' +
-    '<rect class="k" x="30" y="30" width="16" height="40"/>' +
-    '<path class="t" d="M30 42H46M30 56H46"/>' +
-    '<circle class="f" cx="38" cy="63" r="0.9"/>' +
-    '<path class="g" d="M30 19V25M30 22H46M46 19V25"/>',
-  /* Width picker, about 1.5 m: two-bay unit beside the door, green dimension line. */
-  "width-2":
-    '<path class="h" d="M6 70H114"/>' +
-    '<rect class="k" x="8" y="34" width="14" height="36"/>' +
-    '<circle class="f" cx="19" cy="53" r="1"/>' +
-    '<rect class="k" x="30" y="30" width="28" height="40"/>' +
-    '<path class="t" d="M30 42H58M30 56H58M44 30V70"/>' +
-    '<circle class="f" cx="37" cy="63" r="0.9"/><circle class="f" cx="51" cy="63" r="0.9"/>' +
-    '<path class="g" d="M30 19V25M30 22H58M58 19V25"/>',
-  /* Width picker, about 2.5 m: three-bay unit, green dimension line. */
-  "width-3":
-    '<path class="h" d="M6 70H114"/>' +
-    '<rect class="k" x="8" y="34" width="14" height="36"/>' +
-    '<circle class="f" cx="19" cy="53" r="1"/>' +
-    '<rect class="k" x="30" y="30" width="45" height="40"/>' +
-    '<path class="t" d="M30 42H75M30 56H75M45 30V70M60 30V70"/>' +
-    '<circle class="f" cx="37.5" cy="63" r="0.9"/><circle class="f" cx="52.5" cy="63" r="0.9"/><circle class="f" cx="67.5" cy="63" r="0.9"/>' +
-    '<path class="g" d="M30 19V25M30 22H75M75 19V25"/>',
-  /* Width picker, about 3.5 m: four-bay unit, green dimension line. */
-  "width-4":
-    '<path class="h" d="M6 70H114"/>' +
-    '<rect class="k" x="8" y="34" width="14" height="36"/>' +
-    '<circle class="f" cx="19" cy="53" r="1"/>' +
-    '<rect class="k" x="30" y="30" width="64" height="40"/>' +
-    '<path class="t" d="M30 42H94M30 56H94M46 30V70M62 30V70M78 30V70"/>' +
-    '<circle class="f" cx="38" cy="63" r="0.9"/><circle class="f" cx="54" cy="63" r="0.9"/><circle class="f" cx="70" cy="63" r="0.9"/><circle class="f" cx="86" cy="63" r="0.9"/>' +
-    '<path class="g" d="M30 19V25M30 22H94M94 19V25"/>',
-  /* Width picker, 4 m and more: unit runs off the right edge with a zig-zag break mark, green dimension line. */
-  "width-5":
-    '<path class="h" d="M6 70H114"/>' +
-    '<rect class="k" x="8" y="34" width="14" height="36"/>' +
-    '<circle class="f" cx="19" cy="53" r="1"/>' +
-    '<path class="k" d="M114 30H30V70H114"/>' +
-    '<path class="t" d="M30 42H114M30 56H114M46.8 30V70M63.6 30V70M80.4 30V70M97.2 30V70"/>' +
-    '<circle class="f" cx="38.4" cy="63" r="0.9"/><circle class="f" cx="55.2" cy="63" r="0.9"/><circle class="f" cx="72" cy="63" r="0.9"/><circle class="f" cx="88.8" cy="63" r="0.9"/>' +
-    '<path class="g" d="M30 19V25M30 22H114"/>' +
-    '<polyline class="t" points="108 34 112 42 108 50 112 58 108 66"/>',
-  /* Width picker, not sure: door for scale, unit drawn as broken k dashes with no dimension, a tape measure with a green tape pulled out. */
-  "width-unsure":
-    '<path class="h" d="M6 70H114"/>' +
-    '<rect class="k" x="8" y="34" width="14" height="36"/>' +
-    '<circle class="f" cx="19" cy="53" r="1"/>' +
-    '<path class="k" d="M30 30H37M42 30H49M54 30H61M62 30H66M30 30V37M30 42V50M30 55V62M30 67V70M66 30V37M66 42V50M66 55V62M66 67V70"/>' +
-    '<circle class="k" cx="100" cy="61" r="9"/>' +
-    '<circle class="t" cx="100" cy="61" r="3.5"/>' +
-    '<path class="g" d="M91 66H70M70 63V69"/>' +
-    '<path class="t" d="M85 66V63M80 66V63M75 66V63"/>',
 };

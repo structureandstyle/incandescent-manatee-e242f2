@@ -1,13 +1,15 @@
 /*
- * The picture-card enquiry form previews (options A and B, 14 Nov 2026).
+ * The enquiry form with picture cards (14 Nov 2026, EnquiryForm.astro):
+ * option A of the two previews, picked by a founder the same day to replace
+ * the form in the Get a quote pop-up and on /contact/.
  *
- * The field styles (.ecf ...) repeat the live form's scoped rules in
- * EnquiryForm.astro value for value, so the two previews differ from today's
- * form only where the cards and the steps are new. Unlayered, like the live
- * rules, so the token base sheet's button reset cannot beat them.
+ * The field styles (.ecf ...) carry over the earlier form's values, so the
+ * new form differs from it only where the cards are new. The photo upload's
+ * own rules stay scoped in EnquiryForm.astro. Unlayered, so the token base
+ * sheet's button reset cannot beat them.
  */
 
-/* ---- Form shell: as the live form ---------------------------------------- */
+/* ---- Form shell ------------------------------------------------------------ */
 .ecf { display: grid; gap: var(--space-9); container: ecf / inline-size; }
 .ecf.is-compact { gap: var(--space-8); }
 /* Name, phone and email: one line where they fit (the full-width page form),
@@ -124,29 +126,7 @@ form.ecf button.ecf-send:disabled { opacity: 0.45; cursor: not-allowed; backgrou
   form.ecf button.ecf-send { width: 100%; }
 }
 
-/* Photos: the live form's Add files button. */
-.ecf .ecf-files { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); margin-top: var(--space-6); }
-.ecf input.ecf-file-input { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; overflow: hidden; clip-path: inset(50%); }
-.ecf label.ecf-file-button {
-  display: inline-flex; align-items: center; min-height: 44px; margin: 0;
-  padding: var(--space-3) var(--space-6);
-  font-family: var(--font-sans); font-size: var(--type-label); letter-spacing: var(--ls-label); text-transform: uppercase;
-  color: var(--char); background: var(--paper); border: var(--rule-structure); cursor: pointer;
-  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
-}
-.ecf label.ecf-file-button:hover { background: var(--char); color: var(--paper); }
-.ecf input.ecf-file-input:focus-visible + .ecf-file-button { outline: 2px solid var(--green); outline-offset: 2px; }
-.ecf .ecf-files .ecf-help { margin: 0; }
-
 /* ---- A card question ------------------------------------------------------ */
-.ec-group .ec-legend.is-question {
-  font-family: var(--font-serif-display);
-  font-size: var(--type-serif-lg);
-  letter-spacing: normal;
-  text-transform: none;
-  color: var(--char);
-  margin-bottom: var(--space-3);
-}
 .ec-bar {
   display: flex;
   align-items: flex-end;
@@ -286,26 +266,11 @@ html.js .ec-group[data-layout="row"] .ec-cards {
   html.js .ec-group[data-layout="row"] .ec-cards {
     grid-auto-columns: calc((100% - 2 * var(--space-5)) / 2.1);
   }
-  html.js .ec-group[data-layout="grid"] .ec-cards {
-    grid-template-columns: none;
-    grid-template-rows: repeat(2, auto);
-    grid-auto-flow: column;
-    grid-auto-columns: calc((100% - var(--space-5)) / 2.25);
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 4px;
-    padding: 4px 4px var(--space-5);
-    margin: -4px -4px 0;
-    scrollbar-width: thin;
-    scrollbar-color: var(--hair-strong) transparent;
-  }
 }
 /* The smallest phones (320px): a little under two cards at a time, so long
    words such as "wardrobes" fit whole rather than hyphenated. */
 @media (max-width: 359px) {
   html.js .ec-group[data-layout="row"] .ec-cards { grid-auto-columns: calc((100% - var(--space-5)) / 1.85); }
-  html.js .ec-group[data-layout="grid"] .ec-cards { grid-auto-columns: calc((100% - var(--space-5)) / 1.9); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ec-cards { scroll-behavior: auto; }
@@ -353,7 +318,7 @@ html.js .ec-group[data-layout="row"] .ec-cards {
 .ec-nojs { margin: var(--space-5) 0 0; }
 html.js .ec-nojs { display: none; }
 
-/* Option A: the prompts that start a line in the job box. */
+/* The prompts that start a line in the job box. */
 .eca-prompts { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0 0 var(--space-5); padding: 0; list-style: none; }
 .eca-prompts[hidden] { display: none; }
 form.ecf button.eca-prompt {
@@ -379,70 +344,4 @@ form.ecf button.eca-prompt[data-used] .eca-mark::before { content: "\2713"; }
   form.ecf button.eca-prompt { min-height: 44px; }
   form.ecf button.ec-arrow { width: 44px; height: 44px; }
   .ec-bar { min-height: 44px; }
-}
-
-/* ---- Option B: one question at a time ------------------------------------- */
-.ecb-progress { display: grid; gap: var(--space-4); }
-.ecb-progress[hidden] { display: none; }
-.ecb-count { margin: 0; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--ink-soft); }
-.ecb-bar { position: relative; height: 2px; background: var(--hair); }
-.ecb-bar > span { position: absolute; inset: 0 auto 0 0; width: var(--ecb-done, 20%); background: var(--green); transition: width var(--t-move, 0.3s) var(--ease-out); }
-.ecb-step { display: grid; gap: var(--space-9); }
-.ecb-step:focus { outline: none; }
-.ecb-step .ecb-q {
-  margin: 0;
-  font-family: var(--font-serif-display);
-  font-size: var(--type-serif-lg);
-  font-weight: var(--weight-regular);
-  color: var(--char);
-}
-/* Without JavaScript every step shows, one under the other, and the step
-   buttons stay hidden: a complete form ending in Send. */
-html.js .ecf-b[data-ec-stepping] .ecb-step:not(.is-current) { display: none; }
-.ecb-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-6); padding-top: var(--space-3); }
-.ecb-nav[hidden] { display: none; }
-form.ecf button.ecb-back {
-  min-height: 44px;
-  padding: 0 var(--space-3);
-  font-family: var(--font-sans);
-  font-size: var(--type-body-sm);
-  color: var(--green);
-  background: none;
-  border: 0;
-  text-decoration: underline;
-  text-decoration-color: rgba(44, 74, 58, 0.4);
-  text-underline-offset: 3px;
-}
-form.ecf button.ecb-back[hidden] { display: none; }
-form.ecf button.ecb-next {
-  font-family: var(--font-sans);
-  font-weight: var(--weight-medium);
-  font-size: var(--type-label);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--char);
-  background: var(--paper);
-  border: var(--rule-structure);
-  padding: var(--space-6) var(--space-12);
-  margin-left: auto;
-  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
-}
-form.ecf button.ecb-next:hover,
-form.ecf button.ecb-next:focus-visible { background: var(--char); color: var(--paper); }
-
-/* ---- The preview's "what this would send" panel --------------------------- */
-.ec-dry { border: var(--rule-structure); padding: var(--space-9); background: var(--paper); }
-.ec-dry[hidden] { display: none; }
-.ec-dry:focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
-.ec-dry h3 { margin: 0 0 var(--space-4); font-family: var(--font-serif-display); font-weight: var(--weight-regular); font-size: var(--type-serif-sm); }
-.ec-dry p { margin: 0 0 var(--space-6); font-size: var(--type-body-sm); color: var(--text-quiet); }
-.ec-dry table { width: 100%; font-size: var(--type-body-sm); }
-.ec-dry th,
-.ec-dry td { text-align: left; vertical-align: top; padding: var(--space-3) var(--space-4) var(--space-3) 0; border-top: var(--rule-hair); }
-.ec-dry th { font-family: var(--font-mono); font-size: var(--type-mono); font-weight: var(--weight-regular); letter-spacing: var(--ls-mono-table); color: var(--ink-soft); white-space: nowrap; }
-.ec-dry td { white-space: pre-wrap; overflow-wrap: anywhere; }
-.ec-dry td.ec-dry-to { color: var(--ink-soft); white-space: nowrap; }
-.ec-dry td.is-empty { color: var(--ink-soft); font-style: italic; }
-@media (max-width: 520px) {
-  .ec-dry td.ec-dry-to { display: none; }
 }

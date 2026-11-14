@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import CookieNotice from "../components/ds/CookieNotice.astro";
 import EnquiryForm from "../components/EnquiryForm.astro";
+import ArtSprite from "../components/enquiry-cards/ArtSprite.astro";
 import FormProof from "../components/FormProof.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import { SITE_URL, BUSINESS, GA4_ID } from "../data/site";
@@ -342,6 +343,11 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       Escape and the backdrop close it for free, and without JavaScript the
       links simply navigate to /contact/, which stays fully functional.
     */}
+    {/* The enquiry form's card drawings, once per page (14 Nov 2026). Every
+        card points at its drawing with <use>, so /contact/, which shows the
+        form twice (the page and this pop-up), still carries each drawing once.
+        About 4 KB gzipped. */}
+    <ArtSprite />
     <dialog
       id="enquiry-modal"
       style="width:min(660px,94vw);max-height:92vh;overflow-y:auto;border:var(--rule-structure);background:var(--paper);color:var(--ink);padding:clamp(20px,4vw,40px);margin:auto"

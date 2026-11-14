@@ -6,46 +6,41 @@
  * decoration (aria-hidden); the label is the name.
  *
  * LAYOUT. Without JavaScript the cards wrap into a grid: a plain, complete
- * list. With it (Base.astro stamps .js on <html> before first paint):
- *   row    one line of cards that swipes sideways, with arrow buttons and a
- *          visible scrollbar for anyone who does not swipe (option A, and
- *          every phone);
- *   grid   wraps on a laptop; on a phone, two rows that swipe (option B).
- * The arrows only appear when there is something to scroll to. They are for
- * a pointer and stay out of the tab order: the keyboard moves card to card,
- * and each focused card scrolls fully into view (./client.ts).
+ * list. With it (Base.astro stamps .js on <html> before first paint) they are
+ * one line of cards that swipes sideways, with arrow buttons and a visible
+ * scrollbar for anyone who does not swipe. On the full-width /contact/ form
+ * the row shares the width and only scrolls when it cannot fit
+ * (enquiry-cards.css, the rules under @container ecf). The arrows only appear
+ * when there is something to scroll to. They are for a pointer and stay out
+ * of the tab order: the keyboard moves card to card, and each focused card
+ * scrolls fully into view (./client.ts).
  *
- * Preview only (options A and B, 14 Nov 2026). See ./choices.ts for what each
- * card sends.
+ * The enquiry form's picture cards, 14 Nov 2026 (EnquiryForm.astro). See
+ * ./choices.ts for what each card sends.
  */
 import type { Choice } from "./choices";
 import "./enquiry-cards.css";
 
 interface Props {
   legend: string;
-  /** Id for the legend, so a step (option B) can be labelled by it. */
-  legendId?: string;
-  /** "question" draws the legend as the step's heading (option B). */
-  legendStyle?: "label" | "question";
   help?: string;
-  /** The field name the form sends. A formless group prefixes it with idPrefix, so two forms' groups never join. */
+  /** The field name the form sends. */
   name: string;
   type: "checkbox" | "radio";
   choices: Choice[];
   /** Unique per form on the page, as EnquiryForm's idPrefix. */
   idPrefix: string;
   checked?: string[];
-  layout?: "row" | "grid";
   /**
-   * Not part of what the form sends: every input points its form attribute
-   * at an id nothing has, so the browser leaves it out of the submission.
-   * Option B's width picker, whose choice is written into the job box instead.
-   */
-  formless?: boolean;
-  /**
-   * The unlabelled, never-ticked first box that makes Netlify's email read
-   * "Service: ..." rather than "Fitted wardrobes: ..." (EnquiryForm.astro,
-   * 8 Oct 2026, explains it). The service question only.
+   * An unlabelled, never-chosen first input, which makes Netlify's email name
+   * the field rather than its first card. Netlify labels a group of inputs
+   * that share a name with the label of the first one, and ignores the legend
+   * (a known, unfixed Netlify bug): without this the email read "Fitted
+   * wardrobes: Alcove units and shelving" (8 Oct 2026, Denis's ask), and with
+   * the area and source as cards it would read "Hampstead: Camden" and
+   * "Google: Referral". With it the lines read "Service: ...", "Area: ..."
+   * and "Source: ...". It is never chosen, so it never sends a value. Hidden
+   * in a paragraph like the honeypot, so a radio group's arrow keys skip it.
    */
   emailHeading?: boolean;
   /** Show what is chosen under the cards: useful when chosen cards have scrolled out of view. */
@@ -56,26 +51,18 @@ interface Props {
 
 const {
   legend,
-  legendId,
-  legendStyle = "label",
   help,
   name,
   type,
   choices,
   idPrefix,
   checked = [],
-  layout = "row",
-  formless = false,
   emailHeading = false,
   showChosen = false,
   role,
 } = Astro.props;
 
 const base = `${idPrefix}${name.replace(/[^a-z0-9]+/gi, "-")}`;
-/* A formless group's radios have no form owner, so the browser groups them
-   with every formless radio of the same name on the page: the name carries
-   the form's prefix. */
-const inputName = formless ? base : name;
 const trackId = `${base}-cards`;
 const helpId = help ? `${base}-help` : undefined;
 ---
@@ -83,10 +70,10 @@ const helpId = help ? `${base}-help` : undefined;
 <fieldset
   class="ec-group"
   data-ec-group={role ?? ""}
-  data-layout={layout}
+  data-layout="row"
   aria-describedby={helpId}
 >
-  <legend id={legendId} class:list={["ec-legend", legendStyle === "question" && "is-question"]}>{legend}</legend>
+  <legend class="ec-legend">{legend}</legend>
   <div class="ec-bar">
     {help ? <p class="ecf-help" id={helpId}>{help}</p> : <span />}
     <div class="ec-arrows" data-ec-arrows hidden>
@@ -98,7 +85,7 @@ const helpId = help ? `${base}-help` : undefined;
       </button>
     </div>
   </div>
-  {emailHeading && <p hidden><input type="checkbox" name={name} value="" tabindex="-1" /></p>}
+  {emailHeading && <p hidden><input type={type} name={name} value="" tabindex="-1" /></p>}
   <div class="ec-cards" id={trackId} data-ec-track>
     {choices.map((c, i) => (
       <label class="ec-card" for={`${base}-${i}`}>
@@ -110,12 +97,10 @@ const helpId = help ? `${base}-help` : undefined;
             class="ec-input"
             id={`${base}-${i}`}
             type={type}
-            name={inputName}
+            name={name}
             value={c.value}
             checked={checked.includes(c.value)}
-            form={formless ? "ec-not-sent" : undefined}
             data-label={c.label}
-            data-line={c.line}
           />
           <span class="ec-text">
             {c.label}

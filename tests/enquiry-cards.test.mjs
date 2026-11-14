@@ -1,10 +1,12 @@
 /**
- * The picture-card enquiry form previews (options A and B, 14 Nov 2026).
+ * The enquiry form's picture cards (14 Nov 2026, EnquiryForm.astro).
  *
- * Two kinds of check. The rules in src/scripts/enquiry-cards.mjs, which
- * decide what the form would send: one plain value for the area, prompts and
- * the width line written into the job box, the email subject built as the
- * live form builds it. And the card drawings, held to the format in
+ * Three kinds of check. The rules in src/scripts/enquiry-cards.mjs, which
+ * decide what the form sends: one plain value for the area, and the prompts
+ * written into the job box. The form's contract with Netlify and Make, read
+ * from its source: the form name, the fields Make maps by name, and the
+ * unlabelled first input that keeps each card question's email heading. And
+ * the card drawings, held to the format in
  * src/components/enquiry-cards/art/README.md, so a later drawing cannot slip
  * in a logo, a stray colour or text.
  */
@@ -18,9 +20,6 @@ import {
   chosenName,
   dropEmptyStarters,
   otherAreaValue,
-  previewRows,
-  setWidthLine,
-  subjectFor,
 } from "../src/scripts/enquiry-cards.mjs";
 import { SERVICE_ART } from "../src/components/enquiry-cards/art/services.ts";
 import { AREA_ART } from "../src/components/enquiry-cards/art/areas.ts";
@@ -53,37 +52,6 @@ test("a prompt tapped and never finished is not sent", () => {
   assert.equal(dropEmptyStarters("Two alcoves, 1m each.", starters), "Two alcoves, 1m each.");
 });
 
-test("the width line goes first and replaces an earlier pick", () => {
-  assert.equal(setWidthLine("", "Rough width: 2 to 3m"), "Rough width: 2 to 3m");
-  assert.equal(setWidthLine("Box room.", "Rough width: 2 to 3m"), "Rough width: 2 to 3m\nBox room.");
-  assert.equal(
-    setWidthLine("Rough width: 2 to 3m\nBox room.", "Rough width: up to 1m"),
-    "Rough width: up to 1m\nBox room.",
-  );
-  // Moved by the visitor: replaced where it is, never stacked.
-  assert.equal(
-    setWidthLine("Box room.\nRough width: 2 to 3m", "Rough width: over 4m"),
-    "Box room.\nRough width: over 4m",
-  );
-});
-
-test("the email subject is built as the live form builds it", () => {
-  assert.equal(
-    subjectFor({ name: "Nuno", services: ["Alcove units and shelving"], area: "Hendon" }),
-    "Website enquiry from Nuno: Alcove units and shelving, Hendon",
-  );
-  assert.equal(subjectFor({ name: "Nuno" }), "Website enquiry from Nuno");
-  assert.equal(subjectFor({ name: "  " }), "");
-  // Links and invisible characters go, line breaks become spaces.
-  assert.equal(
-    subjectFor({ name: "Cam​den\nLee", area: "see www.example.com" }),
-    "Website enquiry from Camden Lee: see",
-  );
-  const long = subjectFor({ name: "A", services: ["x".repeat(300)] });
-  assert.equal(Array.from(long).length, 150);
-  assert.ok(long.endsWith("..."));
-});
-
 test("the chosen line names what is ticked", () => {
   assert.equal(chosenLine(["Fitted wardrobes", "Flooring"]), "Chosen: Fitted wardrobes, Flooring");
   assert.equal(chosenLine([]), "");
@@ -92,27 +60,41 @@ test("the chosen line names what is ticked", () => {
   assert.equal(chosenName("Camden", "Camden"), "Camden");
 });
 
-test("the preview table lists fields in Netlify's order, services joined, honeypot left out", () => {
-  const rows = previewRows([
-    ["subject", "Website enquiry from Sam: Flooring, Camden"],
-    ["landing_page", ""],
-    ["company-website", ""],
-    ["name", "Sam"],
-    ["phone", "07700 900123"],
-    ["email", "sam@example.com"],
-    ["service", "Flooring"],
-    ["service", "Panelling and doors"],
-    ["area", "Camden"],
-    ["detail", ""],
-    ["source", "Google Maps"],
-  ]);
-  assert.deepEqual(
-    rows.map((r) => r.field),
-    ["subject", "name", "phone", "email", "service", "area", "detail", "attachment", "source"],
-  );
-  assert.equal(rows.find((r) => r.field === "service").value, "Flooring, Panelling and doors");
-  assert.equal(rows.find((r) => r.field === "area").goesTo, "Log: Area");
-  assert.equal(rows.find((r) => r.field === "detail").value, "");
+/* ---- The form's contract with Netlify and Make -------------------------- */
+
+const form = readFileSync(new URL("../src/components/EnquiryForm.astro", import.meta.url), "utf8");
+const cardGroup = readFileSync(new URL("../src/components/enquiry-cards/CardGroup.astro", import.meta.url), "utf8");
+const markup = form.slice(form.indexOf("<form"), form.indexOf("</form>"));
+
+test("the form is still the Netlify form Make reads", () => {
+  assert.match(markup, /name="enquiry"/);
+  assert.match(markup, /data-netlify="true"/);
+  assert.match(markup, /netlify-honeypot="company-website"/);
+  assert.match(markup, /enctype="multipart\/form-data"/);
+  assert.match(markup, /action="\/thanks\/"/);
+  assert.match(markup, /<input type="hidden" name="form-name" value="enquiry" \/>/);
+  assert.match(markup, /name="company-website"/);
+  // Make scenario 7361484 maps these by name.
+  for (const field of ["name", "phone", "email", "detail", "subject"]) {
+    assert.match(markup, new RegExp(`name="${field}"`), `${field} is missing`);
+  }
+});
+
+test("each card question keeps its field name and its email heading", () => {
+  for (const [field, type] of [["service", "checkbox"], ["area", "radio"], ["source", "radio"]]) {
+    const group = markup.match(new RegExp(`<CardGroup[^>]*?name="${field}"[^>]*?>`, "s"))?.[0];
+    assert.ok(group, `no card question sends ${field}`);
+    assert.match(group, new RegExp(`type="${type}"`), `${field} is not ${type}`);
+    assert.match(group, /\bemailHeading\b/, `${field} has lost its email heading`);
+  }
+  // The heading input is the group's own type, named as the field, with no value.
+  assert.match(cardGroup, /<p hidden><input type=\{type\} name=\{name\} value="" tabindex="-1" \/><\/p>/);
+});
+
+test("the Somewhere else box has no name, so it is never sent on its own", () => {
+  const box = markup.match(/<input[^>]*data-ec-other-input[^>]*>/)?.[0];
+  assert.ok(box);
+  assert.doesNotMatch(box, /\bname=/);
 });
 
 /* ---- The drawings ------------------------------------------------------- */

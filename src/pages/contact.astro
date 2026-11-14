@@ -4,14 +4,28 @@
  * page still wearing the scaffold's Tailwind markup, a bold sans heading and a
  * rounded card beside every other page's serif and hairlines.
  *
- * Copy corrected on the way in. The old lede promised "a realistic range
- * before anyone visits", which no questionnaire answer supports: the process
- * is a reply, a visit, and a fixed itemised quotation (Q13, Q17, Q20). The
- * form stays first because it is the one enquiry channel that attributes
- * itself end to end, and because dimensions and photographs genuinely make
- * the first answer better. Never framed as call deflection, and since 6 Sep
- * 2026 not framed at all: the line under the phone number that made the case
- * for the form came off on Kaspar's instruction.
+ * THE FORM FIRST, ACROSS THE PAGE, 14 Nov 2026 (a founder relaying Arthur,
+ * with the picture-card form that replaced the old one that day):
+ *   1. The heading and the Google rating line only. The two review quotes
+ *      that sat beside the form since 29 Oct 2026 are gone; the stars stay.
+ *   2. The form, across the whole width in a frame up to 1360px wide, so the
+ *      service and area cards sit side by side and show at once. A row
+ *      scrolls only when it cannot fit (enquiry-cards.css, the wide rules
+ *      under @container ecf).
+ *   3. Under it, for anyone who would rather talk: phone, WhatsApp, email,
+ *      opening hours and the areas, with Kaspar's paragraph on what happens
+ *      next, moved down from the top of the page.
+ *
+ * Copy corrected on the way in, 2 Sep 2026. The old lede promised "a
+ * realistic range before anyone visits", which no questionnaire answer
+ * supports: the process is a reply, a visit, and a fixed itemised quotation
+ * (Q13, Q17, Q20). The form comes first because it is the one enquiry channel
+ * that attributes itself end to end, and because dimensions and photographs
+ * genuinely make the first answer better. Never framed as call deflection,
+ * and since 6 Sep 2026 not framed at all: the line under the phone number
+ * that made the case for the form came off on Kaspar's instruction. It was
+ * the one sentence on this page that argued with the reader about which
+ * channel to use. The number stands on its own, like the other four entries.
  *
  * Hours render from BUSINESS.openingHours, which mirrors the Business Profile
  * (Mon to Fri 08:00 to 18:00, Sat 09:00 to 14:00), so the two cannot drift.
@@ -21,7 +35,6 @@ import EnquiryForm from "../components/EnquiryForm.astro";
 import FormProof from "../components/FormProof.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
-import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
 import AreaList from "../components/AreaList.astro";
@@ -38,118 +51,101 @@ const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry v
   description="Tell us what you have in mind, with a few photos and rough dimensions, and Structure & Style will come back to you with a survey and a quotation."
   noindex={!indexable("/contact/")}
 >
-  <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
-    <Kicker scribe>Enquiries</Kicker>
-    <Display level={1} as="h1" style="margin:var(--space-12) 0 var(--space-13)">
-      Get a quote
-    </Display>
-    {/* His paragraph, 6 September 2026, the last message of his review. It
-        asks for more than ours did (several photos, dimensions, inspiration
-        images) and calls the visit a survey, which is what it is. */}
-    <p style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
-      Tell us what you have in mind and send a few photos, rough dimensions and any inspiration
-      images you have. We'll come back to you with anything else we need, then arrange a survey
-      before providing a detailed quotation.
-    </p>
-  </Wrap>
+  <Wrap style="max-width:1360px;padding-top:var(--space-15);padding-bottom:var(--section-y)">
+    <div class="contact-head">
+      <Display level={1} as="h1" style="margin:0">Get a quote</Display>
+      <FormProof />
+    </div>
 
-  <Wrap style="padding-bottom:var(--section-y)">
-    <div class="contact-grid">
-      <dl class="contact-details" style="margin:0;display:grid;gap:var(--space-10);max-width:var(--measure-short)">
-        <div style="border-top:var(--rule-structure);padding-top:var(--space-6)">
+    <div class="contact-form">
+      <EnquiryForm />
+    </div>
+
+    <section class="contact-direct" aria-labelledby="contact-direct-title">
+      <MonoLabel as="p" style="margin-bottom:var(--space-4)">Contact details</MonoLabel>
+      <h2 id="contact-direct-title" class="contact-direct-title">Or talk to us directly</h2>
+      {/* His paragraph, 6 September 2026, the last message of his review. It
+          asks for more than ours did (several photos, dimensions, inspiration
+          images) and calls the visit a survey, which is what it is. */}
+      <p class="contact-direct-lede">
+        Tell us what you have in mind and send a few photos, rough dimensions and any inspiration
+        images you have. We'll come back to you with anything else we need, then arrange a survey
+        before providing a detailed quotation.
+      </p>
+      <dl class="contact-details">
+        <div>
           <dt><MonoLabel as="span">Phone</MonoLabel></dt>
-          <dd style="margin:var(--space-4) 0 0">
-            <Link href={BUSINESS.phoneHref} variant="nav" chamfer>Call {BUSINESS.phoneDisplay}</Link>
-          </dd>
-          {/* A line used to follow the number: "A call works too. The form gets
-              you a firmer first answer, because that answer needs the
-              dimensions and the photographs either way." Kaspar asked for it to
-              go, 6 September 2026, on the contact details block of the
-              preview. It was the one sentence on this page that argued with
-              the reader about which channel to use, and the header note above
-              already says the form is never framed as call deflection. The
-              number now stands on its own, like the other four entries. */}
+          <dd><Link href={BUSINESS.phoneHref} variant="nav" chamfer>Call {BUSINESS.phoneDisplay}</Link></dd>
         </div>
-        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+        <div>
           <dt><MonoLabel as="span">WhatsApp</MonoLabel></dt>
-          <dd style="margin:var(--space-4) 0 0">
-            <Link href={BUSINESS.whatsapp} variant="nav" chamfer target="_blank" rel="noopener">Message us</Link>
-          </dd>
+          <dd><Link href={BUSINESS.whatsapp} variant="nav" chamfer target="_blank" rel="noopener">Message us</Link></dd>
         </div>
-        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+        <div>
           <dt><MonoLabel as="span">Email</MonoLabel></dt>
-          <dd style="margin:var(--space-4) 0 0">
-            <Link href={mailto} variant="inline" chamfer>{BUSINESS.email}</Link>
-          </dd>
+          <dd><Link href={mailto} variant="inline" chamfer>{BUSINESS.email}</Link></dd>
         </div>
-        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+        <div>
           <dt><MonoLabel as="span">Hours</MonoLabel></dt>
-          {hours.map((h) => (
-            <dd style="margin:var(--space-4) 0 0;color:var(--text-quiet)">{h}</dd>
-          ))}
+          {hours.map((h) => <dd class="contact-quiet">{h}</dd>)}
         </div>
-        <div style="border-top:var(--rule-hair);padding-top:var(--space-6)">
+        <div>
           <dt><MonoLabel as="span">Where we work</MonoLabel></dt>
-          <dd style="margin:var(--space-4) 0 0;color:var(--text-quiet)">
-            Across north London, including <AreaList />.
-          </dd>
+          <dd class="contact-quiet">Across north London, including <AreaList />.</dd>
         </div>
       </dl>
-
-      {/* The reviews, 29 Oct 2026 (FormProof.astro says why these two and why
-          here). Under the details and beside the form on a laptop, where the
-          column stood empty beside the lower half of the form; between the
-          details and the form once the page folds to one column, one quote
-          only, so the first field moves down as little as it can. */}
-      <div class="contact-proof">
-        <FormProof quotes={["lorenzo", "ozge"]} keep={1} narrow="fold" />
-      </div>
-
-      <div class="contact-form" style="border:var(--rule-structure);padding:clamp(20px,4vw,40px);background:var(--paper)">
-        <MonoLabel as="p" style="margin-bottom:var(--space-10)">Send an enquiry</MonoLabel>
-        <EnquiryForm />
-      </div>
-    </div>
+    </section>
   </Wrap>
 </Base>
 
 <style>
-  /* Named areas rather than the inline 5fr / 7fr grid this replaced, so the
-     reviews can sit under the details beside the form, and come between the
-     two once the page folds to one column. It folds at 820px, where the site
-     folds its other two-column grids (site-layout.css). */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    grid-template-areas:
-      "details form"
-      "proof form";
-    grid-template-rows: auto 1fr;
-    gap: var(--space-15) var(--gap-xl);
-    align-items: start;
+  .contact-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6) var(--space-12);
+    margin-bottom: var(--space-10);
   }
-
-  .contact-details {
-    grid-area: details;
-  }
-
-  .contact-proof {
-    grid-area: proof;
-    max-width: var(--measure-short);
-  }
-
   .contact-form {
-    grid-area: form;
+    border: var(--rule-structure);
+    padding: clamp(20px, 2.6vw, 32px);
+    background: var(--paper);
   }
 
-  @media (max-width: 820px) {
-    .contact-grid {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas:
-        "details"
-        "proof"
-        "form";
-      grid-template-rows: auto;
-    }
+  .contact-direct {
+    margin-top: var(--section-y);
+    border-top: var(--rule-structure);
+    padding-top: var(--space-12);
+  }
+  .contact-direct-title {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-display-5);
+    margin: 0 0 var(--space-6);
+  }
+  .contact-direct-lede {
+    max-width: var(--measure);
+    font-size: var(--type-body);
+    color: var(--text-quiet);
+    margin: 0 0 var(--space-12);
+  }
+  /* Five across on a laptop, two then one as the screen narrows, each under
+     a hairline. */
+  .contact-details {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+    gap: var(--space-10) var(--space-12);
+  }
+  .contact-details > div {
+    border-top: var(--rule-hair);
+    padding-top: var(--space-6);
+  }
+  .contact-details dd {
+    margin: var(--space-4) 0 0;
+  }
+  .contact-quiet {
+    color: var(--text-quiet);
   }
 </style>
