@@ -13,13 +13,22 @@
  * footer's Services group (Footer.astro): the services, not the cost guide,
  * each only once its page gate clears. The rule is written in both files, so
  * a change to one needs the same change in the other.
+ *
+ * THE AREAS MENU, 14 November 2026 (a founder): Areas replaces Process. It
+ * lists "All areas" (the /areas/ hub) and then each area page whose gate has
+ * cleared, by name. On the live site it appears with the hub, the day the
+ * first area page after Hampstead clears (areasHubLive in page-gates.ts);
+ * until then the header keeps Process. On a preview build (SHOW_DRAFTS) it
+ * shows every area page, drafts included, so a reviewer sees the menu as it
+ * will be. Process stays in the footer either way.
  */
 import NavBar from "./ds/NavBar.astro";
-import { NAV, ENQUIRE_HREF, CONTACT } from "../data/site-content";
+import { NAV, PROCESS_LINK, ENQUIRE_HREF, CONTACT } from "../data/site-content";
 import { SERVICES, servicePath, serviceLabel } from "../data/site";
-import { indexable } from "../data/page-gates";
+import { indexable, AREAS_HUB, areasHubLive } from "../data/page-gates";
+import { AREAS, areaPath } from "../data/areas";
 import { getCollection } from "astro:content";
-import { isLive } from "../data/journal";
+import { isLive, SHOW_DRAFTS } from "../data/journal";
 
 const here = Astro.url.pathname;
 
@@ -27,16 +36,28 @@ const here = Astro.url.pathname;
    (13 Oct 2026), rather than waiting for someone to remember the comment in
    site-content.ts. Drafts on a preview build do not count. */
 const hasJournal = (await getCollection("journal")).some(isLive);
-const items = hasJournal ? [...NAV, { label: "Journal", href: "/journal/" }] : NAV;
+const showAreas = SHOW_DRAFTS || areasHubLive();
+const items = [
+  ...(showAreas ? [] : [PROCESS_LINK]),
+  ...NAV,
+  ...(hasJournal ? [{ label: "Journal", href: "/journal/" }] : []),
+];
 const services = SERVICES.filter((s) => !s.guide && indexable(servicePath(s))).map((s) => ({
   label: serviceLabel(s),
   href: servicePath(s),
 }));
+const areas = AREAS.filter((a) => SHOW_DRAFTS || indexable(areaPath(a.slug)))
+  .sort((a, b) => a.name.localeCompare(b.name, "en"))
+  .map((a) => ({ label: a.name, href: areaPath(a.slug) }));
+const menus = [
+  { label: "Services", items: services },
+  ...(showAreas ? [{ label: "Areas", items: [{ label: "All areas", href: AREAS_HUB }, ...areas] }] : []),
+];
 ---
 
 <NavBar
   items={items}
-  menu={{ label: "Services", items: services }}
+  menus={menus}
   cta={{ label: "Enquire", href: ENQUIRE_HREF }}
   whatsapp={{ href: CONTACT.whatsapp, label: "WhatsApp Structure & Style" }}
   activeHref={here}

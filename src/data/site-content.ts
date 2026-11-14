@@ -63,8 +63,15 @@ import QUOTE_BANK_JSON from "./quote-bank.json";
  * notes-post. Settled on Journal because "guides" already means something else
  * on this site: the cost guide is one of the seven contracted service pages.
  */
+/**
+ * Process left the header on 14 November 2026 (a founder: "replace Process
+ * with Areas"). The header shows it again only while there is no Areas menu
+ * (Header.astro), and the footer lists it explicitly (Footer.astro), so the
+ * page stays one tap away from every page.
+ */
+export const PROCESS_LINK = { label: "Process", href: "/process/" } as const;
+
 export const NAV = [
-  { label: "Process", href: "/process/" },
   { label: "Materials", href: "/materials/" },
   { label: "Work", href: "/work/" },
   /* Was Maker. The client's Part 6 direction change, 30 Aug 2026: company

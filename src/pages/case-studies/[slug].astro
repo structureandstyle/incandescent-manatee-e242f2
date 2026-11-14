@@ -175,7 +175,12 @@ const frames = ["Wide shot, lights on", "Wide shot, lights off", "Close detail o
     {showOptional(k.review) && (
       <section class="cs-section" aria-labelledby="cs-review">
         <h2 id="cs-review">What the customer said</h2>
-        <blockquote class="cs-quote"><Value q={k.review} /></blockquote>
+        {/* A blockquote only once answered: verify-build holds every blockquote
+            to a verbatim entry of the review bank, and an open question is not
+            one (14 Nov 2026, when the type first met the current gate). */}
+        {answered(k.review)
+          ? <blockquote class="cs-quote"><Value q={k.review} /></blockquote>
+          : <p><Value q={k.review} /></p>}
       </section>
     )}
 

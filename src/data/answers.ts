@@ -266,6 +266,29 @@ export const ANSWERS = {
   cs1_cost: { value: null, about: "Cost range, only if Kaspar chooses to show one. Default is none" },
   cs1_review: { value: null, about: "The customer's own review wording, only if genuine and he agrees. Quoted as text, no review markup" },
   cs1_video: { value: null, about: "A 60-second phone walkthrough clip" },
+  /**
+   * The other nine area pages and three topic pages, 14 November 2026. Built as
+   * drafts for Kaspar to read on one comment link over Christmas (a founder, 14
+   * Nov 2026): ops repo research/area-pages-2026-11-14/README.md has the data and
+   * the structure of each, and F2F ops clients/structure-and-style/areas-review/
+   * is the link. Each page carries ONE key: he has read it there and his changes
+   * are in. Answer it in the commit that applies his comments, with the date and
+   * where his yes is recorded. Copy that only he can confirm is pointed out on
+   * the page's question card, not given a key of its own, so the questions to him
+   * stay few (a founder, 7 Nov 2026: use what we have).
+   */
+  areaCamdenCheck: { value: null, about: "Kaspar has read the Camden page (/carpenter-camden/) on the review link and his changes are in" },
+  areaPrimroseHillCheck: { value: null, about: "Kaspar has read the Primrose Hill page (/carpenter-primrose-hill/) on the review link and his changes are in" },
+  areaIslingtonCheck: { value: null, about: "Kaspar has read the Islington page (/carpenter-islington/) on the review link and his changes are in" },
+  areaBelsizeParkCheck: { value: null, about: "Kaspar has read the Belsize Park page (/carpenter-belsize-park/) on the review link and his changes are in" },
+  areaKentishTownCheck: { value: null, about: "Kaspar has read the Kentish Town page (/carpenter-kentish-town/) on the review link and his changes are in" },
+  areaSwissCottageCheck: { value: null, about: "Kaspar has read the Swiss Cottage page (/carpenter-swiss-cottage/) on the review link and his changes are in" },
+  areaHighgateCheck: { value: null, about: "Kaspar has read the Highgate page (/carpenter-highgate/) on the review link and his changes are in" },
+  areaWestHampsteadCheck: { value: null, about: "Kaspar has read the West Hampstead page (/carpenter-west-hampstead/) on the review link and his changes are in" },
+  areaMaidaValeCheck: { value: null, about: "Kaspar has read the Maida Vale page (/carpenter-maida-vale/) on the review link and his changes are in" },
+  staircasesCheck: { value: null, about: "Kaspar has read the bespoke staircases page (/bespoke-staircases/) on the review link and his changes are in" },
+  loftWardrobesCheck: { value: null, about: "Kaspar has read the loft and eaves wardrobes page (/loft-wardrobes/) on the review link and his changes are in" },
+  bookcasesCheck: { value: null, about: "Kaspar has read the built-in bookcases and shelving page (/built-in-bookcases/) on the review link and his changes are in" },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;
