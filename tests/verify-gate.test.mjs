@@ -102,9 +102,36 @@ const homeStub = {
 
 /* The design-led copy of the Hampstead page (7 Nov 2026) was registered in
    AREA_PATHS until it was deleted on 12 Nov 2026, so the sandboxes no longer
-   carry a stub for it. */
-function run(pages) {
-  pages = { "/": homeStub, ...pages };
+   carry a stub for it.
+
+   Since 14 Nov 2026 verify-build reads its area paths from src/data/areas.ts,
+   which lists ten. Every area page a case does not supply gets a noindexed
+   stub with its WebPage and breadcrumb, so the cases test Hampstead alone, as
+   before. The stubs carry no prices, so the price rule never needs an owner
+   for them. */
+const OTHER_AREAS = [...readFileSync(new URL("../src/data/areas.ts", import.meta.url), "utf8")
+  .matchAll(/^\s*slug:\s*"([a-z0-9/-]+)"/gm)]
+  .map((m) => `/${m[1]}/`)
+  .filter((p) => p !== AREA);
+/* Under /areas/ the trail is Home > Areas > page (14 Nov 2026). */
+const hubCrumb = (path, name) => ({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+    { "@type": "ListItem", position: 2, name: "Areas", item: `${SITE}/areas/` },
+    { "@type": "ListItem", position: 3, name, item: `${SITE}${path}` },
+  ],
+});
+const areaStub = (path) => ({
+  noindex: true,
+  nodes: [webPage(path), path.startsWith("/areas/") ? hubCrumb(path, "Area") : breadcrumb(path, "Area")],
+  body: "<p>Area.</p>",
+});
+
+function run(pages, { stubAreas = true } = {}) {
+  const stubs = stubAreas ? Object.fromEntries(OTHER_AREAS.map((p) => [p, areaStub(p)])) : {};
+  pages = { "/": homeStub, ...stubs, ...pages };
   const root = mkdtempSync(join(tmpdir(), "ss-verify-"));
   try {
     /* verify-build reads src/data/reviews.json from its working directory
@@ -215,4 +242,13 @@ test("a Service node on an area page fails", () => {
   });
   assert.equal(r.code, 1, r.out);
   assert.match(r.out, /Service schema is present on a non-service page/);
+});
+
+test("an area page under /areas/ needs the Home > Areas > page breadcrumb", () => {
+  const path = "/areas/camden/";
+  const ok = run({ [AREA]: areaPage(), [path]: { noindex: true, nodes: [webPage(path), hubCrumb(path, "Camden")], body: "<p>Camden.</p>" }, "/fitted-wardrobe-cost/": costGuide });
+  assert.equal(ok.code, 0, ok.out);
+  const flat = run({ [AREA]: areaPage(), [path]: { noindex: true, nodes: [webPage(path), breadcrumb(path, "Camden")], body: "<p>Camden.</p>" }, "/fitted-wardrobe-cost/": costGuide });
+  assert.equal(flat.code, 1, flat.out);
+  assert.match(flat.out, /\/areas\/camden\/ {2}area breadcrumb schema is missing or does not match Home > Areas > page/);
 });

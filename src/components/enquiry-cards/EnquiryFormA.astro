@@ -1,0 +1,199 @@
+---
+/**
+ * ENQUIRY FORM, OPTION A: the whole form on one page, as now, with picture
+ * cards. A preview for a founder to compare with option B (14 Nov 2026); the
+ * live form is src/components/EnquiryForm.astro and is unchanged.
+ *
+ * Designed for where the form lives once site PR #41 merges (a founder,
+ * 14 Nov 2026: one form per page): the Get a quote pop-up, on every page,
+ * and /contact/. The inline service-page form, with its shortened choice
+ * list, goes with #41, so this form has no `service` prop.
+ *
+ * What is new against the live form:
+ *   - "What do you need?", the area and "How did you hear about us?" are rows
+ *     of picture cards that swipe on a phone, with arrows and a scrollbar too;
+ *   - the area is one card per area served plus "Somewhere else", which opens
+ *     a box for the area or postcode (its text becomes the card's value);
+ *   - the job box has four prompts that start a line ("Room: ", ...);
+ *   - "How did you hear about us?" has five answers instead of three.
+ *
+ * Field names and values are the live form's, apart from two new source
+ * values (Google Maps, ChatGPT): the pull request lists the mapping.
+ *
+ * PREVIEW, NOT WIRED. No data-netlify and no form-name field, so Netlify
+ * never registers it and a post can never reach the enquiry inbox, the email
+ * or Make. Send is switched off without JavaScript and, with it, shows what
+ * the enquiry would carry (./client.ts). When a founder picks this option,
+ * its markup moves into EnquiryForm.astro, keeping that file's Netlify
+ * attributes, upload code and GA4 flag.
+ */
+import CardGroup from "./CardGroup.astro";
+import {
+  AREA_CHOICES,
+  JOB_EXAMPLE_DEFAULT,
+  JOB_EXAMPLES,
+  SERVICE_CHOICES,
+  SOURCE_CHOICES,
+} from "./choices";
+import { FIELD_NAMES as SOURCE_FIELDS } from "../../scripts/enquiry-source.mjs";
+import "./enquiry-cards.css";
+
+interface Props {
+  compact?: boolean;
+  /** As EnquiryForm: unique per form on the page, so ids never repeat. */
+  idPrefix?: string;
+  /**
+   * As EnquiryForm: the pop-up on a service page ticks that page's service
+   * and keeps the full list (Base.astro passes enquiryService).
+   */
+  preselectedService?: string;
+}
+const { compact = false, idPrefix = "", preselectedService } = Astro.props;
+
+const selectedService = preselectedService;
+const jobExample = (selectedService && JOB_EXAMPLES[selectedService]) || JOB_EXAMPLE_DEFAULT;
+
+/* Four prompts, the three the live hint names plus timing, which the first
+   reply needs for the lead time. Each starts a line the visitor finishes. */
+const PROMPTS = [
+  { label: "The room", starter: "Room: " },
+  { label: "Rough sizes", starter: "Rough sizes: " },
+  { label: "What it needs to hold", starter: "Needs to hold: " },
+  { label: "When you'd like it", starter: "Timing: " },
+];
+---
+
+<form
+  name="enquiry-preview"
+  method="post"
+  action="#enquiry-preview"
+  class:list={["ecf", "ecf-a", compact && "is-compact"]}
+  data-ec-form
+  data-variant="a"
+>
+  <input type="hidden" name="subject" value="Website enquiry (%{submissionId})" />
+  {SOURCE_FIELDS.map((name) => <input type="hidden" name={name} value="" />)}
+  <p hidden>
+    <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="ecf-row">
+    <div>
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}name`} name="name" type="text" required autocomplete="name" placeholder=" " />
+        <label class="ecf-float-label" for={`${idPrefix}name`}>Your name</label>
+      </div>
+    </div>
+    <div>
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel" placeholder=" " />
+        <label class="ecf-float-label" for={`${idPrefix}phone`}>Phone</label>
+      </div>
+    </div>
+    <div>
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" placeholder=" " />
+        <label class="ecf-float-label" for={`${idPrefix}email`}>Email</label>
+      </div>
+    </div>
+  </div>
+
+  <CardGroup
+    legend="What do you need?"
+    help={selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
+    name="service"
+    type="checkbox"
+    choices={SERVICE_CHOICES}
+    idPrefix={idPrefix}
+    checked={selectedService ? [selectedService] : []}
+    layout="row"
+    emailHeading
+    showChosen
+  />
+
+  <CardGroup
+    legend="Which area of north London?"
+    help="Pick the nearest."
+    name="area"
+    type="radio"
+    choices={AREA_CHOICES}
+    idPrefix={idPrefix}
+    layout="row"
+    role="area"
+    showChosen
+  >
+    <p class="ecf-help ec-nojs">Somewhere else? Say where in the job box.</p>
+    <div class="ec-other" data-ec-other hidden>
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}area-other`} type="text" data-ec-other-input placeholder="Finchley, or your postcode" />
+        <label class="ecf-float-label" for={`${idPrefix}area-other`}>Your area or postcode</label>
+      </div>
+    </div>
+  </CardGroup>
+
+  <div class="ecf-pair">
+    <div>
+      <label class="ecf-label" for={`${idPrefix}detail`}>Tell us about the job</label>
+      <p class="ecf-help">The room, rough sizes, and what it needs to hold is plenty.</p>
+      <div class="eca-prompts" data-ec-prompts role="group" aria-label="Start a line in the box below" hidden>
+        {PROMPTS.map((p) => (
+          <button type="button" class="eca-prompt" data-starter={p.starter}><span class="eca-mark" aria-hidden="true"></span>{p.label}</button>
+        ))}
+      </div>
+      <textarea
+        class="ecf-input"
+        id={`${idPrefix}detail`}
+        name="detail"
+        rows={compact ? 4 : 5}
+        placeholder={jobExample}
+      ></textarea>
+    </div>
+
+    <fieldset>
+      <legend class="ecf-label">Photos or drawings (optional)</legend>
+      <p class="ecf-help">
+        Add up to six photos, plans or documents, up to 15 MB each and 60 MB together.
+      </p>
+      <div class="ecf-files">
+        <input
+          id={`${idPrefix}files`}
+          class="ecf-file-input"
+          type="file"
+          multiple
+          data-ec-files
+          accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
+        />
+        <label for={`${idPrefix}files`} class="ecf-file-button">Add files</label>
+        <p class="ecf-help" data-ec-file-count aria-live="polite">Nothing added yet.</p>
+      </div>
+    </fieldset>
+  </div>
+
+  <CardGroup
+    legend="How did you hear about us?"
+    name="source"
+    type="radio"
+    choices={SOURCE_CHOICES}
+    idPrefix={idPrefix}
+    layout="row"
+  />
+
+  <div class="ecf-actions">
+    <button type="submit" class="ecf-send" data-ec-send disabled>Send enquiry</button>
+  </div>
+  <p class="ecf-help">
+    Preview only: Send shows what the enquiry would carry, and nothing leaves this page.
+  </p>
+  <div class="ec-dry" data-ec-dry tabindex="-1" role="region" aria-label="What this enquiry would send" hidden></div>
+
+  <p class="ecf-help">
+    We use your details to reply, to quote, and to carry out the work if you go ahead. We do not add
+    you to a marketing list. See our{" "}
+    <a href="/privacy/">privacy notice</a>.
+  </p>
+</form>
+
+<script>
+  import { initEnquiryCards } from "./client";
+  initEnquiryCards();
+</script>

@@ -33,6 +33,9 @@
  *     the cost list, the guarantee and the four questions.
  *   - Ours, which he read and left as it was: the line to the two guides that
  *     closes the design section.
+ *   - Cut, 13 Nov 2026 (a founder): the design section's opening sentence on
+ *     Hampstead's architectural styles, a near repeat of his Fit section
+ *     sentence. The removed words are kept in a comment where they stood.
  *
  * THE GATE. areaHampsteadMerge held the new copy until he approved it. He
  * answered on 10 Nov by rewriting it, so the key is answered and the page is
@@ -82,7 +85,7 @@ const SECTION = "padding-bottom:var(--section-y)";
     <p>
       {/* Not held since 9 Nov 2026: a founder ruled not to ask Kaspar about Hampstead jobs.
           This is his approved sentence, live on every service page. */}
-      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
+      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
     </p>
     <p style={P2}>
       {/* Kaspar's words, 10 Nov 2026 (his comment on the preview); the links are ours. One word changed:
@@ -118,11 +121,19 @@ const SECTION = "padding-bottom:var(--section-y)";
     <SectionHead meta="Design" level={4}>What fitted furniture works best in different Hampstead properties</SectionHead>
     <div style={TEXT}>
       <p>
-        Images labelled "AI-generated example" are provided for design inspiration and to illustrate different fitted furniture options. All other project photographs on this page show our completed work.
+        {/* Kaspar's note, word for word. The link on "our completed work" is ours, 13 Nov 2026 (a founder):
+            a reader told the pictures below are AI examples gets a way straight to the real jobs. */}
+        Images labelled "AI-generated example" are provided for design inspiration and to illustrate different fitted furniture options. All other project photographs on this page show <Link href="/work/">our completed work</Link>.
       </p>
-      <p style={P2}>
-        Hampstead has a rich variety of architectural styles, from Georgian houses on Church Row and Regency villas on Keats Grove to Victorian terraces around Willoughby Road and traditional mansion blocks such as Northcote Mansions. These properties often have distinctive architectural features that need to be considered when designing bespoke fitted furniture.
-      </p>
+      {/* 13 November 2026, a founder: one repeat cut. Kaspar's 10 Nov rewrite opened
+          here with "Hampstead has a rich variety of architectural styles, from Georgian
+          houses on Church Row and Regency villas on Keats Grove to Victorian terraces
+          around Willoughby Road and traditional mansion blocks such as Northcote
+          Mansions. These properties often have distinctive architectural features
+          that need to be considered when designing bespoke fitted furniture." It
+          repeated, almost word for word, his 8 Nov sentence in the Fit section above,
+          which stays. Willoughby Road and Northcote Mansions are still named in his
+          paragraphs below. Nothing else of his is changed; Kaspar is told, not asked. */}
       <p style={P2}>
         In period properties, careful attention is given to how fitted furniture integrates with the room's existing features. Wardrobes and cabinetry can be designed to finish neatly below original cornices or incorporate matching decorative details where appropriate. The aim is to create practical storage that complements the character and proportions of the property.
       </p>

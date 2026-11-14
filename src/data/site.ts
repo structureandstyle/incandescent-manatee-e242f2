@@ -16,8 +16,11 @@ export const BUSINESS = {
   /** Exactly as it reads on the Business Profile. */
   profileName: "Structure & Style – Bespoke Carpentry & Interiors",
   /* London-led per Kaspar's Q3 answer and Denis's ruling, 30 Aug 2026. The
-     named districts below stay: they are where the demand and the reviews are. */
-  tagline: "Bespoke carpentry and joinery across London",
+     named districts below stay: they are where the demand and the reviews are.
+     12 November 2026: a founder said "change all everywhere to north london",
+     overturning that ruling site-wide. Kaspar's own sentences on /about/ and
+     the home page still say London until he rewords them. */
+  tagline: "Bespoke carpentry and joinery across north London",
   phoneDisplay: "07309 872555",
   phoneHref: "tel:+447309872555",
   whatsapp: "https://wa.me/447309872555",
@@ -246,7 +249,7 @@ export const SERVICES: Service[] = [
        now says "north London" ("Yes, change it", the same day the Business
        Profile link was pointed at this page). The title is unchanged and
        still leads with London and the primary. */
-    metaTitle: "Bespoke fitted wardrobes London, made to measure",
+    metaTitle: "Bespoke fitted wardrobes, north London, made to measure",
     noMinimum: true,
     bandPrice: "Fitted wardrobes from £2,300",
     price:
@@ -269,7 +272,7 @@ export const SERVICES: Service[] = [
       "Fitted wardrobes are available in painted MR MDF, melamine and decorative boards, or natural wood veneer, with a wide choice of colours and finishes.",
     title: "Fitted wardrobes",
     heading: "Fitted wardrobes in north London, made to measure",
-    primary: "fitted wardrobes london",
+    primary: "fitted wardrobes north london",
     /* 10 November 2026, a founder's request: the description names Islington
        and north London (see the intro note in service-copy.ts). "Made to
        measure" left it to stay within 155 characters; the title and heading
@@ -283,7 +286,7 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "walk-in-wardrobes",
-    metaTitle: "Bespoke walk-in wardrobes, London",
+    metaTitle: "Bespoke walk-in wardrobes, north London",
     /* £5,000, Kaspar, 6 September 2026, replacing the generic "projects
        generally from £2,000" that stood on every page the 31 Aug pricing
        document did not price. A walk-in is a room rather than a run, and the
@@ -302,23 +305,23 @@ export const SERVICES: Service[] = [
     heading: "Bespoke walk-in wardrobes and dressing rooms",
     primary: "bespoke walk in wardrobe",
     description:
-      "Bespoke walk-in wardrobes and dressing room fit-outs for London homes, including loft rooms, box rooms and eaves where standard storage will not fit.",
+      "Bespoke walk-in wardrobes and dressing room fit-outs for north London homes, including loft rooms, box rooms and eaves where standard storage will not fit.",
     summary:
       "Walk-in wardrobes and dressing rooms designed around the space and how you use it, with hanging, shelving, drawers, shoe storage and lighting planned together from the start.",
     wave: 1,
   },
   {
     slug: "alcove-units",
-    metaTitle: "Alcove units and shelving in London",
+    metaTitle: "Alcove units and shelving in north London",
     noMinimum: true,
     bandPrice: "Alcove units from £3,300 a pair",
     price:
       "From £3,300 for a pair of alcove units in melamine, from £3,600 hand-painted, and from £6,000 in oak veneer. Based on base cupboards with shelving over, up to about 1m per alcove. Shelving detail, drawers and lighting move it further.",
     title: "Alcove units and shelving",
-    heading: "Alcove units, cupboards and shelving in London",
-    primary: "alcove units london",
+    heading: "Alcove units, cupboards and shelving in north London",
+    primary: "alcove units north london",
     description:
-      "Built-in alcove units, cupboards and shelving for London homes, measured and fitted to each recess with a choice of layouts and finishes.",
+      "Built-in alcove units, cupboards and shelving for north London homes, measured and fitted to each recess with a choice of layouts and finishes.",
     summary:
       "No two alcoves in a period house are the same width. Each unit is built to its own measurements and cut to follow the wall.",
     wave: 1,
@@ -327,22 +330,22 @@ export const SERVICES: Service[] = [
     slug: "fitted-wardrobe-cost",
     guide: true,
     noMinimum: true,
-    metaTitle: "Built-in wardrobe cost in London",
+    metaTitle: "Built-in wardrobe cost in north London",
     bandPrice: "Fitted wardrobes from £2,300",
     price:
       "From £2,300 for a 2-door wardrobe in melamine to £6,300 and up for 4 doors in oak veneer. The tables below give every step between.",
     title: "What fitted wardrobes cost",
-    heading: "How much do fitted wardrobes cost in London?",
+    heading: "How much do fitted wardrobes cost in north London?",
     primary: "built in wardrobe cost",
     description:
-      "What fitted wardrobes and alcove units actually cost in London, guide prices by size and finish, what moves the figure, and how to read a quotation.",
+      "What fitted wardrobes and alcove units actually cost in north London, guide prices by size and finish, what moves the figure, and how to read a quotation.",
     summary:
       "Honest price ranges, what moves them, and the questions worth asking before you accept any quote.",
     wave: 1,
   },
   {
     slug: "media-walls",
-    metaTitle: "Media walls and TV units, London",
+    metaTitle: "Media walls and TV units, north London",
     bandPrice: "Built-in TV units from £3,500",
     costLead:
       "Media walls vary considerably depending on their size, storage, finish and level of integration. The guide price below is for a complete bespoke media wall or built-in TV unit.",
@@ -362,18 +365,18 @@ export const SERVICES: Service[] = [
     },
     title: "Media walls and TV units",
     label: "Built-in TV units",
-    heading: "Media walls and built‑in TV units in London",
-    kicker: "Media walls, London",
-    primary: "media wall london",
+    heading: "Media walls and built‑in TV units in north London",
+    kicker: "Media walls, North London",
+    primary: "media wall north london",
     description:
-      "Bespoke media walls and built-in TV units for London homes, planned around the room, storage, lighting, cable routes and ventilation.",
+      "Bespoke media walls and built-in TV units for north London homes, planned around the room, storage, lighting, cable routes and ventilation.",
     summary:
       "Designed to make the television belong in the room, with each line and proportion resolved before the piece is made.",
     wave: 2,
   },
   {
     slug: "bespoke-kitchens",
-    metaTitle: "Bespoke kitchens in London",
+    metaTitle: "Bespoke kitchens in north London",
     bandPrice: "Bespoke kitchens from £10,000",
     price:
       "Bespoke kitchens typically start from £10,000, with each project individually priced following a measured survey. Larger kitchens, islands and more complex designs are quoted accordingly.",
@@ -394,11 +397,11 @@ export const SERVICES: Service[] = [
         "A fitted kitchen is used every day, so reliable aftercare matters. If anything needs adjusting after installation, we will come back and put it right.",
     },
     title: "Bespoke kitchens",
-    heading: "Bespoke kitchens in London, made to measure",
-    kicker: "Bespoke kitchens, London",
-    primary: "bespoke kitchens london",
+    heading: "Bespoke kitchens in north London, made to measure",
+    kicker: "Bespoke kitchens, North London",
+    primary: "bespoke kitchens north london",
     description:
-      "Bespoke kitchens for London homes, with made-to-measure cabinetry, islands and storage planned alongside appliances, worktops and finishes.",
+      "Bespoke kitchens for north London homes, with made-to-measure cabinetry, islands and storage planned alongside appliances, worktops and finishes.",
     summary:
       "Made-to-measure kitchen cabinetry with tall units, islands, internal storage and surrounding finishes resolved around the room.",
     wave: 2,
@@ -423,7 +426,7 @@ export const DEFERRED_SERVICES: Service[] = [
       "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
     title: "Home office and under-stair storage",
     heading: "Home office and under-stair storage",
-    primary: "under stairs storage london",
+    primary: "under stairs storage north london",
     description:
       "Built-in desks, study storage and under-stair storage that uses the whole void, fitted around windows, radiators and the stair pitch.",
     summary:

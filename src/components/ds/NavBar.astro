@@ -34,6 +34,12 @@
  * It bends one recorded rule, "nothing hidden": five services sit behind one
  * toggle.
  *
+ * THE AREAS MENU, 14 November 2026 (a founder: replace Process with Areas).
+ * A second disclosure menu of the same build, listing the area pages and
+ * "All areas", which leads to the /areas/ hub. `menus` takes any number of
+ * menus in order; each is its own <details>, and opening one closes the
+ * others, so two lists never overlap. Header.astro decides what goes in them.
+ *
  * THE PHONE HEADER, 6 November 2026 (Denis's design, Arthur's go-ahead, for
  * Kaspar's approval on a preview link). Below 860px the header is one row:
  * the wordmark, a WhatsApp icon and a Menu button. It replaces the full-bleed
@@ -67,8 +73,8 @@ import Link from "./Link.astro";
 
 interface Props {
   items?: readonly { label: string; href: string }[];
-  /** A disclosure menu rendered first in the nav: the services, by name. */
-  menu?: { label: string; items: readonly { label: string; href: string }[] };
+  /** Disclosure menus rendered first in the nav, in order: the services, then the areas. */
+  menus?: readonly { label: string; items: readonly { label: string; href: string }[] }[];
   cta?: { label: string; href: string };
   /** Below 860px, an icon beside the Menu button: a wa.me link. */
   whatsapp?: { href: string; label: string };
@@ -82,7 +88,7 @@ interface Props {
 
 const {
   items = [],
-  menu,
+  menus = [],
   cta,
   whatsapp,
   logoHeight = 20,
@@ -95,7 +101,8 @@ const {
 
 const markH = Math.round(logoHeight * 0.92);
 const wordW = Math.round(logoHeight * 10.093);
-const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
+const shown = menus.filter((m) => m.items.length > 0);
+const isCurrent = (m: (typeof menus)[number]) => m.items.some((it) => it.href === activeHref);
 ---
 
 <header
@@ -133,9 +140,9 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
     </a>
 
     <nav aria-label="Primary" class="nav-desktop" style="display:flex;gap:var(--gap-sm);align-items:baseline">
-      {menu && menu.items.length > 0 && (
+      {shown.map((menu) => (
         <details class="nav-menu" data-nav-menu>
-          <summary class:list={["nav-menu-toggle", menuCurrent && "is-current"]}>
+          <summary class:list={["nav-menu-toggle", isCurrent(menu) && "is-current"]}>
             {menu.label}<span class="nav-menu-caret" aria-hidden="true"></span>
           </summary>
           <ul class="nav-menu-list">
@@ -146,7 +153,7 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
             ))}
           </ul>
         </details>
-      )}
+      ))}
       {items.map((it) => (
         <Link href={it.href} variant="nav" chamfer current={activeHref === it.href}>{it.label}</Link>
       ))}
@@ -170,10 +177,10 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
         <div class="nav-drawer-panel">
           <nav aria-label="Menu">
             <ul class="nav-drawer-list">
-              {menu && menu.items.length > 0 && (
+              {shown.map((menu) => (
                 <li>
-                  <details class="nav-drawer-sub" open={menuCurrent}>
-                    <summary class:list={["nav-drawer-row", menuCurrent && "is-current"]}>
+                  <details class="nav-drawer-sub" open={isCurrent(menu)}>
+                    <summary class:list={["nav-drawer-row", isCurrent(menu) && "is-current"]}>
                       {menu.label}<span class="nav-menu-caret" aria-hidden="true"></span>
                     </summary>
                     <ul>
@@ -185,7 +192,7 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
                     </ul>
                   </details>
                 </li>
-              )}
+              ))}
               {items.map((it) => (
                 <li>
                   <a class="nav-drawer-row" href={it.href} aria-current={activeHref === it.href ? "page" : undefined}>{it.label}</a>
@@ -500,12 +507,17 @@ const menuCurrent = Boolean(menu?.items.some((it) => it.href === activeHref));
     window.addEventListener("scroll", update, { passive: true });
   }
 
-  // The services menu opens and closes on its own, because it is <details>.
-  // This only adds the three ways out the disclosure pattern expects: Escape
-  // (focus returns to the toggle), a click anywhere else, and focus leaving.
-  const menu = document.querySelector<HTMLDetailsElement>("[data-nav-menu]");
-  if (menu) {
+  // Each menu (Services, Areas) opens and closes on its own, because it is
+  // <details>. This only adds the three ways out the disclosure pattern
+  // expects: Escape (focus returns to the toggle), a click anywhere else, and
+  // focus leaving. Opening one closes the others (14 Nov 2026), so two open
+  // lists never sit on top of each other.
+  const navMenus = Array.from(document.querySelectorAll<HTMLDetailsElement>("[data-nav-menu]"));
+  for (const menu of navMenus) {
     const toggle = menu.querySelector<HTMLElement>("summary");
+    menu.addEventListener("toggle", () => {
+      if (menu.open) for (const other of navMenus) if (other !== menu) other.open = false;
+    });
     document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape" || !menu.open) return;
       const inside = menu.contains(document.activeElement);

@@ -1,0 +1,110 @@
+---
+/**
+ * The areas hub, /areas/, 14 November 2026 (a founder: "replace Process with
+ * Areas", with an Areas menu whose "All areas" leads here).
+ *
+ * It lists every area page whose gate has cleared, in name order, each with
+ * one sentence on the homes there (areas.ts `summary`). On a preview build
+ * (SHOW_DRAFTS) it lists the drafts too, so the review link shows it as it
+ * will be. It is indexable only once an area page other than Hampstead is
+ * (areasHubLive in page-gates.ts), which is also when the header's Areas menu
+ * appears on the live site; until then it is noindexed and out of the sitemap.
+ *
+ * No copy here claims work in any district. NOTHING HERE ADDS CSS: inline
+ * styles and existing tokens, as AreaPage does.
+ */
+import Base from "../../layouts/Base.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import Display from "../../components/ds/Display.astro";
+import Kicker from "../../components/ds/Kicker.astro";
+import MonoLabel from "../../components/ds/MonoLabel.astro";
+import Link from "../../components/ds/Link.astro";
+import EnquireBand from "../../components/ds/EnquireBand.astro";
+import EnquiryActions from "../../components/ds/EnquiryActions.astro";
+import Value from "../../components/Value.astro";
+
+import { SITE_URL, BUSINESS } from "../../data/site";
+import { BAND } from "../../data/site-content";
+import { AREAS, areaPath } from "../../data/areas";
+import { indexable, AREAS_HUB } from "../../data/page-gates";
+import { SHOW_DRAFTS } from "../../data/journal";
+
+const url = new URL(AREAS_HUB, SITE_URL).href;
+const title = "Areas we cover in north London";
+const description =
+  "The north London areas Structure & Style covers, each with its own page on the homes, the council rules and the fitted furniture that suits them.";
+
+const listed = AREAS.filter((a) => SHOW_DRAFTS || indexable(areaPath(a.slug))).sort((a, b) =>
+  a.name.localeCompare(b.name, "en")
+);
+
+const webPage = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${url}#webpage`,
+  url,
+  name: `${title} | ${BUSINESS.name}`,
+  description,
+  about: { "@id": `${SITE_URL}/#business` },
+};
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+    { "@type": "ListItem", position: 2, name: "Areas", item: url },
+  ],
+};
+---
+
+<Base title={title} description={description} schema={[webPage, breadcrumb]} noindex={!indexable(AREAS_HUB)}>
+  <article>
+    <Wrap style="padding-top:var(--hero-y);padding-bottom:var(--section-y)">
+      <nav aria-label="Breadcrumb" style="margin-bottom:var(--space-10)">
+        <MonoLabel tone="soft">
+          <Link href="/" variant="nav">Home</Link>
+          <span aria-hidden="true" style="padding:0 var(--space-5)">/</span>
+          Areas
+        </MonoLabel>
+      </nav>
+
+      <Kicker scribe>Where we work</Kicker>
+
+      <Display level={1} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
+        {title}
+      </Display>
+
+      <div style="max-width:var(--measure);font-size:var(--type-lede);color:var(--text-quiet)">
+        <p>
+          We design and fit wardrobes, alcove units and other fitted furniture across north London. Each area below has its own page on the homes there, the council's rules and how a job runs.
+        </p>
+      </div>
+
+      <EnquiryActions style="margin-top:var(--space-15)" />
+
+      <ul style="list-style:none;margin:var(--space-15) 0 0;padding:0;border-bottom:var(--rule-hair);max-width:var(--measure)">
+        {listed.map((a) => (
+          <li style="border-top:var(--rule-hair);padding:var(--space-8) 0">
+            <p style="font-family:var(--font-serif-display);font-size:var(--type-serif-md)">
+              <Link href={areaPath(a.slug)}>{a.name}</Link>
+            </p>
+            <p style="margin-top:var(--space-4);color:var(--text-quiet)">{a.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </Wrap>
+
+    <section id="enquire">
+      <EnquireBand heading={BAND.heading} chamfer>
+        {BAND.body}
+        <Fragment slot="facts">
+          {BAND.facts.slice(1).map((q) => (
+            <MonoLabel size="md" tone="paper-soft" style="letter-spacing:.1em">
+              <Value q={q} />
+            </MonoLabel>
+          ))}
+        </Fragment>
+      </EnquireBand>
+    </section>
+  </article>
+</Base>

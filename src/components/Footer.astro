@@ -17,10 +17,10 @@
  */
 import SiteFooter from "./ds/SiteFooter.astro";
 import { AGENCY_CREDIT, BUSINESS, SERVICES, hoursLines, servicePath, serviceLabel } from "../data/site";
-import { indexable } from "../data/page-gates";
-import { NAV, ENQUIRE_HREF } from "../data/site-content";
+import { indexable, AREAS_HUB, areasHubLive } from "../data/page-gates";
+import { NAV, PROCESS_LINK, ENQUIRE_HREF } from "../data/site-content";
 import { getCollection } from "astro:content";
-import { isLive } from "../data/journal";
+import { isLive, SHOW_DRAFTS } from "../data/journal";
 import { AREAS, areaPath } from "../data/areas";
 
 /* Derived, not typed (5 Sep 2026). A literal 2026 on a static site with no
@@ -72,14 +72,21 @@ const guideLinks = [
 
 /* The area pages, by the same rule: only those whose gate has cleared. The
    group is left out entirely while it has none, because SiteFooter renders
-   every group it is given, heading included, even when empty (3 Oct 2026). */
-const areaLinks = AREAS.filter((a) => indexable(areaPath(a.slug))).map((a) => ({
-  label: a.name,
-  href: areaPath(a.slug),
-}));
+   every group it is given, heading included, even when empty (3 Oct 2026).
+   14 Nov 2026: in name order, led by "All areas" once the /areas/ hub is live;
+   on a preview build (SHOW_DRAFTS) every area page and the hub are listed, as
+   in the header's Areas menu. */
+const areaLinks = [
+  ...(SHOW_DRAFTS || areasHubLive() ? [{ label: "All areas", href: AREAS_HUB }] : []),
+  ...AREAS.filter((a) => SHOW_DRAFTS || indexable(areaPath(a.slug)))
+    .sort((a, b) => a.name.localeCompare(b.name, "en"))
+    .map((a) => ({ label: a.name, href: areaPath(a.slug) })),
+];
 
+/* Process is listed here by name, 14 Nov 2026: it left NAV when the header's
+   Areas menu took its place (site-content.ts), and it stays in the footer. */
 const pageLinks = [
-  ...NAV.filter((item) => indexable(item.href)),
+  ...[PROCESS_LINK, ...NAV].filter((item) => indexable(item.href)),
   ...(articles.length > 0 ? [{ label: "Journal", href: "/journal/" }] : []),
 ];
 
@@ -106,7 +113,7 @@ const contact = [
     "Bespoke joinery and fitted furniture" until then. */}
 <SiteFooter
   brand
-  tagline="Bespoke carpentry and fitted wardrobes · London"
+  tagline="Bespoke carpentry and fitted wardrobes · North London"
   contact={contact}
   hours={hoursLines()}
   nav={[

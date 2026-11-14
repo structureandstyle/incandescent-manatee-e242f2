@@ -369,5 +369,21 @@
       "quality": "5",
       "bytes": 69042
     }
+  ],
+  "library": [
+    {
+      "file": "/images/library/ssp-027.webp",
+      "w": 1600,
+      "h": 1200,
+      "source": "20251212_152634.jpg",
+      "date": "20251212"
+    },
+    {
+      "file": "/images/library/ssp-029.webp",
+      "w": 1500,
+      "h": 1000,
+      "source": "20260518_111853.jpg",
+      "date": "20260518"
+    }
   ]
 }

@@ -16,7 +16,6 @@
  * it is why this file contains no prices, no lead times and no guarantee terms.
  */
 import Base from "../layouts/Base.astro";
-import EnquiryForm from "../components/EnquiryForm.astro";
 import Value from "../components/Value.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
@@ -270,7 +269,7 @@ const SECTIONS: Section[] = [
   {
     id: "fitting",
     heading: "How is it fitted?",
-    lead: "London rooms are rarely square. What happens where the piece meets the wall is the whole job.",
+    lead: "North London rooms are rarely square. What happens where the piece meets the wall is the whole job.",
     rows: [
       { label: "Scribing", q: "q31" },
       { label: "Clearing up", q: "q33" },
@@ -498,7 +497,7 @@ const SECTIONS: Section[] = [
     <Wrap style="padding-bottom:var(--section-y)">
       <SectionHead meta="Service area" level={4}>Where we work</SectionHead>
       <p style="max-width:var(--measure)">
-        Across London, including <AreaList />.
+        Across north London, including <AreaList />.
       </p>
     </Wrap>
 
@@ -513,9 +512,17 @@ const SECTIONS: Section[] = [
 
     <!-- Enquiry -->
     <section id="enquire">
-      {/* Keep the action explicit even though the inline form follows. The
-          heading explains the invitation; the button tells the visitor what
-          to do and opens the same service-aware modal as the hero action. */}
+      {/* ONE FORM PER PAGE, 14 November 2026 (a founder): the inline form that
+          used to follow this band is gone, because a Get a quote section
+          followed by the form again read as the same form twice. The band's
+          button opens the service-aware pop-up, as the hero action does: the
+          pop-up gets this page's service from `enquiryService` on <Base>.
+
+          That value is serviceLabel, not title. The checkbox list is built
+          from labels, and on the one page where the two diverge (/media-walls/)
+          the tick silently did not happen (open since 3 Sep 2026). Nothing is
+          passed on the cost guide on purpose: it is a guide, not something
+          anyone orders, so its reader gets the full list, as /contact/ gives. */}
       <EnquireBand heading="If you have a room in mind, start here." chamfer>
         {BAND.body}
         <Fragment slot="facts">
@@ -528,26 +535,6 @@ const SECTIONS: Section[] = [
           ))}
         </Fragment>
       </EnquireBand>
-
-      <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
-        <div style="max-width:var(--measure-tight)">
-          {/* serviceLabel, not title. The checkbox list is built from labels,
-              and on the one page where the two diverge the tick silently did
-              not happen: a visitor arriving at /media-walls/ and using the form
-              on it got the same nothing-ticked state as someone with no context
-              at all, losing the one piece of self-attribution the in-page form
-              exists to supply (open since 3 Sep 2026).
-
-              NOTHING IS PASSED ON THE COST GUIDE, and that is not an oversight.
-              It renders from this template and shares the gate, but it is a
-              guide rather than something anyone orders, so its own label is not
-              in the checkbox list and passing it would offer "What fitted
-              wardrobes cost" as a thing to tick. A reader of a price guide has
-              not chosen a service yet, so they get the full list, which is the
-              same thing /contact/ gives them. */}
-          <EnquiryForm compact service={service.guide ? undefined : serviceLabel(service)} />
-        </div>
-      </Wrap>
     </section>
 
     <!-- Cross-links -->

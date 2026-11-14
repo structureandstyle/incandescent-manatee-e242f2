@@ -51,6 +51,7 @@ import { HOMEPAGE_FAQS, PROCESS, REVIEWS, BAND, CONTACT, ENQUIRE_HREF } from "..
 import { WORK_GALLERY } from "../data/work-gallery";
 import { indexable } from "../data/page-gates";
 import { questionLabel } from "../data/answers";
+import { photoAlt } from "../data/work-gallery";
 import selection from "../../public/images/_selection.json";
 
 const isIndexable = indexable("/");
@@ -150,8 +151,8 @@ const siteSchema = {
       had dropped the word entirely. The title stays off "fitted wardrobes"
       so it does not compete with /fitted-wardrobes/ (5 Sep). Ours, not his:
       his sentences on the page are untouched. */}
-  title="Fitted furniture and carpentry, London"
-  description="Bespoke carpentry and fitted furniture for London homes: fitted wardrobes, walk-in wardrobes and alcove units, measured on site and cut to your walls."
+  title="Fitted furniture and carpentry, North London"
+  description="Bespoke carpentry and fitted furniture for north London homes: fitted wardrobes, walk-in wardrobes and alcove units, measured on site and cut to your walls."
   schema={siteSchema}
   noindex={!isIndexable}
 >
@@ -163,7 +164,7 @@ const siteSchema = {
         Arthur put fitted wardrobes in place of joinery: to a homeowner the two
         words said the same thing, and wardrobes are the job Kaspar most wants.
         London stays London, not north London (ruled 30 Aug 2026). */}
-    <Kicker scribe>Bespoke carpentry and fitted wardrobes · London</Kicker>
+    <Kicker scribe>Bespoke carpentry and fitted wardrobes · North London</Kicker>
 
     {/* Kaspar's own headline and opening paragraph, 6 September 2026, in place
         of "made once, for one room". His is the plainer sentence and it is the
@@ -182,7 +183,7 @@ const siteSchema = {
     </Display>
 
     <p style="max-width:var(--measure);font-size:var(--type-lede)">
-      Bespoke fitted furniture for homes across London, including fitted wardrobes, walk-in
+      Bespoke fitted furniture for homes across north London, including fitted wardrobes, walk-in
       wardrobes, alcove units and built-in TV units. Each piece is measured, designed and fitted
       around the space it belongs in.
     </p>
@@ -213,7 +214,7 @@ const siteSchema = {
       <div style="margin-top:var(--plate-y)">
         <Plate
           photo={hero.file}
-          alt={`Bespoke kitchen, completed installation by ${BUSINESS.legalName}`}
+          alt={photoAlt(hero.file, "Bespoke kitchen")}
           width={hero.w}
           height={hero.h}
           label="Bespoke kitchens"
@@ -308,7 +309,7 @@ const siteSchema = {
         <Plate
           href={s.href}
           photo={s.file}
-          alt={`${s.type}, completed installation by ${BUSINESS.legalName}`}
+          alt={s.alt}
           width={s.w}
           height={s.h}
           ratio="4 / 3"
@@ -461,7 +462,7 @@ const siteSchema = {
           not an About one. The cost sections on every service page already
           say what moves the price, so nothing is lost. */}
       <p>
-        We are a joinery company based in Camden Town, working across London. We design, manage
+        We are a joinery company based in Camden Town, working across north London. We design, manage
         and install bespoke fitted furniture, from individual pieces to larger fitted interiors.
         Each project is developed around the room, the way it will be used and the finish the
         client wants to achieve.

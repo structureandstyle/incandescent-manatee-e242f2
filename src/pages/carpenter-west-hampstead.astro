@@ -1,0 +1,164 @@
+---
+/**
+ * West Hampstead, 14 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex until
+ * he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (West Hampstead), every local fact from facts-west-hampstead-2026-11-14.md:
+ * Camden's West End Green Conservation Area Appraisal and Management Strategy
+ * (adopted 28 February 2011), Camden's South Hampstead appraisal (February
+ * 2011) for the conservation area boundary only, and Camden's listed
+ * buildings, Article 4 directions and parking pages. No review names West
+ * Hampstead, so there is no review block and no customer line.
+ *
+ * WHOSE WORDS. New copy for him to check. His confirmed facts are reworded to
+ * fit: walls rarely straight, the cornice point, parking agreed before
+ * installation and the working hours. The single conduct claim is the
+ * managed-block working hours (protocol section 11, item 4), in the access
+ * section.
+ *
+ * Street and building names are Camden's appraisal describing the houses and
+ * blocks. None is a place we claim to have worked. Lines that rest on general
+ * knowledge, not a council document, are practical advice about that kind of
+ * room and are listed for Kaspar in the hand-over note.
+ *
+ * FAQ sources: "What are the typical duties of a carpenter?" (People also ask,
+ * carpenter west hampstead SERP, serps-areas-2, 14 Nov 2026); "What
+ * alterations can you make to a leasehold property?" (People also ask, cited
+ * in ops deliverables/faq-research-2026-11-06.md, B6); "What is the average
+ * cost of a fitted wardrobe in London?" (People also ask, bespoke wardrobes
+ * islington, serps-areas-1, 14 Nov 2026), answered with Kaspar's own list of
+ * what moves a wardrobe price (site.ts, 6 Sep 2026). It replaced "What are the
+ * 7 types of carpentry work?" (14 Nov review: a trivia question).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-west-hampstead")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and <Link href="/media-walls/">built-in TV units</Link> for West Hampstead homes. Many are red brick Victorian and Edwardian houses and mansion flats.
+    </p>
+    <p style={P2}>
+      Every room is measured as it stands, and each piece of bespoke joinery is cut to its walls, floors and ceilings, which are rarely straight.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansion flats" level={4}>Fitted furniture for West End Lane's mansion flats</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's West End Green appraisal describes West End Lane as framed by five-storey mansion flats over shops. Around Cannon Hill it names Buckingham, Avenue and Marlborough Mansions as a distinctive group in tall red brick. Cholmley Gardens is a large inter-war development nearby.
+      </p>
+      <p style={P2}>
+        Flats of this age often have high ceilings and chimney breasts with alcoves. A wardrobe can run to a high ceiling, and a pair of alcoves can take cupboards below and shelves above. In a bedroom, a wardrobe can stop below an original cornice rather than cut into it.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Leasehold flats" level={4}>Yale and Harvard Courts, and flats bought on a lease</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's appraisal says Yale and Harvard Courts on Honeybourne Road were built as private rented flats, known as Key flats. It adds that the leaseholds are now increasingly bought by individuals.
+      </p>
+      <p style={P2}>
+        A leasehold flat has the building's rules to follow as well as the council's, and the questions below cover what to ask.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Houses" level={4}>Red brick houses around Crediton Hill and Lyncroft Gardens</SectionHead>
+    <div style={TEXT}>
+      <p>
+        East of the Lane, Camden's appraisal describes large semi-detached and detached houses on Lymington Road, Fawley Road and Honeybourne Road, built for Edwardian professionals. Their red brick comes with timber and stone balconies, stucco and terracotta details. Crediton Hill adds stained-glass oval windows and a run of rendered Arts and Crafts houses.
+      </p>
+      <p style={P2}>
+        West of the Lane, the north side of Lyncroft Gardens has late Victorian houses in red brick, raised on basements with attic storeys. Under a sloping attic ceiling, a wardrobe can step down with the roof. Full-height doors suit the high side, and drawers suit the slope.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Nearby terraces" level={4}>Bay windows in the Greek Streets terraces</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's appraisal describes Ajax, Agamemnon, Ulysses and Achilles Roads, known as the Greek Streets, as two-storey terraces with carved faces on the bay capitals. They sit near Fortune Green and are outside the conservation area. The appraisal raises them as a possible conservation area of their own.
+      </p>
+      <p style={P2}>
+        In a bay window, a seat with drawers or cupboards beneath can follow the angles of the bay. It adds storage to a room where wall space is short.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Council rules" level={4}>What the West End Green conservation area controls</SectionHead>
+    <div style={TEXT}>
+      <p>
+        West End Green is a conservation area, so changes to the outside of a building, such as windows and roofs, are controlled. Fitted furniture inside an ordinary home does not normally need planning permission.
+      </p>
+      <p style={P2}>
+        The appraisal's listed buildings are churches, the synagogue, the fire station and street furniture on the Green. Most flats and houses are not listed. Check Camden's <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>listed buildings</Link> page, and its <Link href="https://www.camden.gov.uk/article-4-directions-heritage-and-conservation" {...EXT}>Article 4 directions</Link> page if you plan outside work.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access and parking" level={4}>Getting furniture into a mansion flat, and parking the van</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Before installation we agree parking, deliveries and access with you, including where the van can unload. In a mansion block, find out the lift size, the stair width and any delivery times, and tell us at the survey. In a managed block we work to whatever hours the building sets.
+      </p>
+      <p style={P2}>
+        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>controlled parking zones</Link> cover large areas, so the van may need a permit. A Camden <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> covers resident bays and yellow lines in the zone, though it does not guarantee a space.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>Guide prices for West Hampstead flats and houses</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/media-walls/">Built-in TV units</Link> start from £3,500. The size, the finish and what the unit has to house move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. See the <Link href="/fitted-wardrobe-cost/">fitted wardrobe cost guide</Link> for what sits behind the figures.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="What are the typical duties of a carpenter?">
+        A carpenter measures, cuts, fits and finishes timber work in a home. For fitted furniture that means designing the piece, measuring the room, then fitting and finishing it.
+      </Faq>
+      <Faq q="What alterations can you make to a leasehold property?">
+        Your lease decides, and leases often set rules on alterations. Your managing agent or freeholder can say what the building needs before work starts, so ask them before you commission anything. Tell us what they say at the survey.
+      </Faq>
+      <Faq q="What is the average cost of a fitted wardrobe in London?">
+        There is no useful average, because each fitted wardrobe is priced to its room. Ours start from £2,300, and drawers, lighting, mirrors, shoe storage, pull-outs and decorative details are priced by the specification.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

@@ -76,7 +76,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
        own sentence stays as he wrote it; the new one follows it. */
     intro: [
       "A fitted wardrobe is designed and made specifically for your room, taking into account the available space, the proportions of the room and what you need to store. The interior is planned around how you use it, from hanging space and shelving to drawers and other storage. You don't need to have everything worked out before getting in touch: understanding what you need and helping develop the right layout is part of the service.",
-      "We design and fit wardrobes across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London. We also fit wardrobes in Islington.",
+      "We design and fit wardrobes across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London. We also fit wardrobes in Islington.",
     ],
     /* THE COST AND MADE-FROM LEADS NAME THE WARDROBE THE WAY IT IS SEARCHED,
        27 September 2026. Search Console, 18 Aug to 25 Sep: 45 wardrobe
