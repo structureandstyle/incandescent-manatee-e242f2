@@ -1,0 +1,170 @@
+---
+/**
+ * Swiss Cottage, 14 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaSwissCottageCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Swiss Cottage), every local fact from facts-swiss-cottage-2026-11-14.md:
+ * Camden's South Hampstead Conservation Area appraisal (February 2011, the
+ * former Swiss Cottage Conservation Area), its Belsize Conservation Area
+ * Statement (2002), its Fitzjohns/Netherhall appraisal (the December 2021
+ * draft: the adopted 2022 version could not be read, so the one fact taken
+ * from it is worded loosely), and Camden's listed buildings, Article 4
+ * Directions and parking pages, all read 14 Nov 2026. Scope is the Finchley
+ * Road junction and the streets around it. Swiss Cottage is a junction and a
+ * ward, not one estate, so the page claims no single house type.
+ *
+ * WHOSE WORDS. His facts reworded to fit: the hanging depth from the wardrobe
+ * guide he approved (24 Oct 2026), q31 (walls rarely straight), q30, q34, q35,
+ * q36, q20, the first-visit and survey times, and the cornice line from his
+ * Hampstead section (10 Nov 2026). The one conduct line (the lift is booked
+ * and protected before any delivery) is protocol section 11, item 6. Everything
+ * else is new copy for him to check. No review names Swiss Cottage, so there is
+ * no review block; the rating line sits under the hero buttons already.
+ *
+ * Street names are Camden's, describing the houses. None is a place we claim
+ * to have worked. Advice about attic rooms, tall rooms and lifts is general
+ * practical advice about that kind of room or building, not a fact about any
+ * house in the area.
+ *
+ * FAQ sources: "Can new furniture match my existing doors, skirting and
+ * architraves?" (ops deliverables/faq-research-2026-11-06.md, B10, reworded
+ * without the word make); "How much should I pay a joiner per hour?" and
+ * "How much would you expect to pay for fitted wardrobes?" (People also ask,
+ * fitted wardrobes kentish town and fitted wardrobes maida vale, London, 14 Nov
+ * 2026: ops serps-areas-2). Answered with what the starting price includes,
+ * Kaspar's line of 6 Sep 2026 (site.ts), so it adds to the price section
+ * rather than repeating it. It replaced "What are the three rules of
+ * carpentry?" (14 Nov review: a trivia question, not a buyer's).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-swiss-cottage")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving for homes in Swiss Cottage. Homes here include late Victorian houses and mansion-block flats around the Finchley Road junction.
+    </p>
+    <p style={P2}>
+      Each piece is measured in the room and cut to follow the line of its walls, floor and ceiling, which are rarely straight.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansion blocks" level={4}>Fitted wardrobes in mansion blocks near Finchley Road</SectionHead>
+    <div style={TEXT}>
+      <p>
+        East of Fairhazel Gardens, Camden's South Hampstead appraisal describes terraces that form imposing mansion blocks of three and four storeys. On Canfield Gardens they rise to five.
+      </p>
+      <p style={P2}>
+        The appraisal also says some of these buildings have very large upper windows that suggest studio use. Tall rooms suit full-height wardrobes, and a bay or recess can take fitted seating.
+      </p>
+      <p style={P2}>
+        A starting point for hanging clothes is around 550 to 600mm of clear inside depth. In a smaller flat room, drawers and shelves can use the space better than hanging.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Large houses" level={4}>Large houses and attic rooms around Swiss Cottage</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The middle of the South Hampstead conservation area is large semi-detached houses of three and four storeys. Further west the houses are detached, often with attics and some with raised basements.
+      </p>
+      <p style={P2}>
+        Camden's Belsize statement says that conservation area stretches west to Swiss Cottage. In 1985 it took in Eton Avenue, Fellows Road and Lancaster Gardens to protect groups of large detached houses and some terraces.
+      </p>
+      <p style={P2}>
+        Under a sloping attic ceiling a standard wardrobe leaves dead space behind it. A fitted one follows the slope, with tall doors where the ceiling is high and drawers or low cupboards as it falls.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Name and place" level={4}>Swiss Cottage and the South Hampstead conservation area</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's appraisal puts Swiss Cottage on the east side of Finchley Road, around the library and the former Swiss Tavern. The tavern was built in 1804 in the style of a Swiss chalet.
+      </p>
+      <p style={P2}>
+        The conservation area beside it was called Swiss Cottage until February 2011 and is now South Hampstead. Homes near the junction also sit in the Belsize and Fitzjohns/Netherhall conservation areas.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed homes" level={4}>Is my Swiss Cottage home listed?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Almost nothing in the South Hampstead conservation area is listed. Camden's appraisal names one building, the Church of St James on Sherriff Road, while Fitzjohns/Netherhall next door contains numerous listed buildings.
+      </p>
+      <p style={P2}>
+        Fitted furniture inside a house does not normally need planning permission, but a listed building is protected throughout, interior included. If yours might be listed, check <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden's listed buildings page</Link> before work begins.
+      </p>
+      <p style={P2}>
+        Camden adopted <Link href="https://www.camden.gov.uk/article-4-directions-heritage-and-conservation" {...EXT}>Article 4 Directions</Link> for South Hampstead, Belsize and Fitzjohns/Netherhall on 9 June 2026. They take away some changes owners could make without applying, and aim to preserve historic features.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Parking, lifts and stairs in managed blocks</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Parking, deliveries and access are agreed with you before installation, including the spot where the van loads and unloads. Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>controlled parking zones</Link> cover large areas of the borough, so check your street.
+      </p>
+      <p style={P2}>
+        A <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> is Camden's route for people working at a property, and it does not guarantee a space. A visitor permit is for a resident's guests and needs a Camden address.
+      </p>
+      <p style={P2}>
+        Large pieces in a mansion block travel by lift and stair, so ask the managing agent for the lift's inside measurements. Before any delivery, the lift is booked and protected.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What wardrobes and alcove units cost</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, the number of runs, the layout and the finishes move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Can new furniture match my existing doors, skirting and architraves?">
+        A finish is chosen to suit what is already in the room. Finishes include spray-painted, hand-painted, stained veneer, lacquer and oil. Mention the existing joinery at the first visit, which usually takes 45 to 60 minutes.
+      </Faq>
+      <Faq q="How much should I pay a joiner per hour?">
+        Fitted furniture is priced by the project, not by the hour. A fixed, itemised quotation follows the measured survey, so you see what each part costs.
+      </Faq>
+      <Faq q="How much would you expect to pay for fitted wardrobes?">
+        Our fitted wardrobes start from £2,300 for a 2-door run in melamine. That covers a made-to-measure wardrobe with a straightforward layout, shelving and hanging space, soft-close hinges, delivery and installation.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

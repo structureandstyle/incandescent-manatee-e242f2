@@ -89,6 +89,7 @@ const plates = page.plates.map((p) => {
   return { ...p, w: found.w, h: found.h, alt: photoAlt(p.file, p.type), ai: false };
 });
 const anyAi = plates.some((p) => p.ai);
+const allAi = plates.length > 0 && plates.every((p) => p.ai);
 
 /* Each photograph's own description from work-gallery.ts (6 Nov 2026), the
    same words it has on /work/. No place in it: none is a recorded job in the
@@ -140,11 +141,20 @@ const breadcrumb = {
         {page.h1}
       </Display>
 
-      {/* Kaspar's note, word for word, from the Hampstead page (10 Nov 2026),
-          above the plates only when one of them is an AI-generated example. */}
-      {anyAi && (
+      {/* Above the plates only when one of them is an AI-generated example.
+          Mixed with photographs: Kaspar's note, word for word, from the
+          Hampstead page (10 Nov 2026). All AI: the journal guides' notice
+          (src/pages/journal/[...slug].astro), changing only "guide" to "page",
+          and a way to the real work, since "all other photographs" would point
+          at none. */}
+      {anyAi && !allAi && (
         <p style="max-width:var(--measure);margin:0 0 var(--space-10);color:var(--text-quiet)">
           Images labelled "AI-generated example" are provided for design inspiration and to illustrate different fitted furniture options. All other project photographs on this page show <Link href="/work/">our completed work</Link>.
+        </p>
+      )}
+      {allAi && (
+        <p style="max-width:var(--measure);margin:0 0 var(--space-10);color:var(--text-quiet)">
+          The images on this page are AI-generated examples, shown for inspiration and to help you compare the options. Photographs of <Link href="/work/">our completed work</Link> are in our gallery.
         </p>
       )}
 

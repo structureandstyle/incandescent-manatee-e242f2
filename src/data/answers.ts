@@ -246,26 +246,26 @@ export const ANSWERS = {
    * photographer, photos checked, copy cleared) the value is a one-line record
    * of who confirmed it and when; the proof itself is kept off the repo.
    */
-  cs1_title: { value: null, provisional: "Alcove units in Belsize Park (as heard on the 27 Oct call; the service and the district are both to be confirmed in writing)", blocking: true, about: "Case study 1 title, exactly '[Service] in [Area]'. Decided by which piece was the bigger part of the job" },
-  cs1_area: { value: null, blocking: true, about: "The district, written by Kaspar (the 27 Oct transcript spells it three ways). District only, never an address" },
-  cs1_home: { value: null, about: "Type of home (flat, terrace, house) and the room, in his words. No address" },
-  cs1_handover: { value: null, blocking: true, about: "Whether the job has been handed over, and on what date" },
-  cs1_pieces: { value: null, blocking: true, about: "Each piece fitted, with finished height, width and depth" },
-  cs1_materials: { value: null, about: "Materials, finish and lighting actually used" },
-  cs1_painting: { value: null, about: "Who did the painting, and who else was on the job" },
-  cs1_problem: { value: null, about: "The problem the room set, in his words" },
+  cs1_title: { value: null, provisional: "Alcove units in Belsize Park (to confirm)", blocking: true, about: "The title, as the service and the area: for example Alcove units in Belsize Park" },
+  cs1_area: { value: null, blocking: true, about: "The area, as you would like it written. The area only, never an address" },
+  cs1_home: { value: null, about: "The type of home (flat, terrace, house) and the room, in your words. No address" },
+  cs1_handover: { value: null, blocking: true, about: "Whether the job is handed over, and on what date" },
+  cs1_pieces: { value: null, blocking: true, about: "Each piece fitted, with its finished height, width and depth" },
+  cs1_materials: { value: null, about: "The materials, finish and lighting used" },
+  cs1_painting: { value: null, about: "Who did the painting, and anyone else who worked on the job" },
+  cs1_problem: { value: null, about: "What the room needed, in your words" },
   cs1_dates: { value: null, about: "Start date, finish date and days on site" },
-  cs1_photos: { value: null, blocking: true, about: "Original photographs from Kaspar (about 25 to 30, sent as documents or a shared folder)" },
-  cs1_consent: { value: null, blocking: true, about: "The customer's written OK to show the job (record kept off the repo)" },
-  cs1_photographer: { value: null, blocking: true, about: "Who took the photographs and that we may publish them (his one-sentence line, or a written licence)" },
+  cs1_photos: { value: null, blocking: true, about: "Your photographs of the finished room, about 25 to 30, sent as documents or in a shared folder" },
+  cs1_consent: { value: null, blocking: true, about: "The customer's written OK to show the job (the message itself is kept off the site)" },
+  cs1_photographer: { value: null, blocking: true, about: "Who took the photographs, and their OK to publish them" },
   cs1_photos_checked: { value: null, about: "F2F check: no people, personal items, house numbers, street signs or location data in any frame" },
   cs1_facts_confirmed: { value: null, blocking: true, about: "Kaspar confirmed the job facts in writing" },
   cs1_kaspar_yes: { value: null, blocking: true, about: "Kaspar's written yes to the finished page text" },
   cs1_copy_cleared: { value: null, about: "F2F check: copy cleared against the tone protocol and the claims rules" },
   // Optional on the page: shown if answered, never needed to publish.
-  cs1_cost: { value: null, about: "Cost range, only if Kaspar chooses to show one. Default is none" },
-  cs1_review: { value: null, about: "The customer's own review wording, only if genuine and he agrees. Quoted as text, no review markup" },
-  cs1_video: { value: null, about: "A 60-second phone walkthrough clip" },
+  cs1_cost: { value: null, about: "A cost range, only if you choose to show one. The default is none" },
+  cs1_review: { value: null, about: "The customer's own words, only if they are happy to be quoted" },
+  cs1_video: { value: null, about: "A one-minute phone video of the room, if you have one" },
   /**
    * The other nine area pages and three topic pages, 14 November 2026. Built as
    * drafts for Kaspar to read on one comment link over Christmas (a founder, 14

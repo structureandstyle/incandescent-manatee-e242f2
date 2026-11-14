@@ -1,0 +1,176 @@
+---
+/**
+ * Kentish Town, 14 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaKentishTownCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Kentish Town), every local fact from facts-kentish-town-2026-11-14.md:
+ * Camden's Kentish Town Conservation Area Appraisal and Management Strategy
+ * (2011) and its Kelly Street appraisal (2011), and Camden's listed buildings,
+ * controlled parking zone, visitor permit and trade permit pages, all read
+ * 14 Nov 2026. The Bartholomew Estate paragraph rests on a heritage report an
+ * applicant filed on Camden's planning file, which quotes Camden's 2000
+ * statement; the council's own PDF could not be read, so Kaspar should check
+ * that line. Scope is Kentish Town and the streets around it, not the borough.
+ *
+ * WHOSE WORDS. His facts reworded to fit: q31 (walls rarely straight), stage04
+ * (sections or built up in the room), q14 and q17 (the survey), q20, q35, q07,
+ * the cornice line, the wardrobe depth and his working hours (from the wardrobe
+ * guide he approved and his Hampstead section, 10 Nov 2026). Everything else is
+ * new copy for him to check. No quotable review names Kentish Town, so there is
+ * no review block; the rating line sits under the hero buttons. The one review
+ * that names the area is left out until a founder says it may be used.
+ *
+ * Street names are Camden's appraisals', describing the houses. None is a
+ * place we claim to have worked.
+ *
+ * FAQ sources: "Will it fit my odd space ...?" (ops
+ * deliverables/faq-research-2026-11-06.md, A5, reworded); "What are the best
+ * fully assembled wardrobes in the UK?" (People also ask, ops serps-areas-1,
+ * bespoke wardrobes islington, 14 Nov 2026); "What is the minimum depth of a
+ * fitted wardrobe in the UK?" (People also ask, ops serps-areas-2, fitted
+ * wardrobes kentish town, 14 Nov 2026).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-kentish-town")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving for Kentish Town homes. Many are early 19th century and Victorian terraces on narrow plots.
+    </p>
+    <p style={P2}>
+      Each piece is measured in the room and cut to follow its walls, because walls and floors in houses this old are rarely straight.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Leighton Road" level={4}>Leighton Road's late Georgian, stucco and Victorian terraces</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's Kentish Town appraisal describes Leighton Road as lined with two and three storey terraces of the early 19th century. Most are stucco, with some brick.
+      </p>
+      <p style={P2}>
+        Building was piecemeal, plot by plot, after the landowner sold small freeholds. That is why late Georgian stock brick, 1830s stucco villas and mid Victorian terraces share one street.
+      </p>
+      <p style={P2}>
+        Each house has its own proportions, so a wardrobe or alcove unit is drawn for its room rather than from a standard size.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Kelly Street" level={4}>Small two-storey houses around Kelly Street</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's Kelly Street appraisal describes a narrow cul-de-sac of small two storey houses with brightly coloured stucco fronts. Castlehaven Road has three storey terraces, two windows wide.
+      </p>
+      <p style={P2}>
+        In a small room, a <Link href="/fitted-wardrobes/">fitted wardrobe</Link> or <Link href="/alcove-units/">alcove unit</Link> usually fits better than a walk-in dressing room. Storage can run the full height of the wall and leave the floor clear.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Bays and estates" level={4}>Canted bays and the Bartholomew Estate's 1860s semis</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The northern streets, among them Falkland Road, Ascham Street and Lady Margaret Road, are mostly three storey brick and stucco terraces. Camden's appraisal notes canted bays on their ground floors.
+      </p>
+      <p style={P2}>
+        A canted bay can take a window seat with cupboards or drawers below, cut to the angle of each side.
+      </p>
+      <p style={P2}>
+        South of here is Camden's <Link href="https://www.camden.gov.uk/bartholomew-estate-conservation-area" {...EXT}>Bartholomew Estate</Link> conservation area. A heritage report on the council's planning file describes its Dartmouth streets as three storey villas and terraces of the 1860s, with wide eaves.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Windows and roofs" level={4}>Date-telling windows and slate roofs behind parapets</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's appraisal says the sash windows tell the date. Leighton Road keeps the small panes of the early to mid 19th century, and Leverton Street has the larger panes that came later.
+      </p>
+      <p style={P2}>
+        Roofs are mostly slate behind parapets, and a mansard breaks the parapet line where one has been added. Under a mansard the outer wall leans in. Storage along it is built low, with full-height doors only where the ceiling allows.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed streets in Kentish Town</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's appraisals list many homes here at Grade II. They include Nos 20 to 28 and 64 to 70 Leighton Road, and much of Leverton Street. Every building on Kelly Street is listed too.
+      </p>
+      <p style={P2}>
+        Camden says every part of a listed building is protected, the interior included. Work without consent is a criminal offence, even if the owner did not know the house was listed.
+      </p>
+      <p style={P2}>
+        Fitted furniture in an ordinary home does not normally need planning permission, even in a conservation area. In a listed house, work that affects its character can need listed building consent, so check with <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council</Link> before work begins. Below an original cornice, a wardrobe can stop short rather than cut into it.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Parking" level={4}>Parking and access for the van in Kentish Town</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Before installation we agree with you where the van will load and unload, and how deliveries reach the house. Fitting normally runs 8am to 5pm on weekdays.
+      </p>
+      <p style={P2}>
+        Camden says its <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>controlled parking zones</Link> cover large areas of the borough, and its site has a postcode search. The van can use a <Link href="https://www.camden.gov.uk/visitor-parking-permits" {...EXT}>visitor permit</Link> you buy as a resident, or a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link>.
+      </p>
+      <p style={P2}>
+        A trade permit does not guarantee a space.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What wardrobes, alcove units and TV units cost</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+        <li style={ITEM}>A <Link href="/media-walls/">built-in TV unit</Link> starts from £3,500. Width, finish, storage and lighting move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes by size and finish.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Will it fit my odd space, such as a sloping ceiling or an awkward corner?">
+        A fitted piece is designed for its space, so a corner, a chimney recess or a sloping ceiling is part of the brief. Each one is measured at the survey and drawn into the design.
+      </Faq>
+      <Faq q="What are the best fully assembled wardrobes in the UK?">
+        A fitted wardrobe is not delivered fully assembled. Its parts are prepared as sections ready for assembly, or built up and finished in the room. They are cut to follow the line of the walls, floor and ceiling.
+      </Faq>
+      <Faq q="What is the minimum depth of a fitted wardrobe in the UK?">
+        For hanging clothes, around 550 to 600mm of clear inside depth is a starting point. Where a room is shallower, the space can take shelves and drawers instead of a rail.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
