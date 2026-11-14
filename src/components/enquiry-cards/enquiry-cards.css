@@ -1,0 +1,448 @@
+/*
+ * The picture-card enquiry form previews (options A and B, 14 Nov 2026).
+ *
+ * The field styles (.ecf ...) repeat the live form's scoped rules in
+ * EnquiryForm.astro value for value, so the two previews differ from today's
+ * form only where the cards and the steps are new. Unlayered, like the live
+ * rules, so the token base sheet's button reset cannot beat them.
+ */
+
+/* ---- Form shell: as the live form ---------------------------------------- */
+.ecf { display: grid; gap: var(--space-9); container: ecf / inline-size; }
+.ecf.is-compact { gap: var(--space-8); }
+/* Name, phone and email: one line where they fit (the full-width page form),
+   otherwise name and phone side by side and email across the full width
+   under them (the pop-up), one under another on a phone. */
+.ecf .ecf-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+.ecf .ecf-row > * { flex: 1 1 220px; min-width: 0; }
+/* The job box and the photos: one under the other, side by side on a wide form. */
+.ecf .ecf-pair { display: grid; gap: var(--space-9); align-items: start; }
+.ecf .ecf-label,
+.ecf .ec-legend {
+  display: block;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--type-mono);
+  letter-spacing: var(--ls-mono-table);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: var(--space-3);
+}
+.ecf .ecf-input {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: var(--type-body);
+  color: var(--char);
+  background: var(--paper);
+  border: var(--rule-hair);
+  border-radius: 0;
+  padding: var(--space-5) var(--space-6);
+  transition: border-color var(--t-fast) var(--ease-out);
+}
+.ecf .ecf-input:focus { border-color: var(--hair-strong); }
+.ecf textarea.ecf-input { resize: vertical; min-height: 5.5em; }
+
+/* Labels inside the one-line boxes (name, phone, email, the Somewhere else
+   area), a founder's ask, 14 Nov 2026. At rest the label sits in the box
+   like a placeholder; on focus, or once there is a value, it shrinks to the
+   top of the box in the form's mono label style. CSS only: the input carries
+   a placeholder (a space, or real hint text kept invisible until focus) so
+   :placeholder-shown says whether it is empty. The label stays a real
+   <label for>, after the input so the sibling selector can reach it. */
+.ecf .ecf-float { position: relative; }
+.ecf .ecf-float .ecf-input { min-height: 58px; padding: 24px var(--space-6) 8px; }
+.ecf .ecf-float-label {
+  position: absolute;
+  left: calc(var(--space-6) + 1px);
+  right: var(--space-6);
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  pointer-events: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-soft);
+  transition: top var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out), font-size var(--t-fast) var(--ease-out);
+}
+.ecf .ecf-float .ecf-input:focus + .ecf-float-label,
+.ecf .ecf-float .ecf-input:not(:placeholder-shown) + .ecf-float-label {
+  top: 8px;
+  transform: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--ls-mono-table);
+  text-transform: uppercase;
+}
+/* Its own rule: a browser that does not know :-webkit-autofill would throw
+   away a whole selector list that names it. */
+.ecf .ecf-float .ecf-input:-webkit-autofill + .ecf-float-label {
+  top: 8px;
+  transform: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--ls-mono-table);
+  text-transform: uppercase;
+}
+.ecf .ecf-float .ecf-input::placeholder { color: transparent; }
+.ecf .ecf-float .ecf-input:focus::placeholder { color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) {
+  .ecf .ecf-float-label { transition: none; }
+}
+.ecf ::placeholder { color: var(--ink-soft); opacity: 1; }
+.ecf fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.ecf .ecf-help { font-size: var(--type-body-sm); color: var(--text-quiet); margin: 0; }
+.ecf .ecf-label + .ecf-help { margin: calc(var(--space-3) * -1) 0 var(--space-4); }
+.ecf .ecf-help a { color: var(--green); border-bottom: 1px solid rgba(44, 74, 58, 0.4); }
+.ecf .ecf-actions { padding-top: var(--space-3); }
+form.ecf button.ecf-send {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--type-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--green);
+  border: 1px solid var(--green);
+  padding: var(--space-7) var(--space-12);
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
+}
+form.ecf button.ecf-send:hover,
+form.ecf button.ecf-send:focus-visible { background: var(--char); border-color: var(--char); }
+form.ecf button.ecf-send:disabled { opacity: 0.45; cursor: not-allowed; background: var(--green); border-color: var(--green); }
+@media (max-width: 520px) {
+  form.ecf button.ecf-send { width: 100%; }
+}
+
+/* Photos: the live form's Add files button. */
+.ecf .ecf-files { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); margin-top: var(--space-6); }
+.ecf input.ecf-file-input { position: absolute; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; overflow: hidden; clip-path: inset(50%); }
+.ecf label.ecf-file-button {
+  display: inline-flex; align-items: center; min-height: 44px; margin: 0;
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-sans); font-size: var(--type-label); letter-spacing: var(--ls-label); text-transform: uppercase;
+  color: var(--char); background: var(--paper); border: var(--rule-structure); cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+.ecf label.ecf-file-button:hover { background: var(--char); color: var(--paper); }
+.ecf input.ecf-file-input:focus-visible + .ecf-file-button { outline: 2px solid var(--green); outline-offset: 2px; }
+.ecf .ecf-files .ecf-help { margin: 0; }
+
+/* ---- A card question ------------------------------------------------------ */
+.ec-group .ec-legend.is-question {
+  font-family: var(--font-serif-display);
+  font-size: var(--type-serif-lg);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--char);
+  margin-bottom: var(--space-3);
+}
+.ec-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin: 0 0 var(--space-6);
+  min-height: 40px;
+}
+.ec-bar .ecf-help { margin: 0; }
+/* No help line and nothing to scroll: no empty strip under the question. */
+.ec-bar:not(:has(.ecf-help)):has(.ec-arrows[hidden]) { display: none; }
+.ec-arrows { display: flex; gap: var(--space-3); flex: none; }
+.ec-arrows[hidden] { display: none; }
+form.ecf button.ec-arrow {
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  border: var(--rule-structure);
+  background: var(--paper);
+  color: var(--char);
+  padding: 0;
+  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+form.ecf button.ec-arrow:hover { background: var(--char); color: var(--paper); }
+form.ecf button.ec-arrow[aria-disabled="true"] { opacity: 0.32; cursor: default; background: var(--paper); color: var(--char); }
+.ec-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; }
+
+.ec-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: var(--space-5);
+}
+.ec-card {
+  --ec-paper: var(--paper);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  border: var(--rule-hair);
+  background: var(--paper);
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+.ec-card:hover { border-color: var(--hair-strong); }
+.ec-art { display: block; aspect-ratio: 3 / 2; padding: var(--space-5) var(--space-4) 0; }
+.ec-art svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.ec-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: var(--type-body-sm);
+  line-height: 1.3;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--char);
+}
+/* A long word ("Hampstead", "recommended") never leaves its card: it is
+   hyphenated (the page is lang="en-GB"), or broken as a last resort on the
+   narrowest phones. A founder saw three area names spill out on a phone,
+   14 Nov 2026; the phone sizes below are what fixed it. */
+.ec-text { min-width: 0; overflow-wrap: break-word; hyphens: auto; }
+
+/* Phones: a smaller label and tick, so the names fit cards that show a
+   little over two at a time. Measured from 360 to 414px wide. */
+@media (max-width: 640px) {
+  .ec-label { gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-5); font-size: 13px; }
+  .ec-input { width: 16px; height: 16px; }
+  .ec-input[type="checkbox"]:checked { background-size: 11px; }
+}
+.ec-sub { display: block; margin-top: 2px; font-size: var(--type-note); color: var(--ink-soft); }
+
+/* The real input, drawn square to match the brand, at the start of the
+   label line. It stays in the page and in the label, so it takes focus, is
+   announced, and toggles on a tap anywhere on the card. */
+.ec-input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid var(--hair-strong);
+  border-radius: 0;
+  background: var(--paper);
+  cursor: pointer;
+}
+.ec-input[type="checkbox"]:checked {
+  border-color: var(--green);
+  background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.4 6.3l2.4 2.4 4.8-5.2' fill='none' stroke='%23F2EEE3' stroke-width='1.8'/%3E%3C/svg%3E") center / 12px no-repeat;
+}
+.ec-input[type="radio"]:checked {
+  border-color: var(--green);
+  background: var(--green);
+  box-shadow: inset 0 0 0 3px var(--paper);
+}
+.ec-input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+/* Chosen: a door-green edge two lines thick and a faint green ground. The
+   tick in the corner carries the state too, so it never rests on colour. */
+.ec-card:has(.ec-input:checked) {
+  --ec-paper: #e4e3d7;
+  border-color: var(--green);
+  box-shadow: inset 0 0 0 1px var(--green);
+  background: #e4e3d7;
+}
+.ec-card:has(.ec-input:focus-visible) { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.ec-card:has(.ec-input:focus-visible) .ec-input { outline: none; }
+
+@media (forced-colors: active) {
+  .ec-input { -webkit-appearance: auto; appearance: auto; }
+  .ec-card:has(.ec-input:checked) { border-width: 3px; }
+}
+
+.ec-chosen { margin: var(--space-5) 0 0; font-size: var(--type-body-sm); color: var(--text-quiet); }
+.ec-chosen:empty { display: none; }
+
+/* ---- Swiping (only with JavaScript; without it the grid above is the list) */
+html.js .ec-group[data-layout="row"] .ec-cards {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: 148px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 4px;
+  padding: 4px 4px var(--space-5);
+  margin: -4px -4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hair-strong) transparent;
+}
+@media (max-width: 640px) {
+  html.js .ec-group[data-layout="row"] .ec-cards {
+    grid-auto-columns: calc((100% - 2 * var(--space-5)) / 2.1);
+  }
+  html.js .ec-group[data-layout="grid"] .ec-cards {
+    grid-template-columns: none;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - var(--space-5)) / 2.25);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 4px;
+    padding: 4px 4px var(--space-5);
+    margin: -4px -4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hair-strong) transparent;
+  }
+}
+/* The smallest phones (320px): a little under two cards at a time, so long
+   words such as "wardrobes" fit whole rather than hyphenated. */
+@media (max-width: 359px) {
+  html.js .ec-group[data-layout="row"] .ec-cards { grid-auto-columns: calc((100% - var(--space-5)) / 1.85); }
+  html.js .ec-group[data-layout="grid"] .ec-cards { grid-auto-columns: calc((100% - var(--space-5)) / 1.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ec-cards { scroll-behavior: auto; }
+}
+
+/* ---- The wide form: the page form across the full width -------------------
+   A founder relaying Arthur, 14 Nov 2026: the form first on the page and
+   across it, so the service and area cards sit side by side and show at
+   once, scrolling only when a row cannot fit. Sized from the form's own
+   width (a container query), so the pop-up, which is narrower, keeps the
+   rows and grids above. Each row shares the width: a card is 98 to 150px
+   wide, so nine services fit on any laptop and the eleven areas fit from
+   about 1,300px wide; below that their row scrolls, with its arrows. */
+@container ecf (min-width: 860px) {
+  .ecf .ecf-pair { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-12); }
+  .ec-cards { gap: var(--space-3); }
+  html.js .ec-group[data-layout] .ec-cards {
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(98px, 150px);
+    justify-content: start;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 4px;
+    padding: 4px 4px var(--space-5);
+    margin: -4px -4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hair-strong) transparent;
+  }
+  .ec-art { padding: var(--space-4) var(--space-3) 0; }
+  .ec-label { gap: 3px; padding: var(--space-3) var(--space-3) var(--space-4); font-size: 12px; }
+  .ec-input { width: 16px; height: 16px; }
+  .ec-input[type="checkbox"]:checked { background-size: 11px; }
+}
+
+/* "Somewhere else": the box for an area or postcode, shown when that card is
+   chosen. It has no name, so it is never sent on its own: what is typed
+   becomes the card's value (src/scripts/enquiry-cards.mjs). */
+.ec-other { margin-top: var(--space-6); }
+.ec-other[hidden] { display: none; }
+/* Without JavaScript the box above cannot open, so a line under the cards
+   says where to put an area that is not on the list. */
+.ec-nojs { margin: var(--space-5) 0 0; }
+html.js .ec-nojs { display: none; }
+
+/* Option A: the prompts that start a line in the job box. */
+.eca-prompts { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0 0 var(--space-5); padding: 0; list-style: none; }
+.eca-prompts[hidden] { display: none; }
+form.ecf button.eca-prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 36px;
+  padding: var(--space-2) var(--space-6);
+  font-family: var(--font-sans);
+  font-size: var(--type-body-sm);
+  color: var(--char);
+  background: var(--paper);
+  border: var(--rule-hair);
+  transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+/* The + and the tick sit in an aria-hidden span, so the button's spoken
+   name is exactly its visible label. */
+.eca-mark::before { content: "+"; font-family: var(--font-mono); color: var(--green); }
+form.ecf button.eca-prompt:hover { border-color: var(--hair-strong); }
+form.ecf button.eca-prompt[data-used] { border-color: var(--green); background: #e4e3d7; }
+form.ecf button.eca-prompt[data-used] .eca-mark::before { content: "\2713"; }
+@media (max-width: 640px) {
+  form.ecf button.eca-prompt { min-height: 44px; }
+  form.ecf button.ec-arrow { width: 44px; height: 44px; }
+  .ec-bar { min-height: 44px; }
+}
+
+/* ---- Option B: one question at a time ------------------------------------- */
+.ecb-progress { display: grid; gap: var(--space-4); }
+.ecb-progress[hidden] { display: none; }
+.ecb-count { margin: 0; font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--ink-soft); }
+.ecb-bar { position: relative; height: 2px; background: var(--hair); }
+.ecb-bar > span { position: absolute; inset: 0 auto 0 0; width: var(--ecb-done, 20%); background: var(--green); transition: width var(--t-move, 0.3s) var(--ease-out); }
+.ecb-step { display: grid; gap: var(--space-9); }
+.ecb-step:focus { outline: none; }
+.ecb-step .ecb-q {
+  margin: 0;
+  font-family: var(--font-serif-display);
+  font-size: var(--type-serif-lg);
+  font-weight: var(--weight-regular);
+  color: var(--char);
+}
+/* Without JavaScript every step shows, one under the other, and the step
+   buttons stay hidden: a complete form ending in Send. */
+html.js .ecf-b[data-ec-stepping] .ecb-step:not(.is-current) { display: none; }
+.ecb-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-6); padding-top: var(--space-3); }
+.ecb-nav[hidden] { display: none; }
+form.ecf button.ecb-back {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--type-body-sm);
+  color: var(--green);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-decoration-color: rgba(44, 74, 58, 0.4);
+  text-underline-offset: 3px;
+}
+form.ecf button.ecb-back[hidden] { display: none; }
+form.ecf button.ecb-next {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  font-size: var(--type-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--char);
+  background: var(--paper);
+  border: var(--rule-structure);
+  padding: var(--space-6) var(--space-12);
+  margin-left: auto;
+  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+form.ecf button.ecb-next:hover,
+form.ecf button.ecb-next:focus-visible { background: var(--char); color: var(--paper); }
+
+/* ---- The preview's "what this would send" panel --------------------------- */
+.ec-dry { border: var(--rule-structure); padding: var(--space-9); background: var(--paper); }
+.ec-dry[hidden] { display: none; }
+.ec-dry:focus { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.ec-dry h3 { margin: 0 0 var(--space-4); font-family: var(--font-serif-display); font-weight: var(--weight-regular); font-size: var(--type-serif-sm); }
+.ec-dry p { margin: 0 0 var(--space-6); font-size: var(--type-body-sm); color: var(--text-quiet); }
+.ec-dry table { width: 100%; font-size: var(--type-body-sm); }
+.ec-dry th,
+.ec-dry td { text-align: left; vertical-align: top; padding: var(--space-3) var(--space-4) var(--space-3) 0; border-top: var(--rule-hair); }
+.ec-dry th { font-family: var(--font-mono); font-size: var(--type-mono); font-weight: var(--weight-regular); letter-spacing: var(--ls-mono-table); color: var(--ink-soft); white-space: nowrap; }
+.ec-dry td { white-space: pre-wrap; overflow-wrap: anywhere; }
+.ec-dry td.ec-dry-to { color: var(--ink-soft); white-space: nowrap; }
+.ec-dry td.is-empty { color: var(--ink-soft); font-style: italic; }
+@media (max-width: 520px) {
+  .ec-dry td.ec-dry-to { display: none; }
+}

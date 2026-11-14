@@ -1,0 +1,303 @@
+---
+/**
+ * The body of the two hidden form preview pages, /form-preview-a/ and
+ * /form-preview-b/ (14 Nov 2026): the enquiry page as it would become with
+ * either option, for a founder to compare.
+ *
+ * LAYOUT, a founder relaying Arthur, 14 Nov 2026:
+ *   1. The heading and the Google rating line only. The review quotes the
+ *      live /contact/ carries beside the form are gone; the five stars stay.
+ *   2. The form first, across the whole width, so the service and area cards
+ *      sit side by side and show at once. A row scrolls only if it cannot
+ *      fit (enquiry-cards.css, the wide rules under @container ecf).
+ *   3. Under it, for anyone who would rather talk: phone, WhatsApp, email,
+ *      opening hours and the areas, the same details the live page lists,
+ *      with Kaspar's paragraph on what happens next.
+ *   4. Last, our internal note: what the option is, the other option, and the
+ *      two buttons that open the same form as the Get a quote pop-up (as most
+ *      pages open it, and as a service page does, its service ticked).
+ *
+ * Once site PR #41 merged, the pop-up and /contact/ are the only places the
+ * form appears (a founder, 14 Nov 2026: one form per page).
+ *
+ * Both pages are noindexed and kept out of the sitemap by their entry in
+ * src/data/page-gates.ts, and nothing on the site links to them. When a
+ * founder has picked, both pages and this folder's preview-only parts go,
+ * and /contact/ takes this layout with the chosen form.
+ */
+import Wrap from "../ds/Wrap.astro";
+import Display from "../ds/Display.astro";
+import MonoLabel from "../ds/MonoLabel.astro";
+import Link from "../ds/Link.astro";
+import FormProof from "../FormProof.astro";
+import AreaList from "../AreaList.astro";
+import ArtSprite from "./ArtSprite.astro";
+import EnquiryFormA from "./EnquiryFormA.astro";
+import EnquiryFormB from "./EnquiryFormB.astro";
+import { BUSINESS, hoursLines } from "../../data/site";
+
+interface Props {
+  variant: "a" | "b";
+  /**
+   * "founders" (the default): our internal note at the end, with the option's
+   * name and a link to the other one. "client": the page Kaspar reviews on his
+   * comment link (/enquiry-preview/, 14 Nov 2026), whose note says only what
+   * the page is and opens the two pop-ups, with no option names.
+   */
+  audience?: "founders" | "client";
+}
+const { variant, audience = "founders" } = Astro.props;
+const Form = variant === "a" ? EnquiryFormA : EnquiryFormB;
+const other = variant === "a" ? "b" : "a";
+const SERVICE_DEMO = "Alcove units and shelving";
+const hours = hoursLines();
+const mailto = `mailto:${BUSINESS.email}?subject=${encodeURIComponent("Enquiry via structureandstyle.co.uk")}`;
+
+const NOTES = {
+  a: {
+    title: "Option A: the whole form on one page",
+    points: [
+      "Same order as today: your details first, then the questions.",
+      "Each picture question is one row of cards. On a laptop the rows share the full width so every card shows; a row that cannot fit scrolls, with arrows. On a phone the rows swipe.",
+      "Tell us about the job has four prompts. Tapping one starts a line in the box, such as \"Room: \".",
+      "Somewhere else opens a box for the area or postcode, and that is what arrives in the log.",
+    ],
+  },
+  b: {
+    title: "Option B: one question at a time",
+    points: [
+      "Five short steps with a progress line. Name, phone and email come last, after the easy questions.",
+      "On a laptop each step's cards sit in one row across the full width; a row that cannot fit scrolls, with arrows. On a phone they swipe in two rows.",
+      "Tell us about the job has a rough-width picker. Picking a width writes it as the first line of the box, where it can be changed.",
+      "Somewhere else opens a box for the area or postcode, and that is what arrives in the log.",
+    ],
+  },
+}[variant];
+---
+
+<ArtSprite />
+
+<Wrap style="max-width:1360px;padding-top:var(--space-15);padding-bottom:var(--section-y)">
+  <div class="pv-head">
+    <Display level={1} as="h1" style="margin:0">Get a quote</Display>
+    <FormProof />
+  </div>
+  <div class="pv-form" data-ec-audience={audience}>
+    <Form idPrefix={`p${variant}-`} />
+  </div>
+
+  <section class="pv-direct" aria-labelledby={`pv-direct-${variant}`}>
+    <MonoLabel as="p" style="margin-bottom:var(--space-4)">Contact details</MonoLabel>
+    <h2 id={`pv-direct-${variant}`} class="pv-direct-title">Or talk to us directly</h2>
+    {/* His paragraph, 6 September 2026, from the top of the live /contact/,
+        moved here so the form is the first thing on the page. */}
+    <p class="pv-direct-lede">
+      Tell us what you have in mind and send a few photos, rough dimensions and any inspiration
+      images you have. We'll come back to you with anything else we need, then arrange a survey
+      before providing a detailed quotation.
+    </p>
+    <dl class="pv-details">
+      <div>
+        <dt><MonoLabel as="span">Phone</MonoLabel></dt>
+        <dd><Link href={BUSINESS.phoneHref} variant="nav" chamfer>Call {BUSINESS.phoneDisplay}</Link></dd>
+      </div>
+      <div>
+        <dt><MonoLabel as="span">WhatsApp</MonoLabel></dt>
+        <dd><Link href={BUSINESS.whatsapp} variant="nav" chamfer target="_blank" rel="noopener">Message us</Link></dd>
+      </div>
+      <div>
+        <dt><MonoLabel as="span">Email</MonoLabel></dt>
+        <dd><Link href={mailto} variant="inline" chamfer>{BUSINESS.email}</Link></dd>
+      </div>
+      <div>
+        <dt><MonoLabel as="span">Hours</MonoLabel></dt>
+        {hours.map((h) => <dd class="pv-quiet">{h}</dd>)}
+      </div>
+      <div>
+        <dt><MonoLabel as="span">Where we work</MonoLabel></dt>
+        <dd class="pv-quiet">Across north London, including <AreaList />.</dd>
+      </div>
+    </dl>
+  </section>
+
+  {audience === "client" ? (
+    <aside class="pv-note" aria-label="About this preview">
+      <MonoLabel as="p" tone="green">Preview of your new enquiry page</MonoLabel>
+      <p>
+        This is how your Get a quote page would look and work. Nothing sent from this page goes
+        anywhere: the Send button shows what would reach you instead. The same form also opens as the
+        Get a quote pop-up on every page:
+      </p>
+      <div class="pv-buttons">
+        <button type="button" class="pv-open" data-pv-open={`pv-popup-${variant}`}>See it as the pop-up</button>
+        <button type="button" class="pv-open" data-pv-open={`pv-service-${variant}`}>See it as the pop-up on a service page</button>
+      </div>
+    </aside>
+  ) : (
+  <aside class="pv-note" aria-label="Internal preview note">
+    <MonoLabel as="p" tone="green">Internal preview, hidden from Google</MonoLabel>
+    <p>
+      {NOTES.title}. Nothing sent from this page goes anywhere: Send shows what the enquiry would carry
+      instead. <a href={`/form-preview-${other}/`}>See option {other.toUpperCase()}</a>.
+    </p>
+    <ul>
+      {NOTES.points.map((p) => <li>{p}</li>)}
+    </ul>
+    <div class="pv-buttons">
+      <button type="button" class="pv-open" data-pv-open={`pv-popup-${variant}`}>Open as the Get a quote pop-up</button>
+      <button type="button" class="pv-open" data-pv-open={`pv-service-${variant}`}>Open as the pop-up on a service page</button>
+    </div>
+  </aside>
+  )}
+</Wrap>
+
+<dialog id={`pv-popup-${variant}`} class="pv-dialog" aria-labelledby={`pv-popup-${variant}-h`}>
+  <div class="pv-dialog-head">
+    <MonoLabel as="p" tone="soft">Enquiries</MonoLabel>
+    <button type="button" class="pv-close" aria-label="Close">&times;</button>
+  </div>
+  <h2 id={`pv-popup-${variant}-h`} class="pv-dialog-title">If you have a room in mind, start here.</h2>
+  <p class="pv-dialog-lede">
+    Rough dimensions, a photo or drawing, and a sense of what the piece needs to do gets you a
+    considered reply, not a brochure.
+  </p>
+  <Form compact idPrefix={`m${variant}-`} />
+</dialog>
+
+<dialog id={`pv-service-${variant}`} class="pv-dialog" aria-labelledby={`pv-service-${variant}-h`}>
+  <div class="pv-dialog-head">
+    <MonoLabel as="p" tone="soft">Enquiries, from the alcove units page</MonoLabel>
+    <button type="button" class="pv-close" aria-label="Close">&times;</button>
+  </div>
+  <h2 id={`pv-service-${variant}-h`} class="pv-dialog-title">If you have a room in mind, start here.</h2>
+  <p class="pv-dialog-lede">
+    Opened from a service page, the pop-up has that page's service already ticked, here alcove units,
+    and keeps the full list to add to. The example in the job box matches the service too.
+  </p>
+  <Form compact idPrefix={`s${variant}-`} preselectedService={SERVICE_DEMO} />
+</dialog>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-pv-open]").forEach((button) => {
+    const dialog = document.getElementById(button.dataset.pvOpen ?? "") as HTMLDialogElement | null;
+    if (!dialog || !("showModal" in dialog)) return;
+    button.addEventListener("click", () => dialog.showModal());
+    dialog.querySelector(".pv-close")?.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+</script>
+
+<style>
+  .pv-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6) var(--space-12);
+    margin-bottom: var(--space-10);
+  }
+  .pv-form {
+    border: var(--rule-structure);
+    padding: clamp(20px, 2.6vw, 32px);
+    background: var(--paper);
+  }
+
+  .pv-direct {
+    margin-top: var(--section-y);
+    border-top: var(--rule-structure);
+    padding-top: var(--space-12);
+  }
+  .pv-direct-title {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-display-5);
+    margin: 0 0 var(--space-6);
+  }
+  .pv-direct-lede {
+    max-width: var(--measure);
+    font-size: var(--type-body);
+    color: var(--text-quiet);
+    margin: 0 0 var(--space-12);
+  }
+  /* Five across on a laptop, two then one as the screen narrows, each under
+     a hairline as on the live page. */
+  .pv-details {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+    gap: var(--space-10) var(--space-12);
+  }
+  .pv-details > div { border-top: var(--rule-hair); padding-top: var(--space-6); }
+  .pv-details dd { margin: var(--space-4) 0 0; }
+  .pv-quiet { color: var(--text-quiet); }
+
+  .pv-note {
+    margin-top: var(--section-y);
+    border: 1.6px dashed rgba(34, 29, 24, 0.35);
+    padding: var(--space-9) var(--space-10);
+    display: grid;
+    gap: var(--space-5);
+  }
+  .pv-note p { margin: 0; font-size: var(--type-body-sm); }
+  .pv-note a { color: var(--green); border-bottom: 1px solid rgba(44, 74, 58, 0.4); }
+  .pv-note ul { margin: 0; padding: 0 0 0 1.1em; display: grid; gap: var(--space-3); font-size: var(--type-body-sm); color: var(--text-quiet); max-width: var(--measure); }
+  .pv-buttons { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+  button.pv-open {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-8);
+    font-family: var(--font-sans);
+    font-size: var(--type-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--char);
+    background: var(--paper);
+    border: var(--rule-structure);
+    cursor: pointer;
+  }
+  button.pv-open:hover { background: var(--char); color: var(--paper); }
+
+  .pv-dialog {
+    width: min(660px, 94vw);
+    max-height: 92vh;
+    overflow-y: auto;
+    border: var(--rule-structure);
+    background: var(--paper);
+    color: var(--ink);
+    padding: clamp(20px, 4vw, 40px);
+    margin: auto;
+  }
+  .pv-dialog::backdrop { background: rgba(24, 21, 17, 0.6); }
+  .pv-dialog-head {
+    position: sticky;
+    top: calc(clamp(20px, 4vw, 40px) * -1);
+    z-index: 2;
+    background: var(--paper);
+    padding-top: clamp(20px, 4vw, 40px);
+    margin-top: calc(clamp(20px, 4vw, 40px) * -1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-8);
+  }
+  button.pv-close {
+    background: none;
+    border: none;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--ink-soft);
+    padding: 9px 12px;
+    min-width: 44px;
+    min-height: 44px;
+    margin-right: -12px;
+  }
+  .pv-dialog-title {
+    font-family: var(--font-serif-display);
+    font-weight: var(--weight-regular);
+    font-size: var(--type-serif-lg);
+    margin: var(--space-6) 0 var(--space-4);
+  }
+  .pv-dialog-lede { font-size: var(--type-body-sm); color: var(--text-quiet); margin-bottom: var(--space-10); }
+</style>

@@ -289,6 +289,16 @@ export const ANSWERS = {
   staircasesCheck: { value: null, about: "Kaspar has read the bespoke staircases page (/bespoke-staircases/) on the review link and his changes are in" },
   loftWardrobesCheck: { value: null, about: "Kaspar has read the loft and eaves wardrobes page (/loft-wardrobes/) on the review link and his changes are in" },
   bookcasesCheck: { value: null, about: "Kaspar has read the built-in bookcases and shelving page (/built-in-bookcases/) on the review link and his changes are in" },
+  /**
+   * Not a question for Kaspar: the gate on the two enquiry form previews
+   * (/form-preview-a/ and /form-preview-b/, 14 Nov 2026). It stays null so
+   * both pages stay noindexed and out of the sitemap. When a founder picks an
+   * option, the key goes with the two pages; it is never answered here.
+   */
+  formPick: {
+    value: null,
+    about: "Founders: which enquiry form preview replaces the live form, option A (one page) or option B (one question at a time)",
+  },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;

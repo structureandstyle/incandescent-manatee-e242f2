@@ -1,0 +1,130 @@
+---
+/**
+ * One question answered with picture cards: a fieldset whose every card is a
+ * real checkbox or radio inside its label, so a tap, a click, the keyboard and
+ * a screen reader all work the way they do on a plain list. The drawing is
+ * decoration (aria-hidden); the label is the name.
+ *
+ * LAYOUT. Without JavaScript the cards wrap into a grid: a plain, complete
+ * list. With it (Base.astro stamps .js on <html> before first paint):
+ *   row    one line of cards that swipes sideways, with arrow buttons and a
+ *          visible scrollbar for anyone who does not swipe (option A, and
+ *          every phone);
+ *   grid   wraps on a laptop; on a phone, two rows that swipe (option B).
+ * The arrows only appear when there is something to scroll to. They are for
+ * a pointer and stay out of the tab order: the keyboard moves card to card,
+ * and each focused card scrolls fully into view (./client.ts).
+ *
+ * Preview only (options A and B, 14 Nov 2026). See ./choices.ts for what each
+ * card sends.
+ */
+import type { Choice } from "./choices";
+import "./enquiry-cards.css";
+
+interface Props {
+  legend: string;
+  /** Id for the legend, so a step (option B) can be labelled by it. */
+  legendId?: string;
+  /** "question" draws the legend as the step's heading (option B). */
+  legendStyle?: "label" | "question";
+  help?: string;
+  /** The field name the form sends. A formless group prefixes it with idPrefix, so two forms' groups never join. */
+  name: string;
+  type: "checkbox" | "radio";
+  choices: Choice[];
+  /** Unique per form on the page, as EnquiryForm's idPrefix. */
+  idPrefix: string;
+  checked?: string[];
+  layout?: "row" | "grid";
+  /**
+   * Not part of what the form sends: every input points its form attribute
+   * at an id nothing has, so the browser leaves it out of the submission.
+   * Option B's width picker, whose choice is written into the job box instead.
+   */
+  formless?: boolean;
+  /**
+   * The unlabelled, never-ticked first box that makes Netlify's email read
+   * "Service: ..." rather than "Fitted wardrobes: ..." (EnquiryForm.astro,
+   * 8 Oct 2026, explains it). The service question only.
+   */
+  emailHeading?: boolean;
+  /** Show what is chosen under the cards: useful when chosen cards have scrolled out of view. */
+  showChosen?: boolean;
+  /** Extra data attribute for the client script to find this group by role. */
+  role?: string;
+}
+
+const {
+  legend,
+  legendId,
+  legendStyle = "label",
+  help,
+  name,
+  type,
+  choices,
+  idPrefix,
+  checked = [],
+  layout = "row",
+  formless = false,
+  emailHeading = false,
+  showChosen = false,
+  role,
+} = Astro.props;
+
+const base = `${idPrefix}${name.replace(/[^a-z0-9]+/gi, "-")}`;
+/* A formless group's radios have no form owner, so the browser groups them
+   with every formless radio of the same name on the page: the name carries
+   the form's prefix. */
+const inputName = formless ? base : name;
+const trackId = `${base}-cards`;
+const helpId = help ? `${base}-help` : undefined;
+---
+
+<fieldset
+  class="ec-group"
+  data-ec-group={role ?? ""}
+  data-layout={layout}
+  aria-describedby={helpId}
+>
+  <legend id={legendId} class:list={["ec-legend", legendStyle === "question" && "is-question"]}>{legend}</legend>
+  <div class="ec-bar">
+    {help ? <p class="ecf-help" id={helpId}>{help}</p> : <span />}
+    <div class="ec-arrows" data-ec-arrows hidden>
+      <button type="button" class="ec-arrow" data-ec-scroll="-1" aria-controls={trackId} aria-label="Show earlier cards" tabindex="-1">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3L5 8l5 5" /></svg>
+      </button>
+      <button type="button" class="ec-arrow" data-ec-scroll="1" aria-controls={trackId} aria-label="Show more cards" tabindex="-1">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3l5 5-5 5" /></svg>
+      </button>
+    </div>
+  </div>
+  {emailHeading && <p hidden><input type="checkbox" name={name} value="" tabindex="-1" /></p>}
+  <div class="ec-cards" id={trackId} data-ec-track>
+    {choices.map((c, i) => (
+      <label class="ec-card" for={`${base}-${i}`}>
+        <span class="ec-art" aria-hidden="true">
+          <svg viewBox="0 0 120 80" focusable="false"><use href={`#ec-art-${c.art}`} /></svg>
+        </span>
+        <span class="ec-label">
+          <input
+            class="ec-input"
+            id={`${base}-${i}`}
+            type={type}
+            name={inputName}
+            value={c.value}
+            checked={checked.includes(c.value)}
+            form={formless ? "ec-not-sent" : undefined}
+            data-label={c.label}
+            data-line={c.line}
+          />
+          <span class="ec-text">
+            {c.label}
+            {c.sub && <span class="ec-sub">{c.sub}</span>}
+          </span>
+        </span>
+      </label>
+    ))}
+  </div>
+  {showChosen && <p class="ec-chosen" data-ec-chosen></p>}
+  <slot />
+</fieldset>

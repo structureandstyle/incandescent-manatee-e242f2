@@ -133,6 +133,16 @@ export const PAGE_GATES = {
   "/privacy/": [],
   "/cookies/": [],
   "/thanks/": [],
+
+  /* The two enquiry form previews, 14 Nov 2026: picture cards, option A on
+     one page and option B one question at a time. Held on formPick, which is
+     never answered: when a founder picks, the chosen form replaces the live
+     one and both preview pages are deleted with these two entries. */
+  "/form-preview-a/": ["formPick"],
+  "/form-preview-b/": ["formPick"],
+  /* Option A as Kaspar reviews it on his comment link (14 Nov 2026). Goes
+     with the other two when the chosen form replaces the live one. */
+  "/enquiry-preview/": ["formPick"],
 } as const satisfies Record<string, readonly QuestionKey[]>;
 
 export type GatedPath = keyof typeof PAGE_GATES;
