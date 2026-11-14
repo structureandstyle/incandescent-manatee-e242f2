@@ -11,6 +11,8 @@
  */
 
 import { ready, type QuestionKey } from "./answers";
+import { CASE_STUDIES, caseStudyPath } from "./case-studies";
+import { AREAS, areaPath } from "./areas";
 
 /**
  * All seven service pages render from one template, src/pages/[slug].astro, so
@@ -104,6 +106,27 @@ export const PAGE_GATES = {
     "areaHampsteadMerge",
   ],
 
+  /* The nine new area pages and the three topic pages, 14 Nov 2026: each held
+     until Kaspar has read it on the review link (answers.ts, the *Check keys). */
+  "/carpenter-camden/": [...BAND_QUESTIONS, "areaCamdenCheck"],
+  "/carpenter-primrose-hill/": [...BAND_QUESTIONS, "areaPrimroseHillCheck"],
+  "/carpenter-islington/": [...BAND_QUESTIONS, "areaIslingtonCheck"],
+  "/carpenter-belsize-park/": [...BAND_QUESTIONS, "areaBelsizeParkCheck"],
+  "/carpenter-kentish-town/": [...BAND_QUESTIONS, "areaKentishTownCheck"],
+  "/carpenter-swiss-cottage/": [...BAND_QUESTIONS, "areaSwissCottageCheck"],
+  "/carpenter-highgate/": [...BAND_QUESTIONS, "areaHighgateCheck"],
+  "/carpenter-west-hampstead/": [...BAND_QUESTIONS, "areaWestHampsteadCheck"],
+  "/carpenter-maida-vale/": [...BAND_QUESTIONS, "areaMaidaValeCheck"],
+  "/bespoke-staircases/": [...BAND_QUESTIONS, "staircasesCheck"],
+  "/loft-wardrobes/": [...BAND_QUESTIONS, "loftWardrobesCheck"],
+  "/built-in-bookcases/": [...BAND_QUESTIONS, "bookcasesCheck"],
+
+  /* Case studies. One gated path per entry in src/data/case-studies.ts, each
+     waiting on that entry's own keys, so an entry publishes itself the moment
+     its last answer lands and the others stay held. The index, /case-studies/,
+     is handled in indexable() below: it has no keys of its own. */
+  ...Object.fromEntries(CASE_STUDIES.map((c) => [caseStudyPath(c), c.gate])),
+
   // No client dependency.
   "/journal/": [],
   "/contact/": [],
@@ -128,10 +151,31 @@ export function gateFor(path: string): readonly QuestionKey[] {
 
 /** A page is indexable only when every question it depends on is answered. */
 export function indexable(path: string): boolean {
+  /* The case-study index is indexable only once at least one entry is, the
+     same rule the journal index follows with its articles. */
+  if (path === CASE_STUDY_INDEX) return CASE_STUDIES.some((c) => indexable(caseStudyPath(c)));
+  if (path === AREAS_HUB) return areasHubLive();
   return ready(gateFor(path));
+}
+
+export const CASE_STUDY_INDEX = "/case-studies/";
+
+/**
+ * The areas hub, /areas/, and the header's Areas menu, 14 November 2026.
+ *
+ * A founder asked for Areas in place of Process in the header, shipping on the
+ * live site with the first new area pages and not before. Hampstead went live
+ * on 12 Nov, before the hub existed, so it does not count: the hub, and with
+ * it the menu, go live the day any other area page clears its gate. The hub has
+ * no keys of its own, the same rule the case-study index follows.
+ */
+export const AREAS_HUB = "/areas/";
+const AREA_BEFORE_HUB = "/carpenter-hampstead/";
+export function areasHubLive(): boolean {
+  return AREAS.some((a) => areaPath(a.slug) !== AREA_BEFORE_HUB && ready(gateFor(areaPath(a.slug))));
 }
 
 /** Paths that must stay out of the sitemap because their copy is still incomplete. */
 export function blockedPaths(): string[] {
-  return Object.keys(PAGE_GATES).filter((p) => !indexable(p));
+  return [...Object.keys(PAGE_GATES), CASE_STUDY_INDEX, AREAS_HUB].filter((p) => !indexable(p));
 }

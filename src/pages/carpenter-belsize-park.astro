@@ -1,0 +1,171 @@
+---
+/**
+ * Belsize Park, 14 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaBelsizeParkCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Belsize Park), every local fact from facts-belsize-park-2026-11-14.md:
+ * Camden's Belsize Conservation Area Statement (the 2002 statement, read
+ * 14 Nov 2026), Camden's pages on Article 4 Directions, listed buildings and
+ * trade permits, controlled parking zones and the Planning Portal's internal
+ * alterations page, all read 14 Nov 2026. Camden's three June 2026 Belsize
+ * documents (the Article 4 Direction, fact sheet and design guide) could not
+ * be read, so the page says only that the direction exists, is aimed at
+ * outside work, and where to check.
+ *
+ * WHOSE WORDS. His facts reworded to fit: q31 (walls rarely straight), the
+ * hanging depth is not used here, q33 (floors and surrounding area), q07, q18,
+ * q14 and q17 (the visit and the survey), q20, q35, q24 (finishes), the
+ * cornice line from his Hampstead section (10 Nov 2026). The lift line is
+ * the protocol's approved conduct fact (section 11, item 6), the page's one
+ * conduct claim. Everything else is new copy for him to check.
+ *
+ * Street and building names are Camden's statement's, describing the houses.
+ * None is a place we claim to have worked. No review block: no quotable
+ * review names Belsize Park, and the rating line sits under the hero buttons
+ * already.
+ *
+ * FAQ sources: "What are the lift, parking and working-hours rules for a job
+ * in a mansion block?" (ops deliverables/faq-research-2026-11-06.md, B7);
+ * "How long does the survey take, and what happens after it?" (B3, "Do you do
+ * a survey and how long does it take?", reworded without the word we do not
+ * use); "Do carpenters do built-in wardrobes?" (People also ask, B5 source
+ * list, Google, 6 Nov 2026).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-belsize-park")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> for Belsize Park homes. Most are large Victorian villas, with mansion flats and mews houses close by.
+    </p>
+    <p style={P2}>
+      The room is measured first, and each piece is then cut to follow its walls, floors and ceilings, which are rarely straight.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Tidey's villas" level={4}>Fitted furniture for the villas of Tidey Town</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's conservation area statement describes the core of Belsize Park as large, imposing, semi-detached Victorian villas. Developer Daniel Tidey built Buckland Crescent from 1856, and Belsize Square and Belsize Park Gardens in the early 1860s. The area is still locally called Tidey Town.
+      </p>
+      <p style={P2}>
+        Camden describes pairs of houses set symmetrically either side of slab chimney stacks. Most have three storeys, a lower ground floor and sometimes an attic. The statement says the villas were built with attic and basement space for servants.
+      </p>
+      <p style={P2}>
+        Where a chimney breast stands in a main room, the alcoves beside it suit cupboards and shelving. Attic and lower-ground rooms are often where built-in storage helps most, because it can use the whole wall.
+      </p>
+      <p style={P2}>
+        The statement also notes canted three-light bays at ground level and curved glass bays at the rear. A fitted window seat with drawers beneath can follow the line of a bay.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansion flats" level={4}>Wardrobes and alcove units for Belsize Park's mansion flats</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Belsize Park has purpose-built flats as well as houses. Camden's statement calls Manor Mansions, built in 1884 on Belsize Park Gardens, one of the pioneers of purpose-built flats in London. Antrim Mansions followed in 1897.
+      </p>
+      <p style={P2}>
+        Hillfield Court and Tudor Close date from the late 1930s and stand among open space and trees on the site of Hillfield House. Camden describes them as largely unaltered.
+      </p>
+      <p style={P2}>
+        In an older flat, a wardrobe can stop below an original cornice rather than cut into it. The building sets its own rules for lifts and hours, and the questions below cover what to ask.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Belsize Village" level={4}>Mews houses and terraces around Belsize Lane</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Belsize Village has terraces from the 1850s to the 1880s in London stock brick. North of Belsize Lane, Camden's statement describes single-aspect, two-storey mews houses on narrow streets, including Daleham Mews and Baynes Mews.
+      </p>
+      <p style={P2}>
+        Their upper windows are small vertical sashes, and the ground floors have large openings that were once garages.
+      </p>
+      <p style={P2}>
+        In a compact room, storage built to the exact wall gives the most for the floor space. A bedroom wardrobe can run the full width of a wall. A <Link href="/media-walls/">built-in TV unit</Link> or shelving can fill the side wall of a living room.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed houses and the new Article 4 Direction in Belsize</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Fitted furniture inside a house does not normally need planning permission. A listed building is different: Camden protects every part of it, the interior included, and working on one without consent is a criminal offence.
+      </p>
+      <p style={P2}>
+        Camden's statement lists the Grade II terrace at 26 to 38 Belsize Grove, built in 1825. It also lists the Grade II stucco terrace at 73 to 93 Belsize Lane. Owners of a listed home should check with <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council</Link> before work begins.
+      </p>
+      <p style={P2}>
+        Camden adopted a new Belsize <Link href="https://www.camden.gov.uk/article-4-directions-heritage-and-conservation" {...EXT}>Article 4 Direction</Link> on 9 June 2026. It is aimed at outside work, so check Camden's page before changing windows, doors or roofs.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Porticos, narrow mews and parking in Belsize Park</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many Belsize Park villas have steps up to a portico, and Camden's statement describes the mews as fronting narrow streets. Those are the routes that long panels and doors have to take.
+      </p>
+      <p style={P2}>
+        We agree parking, deliveries and access with you before installation, including where the van can load and unload.
+      </p>
+      <p style={P2}>
+        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zones</Link> cover large areas of the borough, and its map shows the zone for each street. For people working at a property, Camden's route is a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link>, which is not a guaranteed space.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>Belsize Park guide prices for wardrobes and alcove units</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, the number of runs, the layout and the finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware is on the manufacturer's warranty, and doors and drawers are adjusted in the first 2 years. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> shows what moves the price of a fitted wardrobe.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="What are the lift, parking and working-hours rules for a job in a mansion block?">
+        Each managed block sets its own rules for lifts, deliveries and working hours, so ask the managing agent before a date is fixed. The lift is booked and protected before any delivery.
+      </Faq>
+      <Faq q="How long does the survey take, and what happens after it?">
+        The first visit usually takes 45 to 60 minutes, and the measured survey takes about an hour on site. One week is then set aside for design, with drawings for you to review by the end. Up to two rounds of design revisions are included, and an itemised, fixed quotation follows the survey.
+      </Faq>
+      <Faq q="Do carpenters do built-in wardrobes?">
+        Built-in wardrobes are a main part of what we design, measure, fit and finish, including <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>. Finishes include spray-painted, hand-painted, natural and stained veneers, melamine and decorative boards, lacquered or oiled. Pieces are prepared as sections ready for assembly, or built up and finished in the room.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

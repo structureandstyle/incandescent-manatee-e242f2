@@ -1,0 +1,140 @@
+---
+/**
+ * Loft and eaves wardrobes, 14 November 2026. One of the pages "chosen from
+ * what people search for" that the month 3 report told Kaspar about (roadmap
+ * Part C); built as a draft for him to read on the review link and held
+ * noindex by loftWardrobesCheck until he has read it.
+ *
+ * Data and structure: ops repo research/area-pages-2026-11-14/README.md
+ * (Priority 3) and serps-extras-2026-11-14.md: loft wardrobes, sloping
+ * ceiling wardrobes and eaves storage are one cluster, so one page covers it.
+ *
+ * WHOSE WORDS. The sloping-ceiling advice is his, from the built-in wardrobe
+ * guide he approved on 24 Oct 2026 (hanging in the tall part, drawers and
+ * shelves low down; a slope reduces depth as well as height; check every door
+ * under the slope; slopes and awkward access add design and fitting work),
+ * reworded to fit. Also his: q31 (scribed), q11 (sloping ceilings move the
+ * price), stage04 (sections or built up in the room), the hanging depth and
+ * the wardrobe prices. The roof rules sentence summarises Islington's and
+ * Camden's conservation area guidance (ops facts files). The knee wall line
+ * is general building knowledge, for him to check. Everything else is new
+ * copy for him to check.
+ *
+ * Plates: a real photograph of his (fitted-wardrobes-10, a wardrobe under a
+ * sloping ceiling, already on /work/), the guide's approved loft render, and
+ * one new AI example made to the render protocol (ops deliverables/
+ * ai-renders-2026-11-14/). Provisional until the photo register allocates.
+ *
+ * FAQ sources: "What are the best wardrobes for sloping ceilings?" and "Is it
+ * okay to store clothes in a loft?" (Google People also ask, loft wardrobes,
+ * London, 14 Nov 2026); "Will a wardrobe fit an awkward space under the roof?"
+ * (ops deliverables/faq-research-2026-11-06.md, A5: 3 of 9 enquiries described
+ * an awkward recess or corner).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { TOPIC_PAGES } from "../data/topic-pages";
+
+const topic = TOPIC_PAGES.find((t) => t.slug === "loft-wardrobes")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+---
+
+<AreaPage topic={topic}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit wardrobes and storage for loft rooms across north London. Each piece is cut to the slope of the ceiling instead of stopping short of it.
+    </p>
+    <p style={P2}>
+      Under a sloping ceiling, a freestanding wardrobe leaves a dead space behind and above it. A fitted one uses the room to the last corner.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Sloping ceilings" level={4}>Sloping ceiling wardrobes that use the whole room</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Hanging goes in the tall part of the room, and shelves, drawers or cupboards go where the ceiling drops. For clothes on a rail, around 550 to 600mm of clear inside depth is a starting point.
+      </p>
+      <p style={P2}>
+        A slope takes away depth as well as height, so where the wardrobe front sits matters as much as how tall it is. Each door is planned for how it opens under the slope and what you can reach through it.
+      </p>
+      <p style={P2}>
+        A few large, usable compartments work better than a pattern of small doors that follows every change in the ceiling.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Eaves" level={4}>Eaves storage under the lowest part of the roof</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Where the ceiling comes down to a low wall, deep drawers on runners pull the space out to you. Above them, cupboards with their tops cut to the angle of the ceiling take bedding, cases and things used once a season.
+      </p>
+      <p style={P2}>
+        The space behind a low knee wall is sometimes outside the insulated part of the roof. It is checked at the survey before anything is planned to go inside it.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Loft conversions" level={4}>Wardrobes for a north London loft conversion</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many north London terraces and villas have a loft room or a mansard at the top. In conservation areas the councils often restrict new dormers on the front of the roof. The storage then works around the slopes rather than under a dormer.
+      </p>
+      <p style={P2}>
+        Roof windows, radiators and the turn of the loft stair all set limits. The doors are planned to clear them, and the room stays easy to move around once the bed is in.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Fit" level={4}>Cut to the slope, not to a standard size</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Walls, floors and ceilings are rarely straight, and a loft ceiling is rarely one even angle. The furniture is scribed: cut to follow the line of the room, so no gaps are left along the slope.
+      </p>
+      <p style={P2}>
+        Loft stairs are often narrow. Parts are prepared as sections ready to assemble or built up and finished in the room, whichever gives the better result.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What a loft wardrobe costs</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000, for a loft room planned as a dressing room. The size of the room, the number of runs and the finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        Sloping ceilings and awkward access add design and fitting work, so they move the price too. A fixed, itemised quotation follows the measured survey.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="What are the best wardrobes for sloping ceilings?">
+        Wardrobes made to the slope use the room best: hanging where the ceiling is tall, drawers and shelves where it drops. Hinged doors cut to the angle open fully, where a standard wardrobe has to stand clear of the slope.
+      </Faq>
+      <Faq q="Is it okay to store clothes in a loft?">
+        In a converted loft room that is heated and insulated, clothes keep as well as anywhere in the house. In an unconverted loft, or behind a knee wall outside the insulation, cold and damp can mark them, so check that space first.
+      </Faq>
+      <Faq q="Will a wardrobe fit an awkward space under the roof?">
+        Awkward spaces are what fitted furniture is for. Each run is measured in the room and cut to the walls and the slope, and difficult shapes are priced into the itemised quotation.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
