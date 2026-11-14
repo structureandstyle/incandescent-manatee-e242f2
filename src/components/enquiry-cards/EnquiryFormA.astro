@@ -79,18 +79,24 @@ const PROMPTS = [
 
   <div class="ecf-row">
     <div>
-      <label class="ecf-label" for={`${idPrefix}name`}>Your name</label>
-      <input class="ecf-input" id={`${idPrefix}name`} name="name" type="text" required autocomplete="name" />
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}name`} name="name" type="text" required autocomplete="name" placeholder=" " />
+        <label class="ecf-float-label" for={`${idPrefix}name`}>Your name</label>
+      </div>
     </div>
     <div>
-      <label class="ecf-label" for={`${idPrefix}phone`}>Phone</label>
-      <input class="ecf-input" id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel" />
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel" placeholder=" " />
+        <label class="ecf-float-label" for={`${idPrefix}phone`}>Phone</label>
+      </div>
     </div>
   </div>
 
   <div>
-    <label class="ecf-label" for={`${idPrefix}email`}>Email</label>
-    <input class="ecf-input" id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" />
+    <div class="ecf-float">
+      <input class="ecf-input" id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" placeholder=" " />
+      <label class="ecf-float-label" for={`${idPrefix}email`}>Email</label>
+    </div>
   </div>
 
   <CardGroup
@@ -119,14 +125,10 @@ const PROMPTS = [
   >
     <p class="ecf-help ec-nojs">Somewhere else? Say where in the job box.</p>
     <div class="ec-other" data-ec-other hidden>
-      <label class="ecf-label" for={`${idPrefix}area-other`}>Your area or postcode</label>
-      <input
-        class="ecf-input"
-        id={`${idPrefix}area-other`}
-        type="text"
-        data-ec-other-input
-        placeholder="Finchley, or your postcode"
-      />
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}area-other`} type="text" data-ec-other-input placeholder="Finchley, or your postcode" />
+        <label class="ecf-float-label" for={`${idPrefix}area-other`}>Your area or postcode</label>
+      </div>
     </div>
   </CardGroup>
 

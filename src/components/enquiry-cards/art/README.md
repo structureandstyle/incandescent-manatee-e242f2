@@ -36,7 +36,7 @@ nothing in this brand is rounded. Numbers to one decimal place at most.
 | `r` | main road | char, 2.4 wide, round |
 | `s` | minor street | char at 45%, 1 wide |
 | `rl` | railway | char at 70%, 1.2 wide, dashed 4 / 2.5 |
-| `m` | the area marker (one per map) | solid door green, no stroke |
+| `m` | a marker square (the Somewhere else map) | solid door green, no stroke |
 
 ## The style
 
@@ -44,12 +44,15 @@ nothing in this brand is rounded. Numbers to one decimal place at most.
   wardrobe drawing. A floor hairline (`h`), the piece in `k`, inside detail in
   `t`, one green accent (`g`) on the thing that matters (a rail, a shelf line,
   a dimension).
-- Areas: a bird's-eye view, as on a map. Two or three main roads (`r`), a few
-  minor streets (`s`), the park (`gw`), water (`w` for the canal, `gd` for
-  ponds), a railway where it defines the place (`rl`), and one small marker
-  square (`m`, 5 by 5) at the area's centre. Simplified and our own: never
-  traced from map tiles. Each map must still be recognisable to someone who
-  lives there.
+- Areas: one landmark that people who live there recognise at a glance
+  (Kenwood House, the stucco villas of Belsize Park, the top of Primrose
+  Hill, the Forum, Camden Lock, the Swiss Cottage pub, Highgate Cemetery,
+  the railway bridge on West End Lane, the Angel, Little Venice), drawn as a
+  front elevation in the same hand as the services. Simplified and our own:
+  never traced from photographs. "Somewhere else" keeps a small map: streets
+  (`s`, `r`), a dashed boundary (`rl`) and an arrow (`g`) out to a marker
+  (`m`). Landmarks replaced the first bird's-eye maps on 14 Nov 2026, a
+  founder's ask.
 - Ways people hear about us: generic objects. Never a company logo: no
   Google "G", no Maps pin in Google colours, no OpenAI knot.
 

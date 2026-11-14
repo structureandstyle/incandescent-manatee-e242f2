@@ -40,6 +40,58 @@
 }
 .ecf .ecf-input:focus { border-color: var(--hair-strong); }
 .ecf textarea.ecf-input { resize: vertical; min-height: 5.5em; }
+
+/* Labels inside the one-line boxes (name, phone, email, the Somewhere else
+   area), a founder's ask, 14 Nov 2026. At rest the label sits in the box
+   like a placeholder; on focus, or once there is a value, it shrinks to the
+   top of the box in the form's mono label style. CSS only: the input carries
+   a placeholder (a space, or real hint text kept invisible until focus) so
+   :placeholder-shown says whether it is empty. The label stays a real
+   <label for>, after the input so the sibling selector can reach it. */
+.ecf .ecf-float { position: relative; }
+.ecf .ecf-float .ecf-input { min-height: 58px; padding: 24px var(--space-6) 8px; }
+.ecf .ecf-float-label {
+  position: absolute;
+  left: calc(var(--space-6) + 1px);
+  right: var(--space-6);
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  pointer-events: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink-soft);
+  transition: top var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out), font-size var(--t-fast) var(--ease-out);
+}
+.ecf .ecf-float .ecf-input:focus + .ecf-float-label,
+.ecf .ecf-float .ecf-input:not(:placeholder-shown) + .ecf-float-label {
+  top: 8px;
+  transform: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--ls-mono-table);
+  text-transform: uppercase;
+}
+/* Its own rule: a browser that does not know :-webkit-autofill would throw
+   away a whole selector list that names it. */
+.ecf .ecf-float .ecf-input:-webkit-autofill + .ecf-float-label {
+  top: 8px;
+  transform: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--ls-mono-table);
+  text-transform: uppercase;
+}
+.ecf .ecf-float .ecf-input::placeholder { color: transparent; }
+.ecf .ecf-float .ecf-input:focus::placeholder { color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) {
+  .ecf .ecf-float-label { transition: none; }
+}
 .ecf ::placeholder { color: var(--ink-soft); opacity: 1; }
 .ecf fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .ecf .ecf-help { font-size: var(--type-body-sm); color: var(--text-quiet); margin: 0; }

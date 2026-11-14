@@ -157,8 +157,9 @@ test("every drawing keeps to the format: allowed elements, one palette class eac
   }
 });
 
-test("each area map has exactly one marker", () => {
+test("the Somewhere else map keeps its one marker, and the landmarks carry none", () => {
   for (const [id, markup] of Object.entries(AREA_ART)) {
-    assert.equal([...markup.matchAll(/class="m"/g)].length, 1, `${id} needs one marker square`);
+    const markers = [...markup.matchAll(/class="m"/g)].length;
+    assert.equal(markers, id === "area-other" ? 1 : 0, `${id} has ${markers} marker(s)`);
   }
 });
