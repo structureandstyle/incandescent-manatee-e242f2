@@ -2,12 +2,13 @@
  * The enquiry form's picture cards in the browser (14 Nov 2026,
  * src/components/EnquiryForm.astro). Everything here is an enhancement:
  * without it every card is still a checkbox or radio in a plain grid, a line
- * under the areas says where to put one that is not listed, and the form
- * sends exactly as before.
+ * under the areas says where to put one that is not listed, and the ticked
+ * services go as a list, which Netlify and Make both still take.
  *
  * Sending is not done here. Netlify, the photo uploads, the link checks, the
  * email subject and the GA4 flag stay in the form's own inline script; this
- * file only keeps the cards, the Somewhere else box and the prompts in step.
+ * file only keeps the cards, the services line, the Somewhere else box and
+ * the prompts in step.
  * The rules it uses are in src/scripts/enquiry-cards.mjs, where the tests run
  * them.
  */
@@ -18,6 +19,7 @@ import {
   chosenName,
   dropEmptyStarters,
   otherAreaValue,
+  servicesLine,
 } from "../../scripts/enquiry-cards.mjs";
 
 const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
@@ -72,6 +74,39 @@ function armGroup(group: HTMLFieldSetElement) {
   group.addEventListener("change", showChosen);
   group.addEventListener("input", showChosen);
   showChosen();
+}
+
+/* ---- "What do you need?": one plain line in the email ---------------------- */
+
+/*
+ * Netlify shows a field sent several times as code in the notification email,
+ * ["Fitted wardrobes", "Walk-in wardrobes"], and a founder's test on 14 Nov
+ * 2026 read that as the units not coming through. So the service cards hand
+ * their name to one hidden field that carries what is ticked as a plain line
+ * (servicesLine). It is still the field `service`, the one Netlify registered
+ * from the cards at deploy and the one Make maps, so nothing downstream
+ * changes. Nothing ticked: the field is switched off and sends nothing, as an
+ * unticked list did. Without JavaScript the cards keep their name and send a
+ * list, as before.
+ */
+function armServices(form: HTMLFormElement) {
+  const boxes = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="checkbox"][data-field="service"]'));
+  if (!boxes.length) return;
+  const line = document.createElement("input");
+  line.type = "hidden";
+  line.name = "service";
+  line.setAttribute("data-ec-services", "");
+  boxes[0].closest("fieldset")?.append(line);
+  for (const box of boxes) box.removeAttribute("name");
+  const sync = () => {
+    line.value = servicesLine(boxes.filter((b) => b.checked).map((b) => b.value));
+    line.disabled = !line.value;
+  };
+  for (const box of boxes) box.addEventListener("change", sync);
+  // Again on send, ahead of the form's own send script, which listens on the
+  // document and builds the enquiry.
+  form.addEventListener("submit", sync);
+  sync();
 }
 
 /* ---- "Somewhere else": what is typed becomes the card's value -------------- */
@@ -139,6 +174,7 @@ export function initEnquiryCards() {
   document.querySelectorAll<HTMLFormElement>("form[data-ec-form]:not([data-ec-ready])").forEach((form) => {
     form.setAttribute("data-ec-ready", "");
     form.querySelectorAll<HTMLFieldSetElement>("fieldset[data-ec-group]").forEach(armGroup);
+    armServices(form);
     armOtherArea(form);
     armPrompts(form);
   });
