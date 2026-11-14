@@ -24,7 +24,14 @@
 import { BUSINESS } from "./site";
 
 export type Area = {
-  /** URL slug, without slashes. */
+  /**
+   * The address without its outer slashes. "areas/<area>" since 14 Nov 2026,
+   * when a founder moved the area pages to /areas/<area>/ one at a time, with
+   * product-led titles and headings in place of "carpenter" (enquiry quality
+   * over volume: "We don't need carpenter and get a lead that is looking for
+   * someone to install a door"). A page not yet moved keeps its old slug until
+   * its turn; the old address then redirects (netlify.toml).
+   */
   slug: string;
   /** The district as the site names it. Must be an entry in BUSINESS.areaServed. */
   name: string;
@@ -43,7 +50,13 @@ export type Area = {
    * recorded job in the district, so none is captioned with a place. Each file
    * must be in public/images/_selection.json, which supplies its size.
    */
-  plates: { file: string; type: string }[];
+  plates: (
+    | { file: string; type: string }
+    /* An AI-generated example where the photo register lists a gap (ops repo
+       docs/photo-usage.md), made to the render protocol: captioned "AI-generated
+       example" by the frame, never a photograph of a job (14 Nov 2026). */
+    | { file: string; type: string; ai: true; width: number; height: number; alt: string }
+  )[];
   /** One sentence for the /areas/ hub: what the homes there are like. */
   summary: string;
 };
@@ -75,24 +88,35 @@ export const AREAS: Area[] = [
      until the photo session's register (ops repo docs/photo-usage.csv) allocates
      photographs page by page. No frame is a recorded job in its district. */
   {
-    slug: "carpenter-camden",
+    slug: "areas/camden",
     name: "Camden",
-    titleProp: "Camden carpenter, fitted wardrobes",
-    h1: "Camden carpenter for fitted wardrobes and alcove units",
-    /* Camden Town and the streets around it, not the borough: the page would
-       otherwise overlap every other Camden district (brief section 14, option
-       a), and the site already says the business is based in Camden Town. */
-    kicker: "Carpenter in Camden Town",
+    /* Product-led, 14 Nov 2026 (a founder; see `slug` above): the first page moved. "carpenter"
+       is gone from the title, heading and description. Camden Town and the streets around it
+       remain the page's scope, not the borough (brief section 14, option a). */
+    titleProp: "Bespoke fitted wardrobes in Camden",
+    h1: "Bespoke fitted wardrobes and alcove units in Camden",
+    kicker: "Bespoke joinery in Camden",
     description:
-      "Carpenter in Camden Town: fitted wardrobes, alcove units and shelving for terraced houses and flats, measured in the room and cut to follow its walls.",
-    /* camden carpenter, exact phrase, 20 a month (Keyword Planner, London, 14 Nov 2026);
-       carpenter camden cluster 10. Search Console: fitted wardrobes camden 20 and bespoke
-       wardrobes camden 20 impressions, 11 Oct to 8 Nov. */
-    primary: "camden carpenter",
+      "Bespoke fitted wardrobes and alcove units for Camden homes: terraced houses and flats, measured in the room and cut to walls that are rarely straight.",
+    /* Search Console, 11 Oct to 8 Nov: fitted wardrobes camden 20 and bespoke wardrobes camden 20
+       impressions, the area's two largest product searches. Keyword Planner (London, 14 Nov 2026):
+       built in wardrobes camden 10, exact phrase; no data for fitted or bespoke wardrobes camden. */
+    primary: "fitted wardrobes camden",
+    /* 14 Nov 2026: the register (ops PR #49) gives Camden ssp-027 (a white bookcase wall, its lead)
+       and ssp-029 (a white handleless wardrobe, door open), plus an AI example of closed hinged
+       wardrobes in warm grey. The AI example is in; the two photographs replace the two /work/
+       frames below once the Drive originals can be downloaded. */
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
       { file: "/images/alcove-units/alcove-units-03.webp", type: "Alcove units" },
-      { file: "/images/media-walls/media-walls-01.webp", type: "Built-in TV units" },
+      { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
+      {
+        file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
+        type: "Grey Shaker-style wardrobes",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in three pairs, painted warm mid-grey, with slim aged-brass bar handles where each pair meets. The room's cornice runs across the top above a slim infill, slim side infills reach the floor and a recessed plinth runs beneath. A sash window and a bed sit either side.",
+      },
     ],
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",
   },

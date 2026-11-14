@@ -89,7 +89,7 @@ const SERVICE_PATHS = new Set([
    would drift from it, and a page missing from it would skip the WebPage and
    price rules. The file is read beside this script, as the review bank is. */
 const AREA_SLUGS = [...readFileSync(new URL("../src/data/areas.ts", import.meta.url), "utf8")
-  .matchAll(/^\s*slug:\s*"([a-z0-9-]+)"/gm)].map((m) => m[1]);
+  .matchAll(/^\s*slug:\s*"([a-z0-9/-]+)"/gm)].map((m) => m[1]);
 const AREA_PATHS = new Set(AREA_SLUGS.map((slug) => `/${slug}/`));
 /* The pages built on the area page frame that are not about a district
    (src/data/topic-pages.ts, 14 Nov 2026), and the /areas/ hub: each carries
@@ -100,6 +100,8 @@ const TOPIC_SLUGS = [...(() => {
 const TOPIC_PATHS = new Set(TOPIC_SLUGS.map((slug) => `/${slug}/`));
 const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, ...AREA_PATHS, ...TOPIC_PATHS, "/areas/", "/fitted-wardrobe-cost/"]);
 const isArticle = (page) => page.startsWith("/journal/") && page !== "/journal/";
+/* Area pages under the /areas/ hub (14 Nov 2026) carry Home > Areas > page. */
+const isUnderAreasHub = (page) => page.startsWith("/areas/") && page !== "/areas/";
 /** The pages that own the guide prices an area page repeats. */
 const PRICE_SOURCE_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
 
@@ -253,6 +255,14 @@ function verifySchema(html, page, errors) {
         items[0]?.item !== `${SITE_URL}/` || items[1]?.item !== `${SITE_URL}/case-studies/` ||
         items[2]?.item !== `${SITE_URL}${page}`) {
       errors.push(`${page}  case study breadcrumb schema is missing or does not match the page`);
+    }
+  } else if (isUnderAreasHub(page)) {
+    const items = breadcrumbs[0]?.itemListElement;
+    if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 3 ||
+        items[0]?.position !== 1 || items[0]?.item !== `${SITE_URL}/` ||
+        items[1]?.position !== 2 || items[1]?.item !== `${SITE_URL}/areas/` ||
+        items[2]?.position !== 3 || items[2]?.item !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  area breadcrumb schema is missing or does not match Home > Areas > page`);
     }
   } else if (BREADCRUMB_PATHS.has(page)) {
     const items = breadcrumbs[0]?.itemListElement;
