@@ -13,21 +13,21 @@
  * No copy here claims work in any district. NOTHING HERE ADDS CSS: inline
  * styles and existing tokens, as AreaPage does.
  */
-import Base from "../layouts/Base.astro";
-import Wrap from "../components/ds/Wrap.astro";
-import Display from "../components/ds/Display.astro";
-import Kicker from "../components/ds/Kicker.astro";
-import MonoLabel from "../components/ds/MonoLabel.astro";
-import Link from "../components/ds/Link.astro";
-import EnquireBand from "../components/ds/EnquireBand.astro";
-import EnquiryActions from "../components/ds/EnquiryActions.astro";
-import Value from "../components/Value.astro";
+import Base from "../../layouts/Base.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import Display from "../../components/ds/Display.astro";
+import Kicker from "../../components/ds/Kicker.astro";
+import MonoLabel from "../../components/ds/MonoLabel.astro";
+import Link from "../../components/ds/Link.astro";
+import EnquireBand from "../../components/ds/EnquireBand.astro";
+import EnquiryActions from "../../components/ds/EnquiryActions.astro";
+import Value from "../../components/Value.astro";
 
-import { SITE_URL, BUSINESS } from "../data/site";
-import { BAND } from "../data/site-content";
-import { AREAS, areaPath } from "../data/areas";
-import { indexable, AREAS_HUB } from "../data/page-gates";
-import { SHOW_DRAFTS } from "../data/journal";
+import { SITE_URL, BUSINESS } from "../../data/site";
+import { BAND } from "../../data/site-content";
+import { AREAS, areaPath } from "../../data/areas";
+import { indexable, AREAS_HUB } from "../../data/page-gates";
+import { SHOW_DRAFTS } from "../../data/journal";
 
 const url = new URL(AREAS_HUB, SITE_URL).href;
 const title = "Areas we cover in north London";

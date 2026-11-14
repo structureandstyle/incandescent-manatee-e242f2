@@ -56,7 +56,7 @@ import EnquiryActions from "./ds/EnquiryActions.astro";
 
 import { SITE_URL, BUSINESS } from "../data/site";
 import { BAND } from "../data/site-content";
-import { indexable } from "../data/page-gates";
+import { indexable, AREAS_HUB } from "../data/page-gates";
 import { areaPath, type Area } from "../data/areas";
 import { topicPath, type TopicPage } from "../data/topic-pages";
 import { photoAlt } from "../data/work-gallery";
@@ -86,7 +86,7 @@ const plates = page.plates.map((p) => {
   if ("ai" in p && p.ai) return { ...p, w: p.width, h: p.height, alt: p.alt, ai: true };
   const found = sizeOf.get(p.file);
   if (!found) throw new Error(`${page.slug} names ${p.file}, which is not in public/images/_selection.json.`);
-  return { ...p, w: found.w, h: found.h, alt: photoAlt(p.file, p.type), ai: false };
+  return { ...p, w: found.w, h: found.h, alt: ("alt" in p && p.alt) || photoAlt(p.file, p.type), ai: false };
 });
 const anyAi = plates.some((p) => p.ai);
 const allAi = plates.length > 0 && plates.every((p) => p.ai);
@@ -109,12 +109,16 @@ const webPage = {
   about: { "@id": `${SITE_URL}/#business` },
   ...(area ? { spatialCoverage: { "@type": "Place", name: area.name } } : {}),
 };
+/* Under /areas/ (14 Nov 2026) the trail runs Home / Areas / Camden, as the
+   address does; a page not yet moved, and every topic page, keeps Home / page. */
+const underHub = path.startsWith(AREAS_HUB) && path !== AREAS_HUB;
 const breadcrumb = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: page.name, item: url },
+    ...(underHub ? [{ "@type": "ListItem", position: 2, name: "Areas", item: new URL(AREAS_HUB, SITE_URL).href }] : []),
+    { "@type": "ListItem", position: underHub ? 3 : 2, name: page.name, item: url },
   ],
 };
 ---
@@ -131,6 +135,12 @@ const breadcrumb = {
         <MonoLabel tone="soft">
           <Link href="/" variant="nav">Home</Link>
           <span aria-hidden="true" style="padding:0 var(--space-5)">/</span>
+          {underHub && (
+            <>
+              <Link href={AREAS_HUB} variant="nav">Areas</Link>
+              <span aria-hidden="true" style="padding:0 var(--space-5)">/</span>
+            </>
+          )}
           {page.name}
         </MonoLabel>
       </nav>

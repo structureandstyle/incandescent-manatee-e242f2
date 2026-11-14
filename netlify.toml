@@ -57,6 +57,21 @@
   status = 301
   force = true
 
+# The area pages move to /areas/<area>/ one at a time from 14 Nov 2026 (a founder).
+# Camden's first address, /carpenter-camden/, reached production as a noindexed,
+# unlinked draft with site PR #42 (14 Nov), so it forwards to the new one.
+[[redirects]]
+  from = "/carpenter-camden/*"
+  to = "/areas/camden/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-camden"
+  to = "/areas/camden/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

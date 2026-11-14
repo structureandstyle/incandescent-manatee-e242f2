@@ -108,7 +108,7 @@ export const PAGE_GATES = {
 
   /* The nine new area pages and the three topic pages, 14 Nov 2026: each held
      until Kaspar has read it on the review link (answers.ts, the *Check keys). */
-  "/carpenter-camden/": [...BAND_QUESTIONS, "areaCamdenCheck"],
+  "/areas/camden/": [...BAND_QUESTIONS, "areaCamdenCheck"],
   "/carpenter-primrose-hill/": [...BAND_QUESTIONS, "areaPrimroseHillCheck"],
   "/carpenter-islington/": [...BAND_QUESTIONS, "areaIslingtonCheck"],
   "/carpenter-belsize-park/": [...BAND_QUESTIONS, "areaBelsizeParkCheck"],

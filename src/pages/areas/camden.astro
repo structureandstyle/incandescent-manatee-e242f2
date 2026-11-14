@@ -25,23 +25,33 @@
  * Street names are Camden's appraisal's, describing the houses. None is a
  * place we claim to have worked. The three plates are provisional (areas.ts).
  *
- * FAQ sources (Google People also ask, London, desktop, 14 Nov 2026, ops
- * serps-areas-1 and -2): "What is the day rate for a carpenter in London?"
- * and "Is a joiner better than a carpenter?" (carpenter camden), "Is 500mm
- * deep enough for a wardrobe?" (fitted wardrobes kentish town).
+ * PRODUCT-LED, 14 Nov 2026 (a founder: commercial intent, "We don't need
+ * carpenter and get a lead that is looking for someone to install a door").
+ * The address moved to /areas/camden/; the title, heading, kicker and
+ * description lead with fitted and bespoke wardrobes (areas.ts); the opening
+ * carries "bespoke carpentry" and "bespoke joinery" once each; the two FAQs
+ * that courted day-rate and trade-name searches ("What is the day rate for a
+ * carpenter in London?", "Is a joiner better than a carpenter?") are replaced
+ * by questions people ask on the product searches.
+ *
+ * FAQ sources (Google People also ask, London, desktop, 14 Nov 2026):
+ * "How much does it cost to fit fitted wardrobes?" and "What are bespoke
+ * fitted wardrobes?" (fitted wardrobes camden; the first also on fitted
+ * wardrobes london); "Is 500mm deep enough for a wardrobe?" (fitted
+ * wardrobes kentish town, ops serps-areas-2).
  */
-import AreaPage from "../components/AreaPage.astro";
-import Wrap from "../components/ds/Wrap.astro";
-import SectionHead from "../components/ds/SectionHead.astro";
-import Reviews from "../components/ds/Reviews.astro";
-import Faq from "../components/ds/Faq.astro";
-import Link from "../components/ds/Link.astro";
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Reviews from "../../components/ds/Reviews.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
 
-import { AREAS } from "../data/areas";
-import { QUOTE_BANK, REVIEWS } from "../data/site-content";
-import { ANSWERS, answered } from "../data/answers";
+import { AREAS } from "../../data/areas";
+import { QUOTE_BANK, REVIEWS } from "../../data/site-content";
+import { ANSWERS, answered } from "../../data/answers";
 
-const area = AREAS.find((a) => a.slug === "carpenter-camden")!;
+const area = AREAS.find((a) => a.slug === "areas/camden")!;
 
 /* Every bank entry tagged with this district, whole: Lorenzo I's. */
 const quotes = QUOTE_BANK.filter((q) => q.areas.includes(area.name)).map((q) => ({
@@ -63,7 +73,7 @@ const EXT = { target: "_blank", rel: "noopener" };
       We are a joinery company based in Camden Town. We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
     </p>
     <p style={P2}>
-      Most homes around Camden Town are terraced houses of three storeys over a basement, and many are now flats. Every wardrobe, alcove unit and shelf is measured in the room and cut to follow its walls.
+      Most homes around Camden Town are terraced houses of three storeys over a basement, and many are now flats. Their walls are rarely straight, which is where bespoke carpentry earns its place. Each wardrobe, alcove unit and shelf is bespoke joinery, measured in the room and cut to follow those walls.
     </p>
   </Fragment>
 
@@ -171,11 +181,11 @@ const EXT = { target: "_blank", rel: "noopener" };
   <Wrap style={SECTION}>
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
-      <Faq q="What is the day rate for a carpenter in London?">
-        We price fitted furniture by the project rather than by the day, so one figure covers the design, the materials and the fitting. A straightforward fitted wardrobe wall typically takes 2 to 3 days on site. The price is fixed in an itemised quotation after the measured survey.
+      <Faq q="How much does it cost to fit fitted wardrobes?">
+        Fitting is included in our price: fitted wardrobes start from £2,300 for a 2-door run up to 1.2m in melamine, delivered and installed. A straightforward wardrobe wall typically takes 2 to 3 days on site.
       </Faq>
-      <Faq q="Is a joiner better than a carpenter?">
-        Neither is better: the two trades overlap, and for fitted furniture the useful question is who measures, draws and fits it. The person who measures your room is the person who draws it and the person who fits it.
+      <Faq q="What are bespoke fitted wardrobes?">
+        They are wardrobes designed for one room and fitted into it, wall to wall and up to the ceiling, rather than chosen in standard sizes. Ours are measured in the room and cut to follow walls that are rarely straight, with the inside planned around what you keep in them.
       </Faq>
       <Faq q="Is 500mm deep enough for a wardrobe?">
         For clothes on a rail, around 550 to 600mm of clear inside depth is a starting point, so 500mm is tight. In a shallow alcove, a hanging wardrobe often stands forward of the chimney breast, or the space takes shelves and drawers instead.
