@@ -52,11 +52,11 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 
 /* PREVIEW ONLY, 12 Nov 2026 (Denis): a looping red bar above the nav on every
    page except the legal ones, pointing at the Christmas bundle. Comes down with
-   the booking page on 1 February 2027. */
+   the booking page on 1 January 2027. */
 const PROMO_OFF = ["/privacy/", "/cookies/", "/book-early-2027/terms/"];
 const here = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : Astro.url.pathname + "/";
 const showPromo = !PROMO_OFF.includes(here);
-const PROMO = ["The Christmas bundle", "From a £2,500 basket, extras on the house", "Worth [10 to 15%] of your job", "Book by 31 January 2027", "Build your bundle"];
+const PROMO = ["The Christmas bundle", "[10 to 15%] extra, on the house", "Book by 31 December 2026"];
 const ogImage = new URL(image, SITE_URL).href;
 const fullTitle = title.includes(BUSINESS.name) ? title : `${title} | ${BUSINESS.name}`;
 
@@ -322,7 +322,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       >Skip to content</a
     >
     {showPromo && (
-      <a class="promo-bar" href="/book-early-2027/" aria-label="The Christmas bundle: from a £2,500 basket, extras on the house on jobs booked by 31 January 2027. Build your bundle.">
+      <a class="promo-bar" href="/book-early-2027/" aria-label="The Christmas bundle: extras on the house on jobs booked by 31 December 2026.">
         <span class="promo-track" aria-hidden="true">
           {[0, 1].map(() => (
             <span class="promo-run">{PROMO.map((t) => <span class="promo-item">{t}</span>)}</span>
@@ -733,14 +733,19 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       });
     </script>
       <style is:global>
-      .promo-bar { display: block; overflow: hidden; background: #8A2E1F; color: var(--paper); text-decoration: none; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+      .promo-bar { position: relative; display: block; overflow: hidden; background: #8A2E1F; color: var(--paper); text-decoration: none; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
       .promo-track { display: flex; width: max-content; animation: promo-loop 38s linear infinite; }
       .promo-run { display: flex; flex-shrink: 0; }
       .promo-item { padding: 10px 28px; white-space: nowrap; }
       .promo-item::after { content: "\2726"; margin-left: 56px; opacity: 0.7; }
       .promo-bar:hover .promo-track, .promo-bar:focus-visible .promo-track { animation-play-state: paused; }
       @keyframes promo-loop { to { transform: translateX(-50%); } }
-      @media (prefers-reduced-motion: reduce) { .promo-track { animation: none; } }
+      /* A string of lights along the bar's lower edge (Arthur, 14 Nov: more decorations). */
+      .promo-bar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 3px; height: 6px; pointer-events: none;
+        background-image: radial-gradient(circle, #F4D58D 2.2px, transparent 2.8px), radial-gradient(circle, #FFF6E0 2.2px, transparent 2.8px);
+        background-size: 44px 6px, 44px 6px; background-position: 0 0, 22px 0; animation: promo-twinkle 2.4s ease-in-out infinite alternate; }
+      @keyframes promo-twinkle { from { opacity: 0.45; } to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .promo-track, .promo-bar::after { animation: none; } }
     </style>
 </body>
 </html>

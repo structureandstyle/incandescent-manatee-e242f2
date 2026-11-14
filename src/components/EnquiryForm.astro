@@ -308,14 +308,14 @@ const sources = bonusPicker
   </fieldset>
 
   <div>
-    <label for={`${idPrefix}area`}>Which area of north London?</label>
+    <label for={`${idPrefix}area`}>{bonusPicker ? "Which area of north London? (optional)" : "Which area of north London?"}</label>
     <input
       id={`${idPrefix}area`} name="area" type="text"
       placeholder="Hampstead, Camden, or your postcode"
     />
   </div>
 
-  <div>
+  <div data-basket-hide={bonusPicker ? "" : undefined}>
     <label for={`${idPrefix}detail`}>{bonusPicker ? "Anything we should know?" : "Tell us about the job"}</label>
     {!bonusPicker && <p class="help">The room, rough sizes, and what it needs to hold is plenty.</p>}
     <textarea
@@ -332,7 +332,7 @@ const sources = bonusPicker
   </div>
 
   {largeUploadsEnabled ? (
-    <fieldset class="attachments-field" data-upload-fieldset hidden>
+    <fieldset class="attachments-field" data-upload-fieldset data-basket-hide={bonusPicker ? "" : undefined} hidden>
       <legend>Photos or drawings (optional)</legend>
       <p class="help" id={`${idPrefix}attachments-help`}>
         Add up to six photos, plans or documents, up to 15 MB each and 60 MB together. Choose
@@ -382,7 +382,7 @@ const sources = bonusPicker
     </fieldset>
     <noscript><p class="help">Send your enquiry now and share files when we reply.</p></noscript>
   ) : (
-    <div>
+    <div data-basket-hide={bonusPicker ? "" : undefined}>
       <label for={`${idPrefix}attachment`}>A photo or drawing (optional)</label>
       <p class="help" id={`${idPrefix}attachment-help`}>
         {bonusPicker ? "One file, up to 8 MB." : "One file, up to 8 MB. PDF, Word and photographs work. Send anything else when we reply."}
@@ -398,7 +398,7 @@ const sources = bonusPicker
   )}
 
   <div>
-    <label for={`${idPrefix}source`}>How did you hear about us?</label>
+    <label for={`${idPrefix}source`}>{bonusPicker ? "How did you hear about us? (optional)" : "How did you hear about us?"}</label>
     <select id={`${idPrefix}source`} name="source">
       <option value="" selected>Choose one</option>
       {sources.map((o) => <option value={o.value}>{o.label}</option>)}
