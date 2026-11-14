@@ -102,9 +102,22 @@ const homeStub = {
 
 /* The design-led copy of the Hampstead page (7 Nov 2026) was registered in
    AREA_PATHS until it was deleted on 12 Nov 2026, so the sandboxes no longer
-   carry a stub for it. */
-function run(pages) {
-  pages = { "/": homeStub, ...pages };
+   carry a stub for it.
+
+   Since 14 Nov 2026 verify-build reads its area paths from src/data/areas.ts,
+   which lists ten. Every area page a case does not supply gets a noindexed
+   stub with its WebPage and breadcrumb, so the cases test Hampstead alone, as
+   before. The stubs carry no prices, so the price rule never needs an owner
+   for them. */
+const OTHER_AREAS = [...readFileSync(new URL("../src/data/areas.ts", import.meta.url), "utf8")
+  .matchAll(/^\s*slug:\s*"([a-z0-9-]+)"/gm)]
+  .map((m) => `/${m[1]}/`)
+  .filter((p) => p !== AREA);
+const areaStub = (path) => ({ noindex: true, nodes: [webPage(path), breadcrumb(path, "Area")], body: "<p>Area.</p>" });
+
+function run(pages, { stubAreas = true } = {}) {
+  const stubs = stubAreas ? Object.fromEntries(OTHER_AREAS.map((p) => [p, areaStub(p)])) : {};
+  pages = { "/": homeStub, ...stubs, ...pages };
   const root = mkdtempSync(join(tmpdir(), "ss-verify-"));
   try {
     /* verify-build reads src/data/reviews.json from its working directory

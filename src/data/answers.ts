@@ -226,6 +226,69 @@ export const ANSWERS = {
     value: "Answered 10 Nov 2026: Kaspar rewrote the held copy on the preview, and his words replace ours.",
     about: "Merged page: does he approve the new design section under his heading, the parking line after his and the drawings and process lines at the end of the cost section",
   },
+  /**
+   * CASE STUDY 1: the Belsize Park job. Added 6 November 2026.
+   *
+   * Source: briefs/case-study-2026-11.md in the S&S ops repo (section 3, the
+   * needs list for Kaspar, and section 5, the gate). Every fact about the job
+   * is an open question here and is rendered with <Value> or <Ask> on the page
+   * (src/pages/case-studies/[slug].astro); nothing about the job is written
+   * into the template. The keys are listed in the entry's `gate` in
+   * src/data/case-studies.ts, which page-gates.ts reads, so the page stays
+   * noindexed and out of the sitemap until every one has a value.
+   *
+   * What we hold from the 27 Oct call is only as heard through a garbled
+   * transcript, so it is `provisional` (shown inside an Ask, never counted as
+   * an answer) and nothing is copied into a published field.
+   *
+   * To fill one in: set `value` to the confirmed text, in the phrasing it should
+   * render with. For the four keys that are consents and checks (consent,
+   * photographer, photos checked, copy cleared) the value is a one-line record
+   * of who confirmed it and when; the proof itself is kept off the repo.
+   */
+  cs1_title: { value: null, provisional: "Alcove units in Belsize Park (to confirm)", blocking: true, about: "The title, as the service and the area: for example Alcove units in Belsize Park" },
+  cs1_area: { value: null, blocking: true, about: "The area, as you would like it written. The area only, never an address" },
+  cs1_home: { value: null, about: "The type of home (flat, terrace, house) and the room, in your words. No address" },
+  cs1_handover: { value: null, blocking: true, about: "Whether the job is handed over, and on what date" },
+  cs1_pieces: { value: null, blocking: true, about: "Each piece fitted, with its finished height, width and depth" },
+  cs1_materials: { value: null, about: "The materials, finish and lighting used" },
+  cs1_painting: { value: null, about: "Who did the painting, and anyone else who worked on the job" },
+  cs1_problem: { value: null, about: "What the room needed, in your words" },
+  cs1_dates: { value: null, about: "Start date, finish date and days on site" },
+  cs1_photos: { value: null, blocking: true, about: "Your photographs of the finished room, about 25 to 30, sent as documents or in a shared folder" },
+  cs1_consent: { value: null, blocking: true, about: "The customer's written OK to show the job (the message itself is kept off the site)" },
+  cs1_photographer: { value: null, blocking: true, about: "Who took the photographs, and their OK to publish them" },
+  cs1_photos_checked: { value: null, about: "F2F check: no people, personal items, house numbers, street signs or location data in any frame" },
+  cs1_facts_confirmed: { value: null, blocking: true, about: "Kaspar confirmed the job facts in writing" },
+  cs1_kaspar_yes: { value: null, blocking: true, about: "Kaspar's written yes to the finished page text" },
+  cs1_copy_cleared: { value: null, about: "F2F check: copy cleared against the tone protocol and the claims rules" },
+  // Optional on the page: shown if answered, never needed to publish.
+  cs1_cost: { value: null, about: "A cost range, only if you choose to show one. The default is none" },
+  cs1_review: { value: null, about: "The customer's own words, only if they are happy to be quoted" },
+  cs1_video: { value: null, about: "A one-minute phone video of the room, if you have one" },
+  /**
+   * The other nine area pages and three topic pages, 14 November 2026. Built as
+   * drafts for Kaspar to read on one comment link over Christmas (a founder, 14
+   * Nov 2026): ops repo research/area-pages-2026-11-14/README.md has the data and
+   * the structure of each, and F2F ops clients/structure-and-style/areas-review/
+   * is the link. Each page carries ONE key: he has read it there and his changes
+   * are in. Answer it in the commit that applies his comments, with the date and
+   * where his yes is recorded. Copy that only he can confirm is pointed out on
+   * the page's question card, not given a key of its own, so the questions to him
+   * stay few (a founder, 7 Nov 2026: use what we have).
+   */
+  areaCamdenCheck: { value: null, about: "Kaspar has read the Camden page (/carpenter-camden/) on the review link and his changes are in" },
+  areaPrimroseHillCheck: { value: null, about: "Kaspar has read the Primrose Hill page (/carpenter-primrose-hill/) on the review link and his changes are in" },
+  areaIslingtonCheck: { value: null, about: "Kaspar has read the Islington page (/carpenter-islington/) on the review link and his changes are in" },
+  areaBelsizeParkCheck: { value: null, about: "Kaspar has read the Belsize Park page (/carpenter-belsize-park/) on the review link and his changes are in" },
+  areaKentishTownCheck: { value: null, about: "Kaspar has read the Kentish Town page (/carpenter-kentish-town/) on the review link and his changes are in" },
+  areaSwissCottageCheck: { value: null, about: "Kaspar has read the Swiss Cottage page (/carpenter-swiss-cottage/) on the review link and his changes are in" },
+  areaHighgateCheck: { value: null, about: "Kaspar has read the Highgate page (/carpenter-highgate/) on the review link and his changes are in" },
+  areaWestHampsteadCheck: { value: null, about: "Kaspar has read the West Hampstead page (/carpenter-west-hampstead/) on the review link and his changes are in" },
+  areaMaidaValeCheck: { value: null, about: "Kaspar has read the Maida Vale page (/carpenter-maida-vale/) on the review link and his changes are in" },
+  staircasesCheck: { value: null, about: "Kaspar has read the bespoke staircases page (/bespoke-staircases/) on the review link and his changes are in" },
+  loftWardrobesCheck: { value: null, about: "Kaspar has read the loft and eaves wardrobes page (/loft-wardrobes/) on the review link and his changes are in" },
+  bookcasesCheck: { value: null, about: "Kaspar has read the built-in bookcases and shelving page (/built-in-bookcases/) on the review link and his changes are in" },
 } as const satisfies Record<string, Answer>;
 
 export type QuestionKey = keyof typeof ANSWERS;

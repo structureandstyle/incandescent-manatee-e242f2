@@ -7,6 +7,8 @@
  * indexable. While an area page's gate is closed it renders as plain text, so
  * the sentence is byte for byte what it was before area pages existed, and no
  * page links to a draft. The link appears on its own the day the gate clears.
+ * On a preview build (SHOW_DRAFTS, src/data/journal.ts) every area page is
+ * linked, so a reviewer can reach the drafts from where they will sit.
  *
  * Text only, no wrapper: the caller supplies the words around it.
  *   Across London, including <AreaList />.
@@ -15,11 +17,12 @@ import Link from "./ds/Link.astro";
 import { BUSINESS } from "../data/site";
 import { areaFor, areaPath } from "../data/areas";
 import { indexable } from "../data/page-gates";
+import { SHOW_DRAFTS } from "../data/journal";
 
 const names = BUSINESS.areaServed;
 const items = names.map((name) => {
   const area = areaFor(name);
-  const href = area && indexable(areaPath(area.slug)) ? areaPath(area.slug) : null;
+  const href = area && (SHOW_DRAFTS || indexable(areaPath(area.slug))) ? areaPath(area.slug) : null;
   return { name, href };
 });
 const sep = (i: number) => (i === 0 ? "" : i === items.length - 1 ? " and " : ", ");

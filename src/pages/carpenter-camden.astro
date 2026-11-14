@@ -1,0 +1,185 @@
+---
+/**
+ * Camden, 14 November 2026. A draft for Kaspar to read on the review link
+ * (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaCamdenCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Camden), with every local fact from facts-camden-2026-11-14.md: Camden's
+ * Camden Town Conservation Area appraisal (2007), its Kelly Street appraisal
+ * (2011), and Camden's listed buildings, parking zone and trade permit pages,
+ * all read 14 Nov 2026. Scope is Camden Town and the streets around it, not
+ * the borough.
+ *
+ * WHOSE WORDS.
+ *   - Already approved and live elsewhere, used as they stand: "We are a
+ *     joinery company based in Camden Town" (home page, Denis 2 Sep 2026, at
+ *     most once per page) and Kaspar's sentence of 6 Sep on where we work
+ *     (service-copy.ts, the Hampstead lede). Lorenzo I's review, whole.
+ *   - His own facts, reworded only to fit: the hanging depth and the alcove
+ *     line from the built-in wardrobe guide he approved (24 Oct 2026), the
+ *     cornice line from his Hampstead section (10 Nov 2026), stage04 (sections
+ *     or built up in the room), q30, q20, q35 and q36.
+ *   - New copy, ours, for him to check: everything else.
+ *
+ * Street names are Camden's appraisal's, describing the houses. None is a
+ * place we claim to have worked. The three plates are provisional (areas.ts).
+ *
+ * FAQ sources (Google People also ask, London, desktop, 14 Nov 2026, ops
+ * serps-areas-1 and -2): "What is the day rate for a carpenter in London?"
+ * and "Is a joiner better than a carpenter?" (carpenter camden), "Is 500mm
+ * deep enough for a wardrobe?" (fitted wardrobes kentish town).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Reviews from "../components/ds/Reviews.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+import { QUOTE_BANK, REVIEWS } from "../data/site-content";
+import { ANSWERS, answered } from "../data/answers";
+
+const area = AREAS.find((a) => a.slug === "carpenter-camden")!;
+
+/* Every bank entry tagged with this district, whole: Lorenzo I's. */
+const quotes = QUOTE_BANK.filter((q) => q.areas.includes(area.name)).map((q) => ({
+  text: q.text,
+  meta: q.gate && answered(q.gate) ? String(ANSWERS[q.gate].value) : q.meta,
+}));
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We are a joinery company based in Camden Town. We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
+    </p>
+    <p style={P2}>
+      Most homes around Camden Town are terraced houses of three storeys over a basement, and many are now flats. Every wardrobe, alcove unit and shelf is measured in the room and cut to follow its walls.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Terraces" level={4}>Fitted wardrobes in Camden Town's terraces</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The streets west of Camden High Street were laid out between 1820 and 1850. Camden's appraisal describes yellow stock-brick terraces, three storeys over a basement, with painted timber sash windows, and many of them are listed.
+      </p>
+      <p style={P2}>
+        Most of these houses are two windows wide, so the rooms are narrow and a wardrobe usually runs along one wall from floor to ceiling. Depth decides more than width: around 550 to 600mm of clear inside depth is a starting point for hanging clothes.
+      </p>
+      <p style={P2}>
+        Where a room cannot spare that depth, the run changes to shelves and drawers, which work at less. Each run is planned so the sash window beside it still opens fully.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansard rooms" level={4}>Bespoke wardrobes for mansard and attic rooms</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many Camden Town terraces have a mansard or attic room at the top. Camden's appraisal names the three curved terraces of Mornington Crescent and parts of Delancey Street. In Albert Street, Nos 22 to 46 are the one terrace that keeps its original mansard attic.
+      </p>
+      <p style={P2}>
+        Under a mansard the outer wall leans in, so a standard wardrobe stops short and leaves a dead space behind it. A bespoke wardrobe follows the slope, with tall doors where the ceiling is full height and lower cupboards or drawers where it drops.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Alcoves" level={4}>Alcove units in front and back rooms</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Terraced houses of this age were built with a chimney breast in most rooms and an alcove either side of it. On the west side of Arlington Road, Camden's appraisal points out the large chimney stacks and long stair windows at the back of the houses.
+      </p>
+      <p style={P2}>
+        An alcove unit here is usually a cupboard below with shelves above. Each alcove is measured on its own, because the two sides of one chimney breast are rarely the same width.
+      </p>
+      <p style={P2}>
+        Lighting, a desk or a <Link href="/media-walls/">built-in TV unit</Link> can sit in the same run. Our <Link href="/alcove-units/">alcove units</Link> page shows the layouts and finishes.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed homes" level={4}>Do you need consent for fitted furniture in a listed house?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Fitted furniture inside a house does not normally need planning permission, including in a conservation area. A listed building is different: Camden protects every part of it, the interior included, and work that affects its character can need listed building consent.
+      </p>
+      <p style={P2}>
+        Every house in Kelly Street is listed at Grade II, railings included. Camden's appraisal describes many of the Camden Town terraces as listed too. If your home is listed, check with <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council</Link> before work begins.
+      </p>
+      <p style={P2}>
+        A wardrobe can stop below an original cornice rather than cut into it. Its fixings can be planned around skirting and panelling that need to stay.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Parking and deliveries in Camden Town</SectionHead>
+    <div style={TEXT}>
+      <p>
+        We agree parking, deliveries and access with you before installation. That covers where the van can load and unload, and whether the fitting days need a permit. Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>controlled parking zones</Link> cover large areas of the borough.
+      </p>
+      <p style={P2}>
+        As a resident you can buy a visitor permit, or the van can use a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link>, which Camden sells by the day. Neither one guarantees a space outside the house.
+      </p>
+      <p style={P2}>
+        Inside, hallways and stairs in these terraces are often narrow. Pieces are prepared as sections ready to assemble, or built up and finished in the room. Stair protection goes down on every day material comes in.
+      </p>
+    </div>
+  </Wrap>
+
+  {/* "From N Google reviews" and the link to all of them are the component's. */}
+  <Wrap style={SECTION}>
+    <Reviews
+      title=""
+      average={REVIEWS.average}
+      count={REVIEWS.count}
+      href={REVIEWS.profileUrl}
+      quotes={quotes}
+    />
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What fitted wardrobes and alcove units cost</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/media-walls/">Built-in TV units</Link> start from £3,500. Size, storage, lighting, cable routes and finish move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
+      </p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. If a door or drawer needs adjusting in the first 2 years, we come back and adjust it.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="What is the day rate for a carpenter in London?">
+        We price fitted furniture by the project rather than by the day, so one figure covers the design, the materials and the fitting. A straightforward fitted wardrobe wall typically takes 2 to 3 days on site. The price is fixed in an itemised quotation after the measured survey.
+      </Faq>
+      <Faq q="Is a joiner better than a carpenter?">
+        Neither is better: the two trades overlap, and for fitted furniture the useful question is who measures, draws and fits it. The person who measures your room is the person who draws it and the person who fits it.
+      </Faq>
+      <Faq q="Is 500mm deep enough for a wardrobe?">
+        For clothes on a rail, around 550 to 600mm of clear inside depth is a starting point, so 500mm is tight. In a shallow alcove, a hanging wardrobe often stands forward of the chimney breast, or the space takes shelves and drawers instead.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

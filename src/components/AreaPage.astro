@@ -32,6 +32,15 @@
  *
  * The enquiry form is not prefilled: its area field asks which area of London
  * the visitor is in, and a default is not an observation.
+ *
+ * TOPIC PAGES, 14 November 2026. The same frame carries the pages that are
+ * not about a district (src/data/topic-pages.ts: bespoke staircases, loft and
+ * eaves wardrobes, bookcases and shelving), passed as `topic` instead of
+ * `area`. A topic page has no place in its schema. Its plates may be
+ * AI-generated examples where no photograph of the work exists: each such
+ * plate is captioned "AI-generated example", and Kaspar's own note from the
+ * Hampstead page (10 Nov 2026) sits above the plates, so the verify rule on
+ * AI images (scripts/verify-build.mjs, verifyAiLabels) holds.
  */
 import Base from "../layouts/Base.astro";
 import FormProof from "./FormProof.astro";
@@ -49,15 +58,19 @@ import { SITE_URL, BUSINESS } from "../data/site";
 import { BAND } from "../data/site-content";
 import { indexable } from "../data/page-gates";
 import { areaPath, type Area } from "../data/areas";
+import { topicPath, type TopicPage } from "../data/topic-pages";
 import { photoAlt } from "../data/work-gallery";
 import selection from "../../public/images/_selection.json";
 
 interface Props {
-  area: Area;
+  area?: Area;
+  topic?: TopicPage;
 }
 
-const { area } = Astro.props;
-const path = areaPath(area.slug);
+const { area, topic } = Astro.props;
+const page = (area ?? topic)!;
+if (!page) throw new Error("AreaPage needs an area or a topic.");
+const path = area ? areaPath(area.slug) : topicPath(topic!.slug);
 const url = new URL(path, SITE_URL).href;
 
 /* Sizes from the photo selection, as /work/ reads them, so a plate always
@@ -67,11 +80,16 @@ const sizeOf = new Map(
     .flat()
     .map((p) => [p.file, p])
 );
-const plates = area.plates.map((p) => {
+const plates = page.plates.map((p) => {
+  /* An AI-generated example carries its own size and alt text: it is not a
+     photograph of the work, so it is never in the photo selection. */
+  if ("ai" in p && p.ai) return { ...p, w: p.width, h: p.height, alt: p.alt, ai: true };
   const found = sizeOf.get(p.file);
-  if (!found) throw new Error(`areas.ts names ${p.file}, which is not in public/images/_selection.json.`);
-  return { ...p, w: found.w, h: found.h };
+  if (!found) throw new Error(`${page.slug} names ${p.file}, which is not in public/images/_selection.json.`);
+  return { ...p, w: found.w, h: found.h, alt: photoAlt(p.file, p.type), ai: false };
 });
+const anyAi = plates.some((p) => p.ai);
+const allAi = plates.length > 0 && plates.every((p) => p.ai);
 
 /* Each photograph's own description from work-gallery.ts (6 Nov 2026), the
    same words it has on /work/. No place in it: none is a recorded job in the
@@ -86,24 +104,24 @@ const webPage = {
   "@type": "WebPage",
   "@id": `${url}#webpage`,
   url,
-  name: `${area.titleProp} | ${BUSINESS.name}`,
-  description: area.description,
+  name: `${page.titleProp} | ${BUSINESS.name}`,
+  description: page.description,
   about: { "@id": `${SITE_URL}/#business` },
-  spatialCoverage: { "@type": "Place", name: area.name },
+  ...(area ? { spatialCoverage: { "@type": "Place", name: area.name } } : {}),
 };
 const breadcrumb = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-    { "@type": "ListItem", position: 2, name: area.name, item: url },
+    { "@type": "ListItem", position: 2, name: page.name, item: url },
   ],
 };
 ---
 
 <Base
-  title={area.titleProp}
-  description={area.description}
+  title={page.titleProp}
+  description={page.description}
   schema={[webPage, breadcrumb]}
   noindex={!indexable(path)}
 >
@@ -113,15 +131,32 @@ const breadcrumb = {
         <MonoLabel tone="soft">
           <Link href="/" variant="nav">Home</Link>
           <span aria-hidden="true" style="padding:0 var(--space-5)">/</span>
-          {area.name}
+          {page.name}
         </MonoLabel>
       </nav>
 
-      <Kicker scribe>{area.kicker}</Kicker>
+      <Kicker scribe>{page.kicker}</Kicker>
 
       <Display level={1} as="h1" measure="var(--measure-display)" style="margin:var(--space-12) 0 var(--space-13)">
-        {area.h1}
+        {page.h1}
       </Display>
+
+      {/* Above the plates only when one of them is an AI-generated example.
+          Mixed with photographs: Kaspar's note, word for word, from the
+          Hampstead page (10 Nov 2026). All AI: the journal guides' notice
+          (src/pages/journal/[...slug].astro), changing only "guide" to "page",
+          and a way to the real work, since "all other photographs" would point
+          at none. */}
+      {anyAi && !allAi && (
+        <p style="max-width:var(--measure);margin:0 0 var(--space-10);color:var(--text-quiet)">
+          Images labelled "AI-generated example" are provided for design inspiration and to illustrate different fitted furniture options. All other project photographs on this page show <Link href="/work/">our completed work</Link>.
+        </p>
+      )}
+      {allAi && (
+        <p style="max-width:var(--measure);margin:0 0 var(--space-10);color:var(--text-quiet)">
+          The images on this page are AI-generated examples, shown for inspiration and to help you compare the options. Photographs of <Link href="/work/">our completed work</Link> are in our gallery.
+        </p>
+      )}
 
       {/* The plates, then the lede. data-plate-set lets the lightbox step
           through the three as one set.
@@ -140,13 +175,14 @@ const breadcrumb = {
         {plates.map((p, i) => (
           <Plate
             photo={p.file}
-            alt={photoAlt(p.file, p.type)}
+            alt={p.alt}
             label={p.type}
             width={p.w}
             height={p.h}
             ratio="3 / 2"
             sizes="(max-width: 660px) 72vw, 33vw"
-            subject={p.type}
+            subject={p.ai ? "AI-generated example" : p.type}
+            ai={p.ai}
             eager={i === 0}
             style="scroll-snap-align:start"
           />
