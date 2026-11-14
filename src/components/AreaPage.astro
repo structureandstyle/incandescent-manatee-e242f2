@@ -7,7 +7,12 @@
  *   three plates, labelled by type only, then "See selected work"
  *   the lede (slot "lede"), then the hero actions
  *   the page's own sections (default slot), in the order its copy sets
- *   the closing band and the inline enquiry form
+ *   the closing band, whose Get a quote button opens the enquiry form
+ *
+ * ONE FORM PER PAGE, 14 November 2026 (a founder): the inline enquiry form
+ * that used to follow the band is gone. A Get a quote section followed by the
+ * form again read as the same form twice. The band's button opens the shared
+ * enquiry modal, as the hero's Get a quote does.
  *
  * Photographs sit directly under the h1 and above the first block of body
  * copy: tone protocol section 11 point 1. The service pages depart from that
@@ -29,7 +34,6 @@
  * the visitor is in, and a default is not an observation.
  */
 import Base from "../layouts/Base.astro";
-import EnquiryForm from "./EnquiryForm.astro";
 import FormProof from "./FormProof.astro";
 import Value from "./Value.astro";
 import Wrap from "./ds/Wrap.astro";
@@ -184,12 +188,6 @@ const breadcrumb = {
           ))}
         </Fragment>
       </EnquireBand>
-
-      <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
-        <div style="max-width:var(--measure-tight)">
-          <EnquiryForm compact />
-        </div>
-      </Wrap>
     </section>
   </article>
 </Base>
