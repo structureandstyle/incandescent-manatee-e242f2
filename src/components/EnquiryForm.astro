@@ -1,194 +1,76 @@
 ---
-import { SERVICES, DEFERRED_SERVICES, serviceLabel } from "../data/site";
-import { FIELD_NAMES as SOURCE_FIELDS } from "../scripts/enquiry-source.mjs";
-
-interface Props {
-  compact?: boolean;
-  /** Prefix for element ids, so the page form and the modal form can coexist
-      without duplicate ids. Field names are untouched: same Netlify form. */
-  idPrefix?: string;
-  /** The service to tick on arrival: a service page passes its own title.
-      Anywhere else nothing is ticked, rather than silently defaulting to
-      fitted wardrobes, which is what every alcove enquiry used to arrive as. */
-  service?: string;
-  /** Tick the current service without shortening the choice list. The global
-      modal uses this on service pages: the visitor keeps the ability to add
-      related work while the page they opened it from is already selected. */
-  preselectedService?: string;
-}
-const { compact = false, idPrefix = "", service, preselectedService } = Astro.props;
-const turnstileSiteKey = import.meta.env.PUBLIC_SS_TURNSTILE_SITE_KEY;
-const largeUploadsEnabled = Boolean(turnstileSiteKey);
-
 /**
- * What a lead can ask for. Checkboxes rather than a single choice since
- * 2 September 2026, Denis's call, and it is the right shape: a room being
- * fitted out rarely needs one thing, and a dropdown forced those leads to pick
- * the biggest item and mention the rest in the message, or not at all.
+ * THE ENQUIRY FORM, in the Get a quote pop-up on every page (Base.astro) and
+ * on /contact/. Since 14 Nov 2026 the picture-card form: option A of the two
+ * previews (site PR #43), which a founder picked that day to replace the form
+ * everywhere it appears. Site PR #41 had already left those two places as the
+ * only ones, one form per page, so the inline service-page form and its
+ * `service` prop are gone.
  *
- * Netlify Forms records repeated inputs sharing a name, so every ticked box
- * arrives against `service` without changing how the form is wired.
+ * What the cards changed, and what they did not:
+ *   - "What do you need?", the area and "How did you hear about us?" are rows
+ *     of picture cards (./enquiry-cards/), real checkboxes and radios that
+ *     swipe on a phone, with arrows and a scrollbar too;
+ *   - the area is one card per area served plus "Somewhere else", which opens
+ *     a box for the area or postcode; what is typed becomes that card's value,
+ *     so the log's Area column still gets one plain answer;
+ *   - the job box has four prompts that start a line ("Room: ", ...), and a
+ *     prompt left unfinished is dropped before sending;
+ *   - "How did you hear about us?" has five answers instead of three.
+ *   Field names are unchanged, and so is every value Make already reads, apart
+ *   from two new sources (Google Maps, ChatGPT). Make scenario 7361484 maps by
+ *   field name, so it needs no change. The PR's field mapping has the detail.
  *
- * Three entries are not live service pages, and all three are deliberate:
- *
- *   Panelling and doors, added 28 September 2026. Wall panelling, doors,
- *   skirting and architraves are work he takes: his Business Profile
- *   description names doors, panelling and skirting, and his reviews describe
- *   all four (ops repo, docs/baseline-record.md). The work page shows it under this
- *   same label. There is no page yet because the photographs are one job's
- *   worth (see the ops repo), and until now these enquiries could only arrive
- *   as "Something else".
- *
- *   Flooring is work he takes. It is a category on his Business Profile with
- *   two services under it, added on the strength of his own description and
- *   repeated mentions in his reviews. There is no page because there is no
- *   usable photography, which is a reason not to publish a page and no reason
- *   at all to refuse the enquiry.
- *
- *   Home office and under-stair storage is one of the six service pages in the
- *   signed scope, deferred on 31 August until its imagery exists. The page is
- *   deferred; the work is not.
- */
-const CHOICES = [
-  // serviceLabel, not title: this list is read by a visitor, and one service
-  // keeps a search term in its own page title that protocol 5 bans everywhere
-  // else. The enquiry log records whatever is ticked, so the label is what
-  // lands in it, and the two stay in step.
-  ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map(serviceLabel),
-  ...DEFERRED_SERVICES.map(serviceLabel),
-  "Panelling and doors",
-  "Flooring",
-  "Something else",
-];
-
-/**
- * WHAT A SERVICE PAGE SHOWS INSTEAD, 5 September 2026, Denis's call.
- *
- * The full list is right where there is no page context: on /contact/, and in
- * the modal, which opens from anywhere. It was wrong on a service page. Under
- * the heading "What do you need?", a reader who had just spent a page on
- * alcove units was shown a menu of seven other services with theirs ticked,
- * at the exact moment they were about to write. That reads as "while you are
- * here, anything else?", which is the one thing this site's voice is not.
- *
- * So a page that already knows the answer shows the answer, plus the escape
- * hatch. Eight checkboxes become two, the enquiry section stops looking like a
- * lead-capture block, and nothing the shared enquiry log records is lost:
- * whatever is ticked still arrives under `service`, in the log's own
- * vocabulary, and anything else a visitor wants goes in the job box below,
- * which is where they would describe it properly anyway.
- *
- * The multi-select itself is not being reversed. Denis's 2 September reasoning
- * stands, that a room being fitted out rarely needs one thing, and the full
- * list is one click away in the modal on every page including this one.
- */
-const choices = service ? [service, "Something else"] : CHOICES;
-const selectedService = service ?? preselectedService;
-
-/**
- * What to write in the job box, shown as a placeholder, 2 Sep 2026 on Denis's
- * ask: give someone a shape to copy so they start typing instead of composing.
- *
- * Each one is the same three things in the same order, because those are the
- * three the first reply actually needs: the room, rough sizes, and what the
- * piece has to hold. Nobody writes that unprompted, and an enquiry without it
- * costs a round trip before anything useful can be said back.
- *
- * KEYED BY serviceLabel, NOT BY TITLE, corrected 5 September 2026. A service
- * page passes the label, because that is the vocabulary the checkboxes and the
- * enquiry log are built from, and one service's label and title differ: media
- * walls keeps the search term in its own page title and is called "Built-in TV
- * units" everywhere else. Keyed by title, that page silently fell through to
- * the wardrobe example. One vocabulary, one lookup.
- *
- * The contact page and the modal have no service, so they get the wardrobe
- * example: it is the commonest job and it models the same shape.
- *
- * These are examples, not claims. Keep the numbers ordinary and the language
- * the way a person would actually type it.
- */
-const JOB_EXAMPLE_DEFAULT =
-  "Bedroom wall about 3m wide and 2.4m to the ceiling. Hanging both sides, drawers in the middle.";
-
-const JOB_EXAMPLES: Record<string, string> = {
-  "Fitted wardrobes": JOB_EXAMPLE_DEFAULT,
-  "Walk-in wardrobes":
-    "Box room about 2m by 2.5m. Hanging on two walls, shoe shelves and a bank of drawers.",
-  "Alcove units and shelving":
-    "Two alcoves either side of the chimney breast, about 1m wide. Cupboards below, open shelves above.",
-  "Built-in TV units":
-    "Living room chimney wall, 65 inch TV. Cables and a console to hide, sockets already there.",
-  "Bespoke kitchens":
-    "Galley kitchen about 4m long. One wall of units and a tall run for the oven and fridge.",
-  "Home office and under-stair storage":
-    "Under the stairs, about 2m along and sloping. Coats, shoes and a bit of shelving.",
-};
-
-const jobExample = (selectedService && JOB_EXAMPLES[selectedService]) || JOB_EXAMPLE_DEFAULT;
-
-/**
- * "How did you hear about us?" was a free-text box until 2 September 2026.
- * It is a dropdown now, Denis's call, and the option list is not cosmetic.
- *
- * This answer is the one the shared enquiry log records in its "Found us via"
- * column, and clause 2 of the agreement counts an enquiry as F2F-generated
- * when it is "recorded as having found you through Google or the website".
- *
- * `value` matches the log's own vocabulary (its Channel column validates
- * against a list carrying Referral and Other) while the label stays in the
- * words a visitor would use. Change one, change the log.
- *
- * THE SEARCH OPTION IS NOT "GOOGLE". Widened 2 September 2026, Denis's point:
- * a lead can arrive from Bing or DuckDuckGo, and a bare "Google" would push
- * them into "Something else" or make them answer wrongly. The label names
- * Google anyway, because that is the word people use for searching, and adds
- * the rest so nobody hesitates. Nothing is lost by not isolating Google here:
- * Search Console and the Business Profile measure Google far more precisely
- * than a self-reported dropdown ever could, and what this field uniquely
- * catches is the traffic no analytics can see.
- *
- * THERE IS NO "WEBSITE" OPTION, and that is deliberate. It shipped with one
- * for a few hours on 2 September and Denis removed it the same day, correctly:
- * anyone filling this form in is already on the website, so the website cannot
- * be how they heard about us. The question would have invited a shrug, and a
- * shrugged answer is worse than an empty one because it still looks like data.
- * The genuine website-found case is a visitor who browses, then phones or
- * messages: that arrives on another channel entirely and the log records it
- * there. Nothing is lost by leaving it off the form.
- *
- * "Something else" is the escape hatch: a lead from a citation site or a van
- * sign would otherwise pick one of two wrong answers, and a mislabelled
- * attribution is a commission figure we cannot defend. The log carries "Other"
- * for the same reason.
- *
- * Left optional, as the text box was. Never add a required field to a lead
- * form to improve our own reporting.
- */
-const SOURCES = [
-  { value: "Search", label: "Google or another search engine" },
-  { value: "Referral", label: "Someone recommended you" },
-  { value: "Something else", label: "Something else" },
-];
-
-/**
- * Netlify Forms. The site is already on Netlify so this costs nothing and adds
- * no infrastructure, and it produces a timestamped, attributable record.
- *
- * That record is the point. The agreement counts website enquiries as
- * F2F-generated, and without it attribution rests on recall. Photo upload and
- * "how did you hear about us" are both named in the signed scope.
+ * NETLIFY FORMS. The site is already on Netlify so this costs nothing and adds
+ * no infrastructure, and it produces a timestamped, attributable record. That
+ * record is the point: the agreement counts website enquiries as F2F-generated,
+ * and without it attribution rests on recall. Photo upload and "how did you
+ * hear about us" are both named in the signed scope. Netlify registers the
+ * form and its fields by reading the built HTML at deploy, which is why every
+ * field below, the hidden ones included, is real markup.
  *
  * Never reuse the old QuoteRequest.tsx. Its submit handler set a success flag
  * and discarded everything, while telling the visitor they would hear back
  * within 24 hours.
- *
- * STYLED ON THE DESIGN TOKENS since 2 Sep 2026. The form arrived with the
- * scaffold's Tailwind utilities, and the token base stylesheet resets
- * `button` outside any cascade layer, which beats a layered utility however
- * late it loads: the submit button rendered as bare text with no background
- * on every page. The scoped rules below are unlayered too, and carry the
- * specificity to win. Field names, ids and Netlify attributes are untouched.
  */
+import CardGroup from "./enquiry-cards/CardGroup.astro";
+import {
+  AREA_CHOICES,
+  JOB_EXAMPLE_DEFAULT,
+  JOB_EXAMPLES,
+  SERVICE_CHOICES,
+  SOURCE_CHOICES,
+} from "./enquiry-cards/choices";
+import { FIELD_NAMES as SOURCE_FIELDS } from "../scripts/enquiry-source.mjs";
+import "./enquiry-cards/enquiry-cards.css";
+
+interface Props {
+  compact?: boolean;
+  /** Prefix for element ids, so two forms on one page never repeat an id.
+      Field names are untouched: same Netlify form. */
+  idPrefix?: string;
+  /** Tick this service on arrival and keep the full list. The pop-up passes
+      the service of the page it opens from (Base.astro, enquiryService); on
+      any other page nothing is ticked, rather than silently defaulting to
+      fitted wardrobes, which is what every alcove enquiry used to arrive as. */
+  preselectedService?: string;
+}
+const { compact = false, idPrefix = "", preselectedService } = Astro.props;
+const turnstileSiteKey = import.meta.env.PUBLIC_SS_TURNSTILE_SITE_KEY;
+const largeUploadsEnabled = Boolean(turnstileSiteKey);
+
+const selectedService = preselectedService;
+const jobExample = (selectedService && JOB_EXAMPLES[selectedService]) || JOB_EXAMPLE_DEFAULT;
+
+/* Four prompts above the job box: the three its help line names, plus timing,
+   which the first reply needs for the lead time. Each starts a line the
+   visitor finishes. */
+const PROMPTS = [
+  { label: "The room", starter: "Room: " },
+  { label: "Rough sizes", starter: "Rough sizes: " },
+  { label: "What it needs to hold", starter: "Needs to hold: " },
+  { label: "When you'd like it", starter: "Timing: " },
+];
 ---
 
 <form
@@ -198,7 +80,8 @@ const SOURCES = [
   netlify-honeypot="company-website"
   enctype="multipart/form-data"
   action="/thanks/"
-  class:list={["enquiry-form", compact && "is-compact"]}
+  class:list={["enquiry-form", "ecf", compact && "is-compact"]}
+  data-ec-form
 >
   <input type="hidden" name="form-name" value="enquiry" />
   {/* ONE EMAIL PER ENQUIRY, 8 Oct 2026, Denis's ask. Netlify sent every
@@ -223,155 +106,167 @@ const SOURCES = [
     <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
   </p>
 
-  <div class="row">
-    <div>
-      <label for={`${idPrefix}name`}>Your name</label>
-      <input id={`${idPrefix}name`} name="name" type="text" required autocomplete="name" />
+  {/* Labels inside the boxes (a founder, 14 Nov 2026): each label is still a
+      real <label for>, which is also the heading Netlify gives the field in
+      the notification email. */}
+  <div class="ecf-row">
+    <div class="ecf-float">
+      <input class="ecf-input" id={`${idPrefix}name`} name="name" type="text" required autocomplete="name" placeholder=" " />
+      <label class="ecf-float-label" for={`${idPrefix}name`}>Your name</label>
     </div>
-    <div>
-      <label for={`${idPrefix}phone`}>Phone</label>
-      <input id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel" />
+    <div class="ecf-float">
+      <input class="ecf-input" id={`${idPrefix}phone`} name="phone" type="tel" required autocomplete="tel" placeholder=" " />
+      <label class="ecf-float-label" for={`${idPrefix}phone`}>Phone</label>
+    </div>
+    <div class="ecf-float">
+      <input class="ecf-input" id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" placeholder=" " />
+      <label class="ecf-float-label" for={`${idPrefix}email`}>Email</label>
     </div>
   </div>
 
-  <div>
-    <label for={`${idPrefix}email`}>Email</label>
-    <input id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" />
-  </div>
+  {/* Checkboxes rather than a single choice since 2 September 2026, Denis's
+      call: a room being fitted out rarely needs one thing. Netlify Forms
+      records repeated inputs sharing a name, so every ticked box arrives
+      against `service`. */}
+  <CardGroup
+    legend="What do you need?"
+    help={selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
+    name="service"
+    type="checkbox"
+    choices={SERVICE_CHOICES}
+    idPrefix={idPrefix}
+    checked={selectedService ? [selectedService] : []}
+    emailHeading
+    showChosen
+  />
 
-  <fieldset class="choices-field">
-    <legend>What do you need?</legend>
-    <p class="help">
-      {selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
-    </p>
-    {/* THE EMAIL HEADING FOR THIS FIELD, 8 Oct 2026, Denis's ask. Netlify
-        labels a checkbox group with the label of its first box, so every
-        notification read "Fitted wardrobes: Alcove units and shelving", as if
-        wardrobes had been asked for. The legend does not help: Netlify ignores
-        it (a known, unfixed Netlify bug). An unlabelled box first in the group
-        makes Netlify fall back to the field's name, so the line reads
-        "Service: Alcove units and shelving". It is never ticked, so it never
-        sends a value, and `service` stays the name the Make scenario maps.
-        Wrapped in a hidden paragraph like the honeypot, because the input rule
-        below sets display: block, which would beat a hidden attribute on the
-        box itself. */}
-    <p hidden><input type="checkbox" name="service" value="" tabindex="-1" /></p>
-    <div class="choices">
-      {choices.map((label, i) => (
-        <label class="choice" for={`${idPrefix}service-${i}`}>
-          <input
-            id={`${idPrefix}service-${i}`}
-            type="checkbox"
-            name="service"
-            value={label}
-            checked={selectedService === label}
-          />
-          <span>{label}</span>
-        </label>
-      ))}
-    </div>
-  </fieldset>
-
-  <div>
-    <label for={`${idPrefix}area`}>Which area of north London?</label>
-    <input
-      id={`${idPrefix}area`} name="area" type="text"
-      placeholder="Hampstead, Camden, or your postcode"
-    />
-  </div>
-
-  <div>
-    <label for={`${idPrefix}detail`}>Tell us about the job</label>
-    <p class="help">The room, rough sizes, and what it needs to hold is plenty.</p>
-    <textarea
-      id={`${idPrefix}detail`}
-      name="detail"
-      rows={compact ? 3 : 5}
-      placeholder={jobExample}
-      aria-describedby={`${idPrefix}link-limit`}
-    ></textarea>
-    {/* 19 Oct 2026. Netlify drops an enquiry that carries too many links, and
-        the visitor still sees the thank-you page. The script refuses to send
-        one and says why here, under the box the links usually go in. */}
-    <p class="help link-limit" id={`${idPrefix}link-limit`} role="alert" data-link-limit hidden></p>
-  </div>
-
-  {largeUploadsEnabled ? (
-    <fieldset class="attachments-field" data-upload-fieldset hidden>
-      <legend>Photos or drawings (optional)</legend>
-      <p class="help" id={`${idPrefix}attachments-help`}>
-        Add up to six photos, plans or documents, up to 15 MB each and 60 MB together. Choose
-        several at once or add them one at a time. They upload when you send the enquiry.
-      </p>
-      {/* 24 Sep 2026. The bare file input replaced its selection on every pick
-          and could only take several files with Ctrl held down, which nobody
-          knows to do. It is now visually hidden behind an Add files button:
-          every pick adds to the list below, and each file can be removed on its
-          own. The list, not the input, is what gets uploaded. */}
-      <div class="attachments-add">
-        <input
-          id={`${idPrefix}attachments`}
-          class="attachments-input"
-          type="file"
-          multiple
-          disabled
-          data-enquiry-files
-          aria-describedby={`${idPrefix}attachments-help ${idPrefix}attachments-count ${idPrefix}attachments-notice ${idPrefix}attachments-error`}
-          accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
-        />
-        <label for={`${idPrefix}attachments`} class="attachments-button" data-add-files>Add files</label>
-        <p class="help attachments-count" id={`${idPrefix}attachments-count`} aria-live="polite" data-file-count>
-          No files added yet.
-        </p>
+  <CardGroup
+    legend="Which area of north London?"
+    help="Pick the nearest."
+    name="area"
+    type="radio"
+    choices={AREA_CHOICES}
+    idPrefix={idPrefix}
+    role="area"
+    emailHeading
+    showChosen
+  >
+    <p class="ecf-help ec-nojs">Somewhere else? Say where in the job box.</p>
+    {/* No name of its own, so it is never sent by itself: what is typed here
+        becomes the Somewhere else card's value (./enquiry-cards/client.ts). */}
+    <div class="ec-other" data-ec-other hidden>
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}area-other`} type="text" data-ec-other-input placeholder="Finchley, or your postcode" />
+        <label class="ecf-float-label" for={`${idPrefix}area-other`}>Your area or postcode</label>
       </div>
-      <ul class="attachments-list" data-file-list hidden></ul>
-      {/* 19 Oct 2026. Files the form turns away are named here, next to the
-          list, and stay until the next pick. They used to share the error line
-          at the foot of the fieldset, which the upload check cleared a second
-          later, so a phone that picked five and kept two showed no reason. */}
-      <p class="help attachment-notice" id={`${idPrefix}attachments-notice`} role="alert" data-file-notice hidden></p>
-      <div
-        id={`${idPrefix}upload-challenge`}
-        class="upload-challenge"
-        data-upload-challenge
-        data-sitekey={turnstileSiteKey}
-        hidden
-      ></div>
-      <p class="help upload-status" role="status" data-upload-status hidden></p>
-      <p class="help attachment-error" id={`${idPrefix}attachments-error`} role="alert" data-attachment-error hidden></p>
-      {/* 19 Oct 2026. The attachment_links field is gone. It carried every link
-          a second time. Netlify drops a submission with more than five links
-          (tested that day), so the enquiry now carries one link, to a page
-          listing all its files, in the job description that Make copies into
-          the CRM. */}
-    </fieldset>
-    <noscript><p class="help">Send your enquiry now and share files when we reply.</p></noscript>
-  ) : (
-    <div>
-      <label for={`${idPrefix}attachment`}>A photo or drawing (optional)</label>
-      <p class="help" id={`${idPrefix}attachment-help`}>
-        One file, up to 8 MB. PDF, Word and photographs work. Send anything else when we reply.
-      </p>
-      <input
-        id={`${idPrefix}attachment`}
-        name="attachment"
-        type="file"
-        aria-describedby={`${idPrefix}attachment-help`}
-        accept="image/*,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,.pdf,.doc,.docx"
-      />
     </div>
-  )}
+  </CardGroup>
 
-  <div>
-    <label for={`${idPrefix}source`}>How did you hear about us?</label>
-    <select id={`${idPrefix}source`} name="source">
-      <option value="" selected>Choose one</option>
-      {SOURCES.map((o) => <option value={o.value}>{o.label}</option>)}
-    </select>
+  <div class="ecf-pair">
+    <div>
+      <label class="ecf-label" for={`${idPrefix}detail`}>Tell us about the job</label>
+      <p class="ecf-help">The room, rough sizes, and what it needs to hold is plenty.</p>
+      <div class="eca-prompts" data-ec-prompts role="group" aria-label="Start a line in the box below" hidden>
+        {PROMPTS.map((p) => (
+          <button type="button" class="eca-prompt" data-starter={p.starter}><span class="eca-mark" aria-hidden="true"></span>{p.label}</button>
+        ))}
+      </div>
+      {/* The placeholder is an example to copy, 2 Sep 2026 on Denis's ask
+          (./enquiry-cards/choices.ts, JOB_EXAMPLES). */}
+      <textarea
+        class="ecf-input"
+        id={`${idPrefix}detail`}
+        name="detail"
+        rows={compact ? 4 : 5}
+        placeholder={jobExample}
+        aria-describedby={`${idPrefix}link-limit`}
+      ></textarea>
+      {/* 19 Oct 2026. Netlify drops an enquiry that carries too many links, and
+          the visitor still sees the thank-you page. The script refuses to send
+          one and says why here, under the box the links usually go in. */}
+      <p class="ecf-help link-limit" id={`${idPrefix}link-limit`} role="alert" data-link-limit hidden></p>
+    </div>
+
+    <div>
+      {largeUploadsEnabled ? (
+        <fieldset class="attachments-field" data-upload-fieldset hidden>
+          <legend class="ecf-label">Photos or drawings (optional)</legend>
+          <p class="ecf-help" id={`${idPrefix}attachments-help`}>
+            Add up to six photos, plans or documents, up to 15 MB each and 60 MB together.
+          </p>
+          {/* 24 Sep 2026. The bare file input replaced its selection on every pick
+              and could only take several files with Ctrl held down, which nobody
+              knows to do. It is now visually hidden behind an Add files button:
+              every pick adds to the list below, and each file can be removed on its
+              own. The list, not the input, is what gets uploaded. */}
+          <div class="attachments-add">
+            <input
+              id={`${idPrefix}attachments`}
+              class="attachments-input"
+              type="file"
+              multiple
+              disabled
+              data-enquiry-files
+              aria-describedby={`${idPrefix}attachments-help ${idPrefix}attachments-count ${idPrefix}attachments-notice ${idPrefix}attachments-error`}
+              accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
+            />
+            <label for={`${idPrefix}attachments`} class="attachments-button" data-add-files>Add files</label>
+            <p class="ecf-help attachments-count" id={`${idPrefix}attachments-count`} aria-live="polite" data-file-count>
+              No files added yet.
+            </p>
+          </div>
+          <ul class="attachments-list" data-file-list hidden></ul>
+          {/* 19 Oct 2026. Files the form turns away are named here, next to the
+              list, and stay until the next pick. They used to share the error line
+              at the foot of the fieldset, which the upload check cleared a second
+              later, so a phone that picked five and kept two showed no reason. */}
+          <p class="ecf-help attachment-notice" id={`${idPrefix}attachments-notice`} role="alert" data-file-notice hidden></p>
+          <div
+            id={`${idPrefix}upload-challenge`}
+            class="upload-challenge"
+            data-upload-challenge
+            data-sitekey={turnstileSiteKey}
+            hidden
+          ></div>
+          <p class="ecf-help upload-status" role="status" data-upload-status hidden></p>
+          <p class="ecf-help attachment-error" id={`${idPrefix}attachments-error`} role="alert" data-attachment-error hidden></p>
+          {/* 19 Oct 2026. The attachment_links field is gone. It carried every link
+              a second time. Netlify drops a submission with more than five links
+              (tested that day), so the enquiry now carries one link, to a page
+              listing all its files, in the job description that Make copies into
+              the CRM. */}
+        </fieldset>
+        <noscript><p class="ecf-help">Send your enquiry now and share files when we reply.</p></noscript>
+      ) : (
+        <div>
+          <label class="ecf-label" for={`${idPrefix}attachment`}>A photo or drawing (optional)</label>
+          <p class="ecf-help" id={`${idPrefix}attachment-help`}>
+            One file, up to 8 MB. PDF, Word and photographs work. Send anything else when we reply.
+          </p>
+          <input
+            id={`${idPrefix}attachment`}
+            class="ecf-input"
+            name="attachment"
+            type="file"
+            aria-describedby={`${idPrefix}attachment-help`}
+            accept="image/*,.jpg,.jpeg,.png,.heic,.heif,.webp,application/pdf,.pdf,.doc,.docx"
+          />
+        </div>
+      )}
+    </div>
   </div>
 
-  <div class="actions">
-    <button type="submit">Send enquiry</button>
+  <CardGroup
+    legend="How did you hear about us?"
+    name="source"
+    type="radio"
+    choices={SOURCE_CHOICES}
+    idPrefix={idPrefix}
+    emailHeading
+  />
+
+  <div class="ecf-actions">
+    <button type="submit" class="ecf-send">Send enquiry</button>
   </div>
 
   {/* "to reply to this enquiry and nothing else" was narrower than the privacy
@@ -380,68 +275,26 @@ const SOURCES = [
       visitor decides whether to hand over their name, phone, email and
       photographs of their home, the tighter promise was the one they would
       remember. The two now say the same thing. (4 Sep 2026) */}
-  <p class="help">
+  <p class="ecf-help">
     We use your details to reply, to quote, and to carry out the work if you go ahead. We do not add
     you to a marketing list. See our{" "}
     <a href="/privacy/">privacy notice</a>.
   </p>
 </form>
 
+<script>
+  import { initEnquiryCards } from "./enquiry-cards/client";
+  initEnquiryCards();
+</script>
+
 <style>
-  .enquiry-form {
-    display: grid;
-    gap: var(--space-9);
-  }
-  .enquiry-form.is-compact {
-    gap: var(--space-8);
-  }
-  .enquiry-form .row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
-    gap: var(--space-8);
-  }
-  .enquiry-form label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: var(--type-mono);
-    letter-spacing: var(--ls-mono-table);
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: var(--space-3);
-  }
-  .enquiry-form input,
-  .enquiry-form select,
-  .enquiry-form textarea {
-    display: block;
-    width: 100%;
-    font: inherit;
-    font-size: var(--type-body);
-    color: var(--char);
-    background: var(--paper);
-    border: var(--rule-hair);
-    border-radius: 0;
-    padding: var(--space-5) var(--space-6);
-    transition: border-color var(--t-fast) var(--ease-out);
-  }
-  .enquiry-form input:focus,
-  .enquiry-form select:focus,
-  .enquiry-form textarea:focus {
-    border-color: var(--hair-strong);
-  }
-  .enquiry-form textarea {
-    resize: vertical;
-    min-height: 5.5em;
-  }
-  /* Lighter than a typed value, so an example never reads as something already
-     entered, and dark enough to be worth reading.
-     0.45 until 5 Sep 2026, which measured 2.74:1 on paper against WCAG 1.4.3's
-     4.5:1 floor, on the area field and the job-description box of every form on
-     this site. --ink-soft is the value this palette has already proved at
-     5.06:1, and a field's own value renders in full ink, so a placeholder is
-     still visibly not an answer. */
-  .enquiry-form ::placeholder {
-    color: var(--ink-soft);
-    opacity: 1;
+  /* The photo upload, as it was before the cards. Field, label and button
+     styles are the cards' stylesheet (./enquiry-cards/enquiry-cards.css). */
+  .enquiry-form fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
   }
   .enquiry-form input[type="file"] {
     font-size: var(--type-body-sm);
@@ -595,111 +448,6 @@ const SOURCES = [
   .enquiry-form .link-limit[hidden] {
     display: none;
   }
-  .enquiry-form fieldset {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    min-width: 0;
-  }
-  .enquiry-form legend {
-    padding: 0;
-    font-family: var(--font-mono);
-    font-size: var(--type-mono);
-    letter-spacing: var(--ls-mono-table);
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-  .enquiry-form .choices-field .help {
-    margin: var(--space-3) 0 var(--space-6);
-  }
-  .enquiry-form .choices {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr));
-    gap: var(--space-5) var(--space-9);
-  }
-  /* The choices are values, not field labels, so they read as body text. The
-     design system draws the same line in its spec tables: mono for the label
-     column, body for what it says. Without this they inherit the mono
-     uppercase of every other label in the form and eight of them in a column
-     read as a wall. */
-  .enquiry-form .choice {
-    font-family: var(--font-sans);
-    font-weight: var(--weight-regular);
-    letter-spacing: normal;
-    text-transform: none;
-    color: var(--char);
-    margin-bottom: 0;
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-6);
-    font-size: var(--type-body-sm);
-    cursor: pointer;
-    /* A tap target rather than a line of text: these sit close together and
-       are the first thing a thumb reaches for. */
-    padding: var(--space-3) 0;
-    min-height: 30px;
-  }
-  /* On a phone the whole row has to clear the 44px a thumb needs. It is worth
-     the extra height here: a mis-tap on this field sends the wrong enquiry. */
-  @media (max-width: 640px) {
-    .enquiry-form .choice {
-      min-height: 44px;
-      padding: var(--space-5) 0;
-    }
-  }
-  /* 20px, was 16 (7 Sep 2026). The tap target is the whole .choice label,
-     which clears 30px on desktop and 44px on a phone, so the box itself is
-     drawn for the eye rather than the thumb; 20 sits better against the
-     label text than 16 did. */
-  .enquiry-form .choice input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    flex: none;
-    padding: 0;
-    border: var(--rule-structure);
-    background: var(--paper);
-    accent-color: var(--green);
-    cursor: pointer;
-  }
-  .enquiry-form .help {
-    font-size: var(--type-body-sm);
-    color: var(--text-quiet);
-    margin: 0;
-  }
-  .enquiry-form label + .help {
-    margin: calc(var(--space-3) * -1) 0 var(--space-4);
-  }
-  .enquiry-form .help a {
-    color: var(--green);
-    border-bottom: 1px solid rgba(44, 74, 58, 0.4);
-  }
-  .enquiry-form .actions {
-    padding-top: var(--space-3);
-  }
-  /* Specific enough to beat the token base sheet's `button { background: none }`. */
-  form.enquiry-form button[type="submit"] {
-    font-family: var(--font-sans);
-    font-weight: var(--weight-medium);
-    font-size: var(--type-label);
-    letter-spacing: var(--ls-label);
-    text-transform: uppercase;
-    color: var(--paper);
-    background: var(--green);
-    border: 1px solid var(--green);
-    padding: var(--space-7) var(--space-12);
-    cursor: pointer;
-    transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
-  }
-  form.enquiry-form button[type="submit"]:hover,
-  form.enquiry-form button[type="submit"]:focus-visible {
-    background: var(--char);
-    border-color: var(--char);
-  }
-  @media (max-width: 520px) {
-    form.enquiry-form button[type="submit"] {
-      width: 100%;
-    }
-  }
 </style>
 
 {/*
@@ -712,8 +460,8 @@ const SOURCES = [
   verified. Netlify Forms kept every lead; what was lost is GA4's count of the
   one channel the agreement lists first. Restored 3 Sep 2026.
 
-  Document level and armed once: the form renders twice on most pages (the page
-  form and the site-wide modal), and one listener covers both. Inline rather
+  Document level and armed once: the form renders twice on /contact/ (the page
+  form and the site-wide pop-up), and one listener covers both. Inline rather
   than a module so it is live before a fast submitter can beat the hydration.
 */}
 <script is:inline>
@@ -840,12 +588,18 @@ const SOURCES = [
     // While files upload, the text boxes are read-only: the enquiry is built
     // from them after the uploads, so a link typed mid-upload would otherwise
     // reach Netlify without ever passing the link check.
+    // The area is a group of cards since 14 Nov 2026: its only box is the one
+    // under Somewhere else, which has no name of its own. The cards themselves
+    // stay as they are, since a disabled card would drop out of the enquiry,
+    // and a card cannot carry a link.
     const setBusy = (form, busy) => {
       stateFor(form).busy = busy;
-      for (const name of ["name", "phone", "email", "area", "detail"]) {
+      for (const name of ["name", "phone", "email", "detail"]) {
         const field = form.elements.namedItem(name);
         if (field) field.readOnly = busy;
       }
+      const otherArea = form.querySelector("[data-ec-other-input]");
+      if (otherArea) otherArea.readOnly = busy;
       renderFiles(form);
     };
 
@@ -876,11 +630,15 @@ const SOURCES = [
     const linkProblem = (form, detailText, withFiles, ownLinks = 0) => {
       // The email box is checked for "://" only: an address at a www.
       // domain is a real address, but no address holds a scheme.
+      // The area is a group of radios, whose value is the chosen card's. A
+      // link there can only have been typed in the Somewhere else box, so
+      // that box is the one the message goes under.
       for (const name of ["name", "phone", "area", "email"]) {
         const field = form.elements.namedItem(name);
         const value = String(field?.value || "");
         if (field && (name === "email" ? value.includes("://") : countLinks(value))) {
-          return { field, message: "Web links can only go in the job description. Take the link out of this box and add it there." };
+          const box = field instanceof Element ? field : form.querySelector("[data-ec-other-input]");
+          return { field: box, message: "Web links can only go in the job description. Take the link out of this box and add it there." };
         }
       }
       const limit = withFiles ? 4 : 5;
@@ -993,7 +751,8 @@ const SOURCES = [
     // The link message clears as soon as any box it can be about is edited.
     document.addEventListener("input", (event) => {
       const field = event.target;
-      if (["name", "phone", "area", "detail"].includes(field?.name) && field.form?.getAttribute("name") === "enquiry") {
+      const watched = ["name", "phone", "area", "detail"].includes(field?.name) || field?.matches?.("[data-ec-other-input]");
+      if (watched && field.form?.getAttribute("name") === "enquiry") {
         showLinkLimit(field.form, "");
       }
     });

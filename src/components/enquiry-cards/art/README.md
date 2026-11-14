@@ -1,8 +1,9 @@
 # Enquiry card drawings
 
-The small line drawings on the enquiry form's choice cards (14 Nov 2026 preview,
-options A and B). One drawing per card: the services, the areas, the ways
-people hear about us, and option B's rough-width picker.
+The small line drawings on the enquiry form's choice cards (14 Nov 2026,
+option A of the two previews, live across the site since a founder picked it
+the same day). One drawing per card: the services, the areas and the ways
+people hear about us.
 
 They render once per page as an SVG sprite (`ArtSprite.astro`) and every card
 points at its drawing with `<use>`, so a form that appears twice on a page (the
@@ -40,7 +41,7 @@ nothing in this brand is rounded. Numbers to one decimal place at most.
 
 ## The style
 
-- Services and the width picker: a flat front elevation, like the site's
+- Services: a flat front elevation, like the site's
   wardrobe drawing. A floor hairline (`h`), the piece in `k`, inside detail in
   `t`, one green accent (`g`) on the thing that matters (a rail, a shelf line,
   a dimension).

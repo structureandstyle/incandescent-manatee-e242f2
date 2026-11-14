@@ -1,7 +1,8 @@
 /**
  * What each picture card on the enquiry form says, what it sends, and which
- * drawing it shows. Preview only (options A and B, 14 Nov 2026): the live form
- * is src/components/EnquiryForm.astro and is untouched until a founder picks.
+ * drawing it shows. Option A of the 14 Nov 2026 previews, which a founder
+ * picked the same day to replace the live form everywhere it appears: the
+ * Get a quote pop-up and /contact/ (src/components/EnquiryForm.astro).
  *
  * VALUES ARE THE CONTRACT. Netlify records them, the notification email shows
  * them, and Make scenario 7361484 copies them into the shared enquiry log by
@@ -19,17 +20,17 @@ export type Choice = {
   sub?: string;
   /** Drawing id in ./art (see ./art/README.md). */
   art: string;
-  /** Option B's width cards: the line the card writes into the job box. */
-  line?: string;
 };
 
 /**
- * "What do you need?" The same list, in the same order, as CHOICES in the live
- * EnquiryForm.astro, built the same way so the two cannot drift: every service
- * page except the cost guide, the deferred home office page, then the three
- * that have no page. Its header comment says why each of the last three is
- * there. serviceLabel, so media walls reads "Built-in TV units", the label the
- * log already records.
+ * "What do you need?" The same list, in the same order, as the checkboxes the
+ * form had before the cards (2 Sep 2026, Denis's call: tick everything that
+ * applies): every service page except the cost guide, the deferred home
+ * office page, then three with no page of their own. Panelling and doors
+ * (28 Sep 2026) and flooring are work he takes, named on his Business Profile
+ * and in his reviews, with no page because there are no photographs yet; the
+ * home office page is deferred, the work is not. serviceLabel, so media walls
+ * reads "Built-in TV units", the label the log already records.
  */
 const SERVICE_ART: Record<string, string> = {
   "Fitted wardrobes": "fitted-wardrobes",
@@ -72,14 +73,23 @@ export const AREA_CHOICES: Choice[] = [
 
 /**
  * "How did you hear about us?" Split into five on 14 Nov 2026, a founder's
- * ask. Three values are the ones the live form sends today (Search, Referral,
+ * ask. Three values are the ones the form sent before (Search, Referral,
  * Something else), so nothing that already reads them changes. Two are new
- * (Google Maps, ChatGPT): see the field mapping in the pull request.
+ * (Google Maps, ChatGPT): see the field mapping in site PR #43. The shared
+ * log's Lead source dropdown only warns on a word it does not list, so the
+ * row still lands.
+ *
+ * This answer is the one the log records as the lead source, and clause 2 of
+ * the agreement counts an enquiry as F2F-generated when it is "recorded as
+ * having found you through Google or the website". Change a value, change
+ * the log.
  *
  * The Google card keeps "or another search engine" under its name, Denis's
  * 2 Sep 2026 point: a Bing or DuckDuckGo visitor should not have to pick
- * "Something else". There is still no "Website" option, for the reason the
- * live form's comment gives.
+ * "Something else". There is no "Website" option, deliberately (Denis,
+ * 2 Sep 2026): anyone filling the form in is already on the website, so it
+ * cannot be how they heard about us. Left optional: never add a required
+ * field to a lead form to improve our own reporting.
  */
 export const SOURCE_CHOICES: Choice[] = [
   { value: "Search", label: "Google", sub: "or another search engine", art: "source-search" },
@@ -89,32 +99,19 @@ export const SOURCE_CHOICES: Choice[] = [
   { value: "Something else", label: "Something else", art: "source-other" },
 ];
 
-/**
- * Option B only: "Roughly how wide is it?" Not a field of its own. Picking a
- * card writes its line at the top of the job box, where the visitor can see
- * and change it, so `detail` stays the one place the job is described. `line`
- * is that text.
- */
-export type WidthChoice = Choice & { line: string };
-
-export const WIDTH_CHOICES: WidthChoice[] = [
-  { value: "1", label: "Up to 1m", sub: "one alcove", art: "width-1", line: "Rough width: up to 1m" },
-  { value: "2", label: "1 to 2m", art: "width-2", line: "Rough width: 1 to 2m" },
-  { value: "3", label: "2 to 3m", art: "width-3", line: "Rough width: 2 to 3m" },
-  { value: "4", label: "3 to 4m", art: "width-4", line: "Rough width: 3 to 4m" },
-  { value: "5", label: "Over 4m", sub: "a whole wall or more", art: "width-5", line: "Rough width: over 4m" },
-  { value: "6", label: "Not sure yet", art: "width-unsure", line: "Rough width: not sure yet" },
-];
-
 /** Every drawing id the cards use, for the sprite. */
 export const ART_IDS = [
-  ...new Set([...SERVICE_CHOICES, ...AREA_CHOICES, ...SOURCE_CHOICES, ...WIDTH_CHOICES].map((c) => c.art)),
+  ...new Set([...SERVICE_CHOICES, ...AREA_CHOICES, ...SOURCE_CHOICES].map((c) => c.art)),
 ];
 
 /**
- * The example in the job box, by service label. Copied word for word from
- * JOB_EXAMPLES in the live EnquiryForm.astro (2 and 5 Sep 2026, Denis's ask),
- * whose comment says why each is the room, rough sizes and what it holds.
+ * The example in the job box, by service label, 2 Sep 2026 on Denis's ask:
+ * give someone a shape to copy so they start typing instead of composing.
+ * Each is the same three things in the same order, the three the first reply
+ * needs: the room, rough sizes, and what the piece has to hold. Keyed by
+ * serviceLabel, not title (5 Sep 2026): media walls keeps the search term in
+ * its page title and is "Built-in TV units" everywhere else. These are
+ * examples, not claims: ordinary numbers, the way a person would type it.
  */
 export const JOB_EXAMPLE_DEFAULT =
   "Bedroom wall about 3m wide and 2.4m to the ceiling. Hanging both sides, drawers in the middle.";
