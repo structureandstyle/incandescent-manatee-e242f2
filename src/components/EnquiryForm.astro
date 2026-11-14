@@ -806,12 +806,21 @@ const PROMPTS = [
     });
 
     // The notification email's subject, so each enquiry opens its own thread
-    // and reads at a glance in the inbox: "Website enquiry from Nuno: Alcove
-    // units and shelving, Hendon". Set here, before either way of sending
-    // builds the form data. Line breaks, control and invisible direction
-    // characters, and links are taken out, since this text ends up in an
-    // email header and every link counts against the enquiry. The cut counts
-    // characters, not code units, so it cannot split an emoji.
+    // and reads at a glance in the inbox. NAME / AREA / SERVICE since 14 Nov
+    // 2026, a founder's call ("keep it short: Name/Postcode/Service"):
+    // "Nuno / Hendon / Alcove units and shelving", and with several services
+    // ticked the first and how many more, "Denis / Hampstead / Fitted
+    // wardrobes +8". The area is the card chosen, or what was typed under
+    // Somewhere else, which is where a postcode arrives. It replaced
+    // "Website enquiry from Nuno: Alcove units and shelving, Hendon", which a
+    // test with all nine services ticked cut mid-word at 150 characters. The
+    // email body still lists every service. Nothing filters on the old
+    // wording: the team@ Gmail filter for these emails keys on the sender,
+    // formresponses@netlify.com (SOP 09, K2). Set here, before either way of
+    // sending builds the form data. Line breaks, control and invisible
+    // direction characters, and links are taken out, since this text ends up
+    // in an email header and every link counts against the enquiry. The cut
+    // counts characters, not code units, so it cannot split an emoji.
     const setSubject = (form) => {
       const field = form.querySelector('input[name="subject"]');
       if (!field) return;
@@ -833,25 +842,8 @@ const PROMPTS = [
         (box) => clean(box.value),
       ).filter(Boolean);
       const area = clean(form.elements.namedItem("area")?.value);
-      // MANY SERVICES, 14 Nov 2026. A founder's test with all nine ticked was
-      // cut mid-word at 150 characters ("Home office and un...") and lost the
-      // last three and the area. Now the subject names as many whole services
-      // as fit, then "and four more", and keeps the area; the email body
-      // lists every one.
-      const head = `Website enquiry from ${name}`;
-      const tail = area ? `, ${area}` : "";
-      const fits = (text) => Array.from(text).length <= 150;
-      let listed = services.join(", ");
-      if (services.length > 1 && !fits(`${head}: ${listed}${tail}`)) {
-        const words = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-        for (let shown = services.length - 1; shown >= 1; shown -= 1) {
-          const rest = services.length - shown;
-          listed = `${services.slice(0, shown).join(", ")} and ${words[rest - 1] ?? rest} more`;
-          if (fits(`${head}: ${listed}${tail}`)) break;
-        }
-      }
-      const about = [listed, area].filter(Boolean).join(", ");
-      const subject = Array.from(`${head}${about ? `: ${about}` : ""}`);
+      const service = services.length > 1 ? `${services[0]} +${services.length - 1}` : services[0] ?? "";
+      const subject = Array.from([name, area, service].filter(Boolean).join(" / "));
       field.value = subject.length > 150 ? `${subject.slice(0, 147).join("").trimEnd()}...` : subject.join("");
     };
 
