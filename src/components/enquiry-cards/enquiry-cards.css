@@ -208,7 +208,19 @@ form.ecf button.ec-arrow[aria-disabled="true"] { opacity: 0.32; cursor: default;
   text-transform: none;
   color: var(--char);
 }
-.ec-text { min-width: 0; }
+/* A long word ("Hampstead", "recommended") never leaves its card: it is
+   hyphenated (the page is lang="en-GB"), or broken as a last resort on the
+   narrowest phones. A founder saw three area names spill out on a phone,
+   14 Nov 2026; the phone sizes below are what fixed it. */
+.ec-text { min-width: 0; overflow-wrap: break-word; hyphens: auto; }
+
+/* Phones: a smaller label and tick, so the names fit cards that show a
+   little over two at a time. Measured from 360 to 414px wide. */
+@media (max-width: 640px) {
+  .ec-label { gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-5); font-size: 13px; }
+  .ec-input { width: 16px; height: 16px; }
+  .ec-input[type="checkbox"]:checked { background-size: 11px; }
+}
 .ec-sub { display: block; margin-top: 2px; font-size: var(--type-note); color: var(--ink-soft); }
 
 /* The real input, drawn square to match the brand, at the start of the
@@ -272,7 +284,7 @@ html.js .ec-group[data-layout="row"] .ec-cards {
 }
 @media (max-width: 640px) {
   html.js .ec-group[data-layout="row"] .ec-cards {
-    grid-auto-columns: calc((100% - 2 * var(--space-5)) / 2.3);
+    grid-auto-columns: calc((100% - 2 * var(--space-5)) / 2.1);
   }
   html.js .ec-group[data-layout="grid"] .ec-cards {
     grid-template-columns: none;
@@ -289,6 +301,12 @@ html.js .ec-group[data-layout="row"] .ec-cards {
     scrollbar-color: var(--hair-strong) transparent;
   }
 }
+/* The smallest phones (320px): a little under two cards at a time, so long
+   words such as "wardrobes" fit whole rather than hyphenated. */
+@media (max-width: 359px) {
+  html.js .ec-group[data-layout="row"] .ec-cards { grid-auto-columns: calc((100% - var(--space-5)) / 1.85); }
+  html.js .ec-group[data-layout="grid"] .ec-cards { grid-auto-columns: calc((100% - var(--space-5)) / 1.9); }
+}
 @media (prefers-reduced-motion: reduce) {
   .ec-cards { scroll-behavior: auto; }
 }
@@ -298,7 +316,7 @@ html.js .ec-group[data-layout="row"] .ec-cards {
    across it, so the service and area cards sit side by side and show at
    once, scrolling only when a row cannot fit. Sized from the form's own
    width (a container query), so the pop-up, which is narrower, keeps the
-   rows and grids above. Each row shares the width: a card is 96 to 150px
+   rows and grids above. Each row shares the width: a card is 98 to 150px
    wide, so nine services fit on any laptop and the eleven areas fit from
    about 1,300px wide; below that their row scrolls, with its arrows. */
 @container ecf (min-width: 860px) {
@@ -308,7 +326,7 @@ html.js .ec-group[data-layout="row"] .ec-cards {
     grid-template-columns: none;
     grid-template-rows: none;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(96px, 150px);
+    grid-auto-columns: minmax(98px, 150px);
     justify-content: start;
     overflow-x: auto;
     overscroll-behavior-x: contain;
@@ -320,7 +338,7 @@ html.js .ec-group[data-layout="row"] .ec-cards {
     scrollbar-color: var(--hair-strong) transparent;
   }
   .ec-art { padding: var(--space-4) var(--space-3) 0; }
-  .ec-label { gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-4); font-size: 12.5px; hyphens: auto; }
+  .ec-label { gap: 3px; padding: var(--space-3) var(--space-3) var(--space-4); font-size: 12px; }
   .ec-input { width: 16px; height: 16px; }
   .ec-input[type="checkbox"]:checked { background-size: 11px; }
 }
