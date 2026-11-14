@@ -29,9 +29,9 @@ import {
   AREA_CHOICES,
   JOB_EXAMPLE_DEFAULT,
   JOB_EXAMPLES,
+  SERVICE_CHOICES,
   SOURCE_CHOICES,
   WIDTH_CHOICES,
-  serviceChoicesFor,
 } from "./choices";
 import { FIELD_NAMES as SOURCE_FIELDS } from "../../scripts/enquiry-source.mjs";
 import "./enquiry-cards.css";
@@ -39,12 +39,12 @@ import "./enquiry-cards.css";
 interface Props {
   compact?: boolean;
   idPrefix?: string;
-  service?: string;
+  /** As option A: the pop-up on a service page ticks that page's service. */
   preselectedService?: string;
 }
-const { compact = false, idPrefix = "", service, preselectedService } = Astro.props;
+const { compact = false, idPrefix = "", preselectedService } = Astro.props;
 
-const selectedService = service ?? preselectedService;
+const selectedService = preselectedService;
 const jobExample = (selectedService && JOB_EXAMPLES[selectedService]) || JOB_EXAMPLE_DEFAULT;
 const q = (n: number) => `${idPrefix}step-${n}`;
 ---
@@ -77,7 +77,7 @@ const q = (n: number) => `${idPrefix}step-${n}`;
       help={selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
       name="service"
       type="checkbox"
-      choices={serviceChoicesFor(service)}
+      choices={SERVICE_CHOICES}
       idPrefix={idPrefix}
       checked={selectedService ? [selectedService] : []}
       layout="grid"

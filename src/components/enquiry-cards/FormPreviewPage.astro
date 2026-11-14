@@ -4,8 +4,10 @@
  * /form-preview-b/ (14 Nov 2026). Laid out like /contact/: the heading, his
  * paragraph, and the form in its bordered box at the same width. A short
  * internal note says what the option is and links to the other one, and two
- * buttons open the same form as the Get a quote pop-up and as a service page
- * shows it, which is where most visitors meet it.
+ * buttons open the same form as the Get a quote pop-up: once as most pages
+ * open it, and once as a service page does, with its service already ticked.
+ * Once site PR #41 merges, the pop-up and /contact/ are the only places the
+ * form appears (a founder, 14 Nov 2026: one form per page).
  *
  * Both pages are noindexed and kept out of the sitemap by their entry in
  * src/data/page-gates.ts, and nothing on the site links to them. When a
@@ -60,7 +62,7 @@ const NOTES = {
     </p>
     <div class="pv-buttons">
       <button type="button" class="pv-open" data-pv-open={`pv-popup-${variant}`}>Open as the Get a quote pop-up</button>
-      <button type="button" class="pv-open" data-pv-open={`pv-service-${variant}`}>Open as on a service page</button>
+      <button type="button" class="pv-open" data-pv-open={`pv-service-${variant}`}>Open as the pop-up on a service page</button>
     </div>
   </div>
 </Wrap>
@@ -102,15 +104,15 @@ const NOTES = {
 
 <dialog id={`pv-service-${variant}`} class="pv-dialog" aria-labelledby={`pv-service-${variant}-h`}>
   <div class="pv-dialog-head">
-    <MonoLabel as="p" tone="soft">As on the alcove units page</MonoLabel>
+    <MonoLabel as="p" tone="soft">Enquiries, from the alcove units page</MonoLabel>
     <button type="button" class="pv-close" aria-label="Close">&times;</button>
   </div>
-  <h2 id={`pv-service-${variant}-h`} class="pv-dialog-title">A service page shows its own service first.</h2>
+  <h2 id={`pv-service-${variant}-h`} class="pv-dialog-title">If you have a room in mind, start here.</h2>
   <p class="pv-dialog-lede">
-    The first question offers only that service and Something else, already ticked, as the live form
-    does today. Shown here in a window for comparison; on the page it sits in the enquiry section.
+    Opened from a service page, the pop-up has that page's service already ticked, here alcove units,
+    and keeps the full list to add to. The example in the job box matches the service too.
   </p>
-  <Form compact idPrefix={`s${variant}-`} service={SERVICE_DEMO} />
+  <Form compact idPrefix={`s${variant}-`} preselectedService={SERVICE_DEMO} />
 </dialog>
 
 <script>

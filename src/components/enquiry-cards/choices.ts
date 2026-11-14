@@ -43,7 +43,7 @@ const SERVICE_ART: Record<string, string> = {
   "Something else": "service-other",
 };
 
-export const serviceArt = (label: string) => SERVICE_ART[label] ?? "service-other";
+const serviceArt = (label: string) => SERVICE_ART[label] ?? "service-other";
 
 export const SERVICE_CHOICES: Choice[] = [
   ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map(serviceLabel),
@@ -132,9 +132,3 @@ export const JOB_EXAMPLES: Record<string, string> = {
   "Home office and under-stair storage":
     "Under the stairs, about 2m along and sloping. Coats, shoes and a bit of shelving.",
 };
-
-/** The service list a form shows: the full list, or on a service page that service and "Something else". */
-export function serviceChoicesFor(service?: string): Choice[] {
-  if (!service) return SERVICE_CHOICES;
-  return [service, "Something else"].map((label) => ({ value: label, label, art: serviceArt(label) }));
-}

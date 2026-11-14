@@ -4,6 +4,11 @@
  * cards. A preview for a founder to compare with option B (14 Nov 2026); the
  * live form is src/components/EnquiryForm.astro and is unchanged.
  *
+ * Designed for where the form lives once site PR #41 merges (a founder,
+ * 14 Nov 2026: one form per page): the Get a quote pop-up, on every page,
+ * and /contact/. The inline service-page form, with its shortened choice
+ * list, goes with #41, so this form has no `service` prop.
+ *
  * What is new against the live form:
  *   - "What do you need?", the area and "How did you hear about us?" are rows
  *     of picture cards that swipe on a phone, with arrows and a scrollbar too;
@@ -27,8 +32,8 @@ import {
   AREA_CHOICES,
   JOB_EXAMPLE_DEFAULT,
   JOB_EXAMPLES,
+  SERVICE_CHOICES,
   SOURCE_CHOICES,
-  serviceChoicesFor,
 } from "./choices";
 import { FIELD_NAMES as SOURCE_FIELDS } from "../../scripts/enquiry-source.mjs";
 import "./enquiry-cards.css";
@@ -37,14 +42,15 @@ interface Props {
   compact?: boolean;
   /** As EnquiryForm: unique per form on the page, so ids never repeat. */
   idPrefix?: string;
-  /** As EnquiryForm: a service page shows its own service and "Something else". */
-  service?: string;
-  /** As EnquiryForm: tick this service but keep the full list. */
+  /**
+   * As EnquiryForm: the pop-up on a service page ticks that page's service
+   * and keeps the full list (Base.astro passes enquiryService).
+   */
   preselectedService?: string;
 }
-const { compact = false, idPrefix = "", service, preselectedService } = Astro.props;
+const { compact = false, idPrefix = "", preselectedService } = Astro.props;
 
-const selectedService = service ?? preselectedService;
+const selectedService = preselectedService;
 const jobExample = (selectedService && JOB_EXAMPLES[selectedService]) || JOB_EXAMPLE_DEFAULT;
 
 /* Four prompts, the three the live hint names plus timing, which the first
@@ -92,7 +98,7 @@ const PROMPTS = [
     help={selectedService ? "Already ticked for you. Add anything else you need." : "Tick everything that applies."}
     name="service"
     type="checkbox"
-    choices={serviceChoicesFor(service)}
+    choices={SERVICE_CHOICES}
     idPrefix={idPrefix}
     checked={selectedService ? [selectedService] : []}
     layout="row"
