@@ -90,12 +90,11 @@ const PROMPTS = [
         <label class="ecf-float-label" for={`${idPrefix}phone`}>Phone</label>
       </div>
     </div>
-  </div>
-
-  <div>
-    <div class="ecf-float">
-      <input class="ecf-input" id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" placeholder=" " />
-      <label class="ecf-float-label" for={`${idPrefix}email`}>Email</label>
+    <div>
+      <div class="ecf-float">
+        <input class="ecf-input" id={`${idPrefix}email`} name="email" type="email" required autocomplete="email" placeholder=" " />
+        <label class="ecf-float-label" for={`${idPrefix}email`}>Email</label>
+      </div>
     </div>
   </div>
 
@@ -132,42 +131,44 @@ const PROMPTS = [
     </div>
   </CardGroup>
 
-  <div>
-    <label class="ecf-label" for={`${idPrefix}detail`}>Tell us about the job</label>
-    <p class="ecf-help">The room, rough sizes, and what it needs to hold is plenty.</p>
-    <div class="eca-prompts" data-ec-prompts role="group" aria-label="Start a line in the box below" hidden>
-      {PROMPTS.map((p) => (
-        <button type="button" class="eca-prompt" data-starter={p.starter}><span class="eca-mark" aria-hidden="true"></span>{p.label}</button>
-      ))}
+  <div class="ecf-pair">
+    <div>
+      <label class="ecf-label" for={`${idPrefix}detail`}>Tell us about the job</label>
+      <p class="ecf-help">The room, rough sizes, and what it needs to hold is plenty.</p>
+      <div class="eca-prompts" data-ec-prompts role="group" aria-label="Start a line in the box below" hidden>
+        {PROMPTS.map((p) => (
+          <button type="button" class="eca-prompt" data-starter={p.starter}><span class="eca-mark" aria-hidden="true"></span>{p.label}</button>
+        ))}
+      </div>
+      <textarea
+        class="ecf-input"
+        id={`${idPrefix}detail`}
+        name="detail"
+        rows={compact ? 4 : 5}
+        placeholder={jobExample}
+      ></textarea>
     </div>
-    <textarea
-      class="ecf-input"
-      id={`${idPrefix}detail`}
-      name="detail"
-      rows={compact ? 4 : 5}
-      placeholder={jobExample}
-    ></textarea>
-  </div>
 
-  <fieldset>
-    <legend class="ecf-label">Photos or drawings (optional)</legend>
-    <p class="ecf-help">
-      Add up to six photos, plans or documents, up to 15 MB each and 60 MB together. Choose several at
-      once or add them one at a time. They upload when you send the enquiry.
-    </p>
-    <div class="ecf-files">
-      <input
-        id={`${idPrefix}files`}
-        class="ecf-file-input"
-        type="file"
-        multiple
-        data-ec-files
-        accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
-      />
-      <label for={`${idPrefix}files`} class="ecf-file-button">Add files</label>
-      <p class="ecf-help" data-ec-file-count aria-live="polite">Nothing added yet.</p>
-    </div>
-  </fieldset>
+    <fieldset>
+      <legend class="ecf-label">Photos or drawings (optional)</legend>
+      <p class="ecf-help">
+        Add up to six photos, plans or documents, up to 15 MB each and 60 MB together. Choose several at
+        once or add them one at a time. They upload when you send the enquiry.
+      </p>
+      <div class="ecf-files">
+        <input
+          id={`${idPrefix}files`}
+          class="ecf-file-input"
+          type="file"
+          multiple
+          data-ec-files
+          accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.pdf,.doc,.docx"
+        />
+        <label for={`${idPrefix}files`} class="ecf-file-button">Add files</label>
+        <p class="ecf-help" data-ec-file-count aria-live="polite">Nothing added yet.</p>
+      </div>
+    </fieldset>
+  </div>
 
   <CardGroup
     legend="How did you hear about us?"

@@ -8,13 +8,19 @@
  */
 
 /* ---- Form shell: as the live form ---------------------------------------- */
-.ecf { display: grid; gap: var(--space-9); }
+.ecf { display: grid; gap: var(--space-9); container: ecf / inline-size; }
 .ecf.is-compact { gap: var(--space-8); }
+/* Name, phone and email: one line where they fit (the full-width page form),
+   otherwise name and phone side by side and email across the full width
+   under them (the pop-up), one under another on a phone. */
 .ecf .ecf-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-8);
 }
+.ecf .ecf-row > * { flex: 1 1 220px; min-width: 0; }
+/* The job box and the photos: one under the other, side by side on a wide form. */
+.ecf .ecf-pair { display: grid; gap: var(--space-9); align-items: start; }
 .ecf .ecf-label,
 .ecf .ec-legend {
   display: block;
@@ -150,6 +156,8 @@ form.ecf button.ecf-send:disabled { opacity: 0.45; cursor: not-allowed; backgrou
   min-height: 40px;
 }
 .ec-bar .ecf-help { margin: 0; }
+/* No help line and nothing to scroll: no empty strip under the question. */
+.ec-bar:not(:has(.ecf-help)):has(.ec-arrows[hidden]) { display: none; }
 .ec-arrows { display: flex; gap: var(--space-3); flex: none; }
 .ec-arrows[hidden] { display: none; }
 form.ecf button.ec-arrow {
@@ -283,6 +291,38 @@ html.js .ec-group[data-layout="row"] .ec-cards {
 }
 @media (prefers-reduced-motion: reduce) {
   .ec-cards { scroll-behavior: auto; }
+}
+
+/* ---- The wide form: the page form across the full width -------------------
+   A founder relaying Arthur, 14 Nov 2026: the form first on the page and
+   across it, so the service and area cards sit side by side and show at
+   once, scrolling only when a row cannot fit. Sized from the form's own
+   width (a container query), so the pop-up, which is narrower, keeps the
+   rows and grids above. Each row shares the width: a card is 96 to 150px
+   wide, so nine services fit on any laptop and the eleven areas fit from
+   about 1,300px wide; below that their row scrolls, with its arrows. */
+@container ecf (min-width: 860px) {
+  .ecf .ecf-pair { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-12); }
+  .ec-cards { gap: var(--space-3); }
+  html.js .ec-group[data-layout] .ec-cards {
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(96px, 150px);
+    justify-content: start;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 4px;
+    padding: 4px 4px var(--space-5);
+    margin: -4px -4px 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hair-strong) transparent;
+  }
+  .ec-art { padding: var(--space-4) var(--space-3) 0; }
+  .ec-label { gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-4); font-size: 12.5px; hyphens: auto; }
+  .ec-input { width: 16px; height: 16px; }
+  .ec-input[type="checkbox"]:checked { background-size: 11px; }
 }
 
 /* "Somewhere else": the box for an area or postcode, shown when that card is
