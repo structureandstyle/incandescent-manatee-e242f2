@@ -51,7 +51,9 @@ export type Area = {
    * must be in public/images/_selection.json, which supplies its size.
    */
   plates: (
-    | { file: string; type: string }
+    /* A photograph from the photo register (ops repo docs/photo-usage.csv) carries the
+       register's alt text, which says what is in the frame and never names a place. */
+    | { file: string; type: string; alt?: string }
     /* An AI-generated example where the photo register lists a gap (ops repo
        docs/photo-usage.md), made to the render protocol: captioned "AI-generated
        example" by the frame, never a photograph of a job (14 Nov 2026). */
@@ -102,13 +104,22 @@ export const AREAS: Area[] = [
        impressions, the area's two largest product searches. Keyword Planner (London, 14 Nov 2026):
        built in wardrobes camden 10, exact phrase; no data for fitted or bespoke wardrobes camden. */
     primary: "fitted wardrobes camden",
-    /* 14 Nov 2026: the register (ops PR #49) gives Camden ssp-027 (a white bookcase wall, its lead)
-       and ssp-029 (a white handleless wardrobe, door open), plus an AI example of closed hinged
-       wardrobes in warm grey. The AI example is in; the two photographs replace the two /work/
-       frames below once the Drive originals can be downloaded. */
+    /* 14 Nov 2026: the register's allocation for Camden (ops PR #49): ssp-027, its lead, and ssp-029
+       (cropped to the plate's 3:2 around the open bay), downloaded from Drive with the user's yes,
+       plus the register's AI gap, closed hinged wardrobes in warm grey. Neither photograph is a
+       recorded job in Camden; the alt text is the register's. ssp-017 and ssp-018, also allocated
+       here, are interiors that would make a fourth and fifth plate; the frame shows three. */
     plates: [
-      { file: "/images/alcove-units/alcove-units-03.webp", type: "Alcove units" },
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-02.webp", type: "Fitted wardrobes" },
+      {
+        file: "/images/library/ssp-027.webp",
+        type: "Bookcases",
+        alt: "White built-in bookcase in three bays with open shelves above six handleless cupboard doors, lit by two wall lights",
+      },
+      {
+        file: "/images/library/ssp-029.webp",
+        type: "Fitted wardrobes",
+        alt: "White handleless fitted wardrobe with one door open showing oak interior, chrome hanging rail, top shelf and lower shelves",
+      },
       {
         file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
         type: "Grey Shaker-style wardrobes",

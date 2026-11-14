@@ -86,7 +86,7 @@ const plates = page.plates.map((p) => {
   if ("ai" in p && p.ai) return { ...p, w: p.width, h: p.height, alt: p.alt, ai: true };
   const found = sizeOf.get(p.file);
   if (!found) throw new Error(`${page.slug} names ${p.file}, which is not in public/images/_selection.json.`);
-  return { ...p, w: found.w, h: found.h, alt: photoAlt(p.file, p.type), ai: false };
+  return { ...p, w: found.w, h: found.h, alt: ("alt" in p && p.alt) || photoAlt(p.file, p.type), ai: false };
 });
 const anyAi = plates.some((p) => p.ai);
 const allAi = plates.length > 0 && plates.every((p) => p.ai);
