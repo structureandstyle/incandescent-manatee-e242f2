@@ -38,8 +38,15 @@ import { BUSINESS, hoursLines } from "../../data/site";
 
 interface Props {
   variant: "a" | "b";
+  /**
+   * "founders" (the default): our internal note at the end, with the option's
+   * name and a link to the other one. "client": the page Kaspar reviews on his
+   * comment link (/enquiry-preview/, 14 Nov 2026), whose note says only what
+   * the page is and opens the two pop-ups, with no option names.
+   */
+  audience?: "founders" | "client";
 }
-const { variant } = Astro.props;
+const { variant, audience = "founders" } = Astro.props;
 const Form = variant === "a" ? EnquiryFormA : EnquiryFormB;
 const other = variant === "a" ? "b" : "a";
 const SERVICE_DEMO = "Alcove units and shelving";
@@ -75,7 +82,7 @@ const NOTES = {
     <Display level={1} as="h1" style="margin:0">Get a quote</Display>
     <FormProof />
   </div>
-  <div class="pv-form">
+  <div class="pv-form" data-ec-audience={audience}>
     <Form idPrefix={`p${variant}-`} />
   </div>
 
@@ -113,6 +120,20 @@ const NOTES = {
     </dl>
   </section>
 
+  {audience === "client" ? (
+    <aside class="pv-note" aria-label="About this preview">
+      <MonoLabel as="p" tone="green">Preview of your new enquiry page</MonoLabel>
+      <p>
+        This is how your Get a quote page would look and work. Nothing sent from this page goes
+        anywhere: the Send button shows what would reach you instead. The same form also opens as the
+        Get a quote pop-up on every page:
+      </p>
+      <div class="pv-buttons">
+        <button type="button" class="pv-open" data-pv-open={`pv-popup-${variant}`}>See it as the pop-up</button>
+        <button type="button" class="pv-open" data-pv-open={`pv-service-${variant}`}>See it as the pop-up on a service page</button>
+      </div>
+    </aside>
+  ) : (
   <aside class="pv-note" aria-label="Internal preview note">
     <MonoLabel as="p" tone="green">Internal preview, hidden from Google</MonoLabel>
     <p>
@@ -127,6 +148,7 @@ const NOTES = {
       <button type="button" class="pv-open" data-pv-open={`pv-service-${variant}`}>Open as the pop-up on a service page</button>
     </div>
   </aside>
+  )}
 </Wrap>
 
 <dialog id={`pv-popup-${variant}`} class="pv-dialog" aria-labelledby={`pv-popup-${variant}-h`}>

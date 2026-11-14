@@ -1,0 +1,21 @@
+---
+/**
+ * Hidden preview for Kaspar: the new enquiry page with option A (14 Nov
+ * 2026, a founder: "add Option A in the portal for Kas to check it out").
+ * The same page as /form-preview-a/, with a note written for him in place of
+ * our internal one. He reads it on its own comment link (F2F ops
+ * clients/structure-and-style/enquiry-form-kas/). Noindexed and out of the
+ * sitemap by its gate in src/data/page-gates.ts; nothing links here.
+ */
+import Base from "../layouts/Base.astro";
+import FormPreviewPage from "../components/enquiry-cards/FormPreviewPage.astro";
+import { indexable } from "../data/page-gates";
+---
+
+<Base
+  title="Get a quote, preview"
+  description="Preview of the new Structure & Style enquiry page. Not linked from the site and not indexed."
+  noindex={!indexable("/enquiry-preview/")}
+>
+  <FormPreviewPage variant="a" audience="client" />
+</Base>

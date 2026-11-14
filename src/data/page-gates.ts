@@ -140,6 +140,9 @@ export const PAGE_GATES = {
      one and both preview pages are deleted with these two entries. */
   "/form-preview-a/": ["formPick"],
   "/form-preview-b/": ["formPick"],
+  /* Option A as Kaspar reviews it on his comment link (14 Nov 2026). Goes
+     with the other two when the chosen form replaces the live one. */
+  "/enquiry-preview/": ["formPick"],
 } as const satisfies Record<string, readonly QuestionKey[]>;
 
 export type GatedPath = keyof typeof PAGE_GATES;

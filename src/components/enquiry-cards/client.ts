@@ -261,7 +261,9 @@ function armDryRun(form: HTMLFormElement, steps: ReturnType<typeof armSteps>) {
     const rows = previewRows(Array.from(data.entries()));
     panel.innerHTML =
       `<h3>Nothing was sent. This is what the enquiry would carry.</h3>` +
-      `<p>Field names are the live form's. The last column is where Make puts each one in the shared enquiry log.</p>` +
+      (form.closest('[data-ec-audience="client"]')
+        ? `<p>On the live page this arrives in your inbox, and the last column is where it goes in the shared enquiry log.</p>`
+        : `<p>Field names are the live form's. The last column is where Make puts each one in the shared enquiry log.</p>`) +
       `<table><tbody>${rows
         .map(
           (r) =>
