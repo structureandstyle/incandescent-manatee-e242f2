@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # The preview upload bundle, built by scripts/zip-preview.py. Disposable.
 *.zip
+
+# Wrangler local state and secrets (Cloudflare move, 15 Nov 2026)
+.wrangler/
+.dev.vars*
