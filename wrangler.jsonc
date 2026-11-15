@@ -6,7 +6,7 @@
 // Secrets are never in this file. Set them with `wrangler secret put NAME`
 // against S&S's account (docs/cloudflare-move.md, "Secrets"):
 //   MAKE_WEBHOOK_URL, SS_TURNSTILE_SECRET_KEY, SS_UPLOAD_LINK_SECRET,
-//   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
+//   R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY (R2_ACCOUNT_ID is in "vars" below)
 {
   "name": "structureandstyle-site",
   "main": "worker/index.mjs",
@@ -41,6 +41,10 @@
       { "binding": "UPLOADS", "bucket_name": "structure-style-enquiry-uploads-preview" }
     ]
   },
+  // Not secret: S&S's Cloudflare account ID, for the photo routes' R2
+  // endpoint. In the config because a deploy replaces dashboard variables
+  // with these; the real secrets (wrangler secret put) persist.
+  "vars": { "R2_ACCOUNT_ID": "498ba2e45d866087024dedacfabc47d1" },
   "observability": { "enabled": true },
   // The domain is attached once its DNS is on Cloudflare (the move's step 4).
   // Until then the Worker answers on its workers.dev address only, noindexed.
