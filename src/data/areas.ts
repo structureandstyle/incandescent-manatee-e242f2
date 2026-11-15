@@ -240,19 +240,56 @@ export const AREAS: Area[] = [
     ],
     summary: "Late Georgian squares and terraces, Victorian villas and flats in converted houses.",
   },  {
-    slug: "carpenter-belsize-park",
+    slug: "areas/belsize-park",
     name: "Belsize Park",
-    titleProp: "Belsize Park carpenter, fitted wardrobes",
-    h1: "Carpenter in Belsize Park for fitted wardrobes and alcove units",
-    kicker: "Carpenter in Belsize Park",
+    /* Product-led, 15 Nov 2026: the fifth page on the Primrose Hill model (a founder's go; Denis,
+       15 Nov: "use the same design and structure for the next articles"). No "carpenter" in the
+       title, heading or description; the kicker stays "Bespoke joinery" (Denis, 15 Nov: "leave
+       joinery for now") and "bespoke carpentry" sits in the opening. */
+    titleProp: "Bespoke wardrobes in Belsize Park",
+    h1: "Bespoke wardrobes and walk-in wardrobes for Belsize Park's Victorian villas",
+    kicker: "Bespoke joinery in Belsize Park",
     description:
-      "Carpenter in Belsize Park: fitted wardrobes and alcove units for Victorian villas, mansion flats and mews houses, measured and cut to follow the walls.",
-    /* No Keyword Planner volume for any Belsize Park phrase but bespoke kitchens belsize park (10, exact phrase; London, 14 Nov 2026). Search Console: carpenter belsize park 18 impressions at position 8.1, 11 Oct to 8 Nov. No map pack on 14 Nov. */
-    primary: "carpenter belsize park",
+      "Bespoke wardrobes, walk-in wardrobes and alcove units for Belsize Park's Victorian villas, mansion flats and mews houses, each designed for its room.",
+    /* bespoke wardrobes belsize park is the area's one product search in Search Console: 49
+       impressions at position 11.4, 18 Aug to 25 Sep (ops research/hampstead-2026-10-03/
+       evidence.md), and 39 at position 11.5, 11 Sep to 8 Oct (ops briefs/case-study-2026-11.md,
+       local branch area-pages/no-client-work-2026-11-06). It is not among the area queries listed
+       for 11 Oct to 8 Nov, where carpenter belsize park had 18 at position 8.1, and that is not a
+       product search. Keyword Planner returned nothing for any Belsize Park wardrobe phrase; its
+       one figure for the area is bespoke kitchens belsize park, 10, in a single month (London,
+       14 Nov 2026), so the counted, first-party search leads. Walk-in wardrobes come second
+       because the register's photographs for this page are all of one walk-in wardrobe. */
+    primary: "bespoke wardrobes belsize park",
+    /* 15 Nov 2026: the register's allocation (ops PR #49) for Belsize Park is one walk-in wardrobe
+       in four frames. ssp-008, its lead, cropped to 3:2 from the top cubbies to the deep shelf,
+       leaving out the screw holes with red plugs on the right-hand wall that the register notes,
+       so the low cubbies are out of frame and the alt says what is in it; ssp-006, a close view
+       of the same cubbies above a hanging bay, cropped to 3:2. ssp-007 repeats the view of the
+       live walk-in-wardrobes-02 frame and ssp-009 is an alternate of ssp-008. Plus the register's
+       second AI gap for Belsize Park, full-height painted wardrobes in a bay-fronted bedroom
+       (Figma node 33:2). Its first gap, alcove units either side of a chimney breast, has no
+       plate: the frame shows three, and Islington's AI plate is already alcove units. None is
+       a recorded job in Belsize Park. */
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp", type: "Fitted wardrobes" },
-      { file: "/images/walk-in-wardrobes/walk-in-wardrobes-03.webp", type: "Walk-in wardrobes" },
-      { file: "/images/bespoke-kitchens/kitchen-shaker-showpiece.webp", type: "Bespoke kitchens" },
+      {
+        file: "/images/library/ssp-008.webp",
+        type: "Walk-in wardrobes",
+        alt: "Dark oak-effect walk-in wardrobe with four open cubbies along the top, a chrome hanging rail beneath them and its side run turning the corner on the left.",
+      },
+      {
+        file: "/images/library/ssp-006.webp",
+        type: "Walk-in wardrobe shelving",
+        alt: "Dark oak-effect open cubby shelving with neat edge banding, above an open bay, against a pale grey wall.",
+      },
+      {
+        file: "/images/journal/belsize-ai-green-wardrobes-bay.webp",
+        type: "Painted wardrobes by a bay window",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Eight full-height flat wardrobe doors painted pale green, in four pairs with slim brass bar handles, running wall to wall beneath the room's cornice. A bay window with white sashes and linen curtains is to the right, with a low bench in it.",
+      },
     ],
     summary: "Large Victorian villas, mansion flats and mews houses in Camden's Belsize conservation area.",
   },

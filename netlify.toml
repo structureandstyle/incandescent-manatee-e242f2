@@ -116,6 +116,20 @@
   status = 301
   force = true
 
+# Belsize Park, the fifth (15 Nov 2026); its first address also reached production as a
+# noindexed draft with PR #42.
+[[redirects]]
+  from = "/carpenter-belsize-park/*"
+  to = "/areas/belsize-park/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-belsize-park"
+  to = "/areas/belsize-park/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

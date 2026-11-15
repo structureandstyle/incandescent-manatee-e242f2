@@ -1,0 +1,250 @@
+---
+/**
+ * Belsize Park, 14 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaBelsizeParkCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Belsize Park), every local fact from facts-belsize-park-2026-11-14.md:
+ * Camden's Belsize Conservation Area Statement (the 2002 statement, read
+ * 14 Nov 2026), Camden's pages on Article 4 Directions, listed buildings and
+ * trade permits, controlled parking zones and the Planning Portal's internal
+ * alterations page, all read 14 Nov 2026. Camden's three June 2026 Belsize
+ * documents (the Article 4 Direction, fact sheet and design guide) could not
+ * be read, so the page says only that the direction exists, is aimed at
+ * outside work, and where to check.
+ *
+ * WHOSE WORDS. From what he approved: the walk-in wardrobe page (his opening,
+ * 6 Sep 2026: hanging space, drawers, shoe storage and shelving planned
+ * together to make the best use of the available space; sloping ceilings and
+ * awkward angles incorporated rather than simply boxed off; rail heights from
+ * what hangs, drawer and shelf splits from what folds; mirrors, glass, metal
+ * details and specialist handles; the larger project and the inside on show),
+ * the guarantee, and the fitted wardrobe and alcove price lines as approved on
+ * Hampstead. The visit and survey lines (q07, q18, q14, q17) are no longer on
+ * this page. Two conduct lines: the lift line, the protocol's approved conduct
+ * fact (section 11, item 6), and parking and deliveries agreed before
+ * installation, as on Primrose Hill and Camden. Everything else is new copy
+ * for him to check.
+ *
+ * Street and building names are Camden's statement's, describing the houses.
+ * None is a place we claim to have worked. No review block: no quotable
+ * review names Belsize Park, and the rating line sits under the hero buttons
+ * already.
+ *
+ * ON THE PRIMROSE HILL MODEL, 15 Nov 2026 (a founder's go; Denis: "use the
+ * same design and structure for the next articles"; ops README, "The
+ * structure rule, applied"): the address moved to /areas/belsize-park/; the
+ * title, heading, kicker and description lead with bespoke wardrobes, the
+ * area's one product search in Search Console, then walk-in wardrobes, the
+ * register's photographs (areas.ts); the opening carries "bespoke carpentry"
+ * and "bespoke joinery" once each; a line drawing beside each section that
+ * describes something (src/data/area-drawings.ts: a pair of villas about one
+ * shared chimney stack, one wall of an open walk-in wardrobe, a 1930s block of
+ * flats among trees, a row of mews houses), none where a section is rules
+ * only; the guide prices as cards; register photos and one labelled AI image
+ * (ssp-008 and ssp-006, cropped to 3:2, and AI painted wardrobes by a bay
+ * window, Figma node 33:2; the reasons are in areas.ts). New: a walk-in
+ * wardrobe section, built on Camden's line that the villas were built with
+ * attic and basement space for servants. Gone: the cornice line (Camden's page
+ * has it too) and the measuring line in the opening (Primrose Hill's is close
+ * to it); the lift line moved from the questions into the mansion flats
+ * section.
+ *
+ * CHECKED 15 Nov by three independent reviewers (copy rules, facts against the
+ * facts file and approved text, the swap test against Camden, Primrose Hill,
+ * Islington and Hampstead). Changed on their findings: the opening's second
+ * sentence cut to twelve words; the bay seat, listed-building, listed check,
+ * access and parking lines reworded (they were close to Primrose Hill's or
+ * Camden's); the van clause and a method line in the flats section gone (not
+ * approved conduct facts); the managed-block line says "can"; his walk-in
+ * lines restored word for word; Baynes Mews dropped (its frontage is three
+ * storeys); the fitted wardrobe and alcove cards take the approved Hampstead
+ * lines, with the alcove basis; the first answer no longer touches price (the
+ * cards do); the planning answer says only what the Planning Portal says; the
+ * third answer opens with one line of ours on floor space, for him to check,
+ * then his two lines; the ssp-006 alt no longer names a hanging bay.
+ *
+ * FAQ sources, all three new: "What is a walk-in wardrobe called?" and "What
+ * are the disadvantages of a walk-in wardrobe?" (Google People also ask, walk
+ * in wardrobe), "Do you need planning permission for a walk-in wardrobe?"
+ * (People also ask on walk in wardrobes belsize park, walk in wardrobe and
+ * walk in wardrobes london); UK, English, desktop, the built-in browser,
+ * 15 Nov 2026. The box for bespoke wardrobes belsize park itself held only
+ * costs and other companies' names (the price cards answer the one, no
+ * comparisons for the other), as did bespoke wardrobes, bespoke wardrobes
+ * london and built in wardrobes. Answers from what he approved: the "dressing
+ * room" name from the cost guide and the walk-in page's line on mirrors,
+ * glass, metal details and handles; the Planning Portal's internal alterations
+ * page (facts file, S5), with the listed section above carrying the
+ * exception, so the section no longer opens with the planning sentence; the
+ * walk-in wardrobe page's how-long lead and its made-from lead (the inside on
+ * show). Dropped: the lift and
+ * survey questions (not from a product search; the lift answer lives on in
+ * the mansion flats section) and "Do carpenters do built-in wardrobes?" (a
+ * carpenter question).
+ */
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
+
+import { AREAS } from "../../data/areas";
+
+const area = AREAS.find((a) => a.slug === "areas/belsize-park")!;
+
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers, integrated lighting and more complex designs move the figure.",
+  },
+  {
+    art: "walk-in-wardrobes",
+    name: "Walk-in wardrobes",
+    href: "/walk-in-wardrobes/",
+    price: "Typically from around £5,000.",
+    moves: "The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.",
+  },
+];
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      Belsize Park's large Victorian villas, mansion flats and mews houses each ask something different of bespoke carpentry. We design and fit <Link href="/fitted-wardrobes/">bespoke wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link> to suit them.
+    </p>
+    <p style={P2}>
+      We draw each piece of bespoke joinery for the room it stands in.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Tidey's villas" level={4}>Bespoke wardrobes for the villas of Tidey Town</SectionHead>
+    <AreaSide drawing="villa-pair">
+      <p>
+        Camden's conservation area statement describes the core of Belsize Park as large, imposing, semi-detached Victorian villas. Developer Daniel Tidey built Buckland Crescent from 1856, and Belsize Square and Belsize Park Gardens in the early 1860s. The area is locally called Tidey Town.
+      </p>
+      <p style={P2}>
+        Camden describes pairs of houses set symmetrically either side of slab chimney stacks. Most have three storeys over a lower ground floor, and some an attic. The ground floor has a canted three-light bay.
+      </p>
+      <p style={P2}>
+        Where a chimney breast stands in a main room, the alcoves beside it suit cupboards and shelving. In a bedroom, the same alcoves can take a pair of bespoke wardrobes, one either side of the breast.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Walk-in wardrobes" level={4}>Walk-in wardrobes in Belsize Park's attics and box rooms</SectionHead>
+    <AreaSide drawing="walk-in-open">
+      <p>
+        The statement says the villas were built with attic and basement space for servants. A top-floor room, or a box room on the floor below, can now hold a <Link href="/walk-in-wardrobes/">walk-in wardrobe</Link>.
+      </p>
+      <p style={P2}>
+        Hanging space, drawers, shoe storage and shelving are planned together to make the best use of the available space. Rail heights come from what hangs, and drawer and shelf splits from what folds. Sloping ceilings and awkward angles are incorporated into the design rather than simply boxed off.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansion flats" level={4}>Wardrobes and alcove units for Belsize Park's mansion flats</SectionHead>
+    <AreaSide drawing="thirties-flats">
+      <p>
+        Belsize Park has purpose-built flats as well as houses. Camden's statement calls Manor Mansions, built in 1884 on Belsize Park Gardens, one of the pioneers of purpose-built flats in London. Antrim Mansions followed in 1897.
+      </p>
+      <p style={P2}>
+        Hillfield Court and Tudor Close date from the late 1930s and stand among open space and trees on the site of Hillfield House. Camden describes them as largely unaltered.
+      </p>
+      <p style={P2}>
+        A managed block can set its own rules for lifts, deliveries and working hours, so ask the managing agent before a date is fixed. The lift is booked and protected before any delivery.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Belsize Village" level={4}>Mews houses and terraces around Belsize Lane</SectionHead>
+    <AreaSide drawing="mews-row">
+      <p>
+        Belsize Village has terraces from the 1850s to the 1880s in London stock brick. North of Belsize Lane, Camden's statement describes single-aspect, two-storey mews houses on narrow streets, Daleham Mews among them.
+      </p>
+      <p style={P2}>
+        Their upper windows are small vertical sashes, and the ground floors have large openings that were once garages.
+      </p>
+      <p style={P2}>
+        In a compact room, storage built to the exact wall gives the most for the floor space. A bedroom wardrobe can run the full width of a wall. A <Link href="/media-walls/">built-in TV unit</Link> or shelving can fill the side wall of a living room.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed houses and the new Article 4 Direction in Belsize</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The interior of a listed house is protected as well as its outside, and working on one without consent is a criminal offence.
+      </p>
+      <p style={P2}>
+        Camden's statement lists the Grade II terrace at 26 to 38 Belsize Grove, built in 1825. It also lists the Grade II stucco terrace at 73 to 93 Belsize Lane. In either terrace, or any other listed house, the first call before work starts is to <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council</Link>.
+      </p>
+      <p style={P2}>
+        Camden adopted a new Belsize <Link href="https://www.camden.gov.uk/article-4-directions-heritage-and-conservation" {...EXT}>Article 4 Direction</Link> on 9 June 2026. It is aimed at outside work, so check Camden's page before changing windows, doors or roofs.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Porticos, narrow mews and parking in Belsize Park</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many Belsize Park villas have steps up to a portico, and Camden's statement describes the mews as fronting narrow streets. Both decide how a finished piece comes in, and how large each section of it can be.
+      </p>
+      <p style={P2}>
+        Parking, deliveries and access are agreed with you before installation.
+      </p>
+      <p style={P2}>
+        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zone map</Link> shows the zone for each Belsize Park street. Tradespeople park on a Camden <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link>, valid in resident bays within the zone but not a guaranteed space.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>Guide prices for bespoke wardrobes in Belsize Park</SectionHead>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware is on the manufacturer's warranty, and doors and drawers are adjusted in the first 2 years. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> shows what moves the price of a fitted wardrobe.
+      </p>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="What is a walk-in wardrobe called?">
+        It is also called a dressing room, and ours can be fitted out like one. Mirrors, glass, metal details and specialist handles can be worked into the design.
+      </Faq>
+      <Faq q="Do you need planning permission for a walk-in wardrobe?">
+        The Planning Portal says internal alterations do not generally need planning permission, and a walk-in fitted inside an existing room is internal work. A listed house can also need listed building consent.
+      </Faq>
+      <Faq q="What are the disadvantages of a walk-in wardrobe?">
+        It takes floor space that a wardrobe along one wall does not. Walk-in wardrobes are also larger projects, so installation time depends on the size of the room and the specification. With the inside on show, interior finishes matter as much as the fronts.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

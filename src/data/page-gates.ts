@@ -114,7 +114,7 @@ export const PAGE_GATES = {
   "/areas/camden/": [...BAND_QUESTIONS, "areaCamdenCheck"],
   "/areas/primrose-hill/": [...BAND_QUESTIONS, "areaPrimroseHillCheck"],
   "/areas/islington/": [...BAND_QUESTIONS, "areaIslingtonCheck"],
-  "/carpenter-belsize-park/": [...BAND_QUESTIONS, "areaBelsizeParkCheck"],
+  "/areas/belsize-park/": [...BAND_QUESTIONS, "areaBelsizeParkCheck"],
   "/carpenter-kentish-town/": [...BAND_QUESTIONS, "areaKentishTownCheck"],
   "/carpenter-swiss-cottage/": [...BAND_QUESTIONS, "areaSwissCottageCheck"],
   "/carpenter-highgate/": [...BAND_QUESTIONS, "areaHighgateCheck"],
