@@ -23,9 +23,9 @@ Until step 8, nothing here changes the live site: Netlify ignores `worker/` and 
 1. **Cloudflare access.** Invite team@flowtoform.co.uk to his Cloudflare account with rights to deploy Workers and edit DNS (the Administrator role is simplest). Today we have Turnstile and R2 only.
 2. **Netlify settings.**
    - **Notification emails:** tell us which addresses get the form notification emails today, so Make sends to the same ones.
-   - **Secrets:** copy four values from the Netlify site's environment variables into the Cloudflare Worker himself, or with us on a screen share: `SS_UPLOAD_LINK_SECRET`, `SS_TURNSTILE_SECRET_KEY`, `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`.
+   - **Secrets:** copy four values from the Netlify site's environment variables into the Cloudflare Worker himself: `SS_UPLOAD_LINK_SECRET`, `SS_TURNSTILE_SECRET_KEY`, `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`.
    - **Keep the link secret identical.** `SS_UPLOAD_LINK_SECRET` must be the same value on Cloudflare, or every "Attached files" link already in the log stops opening. If Netlify will not show it, say so before the move: those old links would need a decision.
-3. **A 20-minute screen share** at a quiet time, to change the nameservers at Wix (step 7).
+3. **Change the nameservers at Wix himself** (step 7), at a time we give him once the zone is ready, to the two names we send. Messages to Kaspar give what to do and when, and no call offers (Arthur, 12 Nov 2026).
 4. **A week after the move,** turn off the Netlify site's form notifications and outgoing webhook, then delete the Netlify site.
 
 Tell him, do not ask him (the agreement allows it): after the move Netlify is no longer one of the companies we use for his site. Cloudflare is already named in the data agreement. Make still has to be named, as owed since 5 Nov.
@@ -70,7 +70,7 @@ Each step can be checked, and undone, before the next.
    - the apex and www still pointing at Netlify, as now.
 
    Ask Kaspar for a screenshot of the Wix DNS page, to catch any record a resolver cannot see. Add the OpenAI business claim TXT here if it is still wanted, with a fresh value from the OpenAI page.
-7. **Change the nameservers at Wix** to the two Cloudflare gives, on the screen share with Kaspar. Because every record is the same, the site and email carry on exactly as before while it spreads (the old NS records have a 6-hour TTL).
+7. **Kaspar changes the nameservers at Wix** to the two Cloudflare gives, at the time we agreed. Because every record is the same, the site and email carry on exactly as before while it spreads (the old NS records have a 6-hour TTL).
    - **Check it has spread:** `https://dns.google/resolve?name=structureandstyle.co.uk&type=NS`.
    - **Check email still flows both ways:** send a message to info@structureandstyle.co.uk and have Kaspar reply.
    - **To undo:** put the Wix nameservers back.
