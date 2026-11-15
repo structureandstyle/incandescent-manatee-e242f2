@@ -61,6 +61,14 @@ interface Props {
    * never lost when someone enlarges the picture.
    */
   ai?: boolean;
+  /**
+   * With `ai`: the lightbox leads with the label (what the picture shows) and
+   * ends with " · AI-generated example", instead of the other way round. The
+   * area pages under /areas/ use it with the caption the same way round,
+   * subject first and the disclosure on the right (a founder's test, 15 Nov
+   * 2026). The disclosure itself is never dropped.
+   */
+  aiLast?: boolean;
   /** What is still needed, shown in the empty frame. */
   awaiting?: string;
   /**
@@ -105,6 +113,7 @@ const {
   detail,
   label,
   ai = false,
+  aiLast = false,
   awaiting = "Photograph to place",
   eager = false,
   sizes = "(max-width: 700px) 92vw, 1240px",
@@ -151,7 +160,11 @@ const frameCss = [
 
 /** The lightbox's one-line caption, from `label` and `ai` (see Props). */
 const shortName = (label ?? (alt ?? "").split(",")[0]).trim();
-const lightboxCaption = ai ? `AI-generated example${shortName ? ` · ${shortName}` : ""}` : label;
+const lightboxCaption = ai
+  ? aiLast && shortName
+    ? `${shortName} · AI-generated example`
+    : `AI-generated example${shortName ? ` · ${shortName}` : ""}`
+  : label;
 
 const hasCaption = Boolean(subject || detail);
 
