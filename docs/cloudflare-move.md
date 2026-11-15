@@ -2,6 +2,28 @@
 
 *Written 15 Nov 2026. A founder asked to move the site off Netlify. Decided the same day: it goes into **S&S's own Cloudflare account** (where the enquiry uploads bucket and the Turnstile widget already are), and **Make sends the new-enquiry email**, as one Gmail step in scenario 7361484, so no new company joins the data agreement. Update this file as each step is done.*
 
+## Where it stands
+
+**15 Nov 2026, evening (a founder with Kaspar present):**
+- **Done:** team@ is a member of S&S's Cloudflare account, "Info@structureandstyle.co.uk's Account".
+- **Done, steps 6 and 7:**
+  - The zone was added on the Free plan, with Bot Preference Sync off, so Cloudflare never edits the site's robots.txt.
+  - All 13 records are DNS only. Wix's own list showed one record a resolver could not: `en` CNAME `cdn3.wixdns.net`, which was added.
+  - Every record was checked identical on both Cloudflare nameservers and on Wix's, before the switch.
+  - DNSSEC was off.
+  - The nameservers at Wix were changed to `carioca.ns.cloudflare.com` and `garrett.ns.cloudflare.com`. Wix's "Reset to Wix" button undoes it.
+  - The zone is active. The site still runs straight to Netlify, and email is unchanged.
+- **Found in Netlify:**
+  - **Deploys are paused.** Kaspar's team is on "operational credits", so production deploys are paused until his next billing cycle or an upgrade. The site stays live, but nothing merged now deploys there.
+  - **Notifications:** emails go to **info@structureandstyle.co.uk** and **team@flowtoform.co.uk**, plus the Make webhook.
+  - **The secrets cannot be copied out.** All five environment variables are marked Secret values, which Netlify never shows again. So:
+    - `SS_UPLOAD_LINK_SECRET` will be a new value on Cloudflare, and the few "Attached files" links already in the shared log get re-signed with it;
+    - `SS_TURNSTILE_SECRET_KEY` comes from the widget in S&S's account;
+    - the R2 keys come from a new R2 token limited to the bucket;
+    - `R2_ACCOUNT_ID` is `498ba2e45d866087024dedacfabc47d1`.
+  - **Spam:** Netlify's spam folder held 11 bot posts in the past month, many of them "I wanted to know your price" in other languages. The Worker must filter more than the honeypot before step 8.
+- **Next:** step 2 (create the Worker), then steps 3 to 5, then step 8.
+
 ## What moves and what stays
 
 | Part | On Netlify today | On Cloudflare |
@@ -107,6 +129,7 @@ Read from a public resolver on 15 Nov 2026. A record only Wix can see would not 
 | google._domainkey | TXT | `v=DKIM1; k=rsa; p=MIIBIjAN...` (long) | Google Workspace DKIM. Copy the full value |
 | structureandstyle.co.uk | A | 75.2.60.5 | Netlify. Stays until step 8, then is replaced by the Worker's custom domain |
 | www | CNAME | incandescent-manatee-e242f2.netlify.app | Netlify. The same |
+| en | CNAME | cdn3.wixdns.net | Left from the old Wix site. Only on Wix's own list; carried over as it was |
 
 ## Things to know
 
