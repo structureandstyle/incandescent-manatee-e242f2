@@ -1,0 +1,90 @@
+---
+/**
+ * The guide prices on an area page as cards, each with its service's line
+ * drawing (a founder's comment on the Primrose Hill draft, 15 Nov 2026: "could
+ * we add an illustration on the right side with visuals and pricing for
+ * each?"). It goes in AreaSide's "side" slot, beside the section's words.
+ *
+ * The drawings are the enquiry form's service drawings (enquiry-cards/art/
+ * services.ts), so a service looks the same on the form and here. The prices
+ * stay in the page's own copy, as starting prices: scripts/verify-build.mjs
+ * checks every figure against the service pages.
+ *
+ *   <PriceCards items={[{ art: "alcove-units", name: "Alcove units",
+ *     href: "/alcove-units/", price: "From £3,300 ...", moves: "..." }]} />
+ */
+import Link from "./ds/Link.astro";
+import { SERVICE_ART } from "./enquiry-cards/art/services";
+
+interface Props {
+  items: { art: string; name: string; href: string; price: string; moves: string }[];
+}
+
+const { items } = Astro.props;
+const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class="ad-$1"');
+for (const item of items) {
+  if (!SERVICE_ART[item.art]) throw new Error(`There is no service drawing called "${item.art}".`);
+}
+---
+
+<ul class="price-cards">
+  {items.map((item) => (
+    <li class="price-card">
+      <svg viewBox="0 0 120 80" aria-hidden="true" focusable="false" set:html={prefixed(SERVICE_ART[item.art])} />
+      <div>
+        <p class="price-name"><Link href={item.href}>{item.name}</Link></p>
+        <p class="price-from">{item.price}</p>
+        <p class="price-moves">{item.moves}</p>
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .price-cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+  }
+  .price-card {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: var(--space-9);
+    align-items: start;
+    border: var(--rule-hair);
+    background: #f6f3ea;
+    padding: var(--space-9);
+  }
+  .price-card svg {
+    display: block;
+    width: 120px;
+    height: auto;
+    margin-top: var(--space-2);
+  }
+  .price-card p {
+    margin: 0;
+  }
+  .price-name {
+    font-weight: var(--weight-medium);
+  }
+  .price-from {
+    margin-top: var(--space-3) !important;
+  }
+  .price-moves {
+    margin-top: var(--space-3) !important;
+    font-size: var(--type-body-sm);
+    color: var(--text-quiet);
+  }
+  /* On a phone the drawing gives the words the room. */
+  @media (max-width: 480px) {
+    .price-card {
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: var(--space-7);
+    }
+    .price-card svg {
+      width: 72px;
+    }
+  }
+</style>

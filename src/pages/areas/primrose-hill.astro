@@ -9,7 +9,7 @@
  * Camden's Primrose Hill Conservation Area Statement (the 2000 statement, read
  * 14 Nov 2026 where the 6 Nov read could not), the Historic England entries it
  * quotes, and Camden's listed buildings and parking pages. The one customer
- * line comes from a Google review that names Primrose Hill (James M, 12 Oct
+ * line (cut on 15 Nov, below) came from a Google review that names Primrose Hill (James M, 12 Oct
  * 2026: ops reviews-by-area-2026-11-14.md). Its whole text cannot be quoted
  * (it says "the guys", a headcount ban), so the page says what the customer
  * described and where it was said, with no name. Our own reply on the profile
@@ -41,19 +41,64 @@
  * 2026-11-06.md, B6, and People also ask "What alterations can you make to a
  * leasehold property?"). Dropped: "Will you protect the floors ...?" (B8) and
  * "How soon could you start ...?" (B4).
+ *
+ * A FOUNDER'S EIGHT COMMENTS, 15 Nov 2026 (internal, on the review link):
+ * - A line drawing beside four sections (AreaSide.astro, drawings in
+ *   src/data/area-drawings.ts): "examples of what the text describes on the
+ *   right side". Drawings, not photographs: a photograph of a local house
+ *   would read as a job here.
+ * - The guide prices as cards with each service's drawing (PriceCards.astro):
+ *   "an illustration on the right side with visuals and pricing for each".
+ *   The figures are the service pages' own (site.ts), unchanged.
+ * - The customer review line is cut ("Me as a reader what do I get from
+ *   this?"). It also named an area Kaspar had not confirmed, so the question
+ *   card asking him to check it goes too.
+ * - "How much does alcove storage cost?" is replaced: it repeated the price
+ *   section (FAQs add to the page, never restate it). Now "Are alcove
+ *   cupboards worth it?": Google People also ask on both "alcove units
+ *   london" and "alcove cupboards" (UK, English, desktop, the built-in
+ *   browser, 15 Nov 2026; DataForSEO answered 402 that day). Answered from
+ *   the alcove units guide he approved (its standfirst, "useful storage and a
+ *   place to display", and "Cupboards can sit flush with the chimney breast
+ *   or project beyond it to provide more storage"). The other questions in
+ *   that box were cost questions, which the price cards already answer.
+ * - The AI wardrobe picture was made again with bare walls (areas.ts).
  */
 import AreaPage from "../../components/AreaPage.astro";
 import Wrap from "../../components/ds/Wrap.astro";
 import SectionHead from "../../components/ds/SectionHead.astro";
 import Faq from "../../components/ds/Faq.astro";
 import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
 
 import { AREAS } from "../../data/areas";
 
 const area = AREAS.find((a) => a.slug === "areas/primrose-hill")!;
 
-const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
-const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const PRICES = [
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Shelving detail, drawers and lighting move the figure.",
+  },
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers and lighting move the figure.",
+  },
+  {
+    art: "walk-in-wardrobes",
+    name: "Walk-in wardrobes",
+    href: "/walk-in-wardrobes/",
+    price: "Typically from around £5,000.",
+    moves: "The size of the room, the number of runs, the layout and the finishes move the figure.",
+  },
+];
 const P2 = "margin-top:var(--space-10)";
 const TEXT = "max-width:var(--measure)";
 const SECTION = "padding-bottom:var(--section-y)";
@@ -72,7 +117,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Villas and terraces" level={4}>Fitted furniture for Primrose Hill's villas and terraces</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="stucco-villa">
       <p>
         The south of Primrose Hill is mostly Italianate villas in painted stucco, three to four storeys over a basement. Many have raised ground floors and bay windows. Further in, Camden's statement describes long mid-19th century terraces of three storeys over a basement, each with a half-width closet wing at the back.
       </p>
@@ -82,34 +127,31 @@ const EXT = { target: "_blank", rel: "noopener" };
       <p style={P2}>
         In a bay window, a fitted seat with drawers or cupboards beneath can take the curve of the bay.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
     <SectionHead meta="Alcoves" level={4}>Alcove cupboards and shelving in Primrose Hill</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="alcove-pair">
       <p>
-        One Primrose Hill customer's Google review describes alcove cupboards with floating shelves in their living room, and a drawer unit for the bedroom.
-      </p>
-      <p style={P2}>
         Houses of this age were built with chimney breasts in the front and back rooms. Many living rooms have a pair of alcoves to fill. Cupboards below keep everyday things out of sight, and the shelves above can be floating, framed or lit.
       </p>
       <p style={P2}>
         Each alcove is measured on its own, and the cupboards can be painted to the colour of the room. Our <Link href="/alcove-units/">alcove units</Link> page shows the layouts and finishes.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
     <SectionHead meta="Top floors" level={4}>Fitted wardrobes for attic and mansard rooms</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="mansard-wardrobe">
       <p>
         Several terraces around Chalcot Square have attic or mansard rooms above their three main storeys. Where the ceiling slopes, a fitted wardrobe follows it, with full-height doors under the flat part and lower cupboards towards the eaves.
       </p>
       <p style={P2}>
         For clothes on a rail, around 550 to 600mm of clear inside depth is a starting point. Under a low slope, drawers and shelves use the space better than hanging.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
@@ -126,29 +168,25 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Access" level={4}>Steps, stairs and parking</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="steps-route">
       <p>
         Many Primrose Hill houses have steps up to a raised ground floor and a separate stair down to the basement. Long panels and doors have to come up those steps and through the hall. The route in is checked at the survey, and the pieces are sized for it.
       </p>
       <p style={P2}>
         We agree parking and deliveries with you before installation. Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zones</Link> cover large areas of the borough. The van can use a visitor permit you buy as a resident, or a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> sold by the day.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
     <SectionHead meta="Guide prices" level={4}>What alcove units and fitted wardrobes cost</SectionHead>
-    <div style={TEXT}>
-      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
-      <ul style={LIST}>
-        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
-        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
-        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, the number of runs, the layout and the finishes move the figure.</li>
-      </ul>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
       <p style={P2}>
         A fixed, itemised quotation follows the measured survey. The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years.
       </p>
-    </div>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
@@ -157,8 +195,8 @@ const EXT = { target: "_blank", rel: "noopener" };
       <Faq q="Do I need my freeholder's permission for fitted furniture in a flat?">
         It depends on your lease, so read it before you commission anything. Many leases ask for the freeholder's consent before alterations, and some include work that is not structural, such as furniture fixed to the walls.
       </Faq>
-      <Faq q="How much does alcove storage cost?">
-        A pair of alcove units starts from £3,300 in melamine and from £6,000 in oak veneer, delivered and fitted. That covers a two-door cupboard with three open shelves above in each alcove, up to about 1m wide.
+      <Faq q="Are alcove cupboards worth it?">
+        Alcove cupboards bring together useful storage and a place for display, in the recesses either side of a chimney breast. They can sit flush with the breast or project beyond it where more storage is needed. Beside a fireplace they also help shape the whole wall, connecting the joinery with the room's architecture, furniture and colour scheme.
       </Faq>
       <Faq q="How high should alcove units be?">
         The cupboard height sets the split between closed storage below and open shelves above. The shelving can run to the ceiling or stop beneath the cornice. Where the two alcoves differ in width, keeping both cupboard tops at the same height ties them together.

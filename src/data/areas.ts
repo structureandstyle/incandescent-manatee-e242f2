@@ -150,7 +150,7 @@ export const AREAS: Area[] = [
     /* 15 Nov 2026: the register's allocation (ops PR #49): ssp-010, its lead (alcove shelving by a
        fireplace, a kitchen beyond), and ssp-014, the cleaner of the two same-view walk-in frames
        (ssp-013 is its alternate), cropped to 3:2 around the rails; plus the register's first AI gap,
-       off-white hinged wardrobes under an existing cornice. ssp-011, a third walk-in view of the same
+       off-white hinged wardrobes under an existing cornice (made again on 15 Nov, Figma node 31:2, with bare walls: in the first a framed picture ran into the door frame, a founder's comment). ssp-011, a third walk-in view of the same
        room, is allocated too; the frame shows three plates. None is a recorded job in Primrose Hill;
        the alt text is the register's. The register's second gap, a media wall, has no section here. */
     plates: [
@@ -165,12 +165,12 @@ export const AREAS: Area[] = [
         alt: "White walk-in wardrobe with hanging rails in three lit bays, open cubbies above and lit shelving on the left",
       },
       {
-        file: "/images/journal/primrose-ai-offwhite-under-cornice.webp",
+        file: "/images/journal/primrose-ai-offwhite-wardrobes.webp",
         type: "Off-white wardrobes below a cornice",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "A wall-to-wall wardrobe with six flat hinged doors in three pairs, painted off-white, with small round brass knobs where each pair meets. It stops beneath the room's ornate original cornice, which stays in view, with slim infills at the top and sides and a recessed plinth. A sash window and an armchair sit either side.",
+        alt: "A wall-to-wall wardrobe with six flat hinged doors in three pairs, painted off-white, with small round brass knobs where each pair meets. It stops beneath the room's ornate original cornice, which stays in view, with slim infills at the top and sides and a recessed plinth. A sash window with a radiator beneath it is to the right, and an armchair sits in the corner.",
       },
     ],
     summary: "Italianate stucco villas and mid-Victorian terraces, with many listed houses.",

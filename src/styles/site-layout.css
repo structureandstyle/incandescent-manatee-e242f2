@@ -61,3 +61,17 @@ a[href="#main"]:focus,a[href="#main"]:focus-visible{color:var(--paper)}
    (NavBar.astro, 6 Nov 2026). The full-bleed row of links that sat under the
    wordmark from 3 Sep, and its four width steps here, went with it: Journal
    made it six slots on 13 Oct and Enquire was cut off on most phones. */
+
+/* Line drawings on the area pages (AreaSide.astro, PriceCards.astro), 15 Nov
+   2026. The same classes as the enquiry-card drawings (enquiry-cards/art/
+   README.md), prefixed "ad-" and drawn from the palette here. Global, because
+   the drawings arrive through set:html, which scoped styles never reach. */
+.ad-k,.ad-t,.ad-h,.ad-g,.ad-gt{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ad-k{stroke:#221d18;stroke-width:1.6}
+.ad-t{stroke:#221d18;stroke-opacity:.55;stroke-width:1}
+.ad-h{stroke:#221d18;stroke-opacity:.24;stroke-width:1}
+.ad-g{stroke:#2c4a3a;stroke-width:1.8}
+.ad-gt{stroke:#2c4a3a;stroke-width:1}
+.ad-f{fill:#221d18;stroke:none}
+.ad-pf{fill:#f6f3ea;stroke:none}
+.ad-gw{fill:#2c4a3a;fill-opacity:.14;stroke:none}
