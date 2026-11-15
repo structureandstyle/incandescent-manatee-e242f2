@@ -847,10 +847,31 @@ const PROMPTS = [
       field.value = subject.length > 150 ? `${subject.slice(0, 147).join("").trimEnd()}...` : subject.join("");
     };
 
+    // THE SPAM CHECK, 15 Nov 2026 (worker/enquiry.mjs, spamReason). Of the
+    // eleven posts Netlify's filter caught in the month to 15 Nov, ten never
+    // ran this script: their subject was still the placeholder above. They
+    // post straight to the form. So Send adds one field saying how long the
+    // page had been open, in milliseconds on the visitor's own clock. A post
+    // without it, or sent within a couple of seconds of the page opening, is
+    // kept aside as spam rather than sent on, and no visitor sees a puzzle.
+    // Added at send time, not in the markup, so Netlify, which only keeps
+    // fields it found in the built page, never records it.
+    const markSent = (form) => {
+      let field = form.querySelector('input[name="ec_e"]');
+      if (!field) {
+        field = document.createElement("input");
+        field.type = "hidden";
+        field.name = "ec_e";
+        form.append(field);
+      }
+      field.value = String(Math.round(performance.now()));
+    };
+
     document.addEventListener("submit", (e) => {
       const form = e.target;
       if (!form || form.getAttribute("name") !== "enquiry") return;
       setSubject(form);
+      markSent(form);
       const input = form.querySelector("[data-enquiry-files]");
       const state = stateFor(form);
       const files = state.files.slice();

@@ -4,7 +4,8 @@
  *
  * Netlify received every post of the form named "enquiry", kept it, emailed
  * it and sent it to Make scenario 7361484 (the shared enquiry log). Here:
- *   1. the post is read and checked (form name, honeypot, size);
+ *   1. the post is read and checked (form name, size), and spam is kept
+ *      aside under spam/ instead of going on (spamReason, 15 Nov 2026);
  *   2. it is saved first, as JSON in S&S's own R2 bucket under submissions/,
  *      so a lead is never lost if Make is down (Netlify kept every
  *      submission in its dashboard for the same reason);
@@ -26,8 +27,15 @@ export const HONEYPOT = "company-website";
 /** Text only: the photos go straight to R2, so a real enquiry is a few KB. */
 export const MAX_BODY_BYTES = 1_000_000;
 
+/** The field the form's script adds at Send: milliseconds the page had been open. */
+export const SENT_AFTER = "ec_e";
+/** Faster than anyone fills in a name, a phone and an email, autofill included. */
+export const MIN_FILL_MS = 2500;
+/** As the form's own limit (EnquiryForm.astro): Netlify dropped a post with more. */
+export const MAX_LINKS = 5;
+
 /** Fields kept out of what is stored and sent. */
-const DROPPED = new Set(["form-name", HONEYPOT, "cf-turnstile-response", "g-recaptcha-response"]);
+const DROPPED = new Set(["form-name", HONEYPOT, SENT_AFTER, "cf-turnstile-response", "g-recaptcha-response"]);
 
 /**
  * An id in the shape Netlify's were (24 hex characters, the first eight the
@@ -66,11 +74,39 @@ export function readFields(formData) {
   return fields;
 }
 
-/** A filled honeypot, or a post with no way to reply: kept out, answered as if accepted. */
-export function looksLikeSpam(formData, fields) {
-  if (String(formData.get(HONEYPOT) ?? "").trim() !== "") return true;
+const LINK_START = /https?:\/\/(?:www\.)?|\bwww\./gi;
+const countLinks = (text) => (String(text ?? "").match(LINK_START) || []).length;
+
+/**
+ * THE SPAM CHECK, 15 Nov 2026. Netlify ran every post through its spam
+ * filter; Cloudflare has none, so this does the part that mattered. Returns
+ * why a post is spam, or null for a real enquiry.
+ *
+ * The evidence: Netlify's spam folder held eleven posts in the month to
+ * 15 Nov. Ten never ran the form's script (their subject was still the
+ * placeholder "Website enquiry (%{submissionId})" and the landing page was
+ * empty): bots posting straight to the form, most of them one family asking
+ * "your price" in a different language each time. Every real enquiry in the
+ * same months ran it. So the script adds SENT_AFTER at Send
+ * (EnquiryForm.astro, markSent), and a post without it is spam. The one that
+ * did run it was a person pitching a redesign, which no automatic check can
+ * tell from a customer; the log's Review status handles those, as before.
+ *
+ * In order: the honeypot, no way to reply, the script did not run, sent
+ * faster than a person can fill the form, more links than the form allows.
+ * Nothing is deleted on a spam verdict: handleEnquiry keeps the post under
+ * spam/ in the bucket, where a false positive can still be found.
+ */
+export function spamReason(formData, fields) {
+  if (String(formData.get(HONEYPOT) ?? "").trim() !== "") return "honeypot filled";
   const reachable = ["name", "phone", "email"].some((k) => String(fields[k] ?? "").trim() !== "");
-  return !reachable;
+  if (!reachable) return "no way to reply";
+  const raw = formData.get(SENT_AFTER);
+  if (raw === null || String(raw).trim() === "") return "form script did not run";
+  const ms = Number(raw);
+  if (!Number.isFinite(ms) || ms < MIN_FILL_MS) return "sent too fast";
+  if (countLinks(fields.detail) > MAX_LINKS) return "too many links";
+  return null;
 }
 
 const LABELS = [
@@ -116,6 +152,7 @@ export function makePayload({ id, createdAt, fields, siteUrl }) {
   // Netlify filled %{submissionId} in the fallback subject; so does this.
   if (typeof data.subject === "string") data.subject = data.subject.replaceAll("%{submissionId}", id);
   if (!data.subject) data.subject = `Website enquiry (${id})`;
+  const text = emailText(data);
   return {
     id,
     number: null,
@@ -128,8 +165,20 @@ export function makePayload({ id, createdAt, fields, siteUrl }) {
     data,
     created_at: createdAt,
     site_url: siteUrl,
-    email_text: emailText(data),
+    email_text: text,
+    // The same text for Make's Gmail step, whose body is HTML: everything a
+    // visitor typed is escaped, so nothing in an enquiry can become markup in
+    // the email, and line breaks are kept (15 Nov 2026).
+    email_html: emailHtml(text),
   };
+}
+
+const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+
+/** Plain text as safe HTML: escaped, with its line breaks as <br>. */
+export function emailHtml(text) {
+  const escaped = String(text ?? "").replace(/[&<>"']/g, (c) => ESCAPES[c]);
+  return `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5">${escaped.replace(/\r?\n/g, "<br>")}</div>`;
 }
 
 const thanks = (url) =>
@@ -160,10 +209,28 @@ export async function handleEnquiry(request, env, ctx) {
   const accepted = () => (url.pathname === "/thanks/" ? thanks(url) : new Response("ok", { status: 200, headers: { "Cache-Control": "no-store" } }));
 
   const fields = readFields(formData);
-  if (looksLikeSpam(formData, fields)) return accepted();
-
   const id = newSubmissionId();
   const createdAt = new Date().toISOString();
+
+  // Spam is kept, not sent: under spam/ with the reason, like Netlify's spam
+  // folder, so a real enquiry caught by mistake can still be found and sent on
+  // (docs/cloudflare-move.md, "Spam"). The sender is answered as if accepted,
+  // so a bot learns nothing.
+  const reason = spamReason(formData, fields);
+  if (reason) {
+    try {
+      await env.UPLOADS.put(
+        `spam/${createdAt.slice(0, 7)}/${id}.json`,
+        JSON.stringify({ id, created_at: createdAt, reason, sent_after_ms: formData.get(SENT_AFTER), data: fields }),
+        { httpMetadata: { contentType: "application/json" } },
+      );
+    } catch (error) {
+      console.error("enquiry: could not keep spam", id, String(error));
+    }
+    console.log("enquiry: spam kept aside", id, reason);
+    return accepted();
+  }
+
   const payload = makePayload({ id, createdAt, fields, siteUrl: `https://${url.hostname}` });
   const key = `submissions/${createdAt.slice(0, 7)}/${id}.json`;
 
