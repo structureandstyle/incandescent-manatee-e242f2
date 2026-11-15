@@ -20,7 +20,8 @@ import { fileURLToPath } from "node:url";
 const SCRIPT = fileURLToPath(new URL("../scripts/verify-build.mjs", import.meta.url));
 const BANK = JSON.parse(readFileSync(new URL("../src/data/quote-bank.json", import.meta.url), "utf8"));
 const SITE = "https://structureandstyle.co.uk";
-const AREA = "/carpenter-hampstead/";
+/* Hampstead moved to /areas/hampstead/ on the Primrose Hill model (15 Nov 2026). */
+const AREA = "/areas/hampstead/";
 const PAGE_ORDER = ["areaHampstead1", "areaHampstead3", "areaHampstead2", "areaHampstead4"];
 
 const business = {
@@ -72,7 +73,7 @@ function html({ noindex = false, nodes = [], body = "" }) {
 function areaPage(over = {}) {
   return {
     noindex: true,
-    nodes: [webPage(AREA), breadcrumb(AREA, "Hampstead")],
+    nodes: [webPage(AREA), areaCrumb()],
     body:
       `<p>Every figure below is a starting price. Fitted wardrobes start from £2,300.</p>` +
       `<p>Bespoke kitchens typically start from £10,000, and more.</p>` +
@@ -123,6 +124,10 @@ const hubCrumb = (path, name) => ({
     { "@type": "ListItem", position: 3, name, item: `${SITE}${path}` },
   ],
 });
+/** The subject page's own trail: under /areas/ since 15 Nov 2026. */
+function areaCrumb() {
+  return hubCrumb(AREA, "Hampstead");
+}
 const areaStub = (path) => ({
   noindex: true,
   nodes: [webPage(path), path.startsWith("/areas/") ? hubCrumb(path, "Area") : breadcrumb(path, "Area")],
@@ -153,13 +158,13 @@ function run(pages, { stubAreas = true } = {}) {
 test("an area page with the four keys open passes as a noindexed draft", () => {
   const r = run({ [AREA]: areaPage(), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 0, r.out);
-  assert.match(r.out, /\/carpenter-hampstead\/ {2}waiting on AreaHampstead1, AreaHampstead2, AreaHampstead3, AreaHampstead4/);
+  assert.match(r.out, /\/areas\/hampstead\/ {2}waiting on AreaHampstead1, AreaHampstead2, AreaHampstead3, AreaHampstead4/);
 });
 
 test("the same page forced indexable with the keys open fails", () => {
   const r = run({ [AREA]: areaPage({ noindex: false }), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 1, r.out);
-  assert.match(r.out, /\/carpenter-hampstead\/ {2}INDEXABLE but unfinished: 4 open question\(s\)/);
+  assert.match(r.out, /\/areas\/hampstead\/ {2}INDEXABLE but unfinished: 4 open question\(s\)/);
 });
 
 test("the whole Ozge review passes, entity-encoded", () => {
@@ -203,14 +208,14 @@ test("prices fail when no service page is in the build to own them", () => {
 });
 
 test("an area page without its WebPage node fails", () => {
-  const r = run({ [AREA]: areaPage({ nodes: [breadcrumb(AREA, "Hampstead")] }), "/fitted-wardrobe-cost/": costGuide });
+  const r = run({ [AREA]: areaPage({ nodes: [areaCrumb()] }), "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 1, r.out);
   assert.match(r.out, /area page needs one WebPage node/);
 });
 
 test("a WebPage node pointing at another URL fails", () => {
   const r = run({
-    [AREA]: areaPage({ nodes: [webPage("/hampstead/"), breadcrumb(AREA, "Hampstead")] }),
+    [AREA]: areaPage({ nodes: [webPage("/hampstead/"), areaCrumb()] }),
     "/fitted-wardrobe-cost/": costGuide,
   });
   assert.equal(r.code, 1, r.out);
@@ -220,7 +225,7 @@ test("a WebPage node pointing at another URL fails", () => {
 test("a registered area path missing from the build fails", () => {
   const r = run({ "/fitted-wardrobe-cost/": costGuide });
   assert.equal(r.code, 1, r.out);
-  assert.match(r.out, /\/carpenter-hampstead\/ {2}registered in AREA_PATHS but not in this build/);
+  assert.match(r.out, /\/areas\/hampstead\/ {2}registered in AREA_PATHS but not in this build/);
 });
 
 test("a breadcrumb on an unregistered path still fails", () => {
@@ -237,7 +242,7 @@ test("a Service node on an area page fails", () => {
     provider: { "@id": `${SITE}/#business` },
   };
   const r = run({
-    [AREA]: areaPage({ nodes: [webPage(AREA), breadcrumb(AREA, "Hampstead"), service] }),
+    [AREA]: areaPage({ nodes: [webPage(AREA), areaCrumb(), service] }),
     "/fitted-wardrobe-cost/": costGuide,
   });
   assert.equal(r.code, 1, r.out);

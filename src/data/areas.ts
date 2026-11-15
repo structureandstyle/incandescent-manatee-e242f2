@@ -65,19 +65,33 @@ export type Area = {
 
 export const AREAS: Area[] = [
   {
-    slug: "carpenter-hampstead",
+    slug: "areas/hampstead",
     name: "Hampstead",
-    titleProp: "Hampstead carpenter, bespoke wardrobes",
-    h1: "Fitted wardrobes and bespoke carpentry in Hampstead",
-    /* Kept 9 Nov 2026 (a founder), after a comment asking for "Fitted wardrobes in Hampstead": carpenter
-       hampstead is the search with measured demand and the map result he wins, and the h1 already leads
-       with fitted wardrobes (ops briefs/carpenter-hampstead.md, section 1). */
-    kicker: "Carpenter in Hampstead",
+    /* On the Primrose Hill model, 15 Nov 2026 (a founder's go; Denis: "use the same design and
+       structure for the next articles"). Until then: title "Hampstead carpenter, bespoke wardrobes",
+       h1 "Fitted wardrobes and bespoke carpentry in Hampstead" (kept 9 Nov by a founder for carpenter
+       hampstead, the search with measured demand and the map result he wins), kicker "Carpenter in
+       Hampstead", primary "carpenter hampstead", at /carpenter-hampstead/. The page was live and
+       indexed there from 12 Nov; it moves only when every area page is published after Kaspar has
+       approved them (Denis, 15 Nov), with 301s from both old addresses. */
+    titleProp: "Bespoke wardrobes in Hampstead",
+    h1: "Bespoke wardrobes and fitted furniture for Hampstead's period homes and mansion flats",
+    kicker: "Bespoke joinery in Hampstead",
     description:
-      "Carpenter for Hampstead homes: fitted wardrobes, walk-in wardrobes, alcove units and built-in TV units, measured in the room and cut to follow the walls.",
-    primary: "carpenter hampstead",
+      "Bespoke wardrobes, walk-in wardrobes, alcove units and built-in TV units for Hampstead's period houses and mansion flats, measured in the room and made to fit.",
+    /* bespoke wardrobes hampstead is the area's largest product search: Search Console 51
+       impressions, 11 Oct to 8 Nov, then bespoke joinery hampstead 32. Keyword Planner (London,
+       14 Nov 2026) had nothing for either, only the carpenter cluster (10) and bespoke kitchens
+       hampstead (10, exact phrase); it could not be asked again on 15 Nov (DataForSEO answered 402). */
+    primary: "bespoke wardrobes hampstead",
     /* All three on /work/ already, all dated after incorporation (31 Oct
-       2025), none from the SW7 shoot: 27 May 2026, 16 Feb 2026, 10 Nov 2025. */
+       2025), none from the SW7 shoot: 27 May 2026, 16 Feb 2026, 10 Nov 2025.
+       15 Nov 2026: the photo register (ops PR #49) gives Hampstead one photograph,
+       ssp-004, the same wardrobe as fitted-wardrobes-08 (the register's ssp-091) from the same visit, in
+       portrait. Cut to the plate's 3:2 it would be a band across four doors; the
+       landscape frame shows the whole run and is the one Kaspar approved on this
+       page, so it stays. The register's three AI images for Hampstead are
+       optional (a founder's call) and are not made. */
     plates: [
       { file: "/images/fitted-wardrobes/fitted-wardrobes-08.webp", type: "Fitted wardrobes" },
       { file: "/images/alcove-units/alcove-units-08.webp", type: "Alcove units" },

@@ -208,7 +208,7 @@ export const ANSWERS = {
   q56: { value: null, about: "Whether he is happy to be photographed. No portrait at this stage, 30 Aug 2026" },
 
   /**
-   * Area page: /carpenter-hampstead/. NOT QUESTIONNAIRE NUMBERS: area keys take
+   * Area page: /areas/hampstead/ (until 15 Nov 2026 /carpenter-hampstead/). NOT QUESTIONNAIRE NUMBERS: area keys take
    * names rather than the next numbers.
    *
    * Released 12 Nov 2026. The first version's four fact keys (areaHampstead1 to
@@ -226,6 +226,7 @@ export const ANSWERS = {
     value: "Answered 10 Nov 2026: Kaspar rewrote the held copy on the preview, and his words replace ours.",
     about: "Merged page: does he approve the new design section under his heading, the parking line after his and the drawings and process lines at the end of the cost section",
   },
+  areaHampsteadCheck: { value: null, about: "Kaspar has read the Hampstead page on the Primrose Hill model (/areas/hampstead/) on the review link and his changes are in" },
   /**
    * CASE STUDY 1: the Belsize Park job. Added 6 November 2026.
    *

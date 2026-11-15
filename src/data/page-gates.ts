@@ -101,9 +101,12 @@ export const PAGE_GATES = {
      rewriting it: released 12 Nov. The design-led copy that shared this search,
      /carpenter-hampstead-design/, was deleted with its gate entry in the same
      release, so only one Hampstead page can ever be indexed. */
-  "/carpenter-hampstead/": [
+  "/areas/hampstead/": [
     ...BAND_QUESTIONS,
     "areaHampsteadMerge",
+    /* 15 Nov 2026: the page on the Primrose Hill model, at its new address, held like
+       every other area page until Kaspar has read it on the review link. */
+    "areaHampsteadCheck",
   ],
 
   /* The nine new area pages and the three topic pages, 14 Nov 2026: each held
@@ -163,7 +166,7 @@ export const CASE_STUDY_INDEX = "/case-studies/";
  * no keys of its own, the same rule the case-study index follows.
  */
 export const AREAS_HUB = "/areas/";
-const AREA_BEFORE_HUB = "/carpenter-hampstead/";
+const AREA_BEFORE_HUB = "/areas/hampstead/";
 export function areasHubLive(): boolean {
   return AREAS.some((a) => areaPath(a.slug) !== AREA_BEFORE_HUB && ready(gateFor(areaPath(a.slug))));
 }
