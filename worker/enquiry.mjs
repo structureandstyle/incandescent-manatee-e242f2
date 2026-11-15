@@ -152,6 +152,7 @@ export function makePayload({ id, createdAt, fields, siteUrl }) {
   // Netlify filled %{submissionId} in the fallback subject; so does this.
   if (typeof data.subject === "string") data.subject = data.subject.replaceAll("%{submissionId}", id);
   if (!data.subject) data.subject = `Website enquiry (${id})`;
+  const text = emailText(data);
   return {
     id,
     number: null,
@@ -164,8 +165,20 @@ export function makePayload({ id, createdAt, fields, siteUrl }) {
     data,
     created_at: createdAt,
     site_url: siteUrl,
-    email_text: emailText(data),
+    email_text: text,
+    // The same text for Make's Gmail step, whose body is HTML: everything a
+    // visitor typed is escaped, so nothing in an enquiry can become markup in
+    // the email, and line breaks are kept (15 Nov 2026).
+    email_html: emailHtml(text),
   };
+}
+
+const ESCAPES = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+
+/** Plain text as safe HTML: escaped, with its line breaks as <br>. */
+export function emailHtml(text) {
+  const escaped = String(text ?? "").replace(/[&<>"']/g, (c) => ESCAPES[c]);
+  return `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5">${escaped.replace(/\r?\n/g, "<br>")}</div>`;
 }
 
 const thanks = (url) =>

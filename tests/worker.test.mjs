@@ -243,3 +243,13 @@ test("the form's script adds the field the spam check reads", async () => {
   assert.ok(page.includes(`field.name = "${SENT_AFTER}"`), "markSent no longer names the field the Worker reads");
   assert.match(page, /setSubject\(form\);\s*markSent\(form\);/);
 });
+
+test("the email HTML for Make escapes what a visitor typed and keeps line breaks", async () => {
+  const { emailHtml, makePayload: mp } = await import("../worker/enquiry.mjs");
+  const html = emailHtml('Name:\n<script>x</script> & "quotes"');
+  assert.ok(html.includes("Name:<br>&lt;script&gt;x&lt;/script&gt; &amp; &quot;quotes&quot;"));
+  assert.doesNotMatch(html, /<script>/);
+  const p = mp({ id: "a", createdAt: "b", fields: { name: "Sam <b>", detail: "Line 1\nLine 2" }, siteUrl: "" });
+  assert.ok(p.email_html.includes("Sam &lt;b&gt;"));
+  assert.ok(p.email_html.includes("Line 1<br>Line 2"));
+});
