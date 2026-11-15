@@ -72,6 +72,20 @@
   status = 301
   force = true
 
+# Primrose Hill, the second page moved (15 Nov 2026); its first address also reached
+# production as a noindexed draft with PR #42.
+[[redirects]]
+  from = "/carpenter-primrose-hill/*"
+  to = "/areas/primrose-hill/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-primrose-hill"
+  to = "/areas/primrose-hill/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

@@ -25,21 +25,32 @@
  * place we claim to have worked. No review block: no quotable review names
  * Primrose Hill, and the rating line sits under the hero buttons already.
  *
- * FAQ sources: "Do I need my freeholder's permission ...?" (ops
- * deliverables/faq-research-2026-11-06.md, B6, and People also ask "What
- * alterations can you make to a leasehold property?"); "Will you protect the
- * floors ...?" (B8); "How soon could you start, and how long does it take?"
- * (B4).
+ * PRODUCT-LED, 15 Nov 2026 (a founder's go, after Camden): the address moved
+ * to /areas/primrose-hill/; the title, heading, kicker and description lead
+ * with fitted wardrobes and alcove cupboards (areas.ts); the opening carries
+ * "bespoke carpentry" and "bespoke joinery" once each; two process questions
+ * gave way to questions people ask on the product searches. The freeholder
+ * question stays: many homes here are flats in converted houses.
+ *
+ * FAQ sources: "How much does alcove storage cost?" and "How high should
+ * alcove units be?" (Google People also ask, alcove units london, London,
+ * desktop, 15 Nov 2026), answered from the alcove units guide he approved
+ * (the unit the guide price covers; cupboard height sets the split between
+ * storage and display; matching cupboard tops across unequal alcoves); "Do I
+ * need my freeholder's permission ...?" (ops deliverables/faq-research-
+ * 2026-11-06.md, B6, and People also ask "What alterations can you make to a
+ * leasehold property?"). Dropped: "Will you protect the floors ...?" (B8) and
+ * "How soon could you start ...?" (B4).
  */
-import AreaPage from "../components/AreaPage.astro";
-import Wrap from "../components/ds/Wrap.astro";
-import SectionHead from "../components/ds/SectionHead.astro";
-import Faq from "../components/ds/Faq.astro";
-import Link from "../components/ds/Link.astro";
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
 
-import { AREAS } from "../data/areas";
+import { AREAS } from "../../data/areas";
 
-const area = AREAS.find((a) => a.slug === "carpenter-primrose-hill")!;
+const area = AREAS.find((a) => a.slug === "areas/primrose-hill")!;
 
 const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
 const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
@@ -52,7 +63,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 <AreaPage area={area}>
   <Fragment slot="lede">
     <p>
-      We design and fit <Link href="/alcove-units/">alcove units</Link>, <Link href="/fitted-wardrobes/">fitted wardrobes</Link> and shelving for Primrose Hill homes. Most are stucco villas and terraces built between the 1840s and 1870, and many are now flats.
+      We take on bespoke carpentry for Primrose Hill homes: <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove cupboards</Link> and shelving. Most are stucco villas and terraces built between the 1840s and 1870, and many are now flats.
     </p>
     <p style={P2}>
       Every piece of bespoke joinery is measured in the room and cut to its walls, which in a house of this age are rarely straight.
@@ -146,11 +157,11 @@ const EXT = { target: "_blank", rel: "noopener" };
       <Faq q="Do I need my freeholder's permission for fitted furniture in a flat?">
         It depends on your lease, so read it before you commission anything. Many leases ask for the freeholder's consent before alterations, and some include work that is not structural, such as furniture fixed to the walls.
       </Faq>
-      <Faq q="Will you protect the floors, and what do I need to do beforehand?">
-        Floors and the surrounding area are protected before work starts, and dust extraction runs throughout. Beforehand, clear your belongings from the area being fitted and make sure we can reach it.
+      <Faq q="How much does alcove storage cost?">
+        A pair of alcove units starts from £3,300 in melamine and from £6,000 in oak veneer, delivered and fitted. That covers a two-door cupboard with three open shelves above in each alcove, up to about 1m wide.
       </Faq>
-      <Faq q="How soon could you start, and how long does it take?">
-        The lead time is typically 4 to 8 weeks. Where a design is needed, one week is set aside for drawings, and a straightforward wardrobe wall then takes 2 to 3 days on site.
+      <Faq q="How high should alcove units be?">
+        The cupboard height sets the split between closed storage below and open shelves above. The shelving can run to the ceiling or stop beneath the cornice. Where the two alcoves differ in width, keeping both cupboard tops at the same height ties them together.
       </Faq>
     </div>
   </Wrap>

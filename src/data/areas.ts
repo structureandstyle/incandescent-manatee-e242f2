@@ -132,22 +132,46 @@ export const AREAS: Area[] = [
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",
   },
   {
-    slug: "carpenter-primrose-hill",
+    slug: "areas/primrose-hill",
     name: "Primrose Hill",
-    titleProp: "Primrose Hill carpenter, alcove units",
-    h1: "Carpenter in Primrose Hill for alcove units and fitted wardrobes",
-    kicker: "Carpenter in Primrose Hill",
+    /* Product-led, 15 Nov 2026 (a founder's go for the second page; see `slug` above). "carpenter"
+       is gone from the title, heading and description. */
+    titleProp: "Bespoke fitted wardrobes in Primrose Hill",
+    h1: "Fitted wardrobes and alcove cupboards in Primrose Hill, made to measure",
+    kicker: "Bespoke joinery in Primrose Hill",
     description:
-      "Carpenter in Primrose Hill: alcove cupboards, shelving and fitted wardrobes for stucco villas, terraces and flats, measured and cut to follow the walls.",
-    /* No Keyword Planner volume for any Primrose Hill phrase (London, 14 Nov 2026). Search
-       Console: carpenter primrose hill 9 impressions at position 2.9, 11 Oct to 8 Nov; first
-       in the map pack on 14 Nov. Alcove units lead because the one customer review that names
-       Primrose Hill is for alcove cupboards with floating shelves. */
-    primary: "carpenter primrose hill",
+      "Bespoke fitted wardrobes, alcove cupboards and shelving for Primrose Hill homes: stucco villas, terraces and flats, measured and cut to follow the walls.",
+    /* fitted wardrobes primrose hill is the area's one product search on record (Search Console,
+       11 Oct to 8 Nov); Keyword Planner has no Primrose Hill phrase at all (London, 14 Nov 2026).
+       Its page 1 was all directory listings on 14 Nov, with no competitor's own page. Alcove
+       cupboards come second because the one customer review naming Primrose Hill is for alcove
+       cupboards with floating shelves. */
+    primary: "fitted wardrobes primrose hill",
+    /* 15 Nov 2026: the register's allocation (ops PR #49): ssp-010, its lead (alcove shelving by a
+       fireplace, a kitchen beyond), and ssp-014, the cleaner of the two same-view walk-in frames
+       (ssp-013 is its alternate), cropped to 3:2 around the rails; plus the register's first AI gap,
+       off-white hinged wardrobes under an existing cornice. ssp-011, a third walk-in view of the same
+       room, is allocated too; the frame shows three plates. None is a recorded job in Primrose Hill;
+       the alt text is the register's. The register's second gap, a media wall, has no section here. */
     plates: [
-      { file: "/images/alcove-units/alcove-units-05.webp", type: "Alcove units" },
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp", type: "Fitted wardrobes" },
-      { file: "/images/walk-in-wardrobes/walk-in-wardrobes-01.webp", type: "Walk-in wardrobes" },
+      {
+        file: "/images/library/ssp-010.webp",
+        type: "Alcove units",
+        alt: "White fitted alcove shelving with shaker cupboards beside a black fireplace, green kitchen units and fluted dining table in view",
+      },
+      {
+        file: "/images/library/ssp-014.webp",
+        type: "Walk-in wardrobes",
+        alt: "White walk-in wardrobe with hanging rails in three lit bays, open cubbies above and lit shelving on the left",
+      },
+      {
+        file: "/images/journal/primrose-ai-offwhite-under-cornice.webp",
+        type: "Off-white wardrobes below a cornice",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "A wall-to-wall wardrobe with six flat hinged doors in three pairs, painted off-white, with small round brass knobs where each pair meets. It stops beneath the room's ornate original cornice, which stays in view, with slim infills at the top and sides and a recessed plinth. A sash window and an armchair sit either side.",
+      },
     ],
     summary: "Italianate stucco villas and mid-Victorian terraces, with many listed houses.",
   },
