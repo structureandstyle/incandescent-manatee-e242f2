@@ -1,0 +1,40 @@
+// THE SITE ON CLOUDFLARE (15 Nov 2026). One Worker in S&S's own Cloudflare
+// account serving ./dist and doing what Netlify did around it: see
+// worker/index.mjs and docs/cloudflare-move.md. Netlify keeps serving the same
+// build until the domain moves; netlify.toml stays until Netlify is off.
+//
+// Secrets are never in this file. Set them with `wrangler secret put NAME`
+// against S&S's account (docs/cloudflare-move.md, "Secrets"):
+//   MAKE_WEBHOOK_URL, SS_TURNSTILE_SECRET_KEY, SS_UPLOAD_LINK_SECRET,
+//   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
+{
+  "name": "structureandstyle-site",
+  "main": "worker/index.mjs",
+  // 2026-07-01: late enough that nodejs_compat fills process.env from the
+  // secrets (from 2025-04-01), early enough for the local runtime wrangler
+  // 4.112 ships, so `wrangler dev` runs what production runs.
+  "compatibility_date": "2026-07-01",
+  // node:crypto and Buffer for the photo routes' signed links, the AWS SDK
+  // for R2 presigning, and process.env filled from the secrets above.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // /contact serves /contact/, as Netlify's pretty URLs did.
+    "html_handling": "auto-trailing-slash",
+    // Unknown paths get dist/404.html with a 404 status.
+    "not_found_handling": "404-page",
+    // The Worker sees every request first, so the redirects and headers in
+    // worker/site-rules.mjs apply to the static files too.
+    "run_worker_first": true
+  },
+  // The enquiry uploads bucket, already in S&S's account. The Worker also
+  // keeps each enquiry here under submissions/, before sending it to Make.
+  "r2_buckets": [
+    { "binding": "UPLOADS", "bucket_name": "structure-style-enquiry-uploads" }
+  ],
+  "observability": { "enabled": true },
+  // The domain is attached once its DNS is on Cloudflare (the move's step 4).
+  // Until then the Worker answers on its workers.dev address only, noindexed.
+  "workers_dev": true
+}
