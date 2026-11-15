@@ -21,16 +21,21 @@
     - `SS_TURNSTILE_SECRET_KEY` comes from the widget in S&S's account;
     - the R2 keys come from a new R2 token limited to the bucket;
     - `R2_ACCOUNT_ID` is `498ba2e45d866087024dedacfabc47d1`.
-  - **Spam:** Netlify's spam folder held 11 bot posts in the past month, many of them "I wanted to know your price" in other languages. The Worker must filter more than the honeypot before step 8.
+  - **Spam:** Netlify's spam folder held 11 posts in the month to 15 Nov, and 10 of them never ran the form's script (subject still the placeholder `Website enquiry (%{submissionId})`, landing page empty): bots posting straight to the form, most of them asking "your price" in a different language each time. The eleventh was a person pitching a redesign. Every real enquiry ran the script.
 - **Done, steps 1 and 2 (same evening):**
   - Kaspar created the Worker `structureandstyle-site` from his machine. Workers Builds is linked to `structureandstyle/incandescent-manatee-e242f2`, branch `main`, with build `npm run build:production`, deploy `npx wrangler deploy` and preview builds on. The Cloudflare GitHub app is installed on the `structureandstyle` account.
   - The pull request with this code merged at 17:55 UTC, and Cloudflare built it in about 40 seconds. It answers on https://structureandstyle-site.cold-bush-4b5f.workers.dev only, noindexed.
   - Checked there: every page, the 301 to the slash form, both retired-address redirects, the 404 page, all six security headers, `noindex`, and the cache rules. The photo routes answer "Uploads are not configured", correct until step 3. A honeypot post is dropped with a 303.
-  - The build image ran Node 24.22.1. Set `NODE_VERSION=22.20.0` with the other build variables (step 2's list).
+  - The build image ran Node 24.22.1.
 - **Next:**
-  - **Build variables** (not secrets): `NODE_VERSION`, `PUBLIC_SS_TURNSTILE_SITE_KEY`, `CONTEXT=production`, then rebuild.
+  - ~~Build variables~~ **In the code instead (15 Nov, follow-up PR).** The dashboard would not save build variables for a member who does not own the build's access key: it is Kaspar's, and the page offers to create a new one. So the code carries them:
+    - `.node-version` pins Node 22.20.0;
+    - `astro.config.mjs` gives a build of `main` the public Turnstile key and `CONTEXT=production`, from Cloudflare's `WORKERS_CI_BRANCH`;
+    - `scripts/verify-build.mjs` reads the same variable.
+
+    **Check on the test address after it deploys:** `/contact/` must carry `data-sitekey` and `data-upload-fieldset`. Without them the form falls back to the one-file upload, whose file the Worker does not keep.
   - **Step 3, the secrets:** entered by a founder or Kaspar in the Worker's settings, never by an agent, and never in chat.
-  - **The spam filter.**
+  - ~~The spam filter~~ **Built (follow-up PR), see "Spam" below.**
   - **Steps 4 and 5,** then step 8.
 
 ## What moves and what stays
@@ -70,10 +75,7 @@ Each step can be checked, and undone, before the next.
    - Build command: `npm run build:production`
    - Deploy command: `npx wrangler deploy`
    - Non-production branches: build `npm run build`, deploy `npx wrangler versions upload`
-   - Build variables:
-     - `NODE_VERSION=22.20.0`, the pin netlify.toml gives;
-     - `PUBLIC_SS_TURNSTILE_SITE_KEY=0x4AAAAAAE_4Ksd9JvaaXUXM`, public, set for production only, as in netlify.toml;
-     - `CONTEXT=production`, which `scripts/verify-build.mjs` reads.
+   - No build variables: the repository sets them (`.node-version`, and `astro.config.mjs` for a build of `main`).
 3. **Secrets** (Worker, Settings, Variables and secrets, type Secret; never in Git, chat or email):
 
    | Name | Value |
@@ -142,8 +144,17 @@ Read from a public resolver on 15 Nov 2026. A record only Wix can see would not 
 
 ## Things to know
 
-- **Spam.** Netlify ran every post through its spam filter (Akismet). The Worker has the honeypot only, and drops a post with no name, phone or email. Watch the first two weeks.
-  - **If spam gets through:** add Cloudflare's free rate-limiting rule on `POST /` and `POST /thanks/`, or extend the Turnstile check to every send.
+- **Spam.** Netlify ran every post through its spam filter (Akismet). The Worker's check (`spamReason` in `worker/enquiry.mjs`, 15 Nov 2026) is built from what that filter actually caught.
+  - **How it decides:** the form's script adds `ec_e` at Send, the milliseconds the page had been open, on the visitor's own clock. A post is spam if, in order:
+    - the honeypot is filled;
+    - it has no name, phone or email;
+    - `ec_e` is missing, meaning the script did not run, as with 10 of Netlify's 11;
+    - it was sent within 2.5 seconds;
+    - the job box holds more than five links.
+  - **Nothing is deleted.** Spam is kept as `spam/YYYY-MM/<id>.json` in the uploads bucket, with the reason, and is not sent to Make or emailed. The sender sees the thank-you page either way.
+  - **Look in `spam/` once a month,** as nobody did with Netlify's spam folder. A real enquiry kept there by mistake, most likely from someone with JavaScript switched off, can be replayed to the Make webhook.
+  - **Not caught:** a person typing a sales pitch. The log's Review status handles those, as before.
+  - **If spam still gets through:** add Cloudflare's free rate-limiting rule on `POST /` and `POST /thanks/`, or extend the Turnstile check to every send.
 - **If Make is down,** the lead is not lost. The Worker saves each enquiry before sending it, as `submissions/YYYY-MM/<id>.json` in the uploads bucket, with `forwarded` true or false.
   - **To replay one:** post its JSON, without `forwarded` and `make_status`, to the Make webhook.
   - **Errors:** they show in the Worker's logs, where observability is on.

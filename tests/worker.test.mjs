@@ -12,7 +12,7 @@ import { cacheControlFor, isProductionHost, redirectFor, SECURITY_HEADERS } from
 import {
   emailText,
   handleEnquiry,
-  looksLikeSpam,
+  spamReason,
   makePayload,
   newSubmissionId,
   readFields,
@@ -80,6 +80,7 @@ const BASIC = [
   ["source", "Google Maps"],
   ["landing_page", "/contact/"],
   ["referrer", ""],
+  ["ec_e", "41237"],
 ];
 
 test("ids look like Netlify's: 24 hex characters that sort by time", () => {
@@ -102,13 +103,32 @@ test("fields: names, honeypot and form name out; a repeated service becomes a li
   assert.equal(one.service, "Flooring");
 });
 
-test("a filled honeypot, or no way to reply, is spam", () => {
-  const ok = form(BASIC);
-  assert.equal(looksLikeSpam(ok, readFields(ok)), false);
-  const pot = form(BASIC.map(([k, v]) => [k, k === "company-website" ? "http://spam" : v]));
-  assert.equal(looksLikeSpam(pot, readFields(pot)), true);
-  const empty = form([["form-name", "enquiry"], ["detail", "buy now"]]);
-  assert.equal(looksLikeSpam(empty, readFields(empty)), true);
+test("spam: honeypot, no way to reply, no script, too fast, too many links", () => {
+  const reason = (entries) => { const fd = form(entries); return spamReason(fd, readFields(fd)); };
+  const swap = (key, value) => BASIC.map(([k, v]) => [k, k === key ? value : v]);
+  assert.equal(reason(BASIC), null);
+  assert.equal(reason(swap("company-website", "http://spam")), "honeypot filled");
+  assert.equal(reason([["form-name", "enquiry"], ["detail", "buy now"], ["ec_e", "9000"]]), "no way to reply");
+  // The bots in Netlify's spam folder never ran the form's script.
+  assert.equal(reason(BASIC.filter(([k]) => k !== "ec_e")), "form script did not run");
+  assert.equal(reason(swap("ec_e", "")), "form script did not run");
+  assert.equal(reason(swap("ec_e", "900")), "sent too fast");
+  assert.equal(reason(swap("ec_e", "soon")), "sent too fast");
+  const links = Array.from({ length: 6 }, (_, i) => `https://example.com/${i}`).join(" ");
+  assert.equal(reason(swap("detail", links)), "too many links");
+  assert.equal(reason(swap("detail", links.split(" ").slice(0, 5).join(" "))), null);
+  // The script's field is a signal, never part of the enquiry.
+  assert.ok(!("ec_e" in readFields(form(BASIC))));
+});
+
+test("the family Netlify caught most is spam: placeholder subject, no script", () => {
+  const bot = [
+    ["form-name", "enquiry"], ["subject", "Website enquiry (%{submissionId})"], ["company-website", ""],
+    ["name", "Robertdialm"], ["phone", "82973297234"], ["email", "bot@example.com"],
+    ["detail", "Hola, volia saber el seu preu."], ["source", "Referral"],
+  ];
+  const fd = form(bot);
+  assert.equal(spamReason(fd, readFields(fd)), "form script did not run");
 });
 
 test("Make gets every field its scenario maps, where it maps them", () => {
@@ -182,13 +202,17 @@ test("the script's post to / gets 200, and a Make failure still keeps the lead",
   } finally { t.restore(); }
 });
 
-test("spam is answered as accepted but neither saved nor sent", async () => {
+test("spam is answered as accepted, kept under spam/ with its reason, and not sent", async () => {
   const t = fakeEnv();
   try {
-    const res = await handleEnquiry(post("/thanks/", BASIC.map(([k, v]) => [k, k === "company-website" ? "x" : v])), t.env, t.ctx);
+    const res = await handleEnquiry(post("/thanks/", BASIC.filter(([k]) => k !== "ec_e")), t.env, t.ctx);
     assert.equal(res.status, 303);
     assert.equal(t.sent.length, 0);
-    assert.equal(t.saved.size, 0);
+    const [key, record] = [...t.saved.entries()][0];
+    assert.match(key, /^spam\/\d{4}-\d{2}\/[0-9a-f]{24}\.json$/);
+    assert.equal(record.reason, "form script did not run");
+    assert.equal(record.data.name, "Denis");
+    assert.equal([...t.saved.keys()].some((k) => k.startsWith("submissions/")), false);
   } finally { t.restore(); }
 });
 
@@ -211,4 +235,11 @@ test("the Worker: redirects first, then a page with the site's headers, noindex 
     assert.equal(r5.status, 301);
     assert.equal(r5.headers.get("location"), "/contact/");
   } finally { t.restore(); }
+});
+
+test("the form's script adds the field the spam check reads", async () => {
+  const { SENT_AFTER } = await import("../worker/enquiry.mjs");
+  const page = readFileSync(new URL("../src/components/EnquiryForm.astro", import.meta.url), "utf8");
+  assert.ok(page.includes(`field.name = "${SENT_AFTER}"`), "markSent no longer names the field the Worker reads");
+  assert.match(page, /setSubject\(form\);\s*markSent\(form\);/);
 });
