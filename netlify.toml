@@ -86,6 +86,20 @@
   status = 301
   force = true
 
+# Islington, the third (15 Nov 2026); its first address also reached production as a
+# noindexed draft with PR #42.
+[[redirects]]
+  from = "/carpenter-islington/*"
+  to = "/areas/islington/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-islington"
+  to = "/areas/islington/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

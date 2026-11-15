@@ -1,0 +1,216 @@
+---
+/**
+ * Islington, 14 November 2026. A draft for Kaspar to read on the review link
+ * (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaIslingtonCheck until he has read it and his changes are in. Islington
+ * is outside the signed area list; a founder approved the page on 14 Nov 2026.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Islington), every local fact from facts-islington-2026-11-14.md: Islington
+ * Council's conservation area design guidelines for Barnsbury, Highbury
+ * Fields, Canonbury and Duncan Terrace (2002), its conservation areas, listed
+ * buildings and planning permission pages, its tradesperson permit page and its
+ * 2015 parking policy statement, all read 14 Nov 2026. Islington is its own
+ * borough, so nothing here is Camden's.
+ *
+ * WHOSE WORDS. His facts reworded to fit: q31 (scribing, in his words), q16
+ * (budget), q09 (insurance), q35, q20, the cornice line from his Hampstead
+ * section (10 Nov 2026). Everything else is new copy for him to check. No
+ * review names Islington, so there is no review block; the rating line sits
+ * under the hero buttons. Four of the nine real enquiries since launch came
+ * from Islington and nearby postcodes: that is why the page exists, and it
+ * stays internal.
+ *
+ * Street and square names are the council's, describing the houses. None is a
+ * place we claim to have worked.
+ *
+ * ON THE PRIMROSE HILL MODEL, 15 Nov 2026 (Denis: "use the same design and
+ * structure for the next articles"; ops README, "The structure rule,
+ * applied"): the address moved to /areas/islington/; the title, heading, kicker
+ * and description lead with bespoke wardrobes (areas.ts); the opening carries
+ * "bespoke carpentry" and "bespoke joinery" once each; a line drawing beside
+ * each section that describes something (src/data/area-drawings.ts: a Georgian
+ * terrace, a lower-ground room in plan, shelving around a door, storage under a
+ * valley roof), none where a section is rules only; the guide prices as cards;
+ * register photos and one labelled AI image (ssp-048 and ssp-051, cropped to
+ * 3:2, and AI glazed alcove units, Figma node 32:2; the reasons are in
+ * areas.ts).
+ *
+ * CHECKED 15 Nov by three independent reviewers (copy rules, facts against the
+ * facts file and approved text, the swap test against Primrose Hill and
+ * Camden). Changed on their findings: the parking line now follows the
+ * council's current page, not its 2015 policy; the sash line names only
+ * Barnsbury and Canonbury; "even in a conservation area" and the cornice line
+ * (Camden's too) are gone; the lede, alcove and cost guide lines are this
+ * page's own; the FAQ answers no longer repeat the page and keep to 25 words a
+ * sentence.
+ *
+ * FAQ sources, all three new: "Which company does the best fitted wardrobes?"
+ * (Google People also ask, bespoke wardrobes islington), "What is the cheapest
+ * way to get fitted wardrobes?" (People also ask, fitted wardrobes islington
+ * and fitted wardrobes), "What are alcove cabinets?" (People also ask, alcove
+ * cupboards); UK, English, desktop, the built-in browser, 15 Nov 2026. The
+ * other questions in those boxes were costs (the price cards answer them) or
+ * named other companies (no comparisons). Answers from what he approved: q09
+ * (insurance), the guarantee, the itemised quotation; the fitted wardrobe price
+ * table's finishes in order (service-copy.ts) and q16 (budget); the alcove
+ * units guide ("Full-height cupboards are another option where enclosed
+ * storage is the priority"; "The two alcoves can also serve different
+ * purposes ... a television, a desk or additional enclosed storage").
+ * Dropped: "How do I find a good carpenter?" (a carpenter question), "Can you
+ * fit furniture to walls that are not straight in an old house?" and "What if
+ * the design costs more than my budget?" (not from a product search; the
+ * budget answer lives on in the cheapest-way answer).
+ */
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
+
+import { AREAS } from "../../data/areas";
+
+const area = AREAS.find((a) => a.slug === "areas/islington")!;
+
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers and lighting move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Shelving detail, drawers and lighting move the figure.",
+  },
+  {
+    art: "kitchens",
+    name: "Bespoke kitchens",
+    href: "/bespoke-kitchens/",
+    price: "Typically from £10,000.",
+    moves: "Size, layout, worktops, appliances and finishes move the figure.",
+  },
+];
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We take on bespoke carpentry for Islington homes: <Link href="/fitted-wardrobes/">bespoke wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving. Most are Georgian and Victorian terraces and villas, and many are now divided into flats.
+    </p>
+    <p style={P2}>
+      Every piece of bespoke joinery is measured in the room and planned around its tall sash windows and chimney breasts.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Georgian and Victorian houses" level={4}>Bespoke wardrobes in Islington's Georgian and Victorian houses</SectionHead>
+    <AreaSide drawing="georgian-terrace">
+      <p>
+        Barnsbury is Islington's largest conservation area. The council counts its squares, Lonsdale, Gibson and Thornhill among them, as some of the best late Georgian and early Victorian housing in London.
+      </p>
+      <p style={P2}>
+        Highbury Fields is lined with Georgian terraces, with Victorian villas to the north, and Canonbury Square is one of the borough's earliest squares. In Barnsbury and Canonbury the council asks owners to keep the timber sash windows.
+      </p>
+      <p style={P2}>
+        The main rooms in these houses are tall, so a bespoke wardrobe can run to the ceiling. Its doors and drawers are planned so the sash beside it still opens fully.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Flats and lower floors" level={4}>Fitted furniture in Islington flats and lower-ground floors</SectionHead>
+    <AreaSide drawing="lower-ground-plan">
+      <p>
+        Many of these houses are now flats. The same tall rooms and chimney breasts often belong to a first-floor flat rather than a whole house.
+      </p>
+      <p style={P2}>
+        In Barnsbury and Canonbury the lower-ground floor takes its light from a front area behind cast-iron railings. The council will not normally let owners cover those areas over. Built-in furniture there keeps that window clear, with the storage along the side walls instead.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Alcoves and shelving" level={4}>Alcove units, shelving and bespoke furniture in Islington</SectionHead>
+    <AreaSide drawing="door-shelving">
+      <p>
+        Georgian and Victorian rooms were built with a chimney breast and an alcove either side. Each alcove takes cupboards, open shelves or both, painted to the room or finished in veneer.
+      </p>
+      <p style={P2}>
+        Bespoke furniture here also means a seat in a bay window or shelving built around a door. A <Link href="/media-walls/">built-in TV unit</Link> can sit on the chimney breast wall. More layouts are on our <Link href="/alcove-units/">alcove units</Link> page.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Roofs and lofts" level={4}>Storage under Islington's hidden roofs</SectionHead>
+    <AreaSide drawing="valley-roof">
+      <p>
+        Many Islington terraces have a valley roof hidden behind the front parapet. In Barnsbury, Canonbury and Duncan Terrace the council does not allow new dormers on front roof slopes. Loft rooms there tend to sit at the back or inside an existing mansard.
+      </p>
+      <p style={P2}>
+        Storage under those slopes is built low, with drawers and cupboards cut to the angle of the ceiling. Full-height doors go only where the ceiling allows them.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed buildings and conservation areas in Islington</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Islington has 42 conservation areas and around 4,500 listed buildings. Fitted wardrobes, alcove units and shelving inside an ordinary home usually do not need planning permission.
+      </p>
+      <p style={P2}>
+        If the house is listed, Islington Council says internal alterations may need listed building consent, especially work that affects its character. Check with <Link href="https://www.islington.gov.uk/planning/designandconservation/listed_buildings" {...EXT}>Islington Council</Link> before work begins.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Parking" level={4}>Parking for the fitting days</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Most Islington streets are in a <Link href="https://www.islington.gov.uk/parking/parking-restrictions/controlled-parking-zones" {...EXT}>controlled parking zone</Link>, so the van usually needs a permit on fitting days. The council sells a <Link href="https://www.islington.gov.uk/parking/parking-permits/permission-to-park" {...EXT}>permission to park permit</Link> for tradespeople, tied to the van's number plate and bought through RingGo.
+      </p>
+      <p style={P2}>
+        Either you or we can buy it, and residents can also buy visitor vouchers. We agree which one with you before installation, along with where the van can unload.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What bespoke wardrobes and alcove units cost</SectionHead>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> gives starting prices for fitted wardrobes by size and finish, and for alcove units by finish.
+      </p>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Which company does the best fitted wardrobes?">
+        The right one for your home is a company whose finished work and full reviews you can see. It should carry public liability insurance and give a guarantee. We carry five million pounds of public liability cover, and our guarantee covers workmanship for 2 years and the structure of the joinery for 10.
+      </Faq>
+      <Faq q="What is the cheapest way to get fitted wardrobes?">
+        Melamine board is where fitted wardrobes start, then hand-painted MDF, professionally sprayed MDF and oak veneer. Fewer doors cost less than more. If a design comes in above your budget, we explain what is driving the cost. Then we adjust the design, materials or specification without compromising the finished piece.
+      </Faq>
+      <Faq q="What are alcove cabinets?">
+        They can be base cupboards with open shelves above, or full-height cupboards where closed storage matters most. The two alcoves need not match: one can hold display shelving while the other takes a television, a desk or more cupboards.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
