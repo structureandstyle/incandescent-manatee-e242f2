@@ -22,7 +22,16 @@
     - the R2 keys come from a new R2 token limited to the bucket;
     - `R2_ACCOUNT_ID` is `498ba2e45d866087024dedacfabc47d1`.
   - **Spam:** Netlify's spam folder held 11 bot posts in the past month, many of them "I wanted to know your price" in other languages. The Worker must filter more than the honeypot before step 8.
-- **Next:** step 2 (create the Worker), then steps 3 to 5, then step 8.
+- **Done, steps 1 and 2 (same evening):**
+  - Kaspar created the Worker `structureandstyle-site` from his machine. Workers Builds is linked to `structureandstyle/incandescent-manatee-e242f2`, branch `main`, with build `npm run build:production`, deploy `npx wrangler deploy` and preview builds on. The Cloudflare GitHub app is installed on the `structureandstyle` account.
+  - The pull request with this code merged at 17:55 UTC, and Cloudflare built it in about 40 seconds. It answers on https://structureandstyle-site.cold-bush-4b5f.workers.dev only, noindexed.
+  - Checked there: every page, the 301 to the slash form, both retired-address redirects, the 404 page, all six security headers, `noindex`, and the cache rules. The photo routes answer "Uploads are not configured", correct until step 3. A honeypot post is dropped with a 303.
+  - The build image ran Node 24.22.1. Set `NODE_VERSION=22.20.0` with the other build variables (step 2's list).
+- **Next:**
+  - **Build variables** (not secrets): `NODE_VERSION`, `PUBLIC_SS_TURNSTILE_SITE_KEY`, `CONTEXT=production`, then rebuild.
+  - **Step 3, the secrets:** entered by a founder or Kaspar in the Worker's settings, never by an agent, and never in chat.
+  - **The spam filter.**
+  - **Steps 4 and 5,** then step 8.
 
 ## What moves and what stays
 
