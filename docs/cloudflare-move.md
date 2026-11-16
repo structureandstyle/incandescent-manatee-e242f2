@@ -72,7 +72,13 @@
   - The old Netlify-signed links now answer 403, as expected, until they are re-signed.
 - **Next:**
   - Tell Kaspar: new-enquiry emails now come from team@ with the subject "Name / Area / Service", Netlify is gone, and Make is named under the data agreement.
-  - Re-sign the old file links the same day, keeping each Netlify link next to its new one (see "Old file links").
+  - ~~Re-sign the old file links~~ **Done 16 Nov, by 10:10 UTC.**
+    - The 15 Nov link secret had been made on Kaspar's laptop and never saved, so a founder made a new one on their own machine, saved it in the founders' vault and set it in the Worker. That cost nothing: no real enquiry had come in since the switch, so only today's test links used the old one.
+    - `scripts/resign-file-links.mjs` made the five links again. All five open on the live site: four photos, and a files page whose six pictures all open.
+    - The new links sit next to the old ones:
+      - inbox tab, "Attachment URL", rows 7, 8 and 14;
+      - Enquiry log, Notes, after "Attachment:", rows 15, 16 and 18.
+    - The old links stay in the job descriptions until step 9's first week has passed.
   - Delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets): nothing uses them now. The deploy has already removed `R2_ACCOUNT_ID`.
   - Any R2 token made for the Worker on 15 Nov can go. It was made from Kaspar's login, so it is listed under R2, Manage API tokens, **Account** API tokens, which only he can see.
   - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026. Netlify no longer serves the site, but keep it until Netlify is switched off in case step 8 has to be undone.
@@ -120,7 +126,7 @@ Each step can be checked, and undone, before the next.
    | Name | Value |
    |---|---|
    | `MAKE_WEBHOOK_URL` | The webhook of Make scenario 7361484 (module 1, "SS Netlify enquiry live"), the same address Netlify posts to. From Make, by a founder |
-   | `SS_UPLOAD_LINK_SECRET` | A new random value, since Netlify's could not be read: 48 random bytes in Base64, 64 characters, made in PowerShell on 15 Nov and kept in the founders' vault. It signs every file link, so keep it: changing it stops every link the Worker made from opening |
+   | `SS_UPLOAD_LINK_SECRET` | A new random value, since Netlify's could not be read: 48 random bytes in Base64, 64 characters. The 15 Nov one was never saved, so it was made again in PowerShell on 16 Nov and **kept in the founders' vault**. It signs every file link, so keep it: changing it stops every link the Worker made from opening |
    | `SS_TURNSTILE_SECRET_KEY` | The widget's secret, from Turnstile in the same account. Every ticket request is checked with it |
 
    No R2 keys and no account ID: the Worker reaches the bucket through its binding (16 Nov). Three secrets, and nothing else.
