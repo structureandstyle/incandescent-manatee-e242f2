@@ -170,9 +170,14 @@ Read from a public resolver on 15 Nov 2026. A record only Wix can see would not 
   - **Previews** bind the same name to the empty preview bucket, so a test upload on a preview never lands beside real enquiries.
 - **Old file links.** Links signed with Netlify's link secret stop opening once the domain moves: the Worker signs with its own, and Netlify's cannot be read.
   - **Affected:** five links on three real enquiries (8, 18 and 30 Oct), plus test rows. The files are safe in the bucket. If step 8 is ever undone and done again, add the links of every enquiry Netlify took in between.
-  - **The fix:** `scripts/resign-file-links.mjs` makes each link again, for the same file or folder, with the Worker's secret. A founder runs it in their own terminal and pastes the secret at its hidden prompt, never into chat or a file. It writes "old link, new link" pairs, kept outside the repository because they open customers' photos.
+  - **The fix:** `scripts/resign-file-links.mjs` makes each link again, for the same file or folder, with the Worker's secret.
+    - A founder runs it in PowerShell or Windows Terminal and pastes the secret at its hidden prompt, never into chat or a file. It refuses to ask anywhere it could not hide what is pasted.
+    - It accepts only the link secret's shape (64 characters of letters, digits, `+` and `/`), so the Turnstile secret pasted by mistake is refused rather than making links that never open.
+    - It reads the list of old links whether the file was saved as UTF-8 or by Windows PowerShell (UTF-16).
+    - It writes "old link, new link" pairs, kept outside the repository because they open customers' photos.
+    - **Before adding any to the log,** open one new link with its address changed to `structureandstyle-site.cold-bush-4b5f.workers.dev`. If it opens, the secret was the right one.
   - **Keep both links** in the shared log, the new one added next to the old, until step 9's first week has passed. Then drop the old one. Replacing it outright would leave nothing that opens on Netlify if step 8 had to be undone.
-- **http:// goes to https://** (`redirectFor` in `worker/site-rules.mjs`), in the same hop as www to the apex, as Netlify forced it. Without it, an old http:// link would serve pages, and now photo uploads, unencrypted. `wrangler dev` on this machine runs over http and is left alone.
+- **http:// goes to https://** (`redirectFor` in `worker/site-rules.mjs`), in the same hop as www to the apex or a retired address's forward, always to the standard port, as Netlify forced it. Without it, an old http:// link would serve pages, and now photo uploads, unencrypted. `wrangler dev` on this machine runs over http and is left alone.
 - **Spam.** Netlify ran every post through its spam filter (Akismet). The Worker's check (`spamReason` in `worker/enquiry.mjs`, 15 Nov 2026) is built from what that filter actually caught.
   - **How it decides:** the form's script adds `ec_e` at Send, the milliseconds the page had been open, on the visitor's own clock. A post is spam if, in order:
     - the honeypot is filled;
@@ -204,7 +209,7 @@ Read from a public resolver on 15 Nov 2026. A record only Wix can see would not 
     - Make receiving the fields its scenario maps.
   - **Not tested:** anything in S&S's real account (no access yet), real uploads to R2 from the Worker, and the Make Gmail step.
 - **Checked before the photos PR (16 Nov).**
-  - `npm test`: 85 pass. Seventeen are new:
+  - `npm test`: 88 pass. Twenty are new:
     - **The Worker's photos (11, `tests/worker-uploads.test.mjs`):**
       - tickets that point at the Worker;
       - a file in and back out intact;
@@ -216,13 +221,14 @@ Read from a public resolver on 15 Nov 2026. A record only Wix can see would not 
       - the account ID in no file of the repository (checked by its hash);
       - the form's script still sending to its ticket's address with the site's cookies;
       - oversized ticket and enquiry posts refused without being read whole.
-    - **http:// to https:// in one hop (1).**
-    - **The re-sign tool (5).**
+    - **http:// to https:// in one hop, the port dropped (1).**
+    - **The re-sign tool (8),** including a wrong secret refused, a UTF-16 file read, a file with no links failing loudly, and no prompt without a terminal.
   - Netlify's own photo tests pass unchanged. The new photo tests passed 40 runs in a row.
   - **An independent review** looked at four things (security, Cloudflare's runtime, compatibility with the form and Netlify, the docs), with a separate skeptic trying to refute each serious finding. Two were confirmed and fixed:
     - one test passed or failed by chance;
     - this runbook would have had the old links overwritten, which breaks step 8's undo.
     - The fixes above for https, the upload cookies, the body limits and the token clean-up came from its lower-severity findings.
+  - **A second, shorter review** went over those fixes: the redirect, the body limits, the cookies and the re-sign tool. Nothing serious held up. Its four small points are fixed: the redirect now drops a non-standard port, and the tool refuses a wrong secret, reads UTF-16 files, fails loudly on a file with no links, and will not ask for the secret outside a real terminal.
   - `wrangler deploy --dry-run`: 8 KB gzipped, down from 126 KB, with no AWS SDK in it.
   - `wrangler dev` 4.162.0, Cloudflare's runtime on this machine with a local bucket, 25 checks, all passed after the review's fixes:
     - a real photo in and back out, byte for byte, with the right headers;

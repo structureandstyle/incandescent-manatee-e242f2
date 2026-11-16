@@ -12,8 +12,10 @@
  *   node scripts/resign-file-links.mjs <file with the old links> > <output file>
  *
  * The secret comes from SS_UPLOAD_LINK_SECRET if it is set, otherwise the
- * script asks for it without showing what is typed. Never put the secret in a
- * file, in chat or in a command line. Every /api/enquiry-file and
+ * script asks for it without showing what is typed. Run it from PowerShell or
+ * Windows Terminal, where the prompt can hide what is pasted; it refuses to
+ * ask anywhere else. Never put the secret in a file, in chat or in a command
+ * line. Every /api/enquiry-file and
  * /api/enquiry-files link found in the input is printed as one line,
  * "old link<TAB>new link". Nothing is sent anywhere, and a link that is not
  * a well-formed file or folder link is reported and left out.
@@ -61,6 +63,26 @@ export function findLinks(text) {
   return [...new Set(String(text).match(LINK) || [])];
 }
 
+/**
+ * A file's text, whichever way Windows saved it: Windows PowerShell 5.1
+ * writes UTF-16 with a byte-order mark when output is redirected with ">".
+ */
+export function decodeText(buffer) {
+  if (buffer[0] === 0xff && buffer[1] === 0xfe) return buffer.subarray(2).toString("utf16le");
+  if (buffer[0] === 0xfe && buffer[1] === 0xff) {
+    const body = Buffer.from(buffer.subarray(2, 2 + ((buffer.length - 2) & ~1)));
+    return body.swap16().toString("utf16le");
+  }
+  return buffer.toString("utf8").replace(/^﻿/, "");
+}
+
+/**
+ * The Worker's link secret is 48 random bytes in Base64: 64 characters of
+ * letters, digits, "+" and "/" (15 Nov 2026). Anything else, such as the
+ * Turnstile secret pasted by mistake, would make links that never open.
+ */
+export const SECRET_SHAPE = /^[A-Za-z0-9+/]{64}$/;
+
 function askHidden(question) {
   return new Promise((resolve) => {
     const rl = createInterface({ input: process.stdin, output: process.stderr, terminal: true });
@@ -83,16 +105,24 @@ async function main() {
     process.exit(2);
   }
   if (!process.env.SS_UPLOAD_LINK_SECRET) {
+    // Only a real terminal can take the secret without showing it. In a pipe,
+    // or Git Bash's own window, what is pasted could be echoed on screen.
+    if (!process.stdin.isTTY) {
+      process.stderr.write("No terminal to ask for the secret without showing it. Run this from PowerShell or Windows Terminal. Nothing written.\n");
+      process.exit(2);
+    }
     process.env.SS_UPLOAD_LINK_SECRET = await askHidden("Paste the Worker's SS_UPLOAD_LINK_SECRET (hidden), then Enter: ");
   }
-  // The Worker's secret is 48 random bytes in Base64, 64 characters (15 Nov
-  // 2026); Netlify's was hex. Either way it is long and has no spaces.
-  if (!/^\S{32,}$/.test(process.env.SS_UPLOAD_LINK_SECRET)) {
-    process.stderr.write("That does not look like the link secret (at least 32 characters, no spaces). Nothing written.\n");
+  if (!SECRET_SHAPE.test(process.env.SS_UPLOAD_LINK_SECRET)) {
+    process.stderr.write("That is not the Worker's link secret (64 characters: letters, digits, + and /). Check it is SS_UPLOAD_LINK_SECRET, not another secret. Nothing written.\n");
     process.exit(1);
   }
 
-  const links = findLinks(readFileSync(inputPath, "utf8"));
+  const links = findLinks(decodeText(readFileSync(inputPath)));
+  if (links.length === 0) {
+    process.stderr.write(`No /api/enquiry-file or /api/enquiry-files links found in ${inputPath}. Nothing written.\n`);
+    process.exit(1);
+  }
   let made = 0;
   for (const link of links) {
     const fresh = resign(link);
@@ -104,6 +134,7 @@ async function main() {
     }
   }
   process.stderr.write(`${made} of ${links.length} links made again.\n`);
+  process.stderr.write("Before adding them to the log, open one new link with its address changed to https://structureandstyle-site.cold-bush-4b5f.workers.dev and check it opens: that proves the secret was the right one.\n");
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] || "").href) await main();

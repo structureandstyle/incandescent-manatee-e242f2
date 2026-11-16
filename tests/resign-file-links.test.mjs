@@ -10,10 +10,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Shaped like the Worker's: 48 random bytes in Base64.
-const SECRET = "Zm9yIHRlc3RzIG9ubHk6IG5vdCB0aGUgV29ya2VyJ3Mgc2VjcmV0LCBuZXZlciB1c2Vk";
+// Shaped like the Worker's: 48 random bytes in Base64, 64 characters. Not its value.
+const SECRET = "Zm9yIHRlc3RzIG9ubHk6IG5vdCB0aGUgV29ya2VyJ3Mgc2VjcmV0LCBuZXZlciB1";
 process.env.SS_UPLOAD_LINK_SECRET = SECRET;
-const { findLinks, ORIGIN, resign } = await import("../scripts/resign-file-links.mjs");
+const { decodeText, findLinks, ORIGIN, resign, SECRET_SHAPE } = await import("../scripts/resign-file-links.mjs");
 const { downloadLink, folderLink, verifyDownloadLink, verifyFolderLink } = await import("../netlify/functions/lib/enquiry-uploads.mjs");
 
 const folder = "12345678-1234-1234-1234-123456789abc";
@@ -61,4 +61,55 @@ test("the command: secret from the environment, one 'old<TAB>new' line per link,
   const refused = spawnSync(process.execPath, [script, input], { env: { ...process.env, SS_UPLOAD_LINK_SECRET: "too short" }, encoding: "utf8" });
   assert.equal(refused.status, 1);
   assert.equal(refused.stdout, "");
+});
+
+test("only the link secret's shape is accepted: another of the Worker's secrets is refused", () => {
+  assert.equal(SECRET_SHAPE.test(SECRET), true);
+  // A Turnstile secret, pasted by mistake, would make links that never open.
+  assert.equal(SECRET_SHAPE.test("0x4AAAAAAAstandinstandinstandinst"), false);
+  assert.equal(SECRET_SHAPE.test("https://hook.eu1.make.com/standinstandinstandinstandinstandinstand"), false);
+  assert.equal(SECRET_SHAPE.test(`${SECRET} `), false);
+  const dir = mkdtempSync(join(tmpdir(), "resign-"));
+  const input = join(dir, "old-links.txt");
+  writeFileSync(input, oldFile);
+  const script = fileURLToPath(new URL("../scripts/resign-file-links.mjs", import.meta.url));
+  const wrong = spawnSync(process.execPath, [script, input], { env: { ...process.env, SS_UPLOAD_LINK_SECRET: "0x4AAAAAAAstandinstandinstandinst" }, encoding: "utf8" });
+  assert.equal(wrong.status, 1);
+  assert.equal(wrong.stdout, "");
+});
+
+test("a file saved by Windows PowerShell (UTF-16) is read, and a file with no links fails loudly", () => {
+  const text = `Attached files: ${oldFolder}\r\nPROJECT.jpeg: ${oldFile}\r\n`;
+  const utf16le = Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(text, "utf16le")]);
+  assert.deepEqual(findLinks(decodeText(utf16le)), [oldFolder, oldFile]);
+  const utf16be = Buffer.concat([Buffer.from([0xfe, 0xff]), Buffer.from(text, "utf16le").swap16()]);
+  assert.deepEqual(findLinks(decodeText(utf16be)), [oldFolder, oldFile]);
+  assert.deepEqual(findLinks(decodeText(Buffer.from(`﻿${text}`, "utf8"))), [oldFolder, oldFile]);
+
+  const dir = mkdtempSync(join(tmpdir(), "resign-"));
+  const script = fileURLToPath(new URL("../scripts/resign-file-links.mjs", import.meta.url));
+  const saved = join(dir, "from-powershell.txt");
+  writeFileSync(saved, utf16le);
+  const out = execFileSync(process.execPath, [script, saved], { env: { ...process.env, SS_UPLOAD_LINK_SECRET: SECRET }, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+  assert.equal(out.trim().split("\n").length, 2);
+
+  const empty = join(dir, "no-links.txt");
+  writeFileSync(empty, "Nothing to see here.");
+  const none = spawnSync(process.execPath, [script, empty], { env: { ...process.env, SS_UPLOAD_LINK_SECRET: SECRET }, encoding: "utf8" });
+  assert.equal(none.status, 1);
+  assert.equal(none.stdout, "");
+  assert.match(none.stderr, /No \/api\/enquiry-file/);
+});
+
+test("with no terminal to hide what is pasted, it refuses to ask for the secret", () => {
+  const dir = mkdtempSync(join(tmpdir(), "resign-"));
+  const input = join(dir, "old-links.txt");
+  writeFileSync(input, oldFile);
+  const script = fileURLToPath(new URL("../scripts/resign-file-links.mjs", import.meta.url));
+  const env = { ...process.env };
+  delete env.SS_UPLOAD_LINK_SECRET;
+  const piped = spawnSync(process.execPath, [script, input], { env, input: `${SECRET}\n`, encoding: "utf8" });
+  assert.equal(piped.status, 2);
+  assert.equal(piped.stdout, "");
+  assert.doesNotMatch(piped.stderr, new RegExp(SECRET.slice(0, 20)));
 });

@@ -36,6 +36,9 @@ test("http goes to https in one hop, as Netlify forced it; wrangler dev on this 
   assert.equal(redirectFor("http://structureandstyle.co.uk/carpenter-camden/x"), "https://structureandstyle.co.uk/areas/camden/");
   assert.equal(redirectFor("http://structureandstyle.co.uk/api/enquiry-upload?key=a"), "https://structureandstyle.co.uk/api/enquiry-upload?key=a");
   assert.equal(redirectFor("http://structureandstyle-site.example.workers.dev/"), "https://structureandstyle-site.example.workers.dev/");
+  // Cloudflare serves plain http on 8080 but no https there: the target drops the port.
+  assert.equal(redirectFor("http://structureandstyle.co.uk:8080/a"), "https://structureandstyle.co.uk/a");
+  assert.equal(redirectFor("http://www.structureandstyle.co.uk:8080/a"), "https://structureandstyle.co.uk/a");
   assert.equal(redirectFor("https://structureandstyle.co.uk/contact/"), null);
   assert.equal(redirectFor("http://127.0.0.1:8799/contact/"), null);
   assert.equal(redirectFor("http://localhost:8787/"), null);
