@@ -50,11 +50,26 @@
     - the files page, with both photos showing.
   - Turnstile passed on its own once the browser window was on screen. In a minimised window it stalls at "Verifying…".
   - **Found on the way:** a founder's test sent through the live Netlify site on 15 Nov at 19:57 reached the Enquiry log as an open enquiry. The CRM step only skips names containing "test" and flowtoform.co.uk addresses, and it was neither. Founders testing on the live site should put "test" in the name.
+- **Done, step 8: the site moved (16 Nov, about 09:15 UTC).** A founder's go, Kaspar not present: team@ is an Administrator of the whole account, which covers DNS, Workers and SSL.
+  - **Before:**
+    - Email Address Obfuscation turned **off**, so pages are served exactly as Netlify served them. It had been on by default, and would have rewritten info@ on every page.
+    - The universal certificate for the domain and `*.` subdomains was already Active.
+    - AI crawler policies (search, training, agents) were all already "Allow".
+  - **The switch:** the apex `A 75.2.60.5` was deleted, `structureandstyle.co.uk` was added as the Worker's custom domain within seconds, then the same for `www` and its Netlify CNAME. Cloudflare refuses a custom domain while another record holds the name, so the delete has to come first.
+  - **Checked live,** through Cloudflare:
+    - pages 200; http to https, www to the apex, the trailing slash and the retired address all 301; the 404 page;
+    - robots.txt and the sitemap; the upload route;
+    - all six security headers, and **no** `X-Robots-Tag` on the real domain;
+    - the Turnstile key on the form, and no email obfuscation;
+    - MX unchanged.
+    - Public DNS showed Cloudflare for the apex at once, and for www within five minutes.
 - **Next:**
+  - A photo test enquiry from the real domain.
+  - Tell Kaspar: new-enquiry emails now come from team@ with the subject "Name / Area / Service", Netlify is gone, and Make is named under the data agreement.
+  - Re-sign the old file links the same day, keeping each Netlify link next to its new one (see "Old file links").
   - Delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets): nothing uses them now. The deploy has already removed `R2_ACCOUNT_ID`.
   - Any R2 token made for the Worker on 15 Nov can go. It was made from Kaspar's login, so it is listed under R2, Manage API tokens, **Account** API tokens, which only he can see.
-  - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026, and Netlify's live photo uploads depend on it. Deleting it before the switch breaks every photo enquiry on the live site, and paused Netlify cannot take new keys.
-  - Then step 8. The same evening, add a re-signed link next to each old one (see "Old file links").
+  - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026. Netlify no longer serves the site, but keep it until Netlify is switched off in case step 8 has to be undone.
 
 ## What moves and what stays
 
