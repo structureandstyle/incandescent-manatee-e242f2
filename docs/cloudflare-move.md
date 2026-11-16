@@ -63,8 +63,14 @@
     - the Turnstile key on the form, and no email obfuscation;
     - MX unchanged.
     - Public DNS showed Cloudflare for the apex at once, and for www within five minutes.
+- **Done, step 9's photo test on the real domain (16 Nov, 09:26 UTC).** A test enquiry with two photos from `structureandstyle.co.uk/contact/` went through the ticket, both uploads to the Worker, the enquiry and the thank-you page. Then:
+  - the Make run (3 steps; the CRM step skipped the test);
+  - inbox row 24, its files link now on the real domain, marked Test;
+  - the email from team@ to team@ and info@;
+  - both photos on the files page.
+  - Netlify sent no email for it: Netlify no longer receives enquiries, so nothing arrives twice.
+  - The old Netlify-signed links now answer 403, as expected, until they are re-signed.
 - **Next:**
-  - A photo test enquiry from the real domain.
   - Tell Kaspar: new-enquiry emails now come from team@ with the subject "Name / Area / Service", Netlify is gone, and Make is named under the data agreement.
   - Re-sign the old file links the same day, keeping each Netlify link next to its new one (see "Old file links").
   - Delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets): nothing uses them now. The deploy has already removed `R2_ACCOUNT_ID`.
