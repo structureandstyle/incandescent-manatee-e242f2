@@ -39,12 +39,49 @@
   - Make scenario 7361484 now has a router after the inbox row: route 1 is the original CRM modules, unchanged; route 2 is the Gmail step from team@, to team@flowtoform.co.uk and info@structureandstyle.co.uk, with the filter "`email_text` exists".
   - A plain test enquiry on the workers.dev address went through end to end: the Make run, the inbox row, the email to both addresses, and the copy under `submissions/`.
 - **Photos: the bucket keys are gone (15 to 16 Nov).** The first photo test failed at the upload. The ticket was issued, but the bucket refused the file, because the `R2_ACCESS_KEY_ID` secret held an API token's value, not the 32-character Access Key ID. It was entered three times and held a token value each time. A key that can be pasted wrong breaks every photo upload with nothing on screen to say why. So the Worker now writes the photos through its bucket binding and needs no bucket keys at all (`worker/uploads.mjs`, see "Photos" below).
+- **Done, photos end to end (16 Nov, 08:53 UTC).** The photos PR (#53) merged at 08:38 UTC, and Cloudflare had it live 31 seconds later.
+  - Checked on the workers.dev address: http:// goes to https://; the upload address answers; a bad file link is refused.
+  - A test enquiry with two photos went through the whole path:
+    - the ticket, and both uploads to the Worker's own address;
+    - the enquiry post and the thank-you page;
+    - the Make run (webhook, inbox row, email; the CRM step skipped the test, as designed);
+    - inbox row 23 with its "Attached files" link, marked Test;
+    - the email from team@ to team@ and info@structureandstyle.co.uk;
+    - the files page, with both photos showing.
+  - Turnstile passed on its own once the browser window was on screen. In a minimised window it stalls at "Verifying…".
+  - **Found on the way:** a founder's test sent through the live Netlify site on 15 Nov at 19:57 reached the Enquiry log as an open enquiry. The CRM step only skips names containing "test" and flowtoform.co.uk addresses, and it was neither. Founders testing on the live site should put "test" in the name.
+- **Done, step 8: the site moved (16 Nov, about 09:15 UTC).** A founder's go, Kaspar not present: team@ is an Administrator of the whole account, which covers DNS, Workers and SSL.
+  - **Before:**
+    - Email Address Obfuscation turned **off**, so pages are served exactly as Netlify served them. It had been on by default, and would have rewritten info@ on every page.
+    - The universal certificate for the domain and `*.` subdomains was already Active.
+    - AI crawler policies (search, training, agents) were all already "Allow".
+  - **The switch:** the apex `A 75.2.60.5` was deleted, `structureandstyle.co.uk` was added as the Worker's custom domain within seconds, then the same for `www` and its Netlify CNAME. Cloudflare refuses a custom domain while another record holds the name, so the delete has to come first.
+  - **Checked live,** through Cloudflare:
+    - pages 200; http to https, www to the apex, the trailing slash and the retired address all 301; the 404 page;
+    - robots.txt and the sitemap; the upload route;
+    - all six security headers, and **no** `X-Robots-Tag` on the real domain;
+    - the Turnstile key on the form, and no email obfuscation;
+    - MX unchanged.
+    - Public DNS showed Cloudflare for the apex at once, and for www within five minutes.
+- **Done, step 9's photo test on the real domain (16 Nov, 09:26 UTC).** A test enquiry with two photos from `structureandstyle.co.uk/contact/` went through the ticket, both uploads to the Worker, the enquiry and the thank-you page. Then:
+  - the Make run (3 steps; the CRM step skipped the test);
+  - inbox row 24, its files link now on the real domain, marked Test;
+  - the email from team@ to team@ and info@;
+  - both photos on the files page.
+  - Netlify sent no email for it: Netlify no longer receives enquiries, so nothing arrives twice.
+  - The old Netlify-signed links now answer 403, as expected, until they are re-signed.
 - **Next:**
-  - Merge the photos PR, then send a test enquiry with two photos on the workers.dev address.
-  - After it merges, delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets). The deploy removes `R2_ACCOUNT_ID` by itself.
+  - Tell Kaspar: new-enquiry emails now come from team@ with the subject "Name / Area / Service", Netlify is gone, and Make is named under the data agreement.
+  - ~~Re-sign the old file links~~ **Done 16 Nov, by 10:10 UTC.**
+    - The 15 Nov link secret had been made on Kaspar's laptop and never saved, so a founder made a new one on their own machine, saved it in the founders' vault and set it in the Worker. That cost nothing: no real enquiry had come in since the switch, so only today's test links used the old one.
+    - `scripts/resign-file-links.mjs` made the five links again. All five open on the live site: four photos, and a files page whose six pictures all open.
+    - The new links sit next to the old ones:
+      - inbox tab, "Attachment URL", rows 7, 8 and 14;
+      - Enquiry log, Notes, after "Attachment:", rows 15, 16 and 18.
+    - The old links stay in the job descriptions until step 9's first week has passed.
+  - Delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets): nothing uses them now. The deploy has already removed `R2_ACCOUNT_ID`.
   - Any R2 token made for the Worker on 15 Nov can go. It was made from Kaspar's login, so it is listed under R2, Manage API tokens, **Account** API tokens, which only he can see.
-  - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026, and Netlify's live photo uploads depend on it. Deleting it before the switch breaks every photo enquiry on the live site, and paused Netlify cannot take new keys.
-  - Then step 8. The same evening, add a re-signed link next to each old one (see "Old file links").
+  - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026. Netlify no longer serves the site, but keep it until Netlify is switched off in case step 8 has to be undone.
 
 ## What moves and what stays
 
@@ -89,7 +126,7 @@ Each step can be checked, and undone, before the next.
    | Name | Value |
    |---|---|
    | `MAKE_WEBHOOK_URL` | The webhook of Make scenario 7361484 (module 1, "SS Netlify enquiry live"), the same address Netlify posts to. From Make, by a founder |
-   | `SS_UPLOAD_LINK_SECRET` | A new random value, since Netlify's could not be read: 48 random bytes in Base64, 64 characters, made in PowerShell on 15 Nov and kept in the founders' vault. It signs every file link, so keep it: changing it stops every link the Worker made from opening |
+   | `SS_UPLOAD_LINK_SECRET` | A new random value, since Netlify's could not be read: 48 random bytes in Base64, 64 characters. The 15 Nov one was never saved, so it was made again in PowerShell on 16 Nov and **kept in the founders' vault**. It signs every file link, so keep it: changing it stops every link the Worker made from opening |
    | `SS_TURNSTILE_SECRET_KEY` | The widget's secret, from Turnstile in the same account. Every ticket request is checked with it |
 
    No R2 keys and no account ID: the Worker reaches the bucket through its binding (16 Nov). Three secrets, and nothing else.
