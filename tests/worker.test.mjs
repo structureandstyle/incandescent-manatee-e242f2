@@ -30,6 +30,17 @@ test("www goes to the apex, and the retired addresses forward", () => {
   assert.equal(redirectFor("https://structureandstyle.co.uk/"), null);
 });
 
+test("http goes to https in one hop, as Netlify forced it; wrangler dev on this machine is left alone", () => {
+  assert.equal(redirectFor("http://structureandstyle.co.uk/contact/?a=1"), "https://structureandstyle.co.uk/contact/?a=1");
+  assert.equal(redirectFor("http://www.structureandstyle.co.uk/contact/"), "https://structureandstyle.co.uk/contact/");
+  assert.equal(redirectFor("http://structureandstyle.co.uk/carpenter-camden/x"), "https://structureandstyle.co.uk/areas/camden/");
+  assert.equal(redirectFor("http://structureandstyle.co.uk/api/enquiry-upload?key=a"), "https://structureandstyle.co.uk/api/enquiry-upload?key=a");
+  assert.equal(redirectFor("http://structureandstyle-site.example.workers.dev/"), "https://structureandstyle-site.example.workers.dev/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/contact/"), null);
+  assert.equal(redirectFor("http://127.0.0.1:8799/contact/"), null);
+  assert.equal(redirectFor("http://localhost:8787/"), null);
+});
+
 test("every redirect in netlify.toml has its rule here", () => {
   const toml = readFileSync(new URL("../netlify.toml", import.meta.url), "utf8");
   const froms = [...toml.matchAll(/^\s*from = "([^"]+)"/gm)].map((m) => m[1]);

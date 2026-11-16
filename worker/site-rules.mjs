@@ -20,6 +20,9 @@ const PATH_REDIRECTS = [
   { from: /^\/carpenter-camden(?:\/.*)?$/, to: "/areas/camden/" },
 ];
 
+/** wrangler dev on this machine runs over plain http and is left alone. */
+const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
+
 export function redirectFor(url) {
   const u = new URL(url);
   if (u.hostname === `www.${CANONICAL_HOST}`) {
@@ -27,10 +30,15 @@ export function redirectFor(url) {
     u.protocol = "https:";
     return u.toString();
   }
+  // Netlify forced HTTPS for every address; the Worker does it here, in the
+  // same hop as a retired address's forward, so an old http:// link never
+  // serves a page, or a visitor's photos, unencrypted (review, 16 Nov 2026).
+  const insecure = u.protocol === "http:" && !LOCAL_HOSTS.has(u.hostname);
+  if (insecure) u.protocol = "https:";
   for (const rule of PATH_REDIRECTS) {
     if (rule.from.test(u.pathname)) return new URL(rule.to, u.origin).toString();
   }
-  return null;
+  return insecure ? u.toString() : null;
 }
 
 /** Every response from the site: the five security headers netlify.toml sets for /*. */
