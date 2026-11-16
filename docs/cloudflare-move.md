@@ -39,9 +39,19 @@
   - Make scenario 7361484 now has a router after the inbox row: route 1 is the original CRM modules, unchanged; route 2 is the Gmail step from team@, to team@flowtoform.co.uk and info@structureandstyle.co.uk, with the filter "`email_text` exists".
   - A plain test enquiry on the workers.dev address went through end to end: the Make run, the inbox row, the email to both addresses, and the copy under `submissions/`.
 - **Photos: the bucket keys are gone (15 to 16 Nov).** The first photo test failed at the upload. The ticket was issued, but the bucket refused the file, because the `R2_ACCESS_KEY_ID` secret held an API token's value, not the 32-character Access Key ID. It was entered three times and held a token value each time. A key that can be pasted wrong breaks every photo upload with nothing on screen to say why. So the Worker now writes the photos through its bucket binding and needs no bucket keys at all (`worker/uploads.mjs`, see "Photos" below).
+- **Done, photos end to end (16 Nov, 08:53 UTC).** The photos PR (#53) merged at 08:38 UTC, and Cloudflare had it live 31 seconds later.
+  - Checked on the workers.dev address: http:// goes to https://; the upload address answers; a bad file link is refused.
+  - A test enquiry with two photos went through the whole path:
+    - the ticket, and both uploads to the Worker's own address;
+    - the enquiry post and the thank-you page;
+    - the Make run (webhook, inbox row, email; the CRM step skipped the test, as designed);
+    - inbox row 23 with its "Attached files" link, marked Test;
+    - the email from team@ to team@ and info@structureandstyle.co.uk;
+    - the files page, with both photos showing.
+  - Turnstile passed on its own once the browser window was on screen. In a minimised window it stalls at "Verifying…".
+  - **Found on the way:** a founder's test sent through the live Netlify site on 15 Nov at 19:57 reached the Enquiry log as an open enquiry. The CRM step only skips names containing "test" and flowtoform.co.uk addresses, and it was neither. Founders testing on the live site should put "test" in the name.
 - **Next:**
-  - Merge the photos PR, then send a test enquiry with two photos on the workers.dev address.
-  - After it merges, delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets). The deploy removes `R2_ACCOUNT_ID` by itself.
+  - Delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets): nothing uses them now. The deploy has already removed `R2_ACCOUNT_ID`.
   - Any R2 token made for the Worker on 15 Nov can go. It was made from Kaspar's login, so it is listed under R2, Manage API tokens, **Account** API tokens, which only he can see.
   - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026, and Netlify's live photo uploads depend on it. Deleting it before the switch breaks every photo enquiry on the live site, and paused Netlify cannot take new keys.
   - Then step 8. The same evening, add a re-signed link next to each old one (see "Old file links").
