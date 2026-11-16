@@ -6,25 +6,27 @@
  * around it:
  *   - the redirects and headers in netlify.toml (./site-rules.mjs);
  *   - the enquiry form, which Netlify Forms received (./enquiry.mjs);
- *   - the three photo routes, which were Netlify Functions. They are the
- *     same files, imported from netlify/functions/, and run here unchanged:
- *     they use the web Request and Response, and node:crypto and process.env
- *     through the nodejs_compat flag in wrangler.jsonc.
+ *   - the photo routes, which were Netlify Functions (./uploads.mjs). Here
+ *     the files go into the bucket through the Worker's binding, so the
+ *     Worker needs no bucket keys; the checks and signed links are the ones
+ *     the Netlify functions share (netlify/functions/lib/enquiry-uploads.mjs),
+ *     and the files page is Netlify's own function, run unchanged. They use
+ *     node:crypto and process.env through nodejs_compat in wrangler.jsonc.
  *
  * It runs before the static files on every request (run_worker_first), so
  * the rules above apply to all of them. Until the domain moves, Netlify keeps
  * serving the same build from the same repository; nothing here changes the
  * live site. docs/cloudflare-move.md has the move, the secrets and the order.
  */
-import uploadTickets from "../netlify/functions/enquiry-upload-tickets.mjs";
-import enquiryFile from "../netlify/functions/enquiry-file.mjs";
 import enquiryFiles from "../netlify/functions/enquiry-files.mjs";
 import { handleEnquiry } from "./enquiry.mjs";
 import { SECURITY_HEADERS, cacheControlFor, isProductionHost, redirectFor } from "./site-rules.mjs";
+import { handleFile, handleTickets, handleUpload } from "./uploads.mjs";
 
 const ROUTES = {
-  "/api/enquiry-upload-tickets": uploadTickets,
-  "/api/enquiry-file": enquiryFile,
+  "/api/enquiry-upload-tickets": handleTickets,
+  "/api/enquiry-upload": handleUpload,
+  "/api/enquiry-file": handleFile,
   "/api/enquiry-files": enquiryFiles,
 };
 
@@ -48,7 +50,7 @@ export default {
     if (target) return Response.redirect(target, 301);
 
     const route = ROUTES[url.pathname];
-    if (route) return finish(await route(request), url);
+    if (route) return finish(await route(request, env, ctx), url);
 
     if (request.method === "POST") {
       if (url.pathname === "/" || url.pathname === "/thanks/") {

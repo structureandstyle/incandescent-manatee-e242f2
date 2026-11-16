@@ -1,106 +1,25 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import {
-  BUCKET,
-  downloadLink,
-  folderLink,
-  jsonResponse,
-  newEnquiryFolder,
-  newObjectKey,
-  r2Client,
-  UploadRequestError,
-  validateFiles,
-} from "./lib/enquiry-uploads.mjs";
+import { BUCKET, issueTickets, UPLOAD_LINK_SECONDS } from "./lib/enquiry-uploads.mjs";
+import { r2Client } from "./lib/r2-client.mjs";
 
-const ACTION = "ss_enquiry_upload";
-
-export default async function handler(request) {
-  if (request.method !== "POST") return jsonResponse({ error: "Method not allowed." }, 405);
-
-  const origin = new URL(request.url).origin;
-  if (request.headers.get("origin") !== origin) {
-    return jsonResponse({ error: "Request origin is not allowed." }, 403);
-  }
-  if (!request.headers.get("content-type")?.startsWith("application/json")) {
-    return jsonResponse({ error: "Expected JSON." }, 415);
-  }
-  if (Number(request.headers.get("content-length")) > 10_000) {
-    return jsonResponse({ error: "Request is too large." }, 413);
-  }
-
-  const turnstileSecret = process.env.SS_TURNSTILE_SECRET_KEY;
-  if (!turnstileSecret || !process.env.SS_UPLOAD_LINK_SECRET) {
-    return jsonResponse({ error: "Uploads are not configured." }, 503);
-  }
-
-  let s3;
-  try {
-    s3 = r2Client();
-  } catch {
-    return jsonResponse({ error: "Uploads are not configured." }, 503);
-  }
-
-  let files;
-  let token;
-  try {
-    const body = await request.text();
-    if (body.length > 10_000) throw new UploadRequestError("Request is too large.");
-    const payload = JSON.parse(body);
-    if (!payload || typeof payload !== "object") throw new UploadRequestError("Invalid upload request.");
-    files = validateFiles(payload.files);
-    token = payload.turnstileToken;
-    if (typeof token !== "string" || token.length < 1 || token.length > 2048) {
-      throw new UploadRequestError("Complete the upload check and try again.");
-    }
-  } catch (error) {
-    const message = error instanceof UploadRequestError ? error.message : "Invalid upload request.";
-    return jsonResponse({ error: message }, 400);
-  }
-
-  let challenge;
-  try {
-    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ secret: turnstileSecret, response: token }),
+// On Netlify each file goes straight to R2, on a PUT presigned with the
+// bucket's S3 keys. The Cloudflare Worker signs a link to itself instead
+// (worker/uploads.mjs) and needs no keys. Everything else, the checks and the
+// links, is shared: issueTickets in lib/enquiry-uploads.mjs (15 Nov 2026).
+export default function handler(request) {
+  return issueTickets(request, () => {
+    const s3 = r2Client();
+    return (key, file) => getSignedUrl(s3, new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      ContentType: file.contentType,
+      ContentLength: file.size,
+    }), {
+      expiresIn: UPLOAD_LINK_SECONDS,
+      signableHeaders: new Set(["content-type", "content-length"]),
     });
-    if (!response.ok) throw new Error("Verification service unavailable.");
-    challenge = await response.json();
-  } catch {
-    return jsonResponse({ error: "Upload check unavailable. Try again shortly." }, 502);
-  }
-  if (!challenge.success || challenge.action !== ACTION || challenge.hostname !== new URL(origin).hostname) {
-    return jsonResponse({ error: "Upload check expired. Try again." }, 403);
-  }
-
-  try {
-    const folder = newEnquiryFolder();
-    const tickets = await Promise.all(files.map(async (file, index) => {
-      const key = newObjectKey(folder, index, file.extension);
-      const command = new PutObjectCommand({
-        Bucket: BUCKET,
-        Key: key,
-        ContentType: file.contentType,
-        ContentLength: file.size,
-      });
-      const uploadUrl = await getSignedUrl(s3, command, {
-        expiresIn: 1800,
-        signableHeaders: new Set(["content-type", "content-length"]),
-      });
-      return {
-        name: file.name,
-        size: file.size,
-        contentType: file.contentType,
-        uploadUrl,
-        downloadUrl: downloadLink(key, origin),
-      };
-    }));
-    // filesUrl is the one link the enquiry carries; see folderLink.
-    const filesUrl = folderLink(folder, files.map((file) => file.extension), origin);
-    return jsonResponse({ tickets, filesUrl });
-  } catch {
-    return jsonResponse({ error: "Could not prepare uploads. Try again." }, 502);
-  }
+  });
 }
 
 export const config = { path: "/api/enquiry-upload-tickets" };

@@ -22,6 +22,8 @@
  * answered both the same way. docs/cloudflare-move.md has the whole move.
  */
 
+import { readLimited } from "../netlify/functions/lib/enquiry-uploads.mjs";
+
 export const FORM_NAME = "enquiry";
 export const HONEYPOT = "company-website";
 /** Text only: the photos go straight to R2, so a real enquiry is a few KB. */
@@ -196,9 +198,14 @@ export async function handleEnquiry(request, env, ctx) {
     return new Response("Enquiry too large.", { status: 413 });
   }
 
+  // No more than the limit is read, whatever the headers say: a body sent in
+  // chunks states no length, and parsing it whole first could fill the
+  // Worker's memory (review, 16 Nov 2026). Then the bytes read are parsed.
   let formData;
   try {
-    formData = await request.formData();
+    const bytes = await readLimited(request, MAX_BODY_BYTES);
+    if (!bytes) return new Response("Enquiry too large.", { status: 413 });
+    formData = await new Response(bytes, { headers: { "Content-Type": type } }).formData();
   } catch {
     return new Response("Could not read the enquiry.", { status: 400 });
   }

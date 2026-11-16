@@ -3,10 +3,11 @@
 // worker/index.mjs and docs/cloudflare-move.md. Netlify keeps serving the same
 // build until the domain moves; netlify.toml stays until Netlify is off.
 //
-// Secrets are never in this file. Set them with `wrangler secret put NAME`
-// against S&S's account (docs/cloudflare-move.md, "Secrets"):
-//   MAKE_WEBHOOK_URL, SS_TURNSTILE_SECRET_KEY, SS_UPLOAD_LINK_SECRET,
-//   R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY (R2_ACCOUNT_ID is in "vars" below)
+// Secrets are never in this file. They are set in the Worker's settings in
+// S&S's account, type Secret (docs/cloudflare-move.md, step 3):
+//   MAKE_WEBHOOK_URL, SS_TURNSTILE_SECRET_KEY, SS_UPLOAD_LINK_SECRET.
+// No bucket keys: the photos go through the UPLOADS binding below
+// (worker/uploads.mjs, 15 Nov 2026).
 {
   "name": "structureandstyle-site",
   "main": "worker/index.mjs",
@@ -14,8 +15,8 @@
   // secrets (from 2025-04-01), early enough for the local runtime wrangler
   // 4.112 ships, so `wrangler dev` runs what production runs.
   "compatibility_date": "2026-07-01",
-  // node:crypto and Buffer for the photo routes' signed links, the AWS SDK
-  // for R2 presigning, and process.env filled from the secrets above.
+  // node:crypto and Buffer for the photo routes' signed links, and
+  // process.env filled from the secrets above.
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./dist",
@@ -28,8 +29,9 @@
     // worker/site-rules.mjs apply to the static files too.
     "run_worker_first": true
   },
-  // The enquiry uploads bucket, already in S&S's account. The Worker also
-  // keeps each enquiry here under submissions/, before sending it to Make.
+  // The enquiry uploads bucket, already in S&S's account. The Worker writes
+  // the photos here and streams them back through this binding, and keeps
+  // each enquiry here under submissions/ before sending it to Make.
   "r2_buckets": [
     { "binding": "UPLOADS", "bucket_name": "structure-style-enquiry-uploads" }
   ],
@@ -41,12 +43,12 @@
       { "binding": "UPLOADS", "bucket_name": "structure-style-enquiry-uploads-preview" }
     ]
   },
-  // Not secret: S&S's Cloudflare account ID, for the photo routes' R2
-  // endpoint. In the config because a deploy replaces dashboard variables
-  // with these; the real secrets (wrangler secret put) persist.
-  "vars": { "R2_ACCOUNT_ID": "498ba2e45d866087024dedacfabc47d1" },
+  // No "vars": the bucket's account ID went with the bucket keys (15 Nov
+  // 2026). It must also stay out of the repository while Netlify builds it:
+  // Netlify's secrets scan fails the whole build when a value it holds as a
+  // secret, such as R2_ACCOUNT_ID, appears in any file (docs/enquiry-uploads.md).
   "observability": { "enabled": true },
-  // The domain is attached once its DNS is on Cloudflare (the move's step 4).
+  // The domain is attached once its DNS is on Cloudflare (the move's step 8).
   // Until then the Worker answers on its workers.dev address only, noindexed.
   "workers_dev": true
 }

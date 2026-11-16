@@ -17,26 +17,34 @@
   - **Deploys are paused.** Kaspar's team is on "operational credits", so production deploys are paused until his next billing cycle or an upgrade. The site stays live, but nothing merged now deploys there.
   - **Notifications:** emails go to **info@structureandstyle.co.uk** and **team@flowtoform.co.uk**, plus the Make webhook.
   - **The secrets cannot be copied out.** All five environment variables are marked Secret values, which Netlify never shows again. So:
-    - `SS_UPLOAD_LINK_SECRET` will be a new value on Cloudflare, and the few "Attached files" links already in the shared log get re-signed with it;
+    - `SS_UPLOAD_LINK_SECRET` is a new value on Cloudflare, and the "Attached files" links already in the shared log get re-signed with it (see "Old file links" below);
     - `SS_TURNSTILE_SECRET_KEY` comes from the widget in S&S's account;
-    - the R2 keys come from a new R2 token limited to the bucket;
-    - `R2_ACCOUNT_ID` is `498ba2e45d866087024dedacfabc47d1`.
+    - the R2 keys and account ID are not needed on Cloudflare at all: the Worker reaches the bucket through its binding (see "Photos" below, 15 to 16 Nov).
   - **Spam:** Netlify's spam folder held 11 posts in the month to 15 Nov, and 10 of them never ran the form's script (subject still the placeholder `Website enquiry (%{submissionId})`, landing page empty): bots posting straight to the form, most of them asking "your price" in a different language each time. The eleventh was a person pitching a redesign. Every real enquiry ran the script.
 - **Done, steps 1 and 2 (same evening):**
   - Kaspar created the Worker `structureandstyle-site` from his machine. Workers Builds is linked to `structureandstyle/incandescent-manatee-e242f2`, branch `main`, with build `npm run build:production`, deploy `npx wrangler deploy` and preview builds on. The Cloudflare GitHub app is installed on the `structureandstyle` account.
   - The pull request with this code merged at 17:55 UTC, and Cloudflare built it in about 40 seconds. It answers on https://structureandstyle-site.cold-bush-4b5f.workers.dev only, noindexed.
   - Checked there: every page, the 301 to the slash form, both retired-address redirects, the 404 page, all six security headers, `noindex`, and the cache rules. The photo routes answer "Uploads are not configured", correct until step 3. A honeypot post is dropped with a 303.
   - The build image ran Node 24.22.1.
-- **Next:**
-  - ~~Build variables~~ **In the code instead (15 Nov, follow-up PR).** The dashboard would not save build variables for a member who does not own the build's access key: it is Kaspar's, and the page offers to create a new one. So the code carries them:
+- **Done, the build settings and the spam filter (PR #52, merged 18:18 UTC):**
+  - The dashboard would not save build variables for a member who does not own the build's access key: it is Kaspar's, and the page offers to create a new one. So the code carries them:
     - `.node-version` pins Node 22.20.0;
     - `astro.config.mjs` gives a build of `main` the public Turnstile key and `CONTEXT=production`, from Cloudflare's `WORKERS_CI_BRANCH`;
     - `scripts/verify-build.mjs` reads the same variable.
-
-    **Check on the test address after it deploys:** `/contact/` must carry `data-sitekey` and `data-upload-fieldset`. Without them the form falls back to the one-file upload, whose file the Worker does not keep.
-  - **Step 3, the secrets:** entered by a founder or Kaspar in the Worker's settings, never by an agent, and never in chat.
-  - ~~The spam filter~~ **Built (follow-up PR), see "Spam" below.**
-  - **Steps 4 and 5,** then step 8.
+  - Checked on the test address after it deployed: `/contact/` carries `data-sitekey` and the upload fieldsets.
+  - The spam filter: see "Spam" below. A spam test landed under `spam/` in the bucket.
+  - Previews get their own empty bucket, `structure-style-enquiry-uploads-preview`, which Cloudflare requires before it builds a preview.
+- **Done, step 3 and step 5, and the plain test (15 Nov, by 18:55 UTC):**
+  - The secrets were entered as type Secret from Kaspar's login. `SS_UPLOAD_LINK_SECRET` is a new random value, since Netlify's could not be read.
+  - Make scenario 7361484 now has a router after the inbox row: route 1 is the original CRM modules, unchanged; route 2 is the Gmail step from team@, to team@flowtoform.co.uk and info@structureandstyle.co.uk, with the filter "`email_text` exists".
+  - A plain test enquiry on the workers.dev address went through end to end: the Make run, the inbox row, the email to both addresses, and the copy under `submissions/`.
+- **Photos: the bucket keys are gone (15 to 16 Nov).** The first photo test failed at the upload. The ticket was issued, but the bucket refused the file, because the `R2_ACCESS_KEY_ID` secret held an API token's value, not the 32-character Access Key ID. It was entered three times and held a token value each time. A key that can be pasted wrong breaks every photo upload with nothing on screen to say why. So the Worker now writes the photos through its bucket binding and needs no bucket keys at all (`worker/uploads.mjs`, see "Photos" below).
+- **Next:**
+  - Merge the photos PR, then send a test enquiry with two photos on the workers.dev address.
+  - After it merges, delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets). The deploy removes `R2_ACCOUNT_ID` by itself.
+  - Any R2 token made for the Worker on 15 Nov can go. It was made from Kaspar's login, so it is listed under R2, Manage API tokens, **Account** API tokens, which only he can see.
+  - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026, and Netlify's live photo uploads depend on it. Deleting it before the switch breaks every photo enquiry on the live site, and paused Netlify cannot take new keys.
+  - Then step 8. The same evening, add a re-signed link next to each old one (see "Old file links").
 
 ## What moves and what stays
 
@@ -44,7 +52,7 @@
 |---|---|---|
 | The pages | Netlify serves `dist/` | The Worker serves `dist/` (`worker/index.mjs`, static assets) |
 | Redirects and headers | `netlify.toml` | `worker/site-rules.mjs`, the same rules; a test checks they match |
-| Photo routes (`/api/enquiry-upload-tickets`, `/api/enquiry-file`, `/api/enquiry-files`) | Netlify Functions | The same files in `netlify/functions/`, run by the Worker unchanged |
+| Photo routes (`/api/enquiry-upload-tickets`, `/api/enquiry-file`, `/api/enquiry-files`) | Netlify Functions; the browser sends each file straight to R2 on an address presigned with the bucket's S3 keys | `worker/uploads.mjs`: the browser sends each file to the Worker (`/api/enquiry-upload`), which writes it through its bucket binding; file links stream from the bucket. No bucket keys. The checks, the file rules and the links are shared with Netlify's functions (`netlify/functions/lib/enquiry-uploads.mjs`); the files page is Netlify's own function, run unchanged |
 | The enquiry form | Netlify Forms keeps it, emails it, sends it to Make | The Worker saves it in R2 (`submissions/`), then sends it to the same Make webhook in the same shape (`worker/enquiry.mjs`) |
 | The new-enquiry email | Netlify, from formresponses@netlify.com | Make's new Gmail step, from team@ |
 | Build and deploy | Netlify builds `main` from GitHub | Cloudflare Workers Builds builds `main` from the same GitHub repository |
@@ -59,8 +67,8 @@ Until step 8, nothing here changes the live site: Netlify ignores `worker/` and 
 1. **Cloudflare access.** Invite team@flowtoform.co.uk to his Cloudflare account with rights to deploy Workers and edit DNS (the Administrator role is simplest). Today we have Turnstile and R2 only.
 2. **Netlify settings.**
    - **Notification emails:** tell us which addresses get the form notification emails today, so Make sends to the same ones.
-   - **Secrets:** copy four values from the Netlify site's environment variables into the Cloudflare Worker himself: `SS_UPLOAD_LINK_SECRET`, `SS_TURNSTILE_SECRET_KEY`, `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`.
-   - **Keep the link secret identical.** `SS_UPLOAD_LINK_SECRET` must be the same value on Cloudflare, or every "Attached files" link already in the log stops opening. If Netlify will not show it, say so before the move: those old links would need a decision.
+   - **Secrets:** ~~copy four values from Netlify~~ Netlify would not show them (15 Nov). The Worker has its own `SS_UPLOAD_LINK_SECRET` and `SS_TURNSTILE_SECRET_KEY`, and needs no R2 keys.
+   - **The link secret changed,** so the "Attached files" links already in the log stop opening once the domain moves. The files themselves are safe in the bucket: see "Old file links" below.
 3. **Change the nameservers at Wix himself** (step 7), at a time we give him once the zone is ready, to the two names we send. Messages to Kaspar give what to do and when, and no call offers (Arthur, 12 Nov 2026).
 4. **A week after the move,** turn off the Netlify site's form notifications and outgoing webhook, then delete the Netlify site.
 
@@ -81,16 +89,16 @@ Each step can be checked, and undone, before the next.
    | Name | Value |
    |---|---|
    | `MAKE_WEBHOOK_URL` | The webhook of Make scenario 7361484 (module 1, "SS Netlify enquiry live"), the same address Netlify posts to. From Make, by a founder |
-   | `SS_UPLOAD_LINK_SECRET` | Netlify's value, unchanged (see above) |
-   | `SS_TURNSTILE_SECRET_KEY` | Netlify's value, or the widget's secret from Turnstile in the same account |
-   | `R2_ACCOUNT_ID` | S&S's Cloudflare account ID |
-   | `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | Netlify's values, or a new R2 token limited to the bucket, Object Read and Write |
+   | `SS_UPLOAD_LINK_SECRET` | A new random value, since Netlify's could not be read: 48 random bytes in Base64, 64 characters, made in PowerShell on 15 Nov and kept in the founders' vault. It signs every file link, so keep it: changing it stops every link the Worker made from opening |
+   | `SS_TURNSTILE_SECRET_KEY` | The widget's secret, from Turnstile in the same account. Every ticket request is checked with it |
+
+   No R2 keys and no account ID: the Worker reaches the bucket through its binding (16 Nov). Three secrets, and nothing else.
 
 4. **Test on the workers.dev address.** It sends `X-Robots-Tag: noindex`.
    - Check pages, redirects and headers.
    - Send one test enquiry with "test" in the name: Make's filter keeps it out of the Enquiry log, and the inbox row is marked Test after.
    - Check the Make run, the inbox row and the copy in R2 under `submissions/`.
-   - Photo uploads only work there if the workers.dev host is added to the Turnstile widget's hostnames and to the bucket's CORS rule for the test. Remove both afterwards.
+   - Photo uploads only work there once the workers.dev host is in the Turnstile widget's hostnames (added 15 Nov). The bucket's CORS rule no longer matters to the Worker, since the browser sends the files to the Worker, not to the bucket. Remove the workers.dev host from both after step 9.
 5. **Make: add the email step.** Add a Gmail "Send an email" module after module 1 (the webhook), using a new team@ Gmail connection, which a founder authorises.
    - **To:** team@flowtoform.co.uk plus the addresses Kaspar names.
    - **Subject:** `{{1.data.subject}}`
@@ -109,15 +117,23 @@ Each step can be checked, and undone, before the next.
    - **To undo:** put the Wix nameservers back.
 8. **Switch the site.** In the Worker, Settings, Domains and Routes, add the custom domains `structureandstyle.co.uk` and `www.structureandstyle.co.uk`. First delete the apex `A 75.2.60.5` and the `www` CNAME to Netlify, which the custom domains replace. The site moves within minutes.
    - **To undo, in minutes:** remove the two custom domains, then put back `A 75.2.60.5` and the `www` CNAME `incandescent-manatee-e242f2.netlify.app`, both DNS only.
+   - **After an undo, links the Worker signed do not open on Netlify:** the re-signed ones, and those of enquiries the Worker took in between. Netlify checks links with its own secret. Use the Netlify link kept next to each re-signed one. Or open the Worker's link with its address changed to `structureandstyle-site.cold-bush-4b5f.workers.dev`, which keeps answering. If step 8 is then done again, re-sign the links of every enquiry Netlify took in between too.
 9. **Check it live:**
-   - pages, the six security headers, the redirects, www to the apex, the 404 page;
+   - pages, the six security headers, the redirects, www to the apex, http:// to https:// (the Worker does it, as Netlify did), the 404 page;
    - one test enquiry, with a founder's OK: the email from Make, the inbox row, the R2 copy;
    - one with two photos: both open from the files link.
    - Watch the first week of real enquiries against the Make run history.
 10. **A week later, tidy up:**
+    - **Before Netlify goes,** copy out the files of the three September enquiries: they were sent through Netlify's own form upload, and their "Attachment URL" in the inbox tab points at Netlify's storage (`d33wubrfki0l68.cloudfront.net`), which goes with the site.
     - Kaspar turns off and deletes the Netlify site.
+    - Then delete the R2 user token `SS enquiry form uploads` (made by team@ on 22 Sep 2026, Netlify's bucket keys) and the bucket's CORS rule. Nothing else uses either.
     - Remove `netlify.toml`, the `data-netlify`, `netlify-honeypot` and `data-remove-prefix` attributes, and Netlify's `%{submissionId}` placeholder in the form. The Worker fills it, so it can stay until then.
-    - Move `netlify/functions/` to `functions/`.
+    - Delete what only Netlify used:
+      - the files `netlify/functions/enquiry-upload-tickets.mjs`, `netlify/functions/enquiry-file.mjs` and `netlify/functions/lib/r2-client.mjs`;
+      - the two `@aws-sdk` packages in `package.json`;
+      - the Netlify handler tests in `tests/enquiry-uploads.test.mjs`, and the line in `tests/worker-uploads.test.mjs` that expects Netlify's route to import `r2-client.mjs`.
+    - Move what the Worker uses, `netlify/functions/lib/enquiry-uploads.mjs` and `netlify/functions/enquiry-files.mjs`, to `functions/`. In the files page, drop `https://*.r2.cloudflarestorage.com` from its image rule and the comments about redirects to R2.
+    - Rewrite `docs/enquiry-uploads.md` for the Worker alone: no R2 token, no keys, no CORS rule.
     - Update the privacy notice, which says the site is hosted by Netlify and Netlify processes the form, with copy written under S&S protocol v1.4.
     - Update the client runbook in the ops repository.
     - Tell Kaspar Netlify is gone and Make is named.
@@ -144,6 +160,24 @@ Read from a public resolver on 15 Nov 2026. A record only Wix can see would not 
 
 ## Things to know
 
+- **Photos** (`worker/uploads.mjs`, 16 Nov 2026). The form's script is unchanged: it asks for a ticket per file, sends each file to the address on its ticket, then posts the enquiry with the one files link.
+  - **A ticket** (`POST /api/enquiry-upload-tickets`) passes the same checks as on Netlify: same origin, Turnstile, up to six files, 15 MB each, 60 MB together, the allowed types. Each file gets a signed link to `/api/enquiry-upload` for its own name and exact size, good for 30 minutes.
+  - **The upload** (`PUT /api/enquiry-upload`) must match its ticket: the signature, the time, the type from the file's extension, and the size, byte for byte. The Worker writes it to the bucket through the binding. Anything else is refused, and nothing is kept.
+  - **The file link** (`/api/enquiry-file`) streams the file from the bucket. Its type comes from the extension the link signs. Opened directly, it downloads and nothing in it can run. The files page (`/api/enquiry-files`) is Netlify's own function.
+  - **No bucket keys, no CORS rule, no keys to rotate.** The photos need two secrets: `SS_UPLOAD_LINK_SECRET` signs every link, and `SS_TURNSTILE_SECRET_KEY` checks each ticket request.
+  - **The upload carries the site's cookies** (`credentials: "same-origin"` in the form). On Cloudflare the file goes through the site's own zone, so if the zone ever challenges visitors (Under Attack mode during a spam wave, or a challenge rule), Cloudflare's clearance cookie must travel with it. Netlify's R2 address is another origin, which gets no cookies either way.
+  - **Every body is read only up to its limit:** 10 KB for a ticket request, 1 MB for an enquiry. That holds whatever the headers say, so a sender cannot fill the Worker's memory with a body that states no length.
+  - **Previews** bind the same name to the empty preview bucket, so a test upload on a preview never lands beside real enquiries.
+- **Old file links.** Links signed with Netlify's link secret stop opening once the domain moves: the Worker signs with its own, and Netlify's cannot be read.
+  - **Affected:** five links on three real enquiries (8, 18 and 30 Oct), plus test rows. The files are safe in the bucket. If step 8 is ever undone and done again, add the links of every enquiry Netlify took in between.
+  - **The fix:** `scripts/resign-file-links.mjs` makes each link again, for the same file or folder, with the Worker's secret.
+    - A founder runs it in PowerShell or Windows Terminal and pastes the secret at its hidden prompt, never into chat or a file. It refuses to ask anywhere it could not hide what is pasted.
+    - It accepts only the link secret's shape (64 characters of letters, digits, `+` and `/`), so the Turnstile secret pasted by mistake is refused rather than making links that never open.
+    - It reads the list of old links whether the file was saved as UTF-8 or by Windows PowerShell (UTF-16).
+    - It writes "old link, new link" pairs, kept outside the repository because they open customers' photos.
+    - **Before adding any to the log,** open one new link with its address changed to `structureandstyle-site.cold-bush-4b5f.workers.dev`. If it opens, the secret was the right one.
+  - **Keep both links** in the shared log, the new one added next to the old, until step 9's first week has passed. Then drop the old one. Replacing it outright would leave nothing that opens on Netlify if step 8 had to be undone.
+- **http:// goes to https://** (`redirectFor` in `worker/site-rules.mjs`), in the same hop as www to the apex or a retired address's forward, always to the standard port, as Netlify forced it. Without it, an old http:// link would serve pages, and now photo uploads, unencrypted. `wrangler dev` on this machine runs over http and is left alone.
 - **Spam.** Netlify ran every post through its spam filter (Akismet). The Worker's check (`spamReason` in `worker/enquiry.mjs`, 15 Nov 2026) is built from what that filter actually caught.
   - **How it decides:** the form's script adds `ec_e` at Send, the milliseconds the page had been open, on the visitor's own clock. A post is spam if, in order:
     - the honeypot is filled;
@@ -174,3 +208,35 @@ Read from a public resolver on 15 Nov 2026. A record only Wix can see would not 
     - spam dropped;
     - Make receiving the fields its scenario maps.
   - **Not tested:** anything in S&S's real account (no access yet), real uploads to R2 from the Worker, and the Make Gmail step.
+- **Checked before the photos PR (16 Nov).**
+  - `npm test`: 88 pass. Twenty are new:
+    - **The Worker's photos (11, `tests/worker-uploads.test.mjs`):**
+      - tickets that point at the Worker;
+      - a file in and back out intact;
+      - every way an upload link can be misused;
+      - no signature standing in for another kind;
+      - a missing file;
+      - the missing binding;
+      - nothing the Worker loads, following its imports, bringing in the AWS SDK or bucket keys;
+      - the account ID in no file of the repository (checked by its hash);
+      - the form's script still sending to its ticket's address with the site's cookies;
+      - oversized ticket and enquiry posts refused without being read whole.
+    - **http:// to https:// in one hop, the port dropped (1).**
+    - **The re-sign tool (8),** including a wrong secret refused, a UTF-16 file read, a file with no links failing loudly, and no prompt without a terminal.
+  - Netlify's own photo tests pass unchanged. The new photo tests passed 40 runs in a row.
+  - **An independent review** looked at four things (security, Cloudflare's runtime, compatibility with the form and Netlify, the docs), with a separate skeptic trying to refute each serious finding. Two were confirmed and fixed:
+    - one test passed or failed by chance;
+    - this runbook would have had the old links overwritten, which breaks step 8's undo.
+    - The fixes above for https, the upload cookies, the body limits and the token clean-up came from its lower-severity findings.
+  - **A second, shorter review** went over those fixes: the redirect, the body limits, the cookies and the re-sign tool. Nothing serious held up. Its four small points are fixed: the redirect now drops a non-standard port, and the tool refuses a wrong secret, reads UTF-16 files, fails loudly on a file with no links, and will not ask for the secret outside a real terminal.
+  - `wrangler deploy --dry-run`: 8 KB gzipped, down from 126 KB, with no AWS SDK in it.
+  - `wrangler dev` 4.162.0, Cloudflare's runtime on this machine with a local bucket, 25 checks, all passed after the review's fixes:
+    - a real photo in and back out, byte for byte, with the right headers;
+    - the files page, with both photos opening;
+    - a chunked upload of the right size kept;
+    - one too short and one too long refused, with nothing stored;
+    - a changed size, a wrong type, a GET, an expired ticket and a wrong file signature all refused;
+    - the ticket route reaching Cloudflare's Turnstile check, which refused the stand-in secret, as it should;
+    - enquiry posts read through the new body limit and saved: multipart to `/thanks/` (303) and to `/` (200), urlencoded, and a no-script post kept as spam;
+    - a 5 MB enquiry body and a 1 MB ticket body, both sent with no stated length, refused before being read whole.
+  - **Not tested here:** a real Turnstile pass and S&S's real bucket. Both are covered by the test on the workers.dev address after the merge.

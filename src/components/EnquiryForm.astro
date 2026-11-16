@@ -945,11 +945,16 @@ const PROMPTS = [
               // A dropped connection, or a phone that can no longer read the
               // file, rejects the fetch rather than returning a status. Either
               // way the visitor needs the file's name, not "Failed to fetch".
+              // "same-origin" (16 Nov 2026): on Cloudflare the file goes to
+              // this site's own Worker, so it must carry the site's cookies,
+              // Cloudflare's clearance cookie among them if the zone ever
+              // challenges visitors. Netlify's R2 address is another origin,
+              // which gets no cookies either way, as with "omit" before.
               const response = await fetch(ticket.uploadUrl, {
                 method: "PUT",
                 headers: { "Content-Type": ticket.contentType },
                 body: file,
-                credentials: "omit",
+                credentials: "same-origin",
               }).catch(() => null);
               if (!response?.ok) throw new Error(`${file.name} could not upload. Try again. If it fails again, remove it and add it again.`);
               uploaded += 1;
