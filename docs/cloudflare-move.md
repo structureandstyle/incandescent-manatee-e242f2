@@ -79,7 +79,7 @@
       - inbox tab, "Attachment URL", rows 7, 8 and 14;
       - Enquiry log, Notes, after "Attachment:", rows 15, 16 and 18.
     - The old links stay in the job descriptions until step 9's first week has passed.
-  - Delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings (Settings, Variables and secrets): nothing uses them now. The deploy has already removed `R2_ACCOUNT_ID`.
+  - ~~Delete `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` from the Worker's settings~~ **Done 16 Nov, about 10:50 UTC** (a founder's go; "Delete & Deploy", versions 587a2f0d and 5bd33429). The Worker now holds three secrets (`MAKE_WEBHOOK_URL`, `SS_TURNSTILE_SECRET_KEY`, `SS_UPLOAD_LINK_SECRET`) and the `UPLOADS` bucket binding, nothing else. Checked live afterwards: pages, the form's Turnstile key, a customer photo link, the files page, and the ticket route checking Turnstile.
   - Any R2 token made for the Worker on 15 Nov can go. It was made from Kaspar's login, so it is listed under R2, Manage API tokens, **Account** API tokens, which only he can see.
   - **Leave the user token `SS enquiry form uploads` alone until step 10.** team@ made it on 22 Sep 2026. Netlify no longer serves the site, but keep it until Netlify is switched off in case step 8 has to be undone.
 
