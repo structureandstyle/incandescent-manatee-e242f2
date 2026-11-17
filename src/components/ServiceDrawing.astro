@@ -1,0 +1,65 @@
+---
+/**
+ * One line drawing from src/data/service-drawings.ts, framed and captioned
+ * (17 Nov 2026). Used beside a service page section (ServiceSide.astro) and in
+ * the layout cards (ServiceLayouts.astro). The drawing is an <svg role="img">
+ * with its own description (its label) and a caption.
+ *
+ * The drawing's classes are prefixed "sd-" and styled here globally, because
+ * Astro's scoped styles do not reach markup set with set:html. The palette is
+ * the area pages' (site-layout.css on the area branches, "ad-"); the names
+ * differ so the two never collide when those branches merge.
+ */
+import MonoLabel from "./ds/MonoLabel.astro";
+import { SERVICE_DRAWINGS } from "../data/service-drawings";
+
+interface Props {
+  drawing: string;
+  caption?: boolean;
+}
+
+const { drawing, caption = true } = Astro.props;
+const d = SERVICE_DRAWINGS[drawing];
+if (!d) throw new Error(`There is no service drawing called "${drawing}" in src/data/service-drawings.ts.`);
+const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class="sd-$1"');
+---
+
+<figure class="service-drawing">
+  <svg viewBox="0 0 320 240" role="img" aria-label={d.label} set:html={prefixed(d.markup)} />
+  {caption && (
+    <figcaption>
+      <MonoLabel tone="soft">{d.caption}</MonoLabel>
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .service-drawing {
+    margin: 0;
+    border: var(--rule-hair);
+    background: #f6f3ea;
+    padding: var(--space-9) var(--space-9) var(--space-7);
+  }
+  .service-drawing svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .service-drawing figcaption {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: var(--rule-hair);
+  }
+</style>
+
+<style is:global>
+  .sd-k,.sd-t,.sd-h,.sd-g,.sd-gt{fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .sd-k{stroke:#221d18;stroke-width:1.6}
+  .sd-t{stroke:#221d18;stroke-opacity:.55;stroke-width:1}
+  .sd-h{stroke:#221d18;stroke-opacity:.24;stroke-width:1}
+  .sd-g{stroke:#2c4a3a;stroke-width:1.8}
+  .sd-gt{stroke:#2c4a3a;stroke-width:1}
+  .sd-f{fill:#221d18;stroke:none}
+  .sd-pf{fill:#f6f3ea;stroke:none}
+  .sd-gw{fill:#2c4a3a;fill-opacity:.14;stroke:none}
+</style>

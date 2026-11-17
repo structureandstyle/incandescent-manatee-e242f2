@@ -1,0 +1,73 @@
+---
+/**
+ * A service page's layouts as cards, each a plan drawing with its name and two
+ * sentences (17 Nov 2026; first used for the kitchen layouts Arthur asked for on
+ * the review link). Three across on a wide screen, two on a tablet, one on a
+ * phone. The words come from service-copy.ts (`layouts`), the drawings from
+ * service-drawings.ts.
+ */
+import Wrap from "./ds/Wrap.astro";
+import SectionHead from "./ds/SectionHead.astro";
+import ServiceDrawing from "./ServiceDrawing.astro";
+
+interface Props {
+  meta: string;
+  heading: string;
+  lead: string;
+  note?: string;
+  items: { drawing: string; name: string; text: string }[];
+}
+
+const { meta, heading, lead, note, items } = Astro.props;
+---
+
+<Wrap style="padding-bottom:var(--section-y)">
+  <SectionHead meta={meta} level={4}>{heading}</SectionHead>
+  <p style="max-width:var(--measure)">{lead}</p>
+  <ul class="service-layouts">
+    {items.map((it) => (
+      <li>
+        <ServiceDrawing drawing={it.drawing} caption={false} />
+        <h3 class="service-layout-name">{it.name}</h3>
+        <p class="service-layout-text">{it.text}</p>
+      </li>
+    ))}
+  </ul>
+  {note && <p class="service-layout-note">{note}</p>}
+</Wrap>
+
+<style>
+  .service-layouts {
+    list-style: none;
+    margin: var(--space-12) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-14) var(--gap-md);
+  }
+  .service-layout-name {
+    margin-top: var(--space-7);
+    font-size: var(--type-serif-sm);
+    font-weight: 400;
+  }
+  .service-layout-text {
+    margin-top: var(--space-4);
+    font-size: var(--type-body-sm);
+    color: var(--text-quiet);
+  }
+  .service-layout-note {
+    margin-top: var(--space-12);
+    font-size: var(--type-body-sm);
+    color: var(--text-quiet);
+  }
+  @media (max-width: 900px) {
+    .service-layouts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .service-layouts {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
