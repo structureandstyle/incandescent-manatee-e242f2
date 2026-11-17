@@ -468,6 +468,20 @@
       "h": 1000,
       "source": "Vanity toilet bath finished.png",
       "date": "20260831"
+    },
+    {
+      "file": "/images/library/ssp-042.webp",
+      "w": 1500,
+      "h": 1000,
+      "source": "20250628_123433.jpg",
+      "date": "20250628"
+    },
+    {
+      "file": "/images/library/ssp-044.webp",
+      "w": 1500,
+      "h": 1000,
+      "source": "20250628_123501.jpg",
+      "date": "20250628"
     }
   ]
 }

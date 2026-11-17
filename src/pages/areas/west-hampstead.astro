@@ -1,0 +1,243 @@
+---
+/**
+ * West Hampstead, 17 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaWestHampsteadCheck until he has read it and his changes are in. Nothing
+ * goes live before he has approved every area page (Denis, 15 Nov 2026).
+ *
+ * ON THE PRIMROSE HILL MODEL from the start (a founder's go, 17 Nov: "Yes,
+ * West Hampstead"; Denis, 15 Nov: "use the same design and structure for the
+ * next articles"; ops README, "The structure rule, applied"; ops
+ * SS_AREA_PAGE_RULES_v1.0.md, a draft, read for its plan items): address
+ * /areas/west-hampstead/ with 301s from /carpenter-west-hampstead/
+ * (netlify.toml and the Worker's list); the title, heading, kicker and
+ * description lead with fitted wardrobes, then walk-in wardrobes (the reasons
+ * are in areas.ts); the opening carries "bespoke carpentry" and "bespoke
+ * joinery" once each; a line drawing beside each section that describes
+ * something (src/data/area-drawings.ts: a tall gabled mansion block, a large
+ * Edwardian house with a balcony over its bay, a terrace of three with carved
+ * bay capitals), none where a section is rules or access only; the guide
+ * prices as cards; register photos and one labelled AI image (ssp-042 and
+ * ssp-044, cropped to 3:2, and AI Shaker alcove wardrobes, Figma node 37:2).
+ *
+ * Sources. Every local fact from the ops facts file
+ * research/area-pages-2026-11-14/facts-west-hampstead-2026-11-14.md, read
+ * 14 Nov 2026, mainly Camden's West End Green Conservation Area Appraisal and
+ * Management Strategy (adopted 28 Feb 2011, "S1"):
+ *   "Mansion blocks are a characteristic of the area"; West End Lane framed
+ *     by "5 storey mansion flats over shops" (5.1); Buckingham, Avenue and
+ *     Marlborough Mansions, known locally as BAM, tall red brick, turn of the
+ *     20th century, around Cannon Hill; Cholmley Gardens, inter-war, wrapping
+ *     Hillfield Road, Aldred Road and Mill Lane (zone 6).
+ *   East of the Lane (Lymington Road, Fawley Road, Honeybourne Road, Crediton
+ *     Hill): large semi-detached and detached "homes for Edwardian
+ *     professionals" in red brick, timber and stone balconies, stucco and
+ *     terracotta; Crediton Hill's stained-glass oval windows and Arts and
+ *     Crafts rendered two-storey houses (zone 5). Yale and Harvard Courts,
+ *     Honeybourne Road, built as private rented "Key" flats, leaseholds now
+ *     increasingly bought by individuals (zone 5).
+ *   West of the Lane: Inglewood Road (1883 to 1884) on a curve; Lyncroft
+ *     Gardens' north side, two-storey late Victorian houses raised on
+ *     basements with attic storeys (zones 3, 4). West Cottages (1860s, for
+ *     foundry workers) beside the Green (zone 2). The Greek Streets near
+ *     Fortune Green: two-storey terraces with carved faces on bay window
+ *     capitals, named as a possible conservation area of their own.
+ *   Listed: Hampstead Synagogue, Dennington Park Road (1892 to 1901, Grade
+ *     II*); the fire station, 325 West End Lane (1901, Grade II); Emmanuel
+ *     Church (Grade II); the drinking fountain on the Green (Grade II).
+ *   Camden's trade permit page; the Planning Portal's internal alterations
+ *     page ("S4", "S5").
+ * Left out: Article 4 (Camden's page lists South Hampstead but not West End
+ * Green; the June 2026 documents could not be read), King's Gardens and the
+ * mews (South Hampstead, the Swiss Cottage page's area), lifts and porters
+ * (not in the sources).
+ *
+ * WHOSE WORDS. From what he approved: the wardrobe guide's lines on
+ * wardrobes either side of a chimney breast ("Alcoves are a natural place for
+ * bedroom storage, but the recess itself may not be deep enough for clothes
+ * on conventional hangers. A hanging wardrobe will often need to project
+ * beyond the chimney breast into the room..."), on interior lighting, and
+ * its answer on built-in against freestanding ("scribed" made "cut to fit
+ * the wall", the protocol's plain form); the walk-in page's line on
+ * materials, colours and finishes; the alcove guide's lines on the whole
+ * wall and on cupboards with shelving above; the guarantee; the fitted
+ * wardrobe, walk-in and alcove price lines as approved on Hampstead. One
+ * conduct line: parking, deliveries and access agreed before installation,
+ * as on the other area pages. Everything else is new copy for him to check.
+ *
+ * CHECKED 17 Nov by three independent reviewers (copy rules, facts against
+ * the facts file and approved text, the swap test against the eight other
+ * area pages). Changed on their findings: the FAQ question without
+ * "cheaper"; "landmarks rather than homes" (the listed firemen's cottages
+ * are homes) became "nearly all the houses and blocks here are unlisted";
+ * the ssp-044 alt counts no drawers (three are in frame) and the ssp-042 alt
+ * names cubbies, not shoes; the Greek Streets drawing lost the diagonal
+ * glazing the source gives for Gondar Gardens; the "terraces" heading now
+ * says the Greek Streets and west of West End Lane; the Key flats line is
+ * dated 2011; the lease line is advice, not a claim about Camden; the street
+ * door line and the spare-room claim went; his projection lines are back
+ * word for word; conservation area, mansion block, leasehold, listed and the
+ * columns' tops are explained once; the lede and description no longer
+ * share Highgate's wording.
+ *
+ * Street and building names are Camden's appraisal's, describing the homes.
+ * None is a place we claim to have worked. No review names West Hampstead.
+ *
+ * FAQ sources, all three new, none on another area page: "How do you light
+ * a walk-in wardrobe?" (Google People also ask, walk in wardrobe lighting:
+ * "How to light a walk-in wardrobe?", made a whole question), "What looks
+ * good in an alcove?" and "Does a built-in wardrobe cost more than a
+ * freestanding one?" (People also ask, alcove wardrobes: "Is it cheaper to
+ * build or buy a wardrobe?", reworded without "cheaper", the area rules
+ * item 10); UK, English, desktop, 17 Nov 2026.
+ * The other questions in those boxes were costs, design trends, sizes (not
+ * confirmed by him) or rules of thumb with no fixed meaning. Answers from
+ * what he approved: the wardrobe guide's lighting section and its
+ * freestanding answer, and the alcove guide's cupboards-with-shelving lines.
+ */
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
+
+import { AREAS } from "../../data/areas";
+
+const area = AREAS.find((a) => a.slug === "areas/west-hampstead")!;
+
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers, integrated lighting and more complex designs move the figure.",
+  },
+  {
+    art: "walk-in-wardrobes",
+    name: "Walk-in wardrobes",
+    href: "/walk-in-wardrobes/",
+    price: "Typically from around £5,000.",
+    moves: "The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.",
+  },
+];
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We take on bespoke carpentry in West Hampstead: <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link> for its mansion flats and Edwardian houses.
+    </p>
+    <p style={P2}>
+      Mansion blocks are a mark of the area, so each piece of bespoke joinery is planned for its building as well as its room.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansion blocks" level={4}>Fitted wardrobes in West Hampstead's mansion blocks</SectionHead>
+    <AreaSide drawing="gabled-mansion-block">
+      <p>
+        Camden's appraisal of the West End Green conservation area, a district it protects for its character, calls mansion blocks a characteristic of the area. These are large buildings divided into flats, and five-storey mansion flats over shops frame West End Lane.
+      </p>
+      <p style={P2}>
+        Around Cannon Hill stand Buckingham, Avenue and Marlborough Mansions, tall red brick blocks of the turn of the 20th century, known locally as BAM. Cholmley Gardens, an inter-war development, wraps Hillfield Road, Aldred Road and Mill Lane.
+      </p>
+      <p style={P2}>
+        Where a bedroom has alcoves, they are a natural place for storage, though the recess may not be deep enough for clothes on hangers. A hanging <Link href="/fitted-wardrobes/">wardrobe</Link> will often need to project beyond the chimney breast into the room. That projection should be shown in the design, with the exposed sides finished to match the fronts or complement the room.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Edwardian houses" level={4}>Walk-in wardrobes for the Edwardian houses east of West End Lane</SectionHead>
+    <AreaSide drawing="edwardian-balcony-house">
+      <p>
+        On Lymington Road, Fawley Road, Honeybourne Road and Crediton Hill, Camden describes large semi-detached and detached "homes for Edwardian professionals". The houses are red brick, with timber and stone balconies and details in smooth plaster and terracotta.
+      </p>
+      <p style={P2}>
+        Crediton Hill has stained-glass oval windows, and at its top a run of two-storey Arts and Crafts houses with plastered walls.
+      </p>
+      <p style={P2}>
+        Where a house has a spare room, a <Link href="/walk-in-wardrobes/">walk-in wardrobe</Link> can be planned around it. Materials, colours and finishes can be chosen to complement the existing furniture, flooring and other finishes in the home.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Victorian streets" level={4}>Alcove units in the Greek Streets and west of West End Lane</SectionHead>
+    <AreaSide drawing="greek-street-bays">
+      <p>
+        Near Fortune Green lie the Greek Streets: Ajax, Agamemnon, Ulysses and Achilles Roads. They include two-storey terraces with carved faces on the tops of the columns in their bay windows. Camden's appraisal names them as a possible conservation area of their own.
+      </p>
+      <p style={P2}>
+        West of the Lane, Inglewood Road of 1883 to 1884 is laid out on a curve. On the north side of Lyncroft Gardens, two-storey late Victorian houses are raised on basements with attic storeys.
+      </p>
+      <p style={P2}>
+        Where a front room has a fireplace, <Link href="/alcove-units/">alcove units</Link> are best considered as part of the whole wall. The fireplace, mantel, ceiling height, nearby windows and furniture all affect how the joinery will look.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Leaseholds and listing" level={4}>Key flats, leaseholds and listed landmarks</SectionHead>
+    <div style={TEXT}>
+      <p>
+        On Honeybourne Road, Yale and Harvard Courts were built as private rented "Key" flats. Camden's 2011 appraisal noted that their leaseholds, where an owner holds a flat for a set term, were increasingly being bought by individuals.
+      </p>
+      <p style={P2}>
+        Nearly all the houses and blocks here are unlisted. The listed buildings, which the law protects inside and out, include Hampstead Synagogue on Dennington Park Road. The 1901 fire station and firemen's cottages on West End Lane are listed too.
+      </p>
+      <p style={P2}>
+        For most homes here, the <Link href="https://www.planningportal.co.uk/info/200130/common_projects/33/internal_walls" {...EXT}>Planning Portal</Link> rule applies instead: internal alterations do not generally need planning permission. In a leasehold flat, check the lease first, as it may set its own rules on alterations.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Flats over the shops and parking for the fitting days</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Parking, deliveries and access are agreed with you before installation. Camden's <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> is open to anyone and is valid in resident permit bays in its zone, but it does not guarantee a space.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What fitted wardrobes, walk-ins and alcove units cost in West Hampstead</SectionHead>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware is on the manufacturer's warranty, and doors and drawers are adjusted in the first 2 years. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> shows what moves the price of a fitted wardrobe.
+      </p>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="How do you light a walk-in wardrobe?">
+        Vertical strips near the front of compartments can light hanging garments, while lighting beneath shelves can serve folded storage. Interior lighting helps you see clothes and tell colours apart. Agree the light colour using samples alongside the interior finish.
+      </Faq>
+      <Faq q="What looks good in an alcove?">
+        Base cupboards with open shelves above give a combination of enclosed storage and display space. The cupboards hold what you prefer to keep out of sight, while the shelves take books, framed artwork and decorative pieces.
+      </Faq>
+      <Faq q="Does a built-in wardrobe cost more than a freestanding one?">
+        A freestanding or flat-pack wardrobe usually costs less to buy. A built-in wardrobe is priced to the room, using the full height and width of the wall, alcoves and sloping ceilings included. Which is better value depends on how much storage the room needs and how long the furniture is expected to stay.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
