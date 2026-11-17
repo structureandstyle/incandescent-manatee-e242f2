@@ -158,6 +158,20 @@
   status = 301
   force = true
 
+# Highgate, the eighth (17 Nov 2026); its first address also reached production as a
+# noindexed draft with PR #42.
+[[redirects]]
+  from = "/carpenter-highgate/*"
+  to = "/areas/highgate/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-highgate"
+  to = "/areas/highgate/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
