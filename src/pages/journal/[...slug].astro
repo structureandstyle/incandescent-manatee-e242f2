@@ -99,7 +99,7 @@ const components = {
 };
 ---
 
-<Base title={d.title} description={d.description} schema={schema} image={d.hero.src} noindex={draft}>
+<Base title={d.seoTitle ?? d.title} description={d.description} schema={schema} image={d.hero.src} noindex={draft}>
   {draft && (
     <div class="draft-bar" data-journal-draft>
       Draft preview · not published{d.blockedReason ? ` · ${d.blockedReason}` : ""}
