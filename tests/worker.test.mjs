@@ -23,14 +23,14 @@ import worker from "../worker/index.mjs";
 
 test("www goes to the apex, and the retired addresses forward", () => {
   assert.equal(redirectFor("https://www.structureandstyle.co.uk/contact/?a=1"), "https://structureandstyle.co.uk/contact/?a=1");
-  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design/"), "https://structureandstyle.co.uk/carpenter-hampstead/");
-  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design"), "https://structureandstyle.co.uk/carpenter-hampstead/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design/"), "https://structureandstyle.co.uk/areas/hampstead/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design"), "https://structureandstyle.co.uk/areas/hampstead/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-camden/x"), "https://structureandstyle.co.uk/areas/camden/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-islington/"), "https://structureandstyle.co.uk/areas/islington/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-islington"), "https://structureandstyle.co.uk/areas/islington/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-primrose-hill/"), "https://structureandstyle.co.uk/areas/primrose-hill/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-primrose-hill"), "https://structureandstyle.co.uk/areas/primrose-hill/");
-  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead/"), null);
+  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead/"), "https://structureandstyle.co.uk/areas/hampstead/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/"), null);
 });
 

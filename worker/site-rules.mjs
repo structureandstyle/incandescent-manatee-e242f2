@@ -16,7 +16,8 @@ export const CANONICAL_HOST = "structureandstyle.co.uk";
  * forward to their pages (netlify.toml says why each exists).
  */
 const PATH_REDIRECTS = [
-  { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/carpenter-hampstead/" },
+  { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/areas/hampstead/" },
+  { from: /^\/carpenter-hampstead(?:\/.*)?$/, to: "/areas/hampstead/" },
   { from: /^\/carpenter-camden(?:\/.*)?$/, to: "/areas/camden/" },
   { from: /^\/carpenter-primrose-hill(?:\/.*)?$/, to: "/areas/primrose-hill/" },
   { from: /^\/carpenter-islington(?:\/.*)?$/, to: "/areas/islington/" },
