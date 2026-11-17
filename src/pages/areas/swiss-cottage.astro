@@ -1,0 +1,252 @@
+---
+/**
+ * Swiss Cottage, 17 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaSwissCottageCheck until he has read it and his changes are in. Nothing
+ * goes live before he has approved every area page (Denis, 15 Nov 2026).
+ *
+ * ON THE PRIMROSE HILL MODEL from the start (a founder's go, 17 Nov; Denis,
+ * 15 Nov: "use the same design and structure for the next articles"; ops
+ * README, "The structure rule, applied"; ops SS_AREA_PAGE_RULES_v1.0.md, a
+ * draft, read for its plan items): address /areas/swiss-cottage/ with 301s
+ * from /carpenter-swiss-cottage/ (netlify.toml and the Worker's list); the
+ * title, heading, kicker and description lead with bespoke wardrobes, the
+ * area's largest product search on record (the reasons are in areas.ts); the
+ * opening carries "bespoke carpentry" and "bespoke joinery" once each; a line
+ * drawing beside each section that describes something (src/data/
+ * area-drawings.ts: a chalet in the style of the 1804 tavern, a mansion block
+ * with big studio windows on its top floor, a pair of gabled semis with attic
+ * rooms), none where a section is rules or access only; the guide prices as
+ * cards; register photos and one labelled AI image (ssp-032 and ssp-033,
+ * cropped to 3:2, and AI grey sliding-door wardrobe, Figma node 35:2).
+ *
+ * Sources. Every local fact from the ops facts file
+ * research/area-pages-2026-11-14/facts-swiss-cottage-2026-11-14.md, read
+ * 14 Nov 2026:
+ *   Camden's South Hampstead Conservation Area Character Appraisal and
+ *     Management Strategy (February 2011, "S1"): Swiss Cottage proper on the
+ *     east side of Finchley Road, around the library and the former Swiss
+ *     Tavern, built 1804 in the style of a Swiss chalet on the site of a
+ *     tollgate keeper's cottage (2.7); the conservation area called Swiss
+ *     Cottage until February 2011 (1.2); east of Fairhazel Gardens, terraces
+ *     forming imposing mansion blocks of 3 and 4 storeys, rising to 5 on
+ *     Canfield Gardens (5.5); many houses east of Fairhazel Gardens and on
+ *     Compayne Gardens with very large upper-floor windows suggesting studio
+ *     design (5.12); the central part large semi-detached houses of 3 and 4
+ *     storeys, red or gault brick, turrets, gables and tall chimneys (3.1,
+ *     5.7; 3.1 calls them late-Victorian); the west part detached, often with attics, some with raised
+ *     basements (5.8); one listed building, the Grade II Church of St James,
+ *     Sherriff Road (6.3).
+ *   Camden's Belsize Conservation Area Statement (2002, "S3"): Eton Avenue,
+ *     Fellows Road and Lancaster Gardens added in 1985 to protect groups of
+ *     large detached houses and some terraces.
+ *   Camden's Fitzjohns/Netherhall appraisal, DRAFT of December 2021 ("S2";
+ *     the adopted December 2022 version could not be read): the area
+ *     "contains numerous listed buildings", among them the Freud Museum,
+ *     20 Maresfield Gardens (Grade II).
+ *   Camden's Article 4 page ("S5"): directions adopted 9 June 2026 for South
+ *     Hampstead, Belsize and Fitzjohns/Netherhall, removing some permitted
+ *     development rights; its June 2026 documents could not be read.
+ *   Camden's listed buildings, parking zone and trade permit pages ("S6",
+ *     "S7"): a trade permit is valid in resident bays and on yellow lines in
+ *     the zone, with no guaranteed space.
+ * Left out: the Character Study's mansion-block description (not read in
+ * full), King's Gardens and West End Court (West Hampstead's), Swiss Cottage
+ * Library (a landmark, not a home), Finchley Road station.
+ *
+ * WHOSE WORDS. From what he approved: the wardrobe guide's lines on sloping
+ * ceilings ("Use the taller part of the room for hanging clothes and the
+ * lower areas for shelves, drawers or cupboards. The position of the wardrobe
+ * front matters: a slope can reduce usable depth as well as height"), on
+ * drawers, on hinged and sliding doors, and on hanging space and shelves
+ * (the questions); the guarantee; the fitted wardrobe, walk-in and alcove
+ * price lines as approved on Hampstead. Two conduct lines: parking,
+ * deliveries and access agreed before installation, as on Camden, Belsize
+ * Park and Kentish Town, and the protocol's approved conduct fact 5 on the
+ * managing agent (section 11), in its publishable form (Maida Vale's old
+ * draft carries it too: leave it off that page when it is rebuilt).
+ * Everything else is new copy for him to check.
+ *
+ * CHECKED 17 Nov by three independent reviewers (copy rules, facts against
+ * the facts file and approved text, the swap test against the six other area
+ * pages). Changed on their findings: the opening's "whether ... or ..." (a
+ * banned shape) gone; "west of the junction" (no source) replaced by S1's
+ * Canfield Gardens line; "none of its houses is listed" (a deduction) now
+ * "most homes there are not listed"; "all three areas" named; "some
+ * terraces" restored; the slope lines back to his own imperative; mansion
+ * blocks, conservation areas, gault and double hanging explained once; the
+ * Camden listed-building and parking lines (near-copies of other pages)
+ * replaced by this page's own; one wording for mansion blocks throughout;
+ * captions say the drawings show a style; alts say oak-effect throughout.
+ * Kept on purpose: "Parking, deliveries and access are agreed with you
+ * before installation." (as Camden, Belsize Park and Kentish Town; the
+ * protocol keeps keys and access per job, which a founder may want to
+ * weigh), the guarantee sentence and the price card lines.
+ *
+ * Street names are Camden's documents', describing the houses. None is a
+ * place we claim to have worked. No review block: no review names Swiss
+ * Cottage.
+ *
+ * FAQ sources, all three new, none on another area page: "Can you put a
+ * chest of drawers inside a wardrobe?" and "What storage suits the inside of
+ * a wardrobe?" (Google People also ask, wardrobe drawers inside: "What is the
+ * best storage option for inside my wardrobe?", "best" taken out),
+ * "Which is better for a wardrobe, sliding or hinged doors?" (People also ask
+ * on sliding or hinged wardrobe doors: "Which is better for a wardrobe,
+ * sliding or door?", made whole); UK, English, desktop, 17 Nov 2026. The
+ * boxes for bespoke wardrobes swiss cottage and fitted wardrobes swiss
+ * cottage held costs, a design-trends question, a "70/30 rule" with no fixed
+ * meaning, and company names. Answers from the wardrobe guide he approved
+ * (drawers behind the doors or as their own section; hinged doors where they
+ * can swing, sliding where space is limited; double hanging, long garments,
+ * shelves).
+ */
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
+
+import { AREAS } from "../../data/areas";
+
+const area = AREAS.find((a) => a.slug === "areas/swiss-cottage")!;
+
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers, integrated lighting and more complex designs move the figure.",
+  },
+  {
+    art: "walk-in-wardrobes",
+    name: "Walk-in wardrobes",
+    href: "/walk-in-wardrobes/",
+    price: "Typically from around £5,000.",
+    moves: "The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.",
+  },
+];
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We take on bespoke carpentry around Swiss Cottage: <Link href="/fitted-wardrobes/">wardrobes</Link> for its mansion blocks and late Victorian houses, with fitted drawers and <Link href="/alcove-units/">alcove units</Link>.
+    </p>
+    <p style={P2}>
+      Each piece of bespoke joinery is drawn for one room, so a flat in a mansion block and an attic room get different designs.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="The name" level={4}>The tavern, the name and the conservation areas around it</SectionHead>
+    <AreaSide drawing="swiss-chalet">
+      <p>
+        Camden Council's South Hampstead appraisal places Swiss Cottage on the east side of Finchley Road, around the library and the former Swiss Tavern. The tavern was built in 1804 in the style of a Swiss chalet, on the site of a tollgate keeper's cottage.
+      </p>
+      <p style={P2}>
+        Until February 2011 the council called the South Hampstead conservation area the Swiss Cottage conservation area. It reaches Canfield Gardens at the corner of Finchley Road.
+      </p>
+      <p style={P2}>
+        Homes nearby also sit in the Belsize and Fitzjohns/Netherhall conservation areas, where the council controls changes to how buildings look.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansion blocks" level={4}>Bespoke wardrobes in the mansion blocks east of Fairhazel Gardens</SectionHead>
+    <AreaSide drawing="studio-mansion">
+      <p>
+        East of Fairhazel Gardens, the appraisal describes terraces that form imposing mansion blocks, large buildings divided into flats, of three and four storeys. On Canfield Gardens they rise to five.
+      </p>
+      <p style={P2}>
+        Many houses there and on Compayne Gardens have very large windows on their upper floors. The appraisal says these suggest they were designed as studios.
+      </p>
+      <p style={P2}>
+        A <Link href="/fitted-wardrobes/">bespoke wardrobe</Link> can run full height on the solid wall beside a window that size, and stay low beneath the glass.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Large houses" level={4}>Wardrobes for South Hampstead's gabled semis and attic rooms</SectionHead>
+    <AreaSide drawing="gabled-semis">
+      <p>
+        The appraisal describes the area's late Victorian houses as red brick or gault brick, a pale cream brick, with turrets, gables and tall chimneys. In the middle of the area they are large semi-detached houses of three and four storeys.
+      </p>
+      <p style={P2}>
+        Further west the houses are detached, often with attics and some with raised basements. Eton Avenue, Fellows Road and Lancaster Gardens joined the Belsize conservation area in 1985. Its statement says the aim was to protect groups of large detached houses and some terraces.
+      </p>
+      <p style={P2}>
+        Under a sloping ceiling, use the taller part of the room for hanging clothes and the lower areas for shelves, drawers or cupboards. The position of the wardrobe front matters: a slope can reduce usable depth as well as height.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed buildings in South Hampstead and Fitzjohns/Netherhall</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The 2011 appraisal records one listed building in the whole South Hampstead conservation area, the Grade II Church of St James on Sherriff Road. Most homes there are not listed.
+      </p>
+      <p style={P2}>
+        The council's draft appraisal of 2021 says Fitzjohns/Netherhall contains numerous listed buildings, among them the Freud Museum at 20 Maresfield Gardens. If a house is in those streets, check it on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden's listed buildings page</Link> before work starts.
+      </p>
+      <p style={P2}>
+        Camden adopted <Link href="https://www.camden.gov.uk/article-4-directions-heritage-and-conservation" {...EXT}>Article 4 Directions</Link> for South Hampstead, Belsize and Fitzjohns/Netherhall on 9 June 2026. They remove some changes owners could make without applying, and the council's page sets out which.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Mansion blocks, managing agents and parking near Finchley Road</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Parking, deliveries and access are agreed with you before installation. In a mansion block with a managing agent, insurance and the safety paperwork go to the agent before the start date. The building's sign-off is in place before anything begins.
+      </p>
+      <p style={P2}>
+        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>controlled parking zones page</Link> shows whether a street around Finchley Road is controlled. The council sells <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permits</Link> to people working at a property. One covers resident bays and yellow lines in its zone, but does not promise a space.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>Guide prices for wardrobes, walk-ins and alcove units</SectionHead>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware is on the manufacturer's warranty, and doors and drawers are adjusted in the first 2 years. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> shows what moves the price of a fitted wardrobe.
+      </p>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Can you put a chest of drawers inside a wardrobe?">
+        A bespoke wardrobe does not need one: its drawers can sit behind the doors, or form a separate section beneath them with their own fronts. A separate section lets you open a drawer without opening a door first.
+      </Faq>
+      <Faq q="Which is better for a wardrobe, sliding or hinged doors?">
+        It depends on the space in front of the wardrobe. Hinged doors suit many bespoke layouts and offer a wide choice of styles, where there is room for them to swing. Sliding doors are useful where there is not, though part of the wardrobe stays covered as another part opens.
+      </Faq>
+      <Faq q="What storage suits the inside of a wardrobe?">
+        It depends on what you own. Double hanging, two rails one above the other, suits shirts, jackets and folded trousers. Long dresses and coats need a section where they hang full length, and shelves suit knitwear, bags and boxes.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

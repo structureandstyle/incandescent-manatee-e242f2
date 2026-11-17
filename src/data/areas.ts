@@ -351,19 +351,52 @@ export const AREAS: Area[] = [
     summary: "Georgian and Victorian terraces, many of them listed, around Leighton Road and Kelly Street.",
   },
   {
-    slug: "carpenter-swiss-cottage",
+    slug: "areas/swiss-cottage",
     name: "Swiss Cottage",
-    titleProp: "Swiss Cottage carpenter, wardrobes",
-    h1: "Carpenter in Swiss Cottage for fitted wardrobes and built-in storage",
-    kicker: "Carpenter in Swiss Cottage",
+    /* Product-led, 17 Nov 2026: the seventh page on the Primrose Hill model (a founder's go, 17 Nov:
+       "move on to the next area"; Denis, 15 Nov: "use the same design and structure for the next
+       articles"). No "carpenter" in the title, heading or description; the kicker stays "Bespoke
+       joinery" (Denis, 15 Nov: "leave joinery for now") and "bespoke carpentry" sits in the opening. */
+    titleProp: "Bespoke wardrobes in Swiss Cottage",
+    h1: "Bespoke wardrobes for the mansion blocks and Victorian houses around Swiss Cottage",
+    kicker: "Bespoke joinery in Swiss Cottage",
     description:
-      "Carpenter in Swiss Cottage: we design and fit wardrobes, alcove units and shelving for mansion blocks and large houses, with guide prices and advice.",
-    /* No Keyword Planner volume for any of 22 Swiss Cottage phrases (London, 14 Nov 2026). Search Console: carpenter swiss cottage 3, fitted wardrobes swiss cottage 2 impressions, 11 Oct to 8 Nov. */
-    primary: "carpenter swiss cottage",
+      "Bespoke wardrobes, fitted drawers and alcove units for the mansion blocks and late Victorian houses around Swiss Cottage, each planned for its room.",
+    /* bespoke wardrobes swiss cottage is the area's largest product search on record: 19 impressions
+       at position 22.3 in Search Console, 18 Aug to 25 Sep 2026 (ops research/hampstead-2026-10-03/
+       evidence.md, local branch area-pages/no-client-work-2026-11-06), where carpenter swiss cottage
+       had 33. In 11 Oct to 8 Nov, fitted wardrobes swiss cottage had 2 at 6.0 and carpenter swiss
+       cottage 3 at 1.7. Keyword Planner returned nothing for any of 22 Swiss Cottage phrases (London,
+       14 Nov 2026). The heading names the two kinds of home Camden's appraisals describe around the junction (Swiss Cottage proper is east of Finchley Road; the mansion blocks and semis are in South Hampstead, the conservation area that carried the Swiss Cottage name until 2011). */
+    primary: "bespoke wardrobes swiss cottage",
+    /* 17 Nov 2026: the register's allocation (ops PR #49) for Swiss Cottage is the May 2026 wardrobe
+       with oak drawers (Islington shows the open wardrobe; this page the drawer close-ups). ssp-032,
+       its lead, landscape, cropped to 3:2 from y 333: the shelf and the four-drawer bank inside the
+       open wardrobe; ssp-033, portrait, cropped to 3:2 from y 900: a drawer pulled open, leaving out
+       the rug fringe the register notes. ssp-056 and ssp-059 are allocated but the frame shows three
+       plates; ssp-035, 036 and 061 are alternates. Plus the register's first AI gap for Swiss Cottage,
+       a full-height sliding-door wardrobe with a real top track housing, mid-grey (Figma node 35:2):
+       the page has no closed wardrobe. Its second gap, alcove shelving with LED strips, has no plate.
+       None is a recorded job in Swiss Cottage. */
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-06.webp", type: "Fitted wardrobes" },
-      { file: "/images/alcove-units/alcove-units-06.webp", type: "Alcove units" },
-      { file: "/images/media-walls/media-walls-03.webp", type: "Built-in TV units" },
+      {
+        file: "/images/library/ssp-032.webp",
+        type: "Fitted wardrobe drawers",
+        alt: "Four oak-effect drawers with slim bar handles under an oak-effect shelf inside an open wardrobe, above a wooden floor.",
+      },
+      {
+        file: "/images/library/ssp-033.webp",
+        type: "Wardrobe drawer interior",
+        alt: "Oak-effect wardrobe drawer pulled open to show its oak-effect interior and slim bar handle, below a closed drawer.",
+      },
+      {
+        file: "/images/journal/swiss-ai-grey-sliding-wardrobe.webp",
+        type: "Grey sliding-door wardrobe",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Three full-height flat sliding wardrobe doors in matt mid-grey, each with a slim recessed pull, under a matching pelmet below the cornice. A tall sash window with a linen curtain is to the right, and the end of a bed to the left.",
+      },
     ],
     summary: "Late Victorian houses and mansion-block flats around the Finchley Road junction.",
   },
