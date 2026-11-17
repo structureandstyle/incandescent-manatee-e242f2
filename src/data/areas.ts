@@ -294,19 +294,59 @@ export const AREAS: Area[] = [
     summary: "Large Victorian villas, mansion flats and mews houses in Camden's Belsize conservation area.",
   },
   {
-    slug: "carpenter-kentish-town",
+    slug: "areas/kentish-town",
     name: "Kentish Town",
-    titleProp: "Kentish Town carpenter, fitted wardrobes",
-    h1: "Carpenter in Kentish Town for fitted wardrobes and shelving",
-    kicker: "Carpenter in Kentish Town",
+    /* Product-led, 17 Nov 2026: the sixth page on the Primrose Hill model (a founder's go, 17 Nov:
+       "continue with the next Area page"; Denis, 15 Nov: "use the same design and structure for the
+       next articles"). No "carpenter" in the title, heading or description; the kicker stays
+       "Bespoke joinery" (Denis, 15 Nov: "leave joinery for now") and "bespoke carpentry" sits in
+       the opening. The title drops "bespoke" before kitchens so the full title stays near 65
+       characters with the business name. */
+    titleProp: "Fitted wardrobes and kitchens in Kentish Town",
+    h1: "Fitted wardrobes and bespoke kitchens for Kentish Town's terraced houses",
+    kicker: "Bespoke joinery in Kentish Town",
     description:
-      "Carpenter in Kentish Town: fitted wardrobes, alcove units and shelving for Georgian and Victorian terraces. Guide prices and a fixed itemised quotation.",
-    /* No Keyword Planner volume for any of 22 Kentish Town phrases (London, 14 Nov 2026). Search Console: carpenter kentish town 16 impressions at position 1.9, 11 Oct to 8 Nov; third in the map pack on 14 Nov. */
-    primary: "carpenter kentish town",
+      "Fitted wardrobes, bespoke kitchens and alcove units for Kentish Town's narrow Georgian and Victorian terraces, each one planned for its own room.",
+    /* No measured product search exists for Kentish Town. Keyword Planner returned nothing for any
+       of 22 Kentish Town phrases (London, 14 Nov 2026), and the only Kentish Town query in Search
+       Console is carpenter kentish town (16 impressions at position 1.9, 11 Oct to 8 Nov 2026; one
+       impression at position 2 in the 20 Aug 2026 export), which is not a product search. fitted wardrobes
+       kentish town leads because it is the product search the 14 Nov research checked live (ops
+       serps-areas-2: page 1 is directories, one Islington page and one Camden case study, so
+       nobody holds it) and the area plan's first product; Kaspar's own sentence of 6 Sep 2026
+       names Kentish Town among the areas with much of the wardrobe work. Bespoke kitchens come
+       second because the register's photographs for this page are all of one kitchen (as walk-in
+       wardrobes on Belsize Park). bespoke kitchens kentish town showed no People also ask box on
+       17 Nov (UK, desktop, the built-in browser). */
+    primary: "fitted wardrobes kentish town",
+    /* 17 Nov 2026: the register's allocation (ops PR #49) for Kentish Town is the May 2025 grey
+       handleless kitchen, split with Islington in different views (Islington shows ssp-051, the
+       L-shaped run from the far corner). ssp-020, its lead, cropped to 3:2 from y 520 of the
+       portrait original: the view down the long room past the island to the glazed wall; ssp-019,
+       the sink corner with the wall units and metro tiles, cropped to 3:2 from y 600. ssp-021 and
+       ssp-022 are allocated but the frame shows three plates (ssp-022 is close to Islington's
+       view); ssp-024 and ssp-025 are alternates. Plus the register's AI gap for Kentish Town,
+       closed white handleless fitted wardrobes with slim infills (Figma node 34:2): the page has
+       no wardrobe photograph. None is a recorded job in Kentish Town. */
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-07.webp", type: "Fitted wardrobes" },
-      { file: "/images/alcove-units/alcove-units-01.webp", type: "Alcove units" },
-      { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
+      {
+        file: "/images/library/ssp-020.webp",
+        type: "Bespoke kitchens",
+        alt: "Dark grey kitchen island with a marble-effect top and two white stools, tall units at left and an open room beyond.",
+      },
+      {
+        file: "/images/library/ssp-019.webp",
+        type: "Handleless kitchen units",
+        alt: "Matt grey handleless kitchen units with a white marble-effect worktop, a black sink and spring tap, and white metro tiles.",
+      },
+      {
+        file: "/images/journal/kentish-ai-white-handleless-wardrobes.webp",
+        type: "White handleless wardrobes",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Six full-height flat wardrobe doors in matt white with no handles, running wall to wall beneath the room's cornice above a recessed plinth. A sash window with a white roller blind partly drawn is to the left, beside the end of a bed.",
+      },
     ],
     summary: "Georgian and Victorian terraces, many of them listed, around Leighton Road and Kelly Street.",
   },

@@ -426,6 +426,20 @@
       "h": 1000,
       "source": "20260125_153902.jpg",
       "date": "20260125"
+    },
+    {
+      "file": "/images/library/ssp-020.webp",
+      "w": 1126,
+      "h": 751,
+      "source": "IMG-20250505-WA0020.jpg",
+      "date": "20250505"
+    },
+    {
+      "file": "/images/library/ssp-019.webp",
+      "w": 1126,
+      "h": 751,
+      "source": "IMG-20250505-WA0019.jpg",
+      "date": "20250505"
     }
   ]
 }
