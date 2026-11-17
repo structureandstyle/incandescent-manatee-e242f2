@@ -8,6 +8,22 @@ import { blockedPaths } from './src/data/page-gates';
 import { SERVICES } from './src/data/site';
 import { SERVICE_COPY } from './src/data/service-copy';
 
+// THE PRODUCTION BUILD ON CLOUDFLARE, 15 Nov 2026 (docs/cloudflare-move.md).
+// netlify.toml gave Netlify's production builds two settings. Cloudflare
+// Workers Builds names the branch it builds in WORKERS_CI_BRANCH, so a build
+// of main gets the same two here, in the repository rather than in a
+// dashboard only the account holder can save. Netlify keeps reading
+// netlify.toml; a local build sets neither, as before.
+//   PUBLIC_SS_TURNSTILE_SITE_KEY: public, and switches on the six-file photo
+//     upload. Previews keep the one-file form, as on Netlify, because the
+//     Turnstile widget and the bucket's CORS rule only allow the real domain.
+//   CONTEXT=production: what scripts/verify-build.mjs reads (it checks
+//     WORKERS_CI_BRANCH itself too, since it runs as its own process).
+if (process.env.WORKERS_CI_BRANCH === 'main') {
+  process.env.PUBLIC_SS_TURNSTILE_SITE_KEY ??= '0x4AAAAAAE_4Ksd9JvaaXUXM';
+  process.env.CONTEXT ??= 'production';
+}
+
 // Pages still waiting on the content questionnaire stay out of the sitemap.
 // Same source as the noindex tag each page sends, so the two cannot drift into
 // the state where the sitemap advertises a page whose own head says noindex.

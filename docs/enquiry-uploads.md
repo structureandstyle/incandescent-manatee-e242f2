@@ -1,5 +1,7 @@
 # SS enquiry uploads
 
+> **On Cloudflare (16 Nov 2026), the files go through the Worker.** Once the site runs on the Cloudflare Worker (`docs/cloudflare-move.md`), the browser sends each file to the Worker at `/api/enquiry-upload`. The Worker writes it to the same bucket through its binding, and file links stream from the bucket. The Worker needs no R2 keys, no account ID and no CORS rule: only `SS_UPLOAD_LINK_SECRET` and `SS_TURNSTILE_SECRET_KEY`. See `worker/uploads.mjs`. The checks, file rules and links below are shared with Netlify (`netlify/functions/lib/enquiry-uploads.mjs`). The Netlify set-up below holds for Netlify only, until it is switched off. Then its R2 token and the bucket's CORS rule are deleted.
+
 The public form uploads up to six files directly to the private Cloudflare R2 bucket `structure-style-enquiry-uploads`. Each file may be up to 15 MB; the batch may be up to 60 MB. Netlify receives the enquiry text and one private link to a page listing the enquiry's files. The link is added to the job description so the current Make CRM notes mapping can carry it without changing the scenario.
 
 ## Who does what
@@ -44,7 +46,7 @@ Flow to Form has Turnstile and R2 Admin access in the SS Cloudflare account. On 
 
 ## Operation
 
-- Upload tickets expire after 30 minutes. A download link is stable, but each click redirects to a one-minute R2 URL. Anyone holding the stable link can access its file, so keep it inside the enquiry record.
+- Upload tickets expire after 30 minutes. A download link is stable. On Netlify each click redirects to a one-minute R2 URL; on the Worker the file is streamed from the bucket. Anyone holding the stable link can access its file, so keep it inside the enquiry record.
 - The file checker permits JPG, PNG, WebP, HEIC, HEIF, PDF and Word documents. It rejects other extensions and limits file sizes in both the browser and ticket function.
 - Netlify form submission happens only after all selected files upload. If the form post fails, the visitor can retry without uploading those files again in the current page session.
 - One enquiry's files share one folder: `enquiries/<random id>/1.jpg`, `2.pdf` and so on. Deleting an enquiry under the privacy notice therefore means deleting that one folder in R2 as well as the enquiry record. Uploads made before this change sit in one folder per file. An abandoned upload can leave an unlinked folder, so review the bucket for orphaned files as part of routine enquiry cleanup.
