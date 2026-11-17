@@ -26,6 +26,8 @@ test("www goes to the apex, and the retired addresses forward", () => {
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design/"), "https://structureandstyle.co.uk/carpenter-hampstead/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design"), "https://structureandstyle.co.uk/carpenter-hampstead/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-camden/x"), "https://structureandstyle.co.uk/areas/camden/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-islington/"), "https://structureandstyle.co.uk/areas/islington/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-islington"), "https://structureandstyle.co.uk/areas/islington/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-primrose-hill/"), "https://structureandstyle.co.uk/areas/primrose-hill/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-primrose-hill"), "https://structureandstyle.co.uk/areas/primrose-hill/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead/"), null);
