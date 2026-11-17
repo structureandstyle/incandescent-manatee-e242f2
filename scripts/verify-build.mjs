@@ -460,7 +460,9 @@ for (const file of files) {
 
   // A draft article renders only on preview builds (src/data/journal.ts). If
   // one reaches a production build, the gate has failed: stop the deploy.
-  if (process.env.CONTEXT === "production" && html.includes("data-journal-draft")) {
+  // Production is Netlify's CONTEXT, or Cloudflare building main (15 Nov 2026).
+  const production = process.env.CONTEXT === "production" || process.env.WORKERS_CI_BRANCH === "main";
+  if (production && html.includes("data-journal-draft")) {
     errors.push(`${page}  draft journal content in a production build`);
   }
 
