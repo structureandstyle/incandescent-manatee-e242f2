@@ -1,6 +1,10 @@
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { BUCKET, jsonResponse, r2Client, verifyDownloadLink } from "./lib/enquiry-uploads.mjs";
+import { BUCKET, jsonResponse, verifyDownloadLink } from "./lib/enquiry-uploads.mjs";
+import { r2Client } from "./lib/r2-client.mjs";
+
+// Netlify's file link: a one-minute presigned redirect to R2. The Worker
+// streams the file from its bucket binding instead (worker/uploads.mjs).
 
 export default async function handler(request) {
   if (request.method !== "GET") return jsonResponse({ error: "Method not allowed." }, 405);
