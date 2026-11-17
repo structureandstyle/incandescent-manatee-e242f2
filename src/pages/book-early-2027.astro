@@ -37,7 +37,7 @@ import FormProof from "../components/FormProof.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import Link from "../components/ds/Link.astro";
-import { DRAFT, draft, money, BANDS, WHOLE_FROM } from "../data/booking-2027";
+import { DRAFT, draft, money, BANDS, WHOLE_FROM, WHOLE_CAP } from "../data/booking-2027";
 import { SERVICE_ART } from "../components/enquiry-cards/art/services";
 import { BUSINESS } from "../data/site";
 import { REVIEWS } from "../data/site-content";
@@ -76,10 +76,11 @@ const FINISHES = [
   { name: "Veneered wood (your choice)", img: "/images/materials/veneered-board-400w.webp", wash: "" },
 ];
 
-/* Arthur's upsell ladder, kept inside the 10 to 15%: from £15,000 what is on
-   the house is enough for a whole unit, picked like any extra and valued at its
-   normal starting price; another finish, or anything past the allowance, at
-   normal prices. The library unit's price is a draft; the others are his
+/* Arthur's upsell ladder, kept inside the 10 to 15%: a whole unit can be picked
+   like any extra, valued at its normal starting price, once it is worth no more
+   than 11% of the basket, and then everything on the house stays within 11%
+   (a founder, 17 Nov 2026); another finish, or anything past that, at normal
+   prices. The library unit's price is a draft; the others are his
    published starting prices in melamine. */
 const WHOLE = {
   library: { name: "Library unit, 2.4m high and 1.2m wide", price: 2000 },
@@ -95,11 +96,17 @@ const WHOLE = {
    his price less that inside at the draft part prices (2 doors: a rail and 2
    shelves; 3 doors: 2 rails and 3 shelves; 4 doors: 2 rails and 4 shelves).
    Drafts until he gives box prices. Rows are finishes, columns door counts. */
-/* 6 and 8 doors (Denis, 12 Nov): his four-door price times 1.5 and 2, rounded
-   to £50. Drafts until he prices them. */
-const PUBLISHED = [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]]
-  .map((r) => [...r, Math.round((r[2] * 1.5) / 50) * 50, r[2] * 2]);
-const STD_INSIDE = [{ rail: 1, shelf: 2 }, { rail: 2, shelf: 3 }, { rail: 2, shelf: 4 }, { rail: 3, shelf: 6 }, { rail: 4, shelf: 8 }];
+/* 5 to 8 doors (a founder, 17 Nov: every door count from 2 to 8): his list is
+   a straight line per finish, a fixed part plus a step for each door, so 5 to 8
+   doors carry the same steps on, rounded to £50 (replaces 12 Nov's 1.5 and 2
+   times the four-door price). Drafts until he prices them; the same figures are
+   in the price book (F2F clients/structure-and-style/christmas-bundle-numbers). */
+const PUBLISHED = [[2300, 3200, 4000], [2500, 3500, 4500], [3200, 4300, 5400], [3700, 5000, 6300]].map((r) => {
+  const slope = (r[2] - r[0]) / 2;
+  const fixed = (r[0] + r[1] + r[2]) / 3 - 3 * slope;
+  return [...r, ...[5, 6, 7, 8].map((n) => Math.round((fixed + slope * n) / 50) * 50)];
+});
+const STD_INSIDE = [2, 3, 4, 5, 6, 7, 8].map((n) => ({ rail: Math.ceil(n / 2), shelf: n }));
 /* The basic inside is taken off at the finish's own part prices, so the box
    plus that inside comes back to his published price in every finish. */
 const partsValue = (o: Record<string, number>, f: number) =>
@@ -117,15 +124,12 @@ const WARDROBE_PARTS = ["rail", "shelf", "drawer", "led", "trouser", "shoe", "pu
 const BUNDLES = [
   {
     id: "wardrobe", art: "fitted-wardrobes", label: "Fitted wardrobes", from: BOX[0][0], fromText: "box from " + draft(money(BOX[0][0])),
-    sizeLabel: "Doors", sizes: ["2 doors", "3 doors", "4 doors", "6 doors", "8 doors"],
+    sizeLabel: "Doors", sizes: ["2 doors", "3 doors", "4 doors", "5 doors", "6 doors", "7 doors", "8 doors"],
     finishes: FINISHES, prices: BOX, boxDraft: true, priceLabel: "the box",
-    typical: [
-      { parts: { rail: 1, shelf: 2, drawer: 2 }, text: "a rail, 2 shelves and 2 drawers" },
-      { parts: { rail: 2, shelf: 3, drawer: 3 }, text: "2 rails, 3 shelves and 3 drawers" },
-      { parts: { rail: 2, shelf: 4, drawer: 4 }, text: "2 rails, 4 shelves and 4 drawers" },
-      { parts: { rail: 3, shelf: 6, drawer: 6 }, text: "3 rails, 6 shelves and 6 drawers" },
-      { parts: { rail: 4, shelf: 8, drawer: 8 }, text: "4 rails, 8 shelves and 8 drawers" },
-    ],
+    typical: [2, 3, 4, 5, 6, 7, 8].map((n) => {
+      const r = Math.ceil(n / 2);
+      return { parts: { rail: r, shelf: n, drawer: n }, text: (r === 1 ? "a rail" : r + " rails") + ", " + n + " shelves and " + n + " drawers" };
+    }),
     partsLabel: "What goes inside", parts: WARDROBE_PARTS,
     includes: "The box is the doors and carcass. Then choose what goes inside.",
     included: ["Choose the doors and the finish", "Then build the inside, part by part"],
@@ -239,6 +243,7 @@ const clientData = {
   addons: ADDONS,
   whole: WHOLE,
   wholeFrom: WHOLE_FROM,
+  wholeCap: WHOLE_CAP,
   finishStep: FINISH_STEP,
   bundles: BUNDLES.map((b) => ({ ...b })),
 };
@@ -696,10 +701,15 @@ const clientData = {
     const split = (list, order) => {
       const base = list.reduce((s, u) => s + (u.value || 0), 0);
       const keys = addonOrder.filter((k) => list.some((u) => u.addons.includes(k))).concat(base >= data.wholeFrom ? wholeOrder : []);
-      const allow = allowance(base);
-      const items = (order || []).filter((k) => keys.includes(k));
+      const allow0 = allowance(base);
+      /* A whole unit only once it is worth no more than 11% of the basket, and
+         then everything on the house together stays within 11% (17 Nov). */
+      const cap = Math.min(allow0, Math.floor(data.wholeCap * base));
+      const items = (order || []).filter((k) => keys.includes(k) && (!wholeOrder.includes(k) || pickPrice(k, list) <= cap));
+      const capOf = (its) => (its.some((k) => wholeOrder.includes(k)) ? cap : allow0);
+      let allow = capOf(items);
       let used = items.reduce((t, k) => t + pickPrice(k, list), 0);
-      while (used > allow && items.length) used -= pickPrice(items.pop(), list);
+      while (used > allow && items.length) { used -= pickPrice(items.pop(), list); allow = capOf(items); }
       const lines = [];
       items.forEach((k) => {
         const l = lines.find((x) => x.k === k);
@@ -708,7 +718,7 @@ const clientData = {
       const room = allow - used;
       const cheapest = keys.length ? Math.min(...keys.filter((k) => !(wholeOrder.includes(k) && items.some((x) => wholeOrder.includes(x)))).map((k) => pickPrice(k, list))) : Infinity;
       return {
-        base, keys, allow, room, lines, items, included: used, spendable: room >= cheapest,
+        base, keys, allow, room, lines, items, included: used, spendable: room >= cheapest, cap, wholeRoom: cap - used,
         pending: list.some((u) => u.pending), around: list.some((u) => u.around), draft: list.some((u) => u.draft),
       };
     };
@@ -718,8 +728,7 @@ const clientData = {
       if (s.pending) return "A unit with its price to come is priced at the quotation, and counts towards what comes on the house.";
       const nb = nextBand(s.base);
       if (!nb) return "";
-      return "At " + step(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house" +
-        (nb[0] === data.wholeFrom ? ", enough for a whole library unit" : "") + ". Your basket is " + money(nb[0] - s.base) + " away.";
+      return "At " + step(nb[0]) + ", extras worth " + d(money(nb[1])) + " come on the house. Your basket is " + money(nb[0] - s.base) + " away.";
     };
     const totalLabel = (s) => (!s.base && s.pending ? "Total" : "Indicative total, from" + (s.around ? " around" : ""));
     const totalAmount = (s) => (!s.base && s.pending ? "priced at the quotation" : price(s.base, s.draft));
@@ -805,7 +814,7 @@ const clientData = {
             ", and extras worth up to " + about(s) + d(money(s.allow)) + " come on the house" + (s.around ? ", set by your quotation" : "") +
             (s.included ? ", " + d(money(s.included)) + " of it already picked" : "") +
             (!s.spendable ? ". " :
-              s.base >= data.wholeFrom && !hasWhole && s.room >= pickPrice("library", hypo) ? ": room for a whole unit, picked in your basket. "
+              s.base >= data.wholeFrom && !hasWhole && s.wholeRoom >= pickPrice("library", hypo) ? ": room for a whole unit, picked in your basket. "
               : kd >= 1 && kd <= 6 ? ": room for " + pl(kd, "soft-close drawer") + " at £0" + (kl ? ", or lighting in " + pl(kl, "section") : "") + ", picked in your basket. "
               : ": you pick them in your basket. ")
           : "") + nextLine(s);
@@ -908,7 +917,10 @@ const clientData = {
         const pp = pickPrice(k, state.list);
         const isWhole = wholeOrder.includes(k);
         const why = !s.allow ? (s.pending ? "Set once your quotation prices the unit" : "Extras on the house start at a " + money(data.bands[0][0]) + " basket")
-          : isWhole && hasWhole ? "One whole unit per basket" : pp > s.room ? "More than is left on the house" : "";
+          : isWhole && hasWhole ? "One whole unit per basket"
+          : isWhole && pp > s.cap ? "On the house from a " + d(money(Math.ceil(pp / data.wholeCap / 100) * 100)) + " basket"
+          : isWhole && pp > s.wholeRoom ? "More than is left within 11% of your basket"
+          : pp > s.room ? "More than is left on the house" : "";
         const r = addonRow(k, state.picks[k] || 0, (m) => setPick(k, m), "", pp, why || false);
         return r;
       };
@@ -918,7 +930,7 @@ const clientData = {
       const canWhole = s.base >= data.wholeFrom;
       $("[data-whole-lock]").textContent = canWhole ? "" : "from " + d(money(data.wholeFrom));
       $("[data-whole-note]").textContent = canWhole
-        ? "One whole unit per basket, valued at its normal starting price and picked at £0, with extras for whatever is left."
+        ? "One whole unit per basket, once it is worth no more than 11% of your basket, valued at its normal starting price and picked at £0. Everything on the house together then stays within 11%."
         : s.pending ? "Whole units come from " + d(money(data.wholeFrom)) + "."
         : "Your basket reaches whole units at " + d(money(data.wholeFrom)) + ": " + money(data.wholeFrom - s.base) + " away.";
       if (canWhole) wholeOrder.forEach((k) => whole.append(row(k)));
@@ -1080,14 +1092,14 @@ const clientData = {
     const KEY = "ss_bundle_2027";
     function keepBasket() {
       try {
-        if (state.list.length) localStorage.setItem(KEY, JSON.stringify({ v: 2, units: state.list.map((u) => u.choice), order: state.order }));
+        if (state.list.length) localStorage.setItem(KEY, JSON.stringify({ v: 3, units: state.list.map((u) => u.choice), order: state.order }));
         else localStorage.removeItem(KEY);
       } catch (e) { /* storage off: the page still works */ }
     }
     if (enquiry) enquiry.addEventListener("submit", () => { try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ } });
     try {
       const stored = JSON.parse(localStorage.getItem(KEY) || "null");
-      if (stored && stored.v === 2 && Array.isArray(stored.units)) {
+      if (stored && stored.v === 3 && Array.isArray(stored.units)) {
         stored.units.forEach((c) => {
           try {
             const bb = c && data.bundles.find((x) => x.id === c.id);

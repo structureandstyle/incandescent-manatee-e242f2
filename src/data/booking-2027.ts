@@ -22,17 +22,27 @@ export const BANDS: [number, number][] = [
   [2500, 350], [3500, 500], [5000, 750], [7500, 1000], [10000, 1500],
   [15000, 2000], [20000, 3000], [30000, 4500], [45000, 6000],
 ];
-export const WHOLE_FROM = 15000;
+/* Whole units on the house (a founder, 17 Nov 2026): only when the unit's
+   starting price is no more than 11% of the quotation, and then everything on
+   the house together stays within 11%. A whole unit costs Kaspar close to its
+   full price, so the cap keeps a whole-unit job at his 5% floor after
+   commission (price book, F2F clients/structure-and-style/christmas-bundle-numbers).
+   The cheapest whole unit, the library unit at a draft £2,000, sets the first
+   threshold. Steps from £15,000 stay bracketed as drafts. */
+export const WHOLE_CAP = 0.11;
+export const wholeFromPrice = (p: number) => Math.ceil(p / WHOLE_CAP / 100) * 100;
+export const WHOLE_FROM = wholeFromPrice(2000);
+const DRAFT_FROM = 15000;
 
-const WHOLE_NOTE: Record<number, string> = {
-  15000: ", enough for a library unit",
-  20000: ", enough for a 2-door wardrobe",
-  30000: ", enough for a pair of alcove units, a TV unit or a 4-door wardrobe",
-  45000: ", enough for any of the whole units",
-};
+/* The whole-unit thresholds (library from about £18,200 up to a 4-door
+   wardrobe from about £36,400) fall inside these steps, so each row from
+   £15,000 says the rule and the term below lists the thresholds. */
+const WHOLE_NOTE: Record<number, string> = Object.fromEntries(
+  [15000, 20000, 30000, 45000].map((n) => [n, ", or one whole unit worth up to 11% of the quotation"]),
+);
 export const BAND_ROWS = BANDS.map(([at, v], i) => {
   const next = BANDS[i + 1];
-  const t = (n: number) => (n >= WHOLE_FROM ? draft(money(n)) : money(n));
+  const t = (n: number) => (n >= DRAFT_FROM ? draft(money(n)) : money(n));
   return [t(at) + (next ? " to " + t(next[0] - 1) : " and over"), "up to " + draft(money(v)) + (WHOLE_NOTE[at] || "")];
 });
 
@@ -48,7 +58,7 @@ export const TERMS = [
   "Applies to fitted wardrobe, walk-in wardrobe, alcove unit and library, TV unit and kitchen jobs, and to home office and under-stair storage, panelling and doors, and flooring [CONFIRM], with a quotation of £2,500 or more. Several units in one quotation count together.",
   "Your quotation total, the units and their parts at normal prices, sets how much is included, as in the table above. Extras on the house are £0 lines and do not add to it.",
   "Extras on the house are worth 10% to 15% of the quotation up to £60,000, and stay at " + draft("£6,000") + " above that.",
-  "From " + draft("£15,000") + ", what is included can take in one whole unit: a library unit, 2.4m high and 1.2m wide, a 2-door or 4-door wardrobe, a pair of alcove units or a TV unit, valued at its normal starting price, with extras for whatever is left. Another finish, or anything beyond what is included, is charged at normal prices.",
+  "A whole unit can come on the house when its normal starting price is no more than 11% of the quotation: a library unit, 2.4m high and 1.2m wide, from a " + draft(money(wholeFromPrice(2000))) + " quotation; a 2-door wardrobe from " + money(wholeFromPrice(2300)) + "; a pair of alcove units from " + money(wholeFromPrice(3300)) + "; a TV unit from " + money(wholeFromPrice(3500)) + "; a 4-door wardrobe from " + money(wholeFromPrice(4000)) + ". One whole unit per quotation, valued at its normal starting price, and everything on the house together stays within 11% of the quotation. Another finish, or anything beyond what is included, is charged at normal prices.",
   "Extras on the house are picked in the basket and only fill what is included. Extras you want beyond that are added to a unit as parts, at normal prices, and count towards the quotation total.",
   "Prices on the booking page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements.",
   "Each extra on the house appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
