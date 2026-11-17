@@ -62,6 +62,12 @@ const journal = defineCollection({
   loader: glob({ base: "./src/content/journal", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
     title: z.string(),
+    /** The Google title (the <title> tag), when it should differ from the
+        H1: literal, the words people search first, about 55 to 65 characters
+        before " | Structure & Style" (a founder, 17 Nov 2026: "match the
+        keywords people search"; SS_JOURNAL_ARTICLE_RULES_v1.0 section 4).
+        Absent, the title is used for both. */
+    seoTitle: z.string().optional(),
     description: z.string(),
     /** Shown under the title. Defaults to the description. */
     standfirst: z.string().optional(),
