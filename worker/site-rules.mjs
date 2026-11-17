@@ -12,12 +12,13 @@ export const CANONICAL_HOST = "structureandstyle.co.uk";
 
 /**
  * Permanent redirects, checked before anything else. Returns the target URL
- * or null. www goes to the apex in one direction; the two retired addresses
+ * or null. www goes to the apex in one direction; the retired addresses
  * forward to their pages (netlify.toml says why each exists).
  */
 const PATH_REDIRECTS = [
   { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/carpenter-hampstead/" },
   { from: /^\/carpenter-camden(?:\/.*)?$/, to: "/areas/camden/" },
+  { from: /^\/carpenter-primrose-hill(?:\/.*)?$/, to: "/areas/primrose-hill/" },
 ];
 
 /** wrangler dev on this machine runs over plain http and is left alone. */
