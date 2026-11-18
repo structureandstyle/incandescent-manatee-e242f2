@@ -112,8 +112,9 @@ export const AREAS: Area[] = [
     titleProp: "Bespoke fitted wardrobes in Camden",
     h1: "Bespoke fitted wardrobes and alcove units in Camden",
     kicker: "Bespoke joinery in Camden",
+    /* 18 Nov 2026: "and flats" came out (the facts file gives no source for it) and "and shelving" went in (camden.astro). */
     description:
-      "Bespoke fitted wardrobes and alcove units for Camden homes: terraced houses and flats, measured in the room and cut to walls that are rarely straight.",
+      "Bespoke fitted wardrobes, alcove units and shelving for Camden Town's terraced houses, measured in the room and cut to walls that are rarely straight.",
     /* Search Console, 11 Oct to 8 Nov: fitted wardrobes camden 20 and bespoke wardrobes camden 20
        impressions, the area's two largest product searches. Keyword Planner (London, 14 Nov 2026):
        built in wardrobes camden 10, exact phrase; no data for fitted or bespoke wardrobes camden. */
