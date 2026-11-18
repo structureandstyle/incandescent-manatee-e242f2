@@ -111,7 +111,10 @@ export const AREAS: Area[] = [
        remain the page's scope, not the borough (brief section 14, option a). */
     titleProp: "Bespoke fitted wardrobes in Camden",
     h1: "Bespoke fitted wardrobes and alcove units in Camden",
-    kicker: "Bespoke joinery in Camden",
+    /* "Bespoke carpentry", Arthur's comment on the review link, 14 Nov 2026; the footer tagline's words.
+       Kept when the page moved onto the Primrose Hill model: a founder's choice, 18 Nov 2026. The other
+       area pages say "Bespoke joinery in <Area>". */
+    kicker: "Bespoke carpentry in Camden",
     /* 18 Nov 2026: "and flats" came out (the facts file gives no source for it) and "and shelving" went in (camden.astro). */
     description:
       "Bespoke fitted wardrobes, alcove units and shelving for Camden Town's terraced houses, measured in the room and cut to walls that are rarely straight.",
