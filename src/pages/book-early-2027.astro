@@ -325,6 +325,9 @@ const clientData = {
             <li>Extras on the house, from a £2,500 basket</li>
             <li>Prices unchanged</li>
             <li>A [15%] deposit books your slot</li>
+            {/* Rev 27 (a founder, 18 Nov): copy agent's lines, protocol v1.4. */}
+            <li>Quoted price held for any 2027 fitting date</li>
+            <li>Deposit back in full after the drawings, if you decide not to go ahead</li>
           </ul>
           {/* No prices first thing (Denis, 12 Nov): the ladder became what people pick. */}
           <p class="xmas-card-title">Pick your extras</p>
@@ -496,6 +499,23 @@ const clientData = {
     </dialog>
   </Wrap>
 
+  {/* Rev 27 (a founder, 18 Nov 2026): what else comes with a 2027 booking.
+      Every item is a bonus at unchanged prices, costed on Kaspar's numbers in
+      F2F research/2026-11-18-booking-ahead-offers/. Copy by a separate copy
+      agent to protocol v1.4 (F2F clients/structure-and-style/booking-2027-preview/copy-rev27.md),
+      built in unchanged. The slot count stays on the ribbon only. */}
+  <Wrap style="padding-bottom:var(--section-y)">
+    <SectionHead level={4}>Also with a job booked by 31 December</SectionHead>
+    <p class="promise-intro">Prices stay as they are. These come on top.</p>
+    <ul class="promise-grid">
+      <li><strong class="promise-title">Price held for 2027.</strong><p class="promise-text">Quotation accepted and deposit paid by 31 December 2026: the quoted price holds for a fitting date any time in 2027.</p></li>
+      <li><strong class="promise-title">Drawings on approval.</strong><p class="promise-text">After you see your 2D drawings and elevations, you can decide not to go ahead. The deposit comes back in full within [14 days] of you receiving them.</p></li>
+      <li><strong class="promise-title">Longer guarantee.</strong><p class="promise-text">[10 years] on installation and workmanship, instead of 2. The structure of the joinery already has 10.</p></li>
+      <li><strong class="promise-title">We pick the week.</strong><p class="promise-text">Let us choose your fitting week between January and April 2027, and the old wardrobes or units from that room are taken away and disposed of on the house.</p></li>
+      <li><strong class="promise-title">Recommend a friend.</strong><p class="promise-text">When someone you recommend books a job by 31 December 2026, you both get extras worth [£250] on the house. They mention your name when they send their basket or message.</p></li>
+    </ul>
+  </Wrap>
+
   <Wrap style="padding-bottom:var(--section-y)">
     <SectionHead level={4}>What stands behind it</SectionHead>
     <div class="xmas-proof">
@@ -503,7 +523,7 @@ const clientData = {
         <FormProof quotes={["lorenzo", "ozge"]} keep={1} />
       </div>
       <ul class="xmas-guarantee">
-        <li><strong>2 years</strong> on installation and workmanship.</li>
+        <li><strong>[10 years]</strong> on installation and workmanship for jobs booked by 31 December 2026, instead of 2.</li>
         <li><strong>10 years</strong> on the structure of the joinery.</li>
         <li><strong>Hardware</strong> under its maker's warranty.</li>
         <li><strong>Your cancellation rights</strong> are not affected.</li>
@@ -1254,6 +1274,16 @@ const clientData = {
   @media (prefers-reduced-motion: reduce) { .bundle-card { transition: none; } .bundle-card:hover { transform: none; } }
   .bundle-name { font-family: var(--font-serif-display); font-size: var(--type-serif-md); line-height: 1.2; }
   .bundle-cta { color: var(--green); font-weight: var(--weight-medium, 500); text-decoration: underline; text-underline-offset: 4px; }
+  /* Rev 27 (a founder, 18 Nov): what else comes with a 2027 booking, each a
+     bonus at unchanged prices. Cards in a grid, green rule on top, as the
+     standard strip. */
+  .promise-intro { max-width: var(--measure); margin: var(--space-6) 0 0; }
+  .promise-grid { list-style: none; margin: var(--space-9) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .promise-grid li { padding: var(--space-6); background: color-mix(in srgb, var(--green) 6%, var(--paper)); border-top: 4px solid var(--green); }
+  .promise-title { display: block; margin: 0 0 var(--space-3); font-family: var(--font-display); font-size: var(--type-h5, 1.2rem); line-height: 1.2; color: var(--char); }
+  .promise-text { margin: 0; font-size: var(--type-body-sm); }
+  @media (max-width: 1000px) { .promise-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .promise-grid { grid-template-columns: 1fr; gap: var(--space-4); } }
   .std-strip { margin-top: var(--space-10); padding: var(--space-6) var(--space-8); background: color-mix(in srgb, var(--green) 8%, var(--paper)); border-left: 6px solid var(--green); }
   .std-strip-title { margin: 0 0 var(--space-4); font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono-table); text-transform: uppercase; color: var(--green); }
   .std-strip-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-10); }

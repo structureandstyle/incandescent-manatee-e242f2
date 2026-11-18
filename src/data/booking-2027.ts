@@ -63,6 +63,12 @@ export const TERMS = [
   "Prices on the booking page are indicative guide prices. The firm figure is the itemised quotation, sent after a measured survey or from your photos and measurements.",
   "Each extra on the house appears on the quotation as its own line at £0. Its normal price is the price on our cost guide, and what we charge for it on any other job.",
   "Prices are unchanged. The quotation is the normal itemised price for the job.",
+  /* Rev 27 (a founder, 18 Nov 2026): copy agent's terms, protocol v1.4, built in unchanged. */
+  "Booked by 11.59pm on Thursday 31 December 2026 (quotation accepted in writing and the deposit paid), the quoted price holds for a fitting date at any time in 2027. The price is the quoted price for the same work: a change to the work is quoted at normal prices. [CONFIRM]",
+  "If you decide not to go ahead after receiving your 2D drawings and elevations, tell us within [14 days] of receiving them and the deposit is returned in full. The drawing files are handed over once the job goes ahead. This is in addition to your cancellation rights. [CONFIRM]",
+  "For jobs booked by 31 December 2026, installation and workmanship are guaranteed for [10 years]. The structure of the joinery is guaranteed for 10 years, and hardware stays under its maker's warranty. [CONFIRM]",
+  "Customers who let us choose the fitting week between January and April 2027 have the old wardrobes or units from the room being fitted taken away and disposed of at no charge. This covers the furniture in that room only, and the week we choose is confirmed in writing. [CONFIRM]",
+  "When someone you recommend books a job by 31 December 2026, you both receive extras worth [£250] on the house. They go on each of your quotations, or on your next job if yours is already done. The person you recommend mentions your name when they send their basket or message. Extras worth [£250] are not exchanged for money. [CONFIRM]",
   "Lighting needs a power supply that can reach the unit, which we check at the visit. Where it cannot, other extras of the same value are included.",
   "Extras and whole units on the house cannot be exchanged for money, swapped for a lower price or moved to another job.",
   "The fitting date is agreed when the deposit is paid.",
