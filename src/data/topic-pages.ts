@@ -19,7 +19,8 @@
  */
 
 /** A real photograph from public/images/_selection.json, labelled by type only. */
-type PhotoPlate = { file: string; type: string };
+/** `service`: names the photo's service where its caption alone would give the wrong one (src/data/plate-services.ts). */
+type PhotoPlate = { file: string; type: string; service?: string };
 
 /**
  * An AI-generated example, made to docs/ai-render-protocol.md in the ops repo
@@ -103,7 +104,7 @@ export const TOPIC_PAGES: TopicPage[] = [
        than grow its own loft section. */
     primary: "loft wardrobes",
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-10.webp", type: "Fitted wardrobes" },
+      { file: "/images/fitted-wardrobes/fitted-wardrobes-10.webp", type: "Fitted wardrobes", service: "Loft wardrobes" },
       {
         file: "/images/journal/built-in-wardrobes-ai-loft-oak-niches.webp",
         type: "Loft wardrobes with oak niches",
