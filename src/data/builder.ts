@@ -12,9 +12,31 @@ import { SERVICE_COPY } from "./service-copy";
 import { SERVICES, DEFERRED_SERVICES, serviceLabel } from "./site";
 import { SERVICE_CHOICES } from "../components/enquiry-cards/choices";
 import { readPrices } from "../scripts/builder/prices.mjs";
+import { sellBook } from "../scripts/builder/costing.mjs";
+import { DESIGN_YOUR_OWN_LIVE } from "./design-your-own-gate";
+import PRICE_BOOK from "./price-book.json";
 
-/** The cost guide's guide starting prices, as numbers. */
+/** The cost guide's guide starting prices, as numbers, and its four finish names. */
 export const PRICES = readPrices(SERVICE_COPY["fitted-wardrobe-cost"].priceTables ?? []);
+
+/**
+ * THE BUILDER'S PRICE, PART BY PART (a founder, 19 Nov 2026).
+ *
+ * Every design is priced from the price book (./price-book.json): each board,
+ * edge, hinge, handle, screw, finish and hour, through the same formulas as
+ * the S&S pricing workbook (src/scripts/builder/costing.mjs). The figures are
+ * researched UK prices and the workbook's assumptions until Kaspar puts in his
+ * own; the book is kept in the Google Sheet "S&S price book".
+ *
+ * The page carries only the selling rates (sellBook): his costs, his day rate
+ * and his margin are folded in and never reach a visitor's browser.
+ *
+ * THE PAGE CANNOT GO LIVE until he has confirmed the book: the build stops.
+ */
+export const SELL_BOOK = sellBook(PRICE_BOOK);
+if (DESIGN_YOUR_OWN_LIVE && !PRICE_BOOK.confirmedByKaspar) {
+  throw new Error("Design your own: the price book is not confirmed by Kaspar yet (confirmedByKaspar in src/data/price-book.json)");
+}
 
 /** The enquiry form's card for each unit the builder draws. */
 export const UNIT_SERVICE = {

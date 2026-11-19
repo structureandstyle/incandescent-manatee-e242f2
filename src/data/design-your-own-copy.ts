@@ -48,14 +48,16 @@ export const COPY = {
       title: "Handles",
       help: "",
     },
+    // 19 Nov 2026: every part now moves the price (a founder). These three
+    // help lines are a copy agent's, against protocol v1.4, like the rest.
     inside: {
       title: "Inside",
-      help: "Choose what goes in each section of the run. Drawers are priced separately and sent with your enquiry.",
+      help: "Choose what goes in each section of the run. Each drawer adds its guide price, per drawer.",
       section: "Section",
     },
     extras: {
       title: "Extras",
-      help: "Extras are priced in the quotation, not in the guide price. They are sent with your enquiry.",
+      help: "Each extra adds its own guide price to the figure, shown line by line under it.",
     },
     alcoveSize: {
       title: "Alcove sizes",
@@ -63,7 +65,7 @@ export const COPY = {
     },
     alcoveUnit: {
       title: "Base cupboard and shelves",
-      help: "Each alcove has a base cupboard with two doors and open shelves above. Three shelves are in the guide price.",
+      help: "Each alcove has a base cupboard with two doors and open shelves above. Every shelf adds its own guide price to the figure.",
     },
   },
   fields: {
@@ -101,17 +103,15 @@ export const COPY = {
     drag: "Drag to turn the picture",
     note: "This picture is an illustration to help you decide. It is not a drawing to make from.",
   },
+  // 19 Nov 2026: the figure is worked out part by part from his price list (a
+  // founder), so every size has one; "parts" and "breakdown" are a copy agent's.
   price: {
     label: "Guide price",
     from: "from",
-    includesWardrobe: "Includes a straightforward internal layout, standard shelving and hanging space, soft-close hinges, delivery and professional installation.",
-    includesAlcove: "Includes a pair of alcove units, each a base cupboard with two doors and three open shelves above, up to about 1m wide.",
+    parts: "This guide price is worked out from what your design needs: boards, edging, fittings and handles, finishing, fitting time and delivery.",
+    breakdown: "What makes up this figure",
     guide: "A guide starting price, not a fixed quotation. A detailed, itemised quotation follows the measured survey.",
     quoted: "Priced in your quotation",
-    quotedWide: "A run wider than 2.4m has no published figure, so it is priced in the quotation.",
-    quotedOneAlcove: "A single alcove has no published figure, so it is priced in the quotation.",
-    quotedWideAlcove: "An alcove wider than about 1m has no published figure, so it is priced in the quotation.",
-    extras: "Priced separately in the quotation: {items}.",
   },
   actions: {
     add: "Add to my project",
@@ -160,7 +160,7 @@ export const COPY = {
     items: [
       {
         q: "Is the price shown what I will pay?",
-        a: "It is a guide starting price from our cost guide, not a fixed quotation. The final figure depends on exact dimensions, internal layout, materials and finish, design details, access and site conditions. A detailed, itemised quotation follows the measured survey.",
+        a: "It is a guide starting price, worked out from the parts, finishing and fitting time your design needs, not a fixed quotation. The final figure depends on exact dimensions, internal layout, materials and finish, design details, access and site conditions. A detailed, itemised quotation follows the measured survey.",
       },
       {
         q: "Do I need exact measurements?",

@@ -6,19 +6,22 @@
  *
  * THE PRICE IS NEVER TYPED HERE. The page hands in the guide starting prices
  * it read from the cost guide's own tables (src/data/service-copy.ts, through
- * src/data/builder.ts). This file only decides which published figure a
- * design lands on, or that it lands on none and is priced in the quotation.
+ * src/data/builder.ts), and the extras' guide prices beside them. This file
+ * decides how a design's figure is made up from those, line by line.
  *
  * His published steps, the ones the cost guide's columns name:
  *   up to 1.2m is 2 doors, up to 1.8m is 3 doors, up to 2.4m is 4 doors;
  *   a pair of alcove units, each up to about 1m wide.
- * Anything past those is drawn, described and sent, and carries no figure.
+ * Past those, every size still gets a figure (a founder, 19 Nov 2026), worked
+ * out from his own (see guidePrice). Every extra adds its own line.
  *
  * DEFAULTS STANDING IN FOR FACTS ONLY KASPAR HOLDS (the brief lists them):
  * the height range, the door styles, and which insides count as the
  * "straightforward internal layout" his starting price names. Each is one
  * constant below.
  */
+
+import { prepare, priceDesign } from "./costing.mjs";
 
 /** Millimetres. The picture and the wording both take these as given. */
 export const LIMITS = {
@@ -52,8 +55,8 @@ export const HANDLES = [
 
 /**
  * What goes inside one section. `extra` names what his starting price does
- * not cover (the cost guide: drawers are priced separately), so the page can
- * say so beside the choice and the enquiry can list it.
+ * not cover (the cost guide: drawers are priced separately): guidePrice adds
+ * those drawers as their own line.
  */
 export const INSIDES = [
   { id: "hang", label: "Long hanging", text: "long hanging with a shelf above" },
@@ -64,7 +67,7 @@ export const INSIDES = [
   { id: "shelves-drawers", label: "Shelves over drawers", text: "shelves over three drawers", extra: "drawers" },
 ];
 
-/** Priced separately to the specification, in the cost guide's own words. */
+/** Priced separately to the specification, in the cost guide's own words; each adds its line in guidePrice. */
 export const EXTRAS = {
   wardrobe: [
     { id: "lighting", label: "Integrated lighting", text: "integrated lighting" },
@@ -121,8 +124,8 @@ export const COLOURS = [
 /**
  * The designs the page opens on. LIGHTING IS ON IN BOTH (a founder, 19 Nov
  * 2026, reviewing the first build: the inside should be shown "with leds").
- * It is an extra, so the page lists it at once as priced separately in the
- * quotation, and it never moves the figure. A design made from anything else
+ * It is an extra, so its guide price is in the opening figure, on its own
+ * line. A design made from anything else
  * (a link, a saved project, a part-filled form) gets only the extras it names:
  * normalise() adds none.
  */
@@ -219,43 +222,59 @@ export function describe(input) {
   return { ...s, doors, sections: sectionsFor(doors) };
 }
 
-/**
- * What is not in his starting price for this design, in the order to say it.
- * Chosen extras, drawers that came with an inside, shelves past the three.
- */
-export function quotedItems(input) {
+/** The extras chosen for this design, in words, in the order the form lists them. */
+export function extrasChosen(input) {
   const s = describe(input);
-  const out = [];
-  if (s.unit === "wardrobe") {
-    if (s.inside.some((id) => INSIDES.find((x) => x.id === id)?.extra === "drawers")) out.push("drawers");
-  } else if (s.shelves > ALCOVE_SHELVES_INCLUDED) {
-    out.push("extra shelves");
-  }
-  for (const x of EXTRAS[s.unit]) if (s.extras.includes(x.id)) out.push(x.text);
-  return out;
-}
-
-/**
- * The published guide starting price this design lands on, or null when it is
- * outside what he has published. `prices` comes from the cost guide's tables:
- *   { wardrobe: [[2 doors, 3 doors, 4 doors] per finish], alcovePair: [per finish] }
- * `why` says, in page wording, why there is no figure.
- */
-export function guidePrice(input, prices) {
-  const s = describe(input);
-  if (s.unit === "wardrobe") {
-    if (s.w > PRICED_WARDROBE_MAX) return { from: null, why: "wider than 2.4m" };
-    const from = prices?.wardrobe?.[s.finish]?.[s.doors - 2];
-    return Number.isFinite(from) ? { from, why: "" } : { from: null, why: "" };
-  }
-  if (s.count === 1) return { from: null, why: "a single alcove" };
-  if (s.widths.some((w) => w > PRICED_ALCOVE_MAX)) return { from: null, why: "an alcove wider than 1m" };
-  const from = prices?.alcovePair?.[s.finish];
-  return Number.isFinite(from) ? { from, why: "" } : { from: null, why: "" };
+  return EXTRAS[s.unit].filter((x) => s.extras.includes(x.id)).map((x) => x.text);
 }
 
 export const money = (n) => "£" + Math.round(n).toLocaleString("en-GB");
 const metres = (mm) => (mm / 1000).toFixed(mm % 100 ? 2 : 1).replace(/\.?0+$/, (m) => (m.includes(".") ? "" : m)) + "m";
+/** Each price book is indexed once, however often a visitor changes the design. */
+const ready = new WeakMap();
+const prepared = (book) => {
+  if (!ready.has(book)) ready.set(book, prepare(book));
+  return ready.get(book);
+};
+
+/**
+ * The guide price of a design, worked out part by part (a founder, 19 Nov
+ * 2026) from the price book the page carries: `prices.book`, the selling
+ * rates (src/data/builder.ts, costing.mjs). Size, finish, door style,
+ * handles, the inside of every section, every shelf and every extra all move
+ * it, because each changes the parts, the finishing or the fitting time.
+ *
+ * Returns { from, basis, lines }: the first line is the design without its
+ * extras (marked `from`, a starting price), then one line per extra chosen,
+ * each what adding it costs. The lines always add up to `from`. With no price
+ * book handed in, `from` is null: never a guess.
+ */
+export function guidePrice(input, prices) {
+  const s = describe(input);
+  if (!prices?.book) return { from: null, basis: "", lines: [] };
+  const P = prepared(prices.book);
+  const at = (extras) => priceDesign({ ...s, extras }, P).price;
+  const label = s.unit === "wardrobe"
+    ? `Fitted wardrobe, ${metres(s.w)} wide, ${s.doors} doors`
+    : s.count === 2 ? "A pair of alcove units" : "One alcove unit";
+  let running = at([]);
+  const lines = [{ text: label, amount: running, from: true }];
+  const chosen = [];
+  for (const x of EXTRAS[s.unit]) {
+    if (!s.extras.includes(x.id)) continue;
+    chosen.push(x.id);
+    const next = at([...chosen]);
+    lines.push({ text: x.label, amount: next - running });
+    running = next;
+  }
+  return { from: running, basis: "parts", lines };
+}
+
+/** The figure line by line, for the enquiry: "(fitted wardrobe ..., from £4,500; integrated lighting, 2 sections, £300)". */
+export function priceWords(p) {
+  if (!p?.from || p.lines.length < 2) return "";
+  return `(${p.lines.map((l) => `${l.text.replace(/^./, (c) => c.toLowerCase())}, ${l.from ? "from " : ""}${money(l.amount)}`).join("; ")})`;
+}
 
 /** One line for a list: "Fitted wardrobe, 2.4m wide, 4 doors, hand-painted MDF". */
 export function title(input, finishes) {
@@ -291,8 +310,8 @@ export function specLines(input, finishes) {
     lines.push(`Alcove units: ${sizes}, ${s.d} deep, ceiling ${s.h} high (mm).`);
     lines.push(`In each alcove: a base cupboard ${s.base} high with two ${door.replace(" doors", "")} doors, ${handle}, and ${s.shelves} open ${s.shelves === 1 ? "shelf" : "shelves"} above. Finish: ${finish}, shown in ${colour}.`);
   }
-  const quoted = quotedItems(s);
-  if (quoted.length) lines.push(`To price in the quotation: ${quoted.join(", ")}.`);
+  const extras = extrasChosen(s);
+  if (extras.length) lines.push(`Extras: ${extras.join(", ")}.`);
   return lines;
 }
 
@@ -354,7 +373,8 @@ export function projectText({ items = [], others = [], prices, finishes, linkFor
     if (p.from) known += p.from; else unpriced += 1;
     out.push("");
     out.push(`${items.length > 1 ? `${i + 1}. ` : ""}${specLines(s, finishes).join(" ")}`);
-    out.push(p.from ? `Guide starting price shown: from ${money(p.from)}.` : "No guide price shown: priced in the quotation.");
+    const parts = priceWords(p);
+    out.push(p.from ? `Guide price shown: from ${money(p.from)}${parts ? ` ${parts}` : ""}.` : "No guide price shown: priced in the quotation.");
     if (linkFor && i < 4) out.push(`Open the design: ${linkFor(s)}`);
   });
   if (others.length) {

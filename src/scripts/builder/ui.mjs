@@ -28,7 +28,6 @@ import {
   money,
   normalise,
   projectText,
-  quotedItems,
   servicesFor,
   specLines,
   title,
@@ -169,25 +168,26 @@ export function initBuilder(root) {
 
   /* ---- What the visitor sees --------------------------------------------- */
 
-  const WHY = {
-    "wider than 2.4m": copy.quotedWide,
-    "a single alcove": copy.quotedOneAlcove,
-    "an alcove wider than 1m": copy.quotedWideAlcove,
-  };
-
   function drawPrice(d) {
     const p = guidePrice(d, cfg.prices);
-    const quoted = quotedItems(d);
     for (const el of $$(root, "[data-dyo-figure]")) {
       el.textContent = p.from ? `${copy.from} ${money(p.from)}` : copy.quoted;
       el.classList.toggle("is-quoted", !p.from);
     }
-    for (const el of $$(root, "[data-dyo-price-note]")) {
-      el.textContent = p.from ? (d.unit === "alcove" ? copy.includesAlcove : copy.includesWardrobe) : (WHY[p.why] || "");
-    }
-    for (const el of $$(root, "[data-dyo-extras-note]")) {
-      el.textContent = quoted.length ? copy.extras.replace("{items}", quoted.join(", ")) : "";
-      el.hidden = !quoted.length;
+    // The figure line by line, once the design has an extra in it: the design, then what each extra adds.
+    for (const box of $$(root, "[data-dyo-lines]")) {
+      const list = $(box, "ul");
+      list.textContent = "";
+      for (const line of p.lines) {
+        const li = document.createElement("li");
+        const name = document.createElement("span");
+        name.textContent = line.text;
+        const amount = document.createElement("span");
+        amount.textContent = `${line.from ? `${copy.from} ` : "+ "}${money(line.amount)}`;
+        li.append(name, amount);
+        list.append(li);
+      }
+      box.hidden = p.lines.length < 2;
     }
     // Each finish shows what it would cost at this size, so the choice is a real one.
     for (const el of $$(form, "[data-dyo-finish-price]")) {
