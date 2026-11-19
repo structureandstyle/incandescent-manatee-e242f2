@@ -382,6 +382,32 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "after": "What stands behind the number: the cover on the work after the invoice is paid.",
     },
     sections: [
+      /* 19 Nov 2026, the CTR plan (ops research/ctr-2026-11-19): two sections
+         straight after the price tables (after: "cost"). Written by a separate
+         copy agent to protocol v1.4, checked adversarially and revised once;
+         every price is the table's own, the fitting facts are Kas's (answers.ts
+         q30, q32) and the table note. B's heading is a People also ask question
+         on 7 of the 10 cost results pages checked live from NW3 on 19 Nov. B's
+         days line repeats "How long does it take?" further down on purpose, so
+         B answers the installation question on its own. */
+      {
+        meta: "By size",
+        heading: "What a 3-door fitted wardrobe costs",
+        after: "cost",
+        body: [
+          "Our guide price for a 3-door fitted wardrobe up to 1.8m wide starts from £3,200 in melamine board. The same size starts from £3,500 in hand-painted MDF, £4,300 in professionally sprayed MDF and £5,000 in oak veneer. From those starting points, the price moves with size, finish, the internal layout and lighting.",
+          "One size up, a 4-door wardrobe up to 2.4m wide starts from £4,000 in melamine board. Each figure is a guide starting price for a straightforward internal layout, standard shelving and hanging space, and soft-close hinges. We price drawers, integrated lighting, mirrors and pull-out accessories separately to that specification.",
+        ],
+      },
+      {
+        meta: "Installation",
+        heading: "How much does it cost to install built-in wardrobes?",
+        after: "cost",
+        body: [
+          "We include delivery and installation in every guide price in the fitted wardrobe table. Access and site conditions can still move the final figure.",
+          "A straightforward wardrobe wall typically takes 2 to 3 days on site. It is closer to a week where the wardrobe is built up in the room or hand-painted on site. We agree the installation period when the deposit is paid, and confirm the final dates as the project progresses.",
+        ],
+      },
       {
         meta: "The price",
         heading: "What moves a fitted wardrobe up its range",

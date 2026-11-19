@@ -421,6 +421,11 @@ export const HOMEPAGE_FAQS = [
   {
     q: "What does a fitted wardrobe cost?",
     a: "A fitted wardrobe typically starts from £2,300 for a 2-door wardrobe, with 4-door wardrobes starting from around £4,000. The final price depends on the size, internal layout, material and finish, with drawers, lighting and other details priced as required.",
+    /* 19 Nov 2026, the CTR plan: a link to the cost guide from the home
+       page, the site's strongest page. The sentence is the copy agent's;
+       Kas's answer above is unchanged. index.astro renders it after the
+       answer, with the link on `text`. */
+    more: { before: "Guide prices by size and finish, with fitting included, are in our ", text: "fitted wardrobe cost guide", href: "/fitted-wardrobe-cost/", after: "." },
   },
   /* His answer, 7 September 2026, under a screenshot of this question. The
      same screenshot came on 6 September with nothing typed beneath it. It
