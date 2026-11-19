@@ -373,11 +373,12 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
         Rough dimensions, a photo or drawing, and a sense of what the piece needs to do gets you a
         considered reply, not a brochure.
       </p>
-      {/* The Google rating above the first field, and Lorenzo I's wardrobe
-          review from 600px up, 29 Oct 2026 (FormProof.astro). A phone keeps
-          the rating alone: this pop-up is the quick way in, and its form is
-          already long on a phone. */}
-      <FormProof quotes={["lorenzo"]} keep={0} style="margin-bottom:var(--space-10)" />
+      {/* The Google rating above the first field (FormProof.astro), as on
+          /contact/. No review quote since 19 Nov 2026 (Denis, on the review
+          link: "the lead already decided to fill in the form and contact Kas
+          so it has no value it just clutters the form"); until then Lorenzo
+          I's wardrobe review sat here from 600px up (29 Oct 2026). */}
+      <FormProof style="margin-bottom:var(--space-10)" />
       <EnquiryForm compact idPrefix="modal-" preselectedService={enquiryService} />
     </dialog>
 
