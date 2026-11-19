@@ -216,12 +216,15 @@ export const AREAS: Area[] = [
         alt: "Matt charcoal L-shaped handleless kitchen with an island, two white stools, a tall fridge housing, a black extractor and a white metro tile splashback.",
       },
       {
+        /* 19 Nov 2026, Denis on the review link: "remove the leds here". Made again without lighting
+           (Figma node 41:8, picked over 41:9 by an independent check against the render protocol;
+           one faint mark on a door rail retouched). Original PNG in S&S ops deliverables/ai-renders-2026-11-14/. */
         file: "/images/journal/islington-ai-glazed-alcove-units.webp",
         type: "Glazed alcove cupboards",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Two fitted alcove units painted soft sage green either side of a white fireplace with a black cast-iron insert. Each has a two-door panelled base cupboard with small brass knobs and a glazed upper cupboard with lit shelves holding books and ceramics, running up to the room's cornice. A sash window is to the right.",
+        alt: "Two fitted alcove units painted soft sage green either side of a white fireplace with a black cast-iron insert. Each has a two-door panelled base cupboard and a two-door glazed upper cupboard with shelves holding books and ceramics, all with small brass knobs, running up to the room's cornice. A tall sash window is to the right.",
       },
     ],
     summary: "Late Georgian squares and terraces, Victorian villas and flats in converted houses.",
