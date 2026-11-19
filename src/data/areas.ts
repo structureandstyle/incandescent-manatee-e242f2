@@ -133,11 +133,24 @@ export const AREAS: Area[] = [
         type: "Bookcases",
         alt: "White built-in bookcase in three bays with open shelves above six handleless cupboard doors, lit by two wall lights",
       },
+      /* 19 Nov 2026, Denis on the review link: "replace this image with a generated one" (it was
+         ssp-029, the white handleless wardrobe with one door open). Made in Figma the same day (file
+         d0AWnKDiTyYDbBrrCsE4NS, node 39:2, gpt-image-2.5-sunburst) to the ops AI render protocol;
+         small retouches, told to Kaspar on the card: a second handle on each closed door beside the
+         open pair was painted out (every door now has one handle, at its pair's centre); a blue-grey
+         strip under the top infill over the open bay became the oak top panel's edge, so the panel
+         meets the single infill (protocol section 4); four faint marks on the open doors and two on
+         the oak went. Checked by an independent pass against the protocol's section 5. */
       {
-        file: "/images/library/ssp-029.webp",
-        type: "Fitted wardrobes",
-        alt: "White handleless fitted wardrobe with one door open showing oak interior, chrome hanging rail, top shelf and lower shelves",
+        file: "/images/journal/camden-ai-blue-grey-open-wardrobes.webp",
+        type: "Blue-grey wardrobes with an oak-effect interior",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Six flat wardrobe doors in deep blue-grey run wall to wall in three pairs, with slim brushed-nickel bar handles where each closed pair meets. The centre pair stands open on an oak-effect interior: a top shelf, a hanging rail with shirts and jackets, and three drawers. Slim infills meet the flat ceiling and run to the floor at each end, with a recessed plinth beneath the doors. Daylight comes from a sash window on the left, and a panelled door stands to the right.",
       },
+      /* 19 Nov 2026, Denis: a framed picture on the wall ran into the door frame; it was painted
+         out of the render (plain wall, filled from the wall above and below it). */
       {
         file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
         type: "Grey Shaker-style wardrobes",

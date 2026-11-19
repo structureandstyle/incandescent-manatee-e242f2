@@ -123,6 +123,37 @@
  *   trend and depth questions. bespoke wardrobes camden and alcove units camden
  *   showed no box.
  *
+ * 19 NOV 2026, DENIS'S COMMENTS ON THE REVIEW LINK.
+ *   - The opening: "if for this article the old copy protocol was used update
+ *     this section. If not, i dont see much value for the viewer here". It was
+ *     the 14 Nov wording, written to protocol v1.4 before the newsroom playbook
+ *     and the area page rules v1.0 (17 Nov) existed; the 18 Nov move kept it.
+ *     Rewritten to the area rules' section 4 item 2 (the playbook's summary
+ *     lede): the first sentence answers the search, with the approved Camden
+ *     Town base folded in, and the council appraisal sentence went (the
+ *     playbook's "unnecessary geography" in an opening). Facts: based in Camden
+ *     Town (home page); early and mid 19th century terraces, the planned grid
+ *     west of the High Street (S1; Mornington Crescent has no date there); "Walls, floors and
+ *     ceilings are rarely straight" (q31, his words, kept general). Not Primrose
+ *     Hill's "measured in the room and cut to its walls" construction (swap
+ *     test). "bespoke carpentry" and "bespoke joinery" once each.
+ *   - Checked the same day by four independent passes (copy rules with the
+ *     playbook, facts, swap test, the render protocol). Changed on them: the
+ *     appraisal is named where it is first used (Terraces), since the opening
+ *     no longer names it; the railway cuttings and Carreras factory line went
+ *     (no use to the reader) and "mansard" is explained; the alcove section
+ *     leads with the alcove point; "historic doors and skirting in places"
+ *     (S5's own limit); "engineered boards are more stable" (q43's word); the
+ *     parking page "has a search by street or postcode" (S11). Left for a
+ *     founder or Kaspar: the FAQ "How long do fitted wardrobes last?" opens on
+ *     materials, not a lifespan (none is approved, and the guarantee would
+ *     repeat the price section); the dormer window seat (his card); "we agree
+ *     with you where the van stops" (as on Primrose Hill, no source in the
+ *     facts file).
+ *   - Pictures: no AI label (main's PRs #66 and #67, merged into the stack);
+ *     the grey render lost a framed picture that ran into the door frame; ssp-029
+ *     gave way to a new render (areas.ts).
+ *
  * OPEN FOR A FOUNDER: the kicker. Main says "Bespoke joinery in Camden";
  * Arthur's comment branch (flowtoform/areas-comments-2026-11-14, never merged)
  * says "Bespoke carpentry in Camden". Main's wording stays until a founder
@@ -184,10 +215,10 @@ const EXT = { target: "_blank", rel: "noopener" };
 <AreaPage area={area}>
   <Fragment slot="lede">
     <p>
-      We are a joinery company based in Camden Town. For the houses on the streets around us, we take on bespoke carpentry: <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving.
+      Based in Camden Town, we take on bespoke carpentry for the houses around us: <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving.
     </p>
     <p style={P2}>
-      Camden Council's appraisal of the Camden Town Conservation Area records a large number of early and mid 19th century terraces, many of them listed. Their walls are rarely straight, so every wardrobe, alcove unit and shelf is bespoke joinery, cut to follow them.
+      Many of those houses are early and mid 19th century terraces, like those on the planned grid west of the High Street. Walls, floors and ceilings are rarely straight, so each piece of bespoke joinery is fitted to the room as it is.
     </p>
   </Fragment>
 
@@ -195,7 +226,7 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Terraces" level={4}>Fitted wardrobes in the terraces west of Camden High Street</SectionHead>
     <AreaSide drawing="balcony-terrace">
       <p>
-        West of Camden High Street, Albert Street, Arlington Road and Mornington Terrace were laid out on a planned grid between 1820 and 1850. The appraisal describes yellow stock-brick terraces, typically three storeys over a basement, mostly with painted timber sash windows and cast-iron railings.
+        West of Camden High Street, Albert Street, Arlington Road and Mornington Terrace were laid out on a planned grid between 1820 and 1850. Camden Council's appraisal of the Camden Town Conservation Area describes yellow stock-brick terraces, typically three storeys over a basement. Most have painted timber sash windows, and cast-iron railings are a feature.
       </p>
       <p style={P2}>
         Mornington Terrace, built in the 1840s, is taller and grander than the streets to its east, with continuous cast-iron balconies. Albert Street was built mostly by George Bassett between 1844 and 1848, and many of its houses are still single family homes.
@@ -210,7 +241,7 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Mansard rooms" level={4}>Wardrobes under the mansards of Mornington Crescent and Albert Street</SectionHead>
     <AreaSide drawing="dormer-wardrobes">
       <p>
-        Mornington Crescent is three curved terraces of four storeys over basements, with mansard roofs and dormers, windows built out from the slope of the roof. The appraisal notes the railway cuttings behind them and the old Carreras tobacco factory in front. In Albert Street, Nos 22 to 46 are the only terrace that keeps its original mansard attic.
+        Mornington Crescent is three curved terraces of four storeys over basements. Their mansard roofs have a steep lower slope, with dormers: windows built out from the slope of the roof. In Albert Street, Nos 22 to 46 are the only terrace that keeps its original mansard attic.
       </p>
       <p style={P2}>
         In rooms like these, wardrobes can stand either side of a dormer, with a window seat between them.
@@ -222,10 +253,10 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Alcoves" level={4}>Alcove units in Camden Town's front and back rooms</SectionHead>
     <AreaSide drawing="front-back-alcoves">
       <p>
-        The houses on the west side of Arlington Road date from the 1820s to about 1840. The appraisal calls their roof form very distinct, with large rear chimney stacks and long stair windows.
+        Where a room has a chimney breast, an alcove unit fills the recess on either side. A floor with a breast in each room can take two pairs of units, each drawn for its own alcove.
       </p>
       <p style={P2}>
-        Where a room has a chimney breast, an alcove unit fills the recess on either side. A floor with a breast in each room can take two pairs of units, each drawn for its own alcove.
+        The houses on the west side of Arlington Road date from the 1820s to about 1840. The appraisal calls their roof form very distinct, with large rear chimney stacks and long stair windows.
       </p>
     </AreaSide>
   </Wrap>
@@ -240,7 +271,7 @@ const EXT = { target: "_blank", rel: "noopener" };
         Camden's protection of a listed house covers its interior, so significant work inside can need listed building consent.
       </p>
       <p style={P2}>
-        A heritage report on Camden's planning file for one Jeffreys Street house records its original staircase, a plaster cornice and historic doors and skirting. Where a room keeps details like these, a wardrobe can finish neatly below the cornice, the moulding where the wall meets the ceiling.
+        A heritage report on Camden's planning file records one Jeffreys Street house's original staircase and plaster cornice, with historic doors and skirting in places. Where a room keeps details like these, a wardrobe can finish neatly below the cornice, the moulding where the wall meets the ceiling.
       </p>
     </div>
   </Wrap>
@@ -252,7 +283,7 @@ const EXT = { target: "_blank", rel: "noopener" };
         South of Delancey Street, Albert Street's houses sit behind front gardens up to 5 metres deep. In Camden Square, steep steps climb to front doors above semi-basements. Before installation we agree with you where the van stops and how each piece comes in.
       </p>
       <p style={P2}>
-        Camden sells <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permits</Link> to tradespeople working for a resident, valid in resident bays and on certain yellow lines, with no space promised. Its <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zone search</Link> shows the rules for your street.
+        Camden sells <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permits</Link> to tradespeople working for a resident, valid in resident bays and on certain yellow lines, with no space promised. Its <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zone page</Link> has a search by street or postcode.
       </p>
       <p style={P2}>
         Where the stairs are tight, large pieces come in as sections ready to assemble. Stair protection goes down on every day material comes in.
@@ -292,7 +323,7 @@ const EXT = { target: "_blank", rel: "noopener" };
         They are wardrobes designed for one room rather than bought in standard sizes. Where a design needs drawings, they show the inside layout and the materials and finishes before work starts. The drawings stay on file, so a matching piece later starts from that record.
       </Faq>
       <Faq q="How long do fitted wardrobes last?">
-        The materials are chosen for long-term stability: engineered boards stay truer than solid timber, which rarely makes sense for fitted furniture. Natural veneers develop subtly with age and light, while painted and decorative finishes stay more consistent. Care advice for each finish comes with the finished piece.
+        The materials are chosen for long-term stability: engineered boards are more stable than solid timber, which rarely makes sense for fitted furniture. Natural veneers develop subtly with age and light, while painted and decorative finishes stay more consistent. Care advice for each finish comes with the finished piece.
       </Faq>
       <Faq q="How thick should alcove shelves be?">
         Shelf thickness depends on how far the shelf spans between supports and what it holds: books ask more of it than a light display. Material, thickness, reinforcement and fixings are considered together, and a wider shelf may need concealed reinforcement or a supporting division. A thick appearance alone does not show how much a shelf can carry.
