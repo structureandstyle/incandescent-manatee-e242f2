@@ -47,6 +47,12 @@ interface Props {
   /** The right-hand half of the caption. */
   detail?: string;
   /**
+   * A full description under the caption line, in the body voice (19 Nov 2026,
+   * a founder: every photo carries a visible description in the same words as
+   * its alt text). Left out, the caption stays one specification line.
+   */
+  description?: string;
+  /**
    * What the lightbox calls this photograph (6 Nov 2026): a few plain words,
    * no numbering and no "completed installation by ...". A real photograph
    * takes the service name ("Fitted wardrobes"). Alt text stays long and
@@ -105,6 +111,7 @@ const {
   height,
   subject,
   detail,
+  description,
   label,
   ai = false,
   awaiting = "Photograph to place",
@@ -231,7 +238,7 @@ const srcset =
     )}
   </div>
 
-  {hasCaption && (
+  {hasCaption && !description && (
     <Cap
       style="display:flex;justify-content:space-between;gap:var(--space-8);flex-wrap:wrap;border-top:var(--rule-structure);padding-top:var(--space-5)"
       data-motion={planed ? "stamp-group" : undefined}
@@ -243,6 +250,25 @@ const srcset =
       )}
       {detail && <MonoLabel style="letter-spacing:var(--ls-mono-table)">{detail}</MonoLabel>}
       <slot name="controls" />
+    </Cap>
+  )}
+  {description && (
+    <Cap
+      style="display:block;border-top:var(--rule-structure);padding-top:var(--space-5)"
+      data-motion={planed ? "stamp-group" : undefined}
+    >
+      {hasCaption && (
+        <span style="display:flex;justify-content:space-between;gap:var(--space-8);flex-wrap:wrap">
+          {subject && (
+            <MonoLabel tone="default" style="letter-spacing:var(--ls-mono-table)">
+              {href ? <span class="plate-link-label">{subject}</span> : subject}
+            </MonoLabel>
+          )}
+          {detail && <MonoLabel style="letter-spacing:var(--ls-mono-table)">{detail}</MonoLabel>}
+          <slot name="controls" />
+        </span>
+      )}
+      <span data-plate-description style="display:block;margin-top:var(--space-4);font-size:15px;line-height:1.55;color:var(--text-quiet)">{description}</span>
     </Cap>
   )}
 </Tag>
