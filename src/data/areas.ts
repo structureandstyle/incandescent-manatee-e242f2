@@ -231,14 +231,16 @@ export const AREAS: Area[] = [
       },
       {
         /* 19 Nov 2026, Denis on the review link: "remove the leds here". Made again without lighting
-           (Figma node 41:8, picked over 41:9 by an independent check against the render protocol;
-           one faint mark on a door rail retouched). Original PNG in S&S ops deliverables/ai-renders-2026-11-14/. */
+           (Figma node 41:8). Then, the same day, Denis: "remove the plants from inside the alcove units":
+           made again with nothing but books, bowls and jugs on the shelves (node 43:9, picked over 43:8 by
+           an independent check against the render protocol: 43:8 stopped short of the cornice and had slab
+           base doors). No retouch. Original PNGs in S&S ops deliverables/ai-renders-2026-11-14/. */
         file: "/images/journal/islington-ai-glazed-alcove-units.webp",
         type: "Glazed alcove cupboards",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Two fitted alcove units painted soft sage green either side of a white fireplace with a black cast-iron insert. Each has a two-door panelled base cupboard and a two-door glazed upper cupboard with shelves holding books and ceramics, all with small brass knobs, running up to the room's cornice. A tall sash window is to the right.",
+        alt: "Two fitted alcove units painted soft sage green either side of a white fireplace with a black cast-iron insert. Each has a two-door panelled base cupboard and a two-door glazed upper cupboard with shelves holding books, bowls and jugs, all with small brass knobs, running up to the room's cornice. A tall sash window with shutters is to the right.",
       },
     ],
     summary: "Late Georgian squares and terraces, Victorian villas and flats in converted houses.",
