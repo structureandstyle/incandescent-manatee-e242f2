@@ -33,10 +33,10 @@ interface Props {
   /** What this render shows that the others do not, in a few words. */
   caption: string;
   /**
-   * A short name of what the render shows, for the enlarged photograph
-   * ("Sliding doors"). The lightbox reads "AI-generated example · " and this.
-   * Needed where the caption is only "AI-generated example"; where the caption
-   * already names the render, that is used.
+   * A short name of what the render shows ("Sliding doors"), for the enlarged
+   * photograph and, where the caption is only "AI-generated example", for the
+   * caption too (that label is no longer shown on pictures, 19 Nov 2026).
+   * Where the caption already names the render, that is used.
    */
   short?: string;
   /** The fuller description shown beneath the image. */
@@ -46,12 +46,18 @@ interface Props {
 }
 
 const { src, alt, width, height, caption, short, description, pair = false } = Astro.props;
-const label = short ?? (/^AI-generated example$/i.test(caption) ? undefined : caption);
+/* No "AI-generated example" on the picture itself (a founder, 19 Nov 2026:
+   "remove the AI-GENERATED EXAMPLE from all the photos"). A caption that is
+   only that label shows the short name instead; the page's one line above the
+   first image still says the images are AI-generated examples. */
+const labelOnly = /^AI-generated example$/i.test(caption);
+const label = short ?? (labelOnly ? undefined : caption);
+const shown = labelOnly ? short : caption;
 const sizes = pair ? "(max-width: 760px) 92vw, 530px" : "(max-width: 700px) 92vw, 680px";
 ---
 
 <div class="render">
-  <Plate photo={src} alt={alt} width={width} height={height} ratio={`${width} / ${height}`} subject={caption} label={label} ai sizes={sizes} />
+  <Plate photo={src} alt={alt} width={width} height={height} ratio={`${width} / ${height}`} subject={shown} label={label} ai sizes={sizes} />
   {description && <p class="render-desc">{description}</p>}
 </div>
 

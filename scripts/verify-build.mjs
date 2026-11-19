@@ -151,20 +151,26 @@ const CASE_STUDY_TITLE = /^[A-Z][A-Za-z' -]+ in [A-Z][A-Za-z' -]+$/;
  * showing an unlabelled render as if it were his work. Brought onto the area
  * pages branch on 14 Nov 2026 unchanged; whichever of the two merges second
  * keeps one copy.
+ *
+ * TURNED ROUND on 19 Nov 2026 (a founder: "remove the AI-GENERATED EXAMPLE
+ * from all the photos"). The label now must NOT appear on the picture: not in
+ * its figure's visible caption, and not in the data-caption the lightbox shows
+ * when it is enlarged. The page-level notice stays required, so a page with AI
+ * images still says so in a visible line above the first one.
  */
 const AI_LABEL = /AI-generated example/i;
 function verifyAiLabels(html, page, errors) {
   const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']*-ai-[^"']*)["'][^>]*>/gi)];
   if (!imgs.length) return;
-  /* Journal guides (approved before this rule) say it once above the first
-     image and caption each render with what differs in it, so they are held
-     to the notice only. Every other page labels each image itself. */
-  for (const m of isArticle(page) ? [] : imgs) {
+  for (const m of imgs) {
+    if (/\sdata-caption=["']AI-generated example/i.test(m[0])) {
+      errors.push(`${page}  AI image ${m[1]} says "AI-generated example" when enlarged (off the pictures since 19 Nov 2026)`);
+    }
     const start = html.lastIndexOf("<figure", m.index);
     const end = html.indexOf("</figure>", m.index);
     const fig = start === -1 || end === -1 || html.indexOf("</figure>", start) < m.index ? "" : html.slice(start, end);
-    if (!AI_LABEL.test(visibleText(fig.replace(/<img\b[^>]*>/gi, " ")))) {
-      errors.push(`${page}  AI image ${m[1]} has no visible "AI-generated example" label in its figure`);
+    if (AI_LABEL.test(visibleText(fig.replace(/<img\b[^>]*>/gi, " ")))) {
+      errors.push(`${page}  AI image ${m[1]} carries a visible "AI-generated example" label (off the pictures since 19 Nov 2026)`);
     }
   }
   const before = visibleText(html.slice(0, imgs[0].index));
