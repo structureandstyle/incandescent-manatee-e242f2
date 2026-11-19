@@ -42,15 +42,34 @@ export const FITS = [
   { id: "none", label: "Open both ends", text: "open at both ends" },
 ];
 
+/*
+ * Door styles, handles and handle finishes. Slim Shaker, tongue and groove,
+ * fluted, long bars, edge pulls and the three finishes were added on 19 Nov
+ * 2026 (a founder: "Add more styles"); their words are a copy agent's. S&S's
+ * own site lists fluted and grooved MDF among its panels, but how Kaspar makes
+ * each style is one of the questions for him.
+ */
 export const DOORS = [
   { id: "shaker", label: "Shaker", text: "Shaker-style doors" },
   { id: "flat", label: "Flat", text: "flat doors" },
+  { id: "slim", label: "Slim Shaker", text: "slim Shaker doors" },
+  { id: "tg", label: "Tongue and groove", text: "tongue and groove doors" },
+  { id: "fluted", label: "Fluted", text: "fluted doors" },
 ];
 
 export const HANDLES = [
   { id: "knob", label: "Knobs", text: "knobs" },
   { id: "bar", label: "Bar handles", text: "bar handles" },
+  { id: "longbar", label: "Long bar handles", text: "long bar handles" },
+  { id: "edge", label: "Edge pulls", text: "edge pulls" },
   { id: "none", label: "None, push to open", text: "no handles, push to open" },
+];
+
+/** The metal of the handles. The three cost the same (price book note 04), so the choice never moves the price. */
+export const HANDLE_FINISHES = [
+  { id: "brass", label: "Brushed brass", text: "brushed brass" },
+  { id: "black", label: "Matt black", text: "matt black" },
+  { id: "chrome", label: "Polished chrome", text: "polished chrome" },
 ];
 
 /**
@@ -132,11 +151,11 @@ export const COLOURS = [
 export const DEFAULTS = {
   wardrobe: {
     unit: "wardrobe", w: 2400, h: 2400, d: 600, fit: "both", finish: 1, colour: 0,
-    door: "shaker", handle: "bar", inside: ["hang", "hang-shelves"], extras: ["lighting"],
+    door: "shaker", handle: "bar", handleFinish: "brass", inside: ["hang", "hang-shelves"], extras: ["lighting"],
   },
   alcove: {
     unit: "alcove", count: 2, wl: 900, wr: 900, h: 2400, d: 350, breast: 1400, base: 850, shelves: 3,
-    finish: 1, colour: 0, door: "shaker", handle: "knob", extras: ["lighting"],
+    finish: 1, colour: 0, door: "shaker", handle: "knob", handleFinish: "brass", extras: ["lighting"],
   },
 };
 
@@ -175,6 +194,7 @@ export function normalise(input = {}) {
   const colour = clampInt(src.colour, [0, COLOURS[finish].length - 1], 0);
   const door = oneOf(src.door, DOORS, base.door);
   const handle = oneOf(src.handle, HANDLES, base.handle);
+  const handleFinish = oneOf(src.handleFinish, HANDLE_FINISHES, base.handleFinish);
   const allowed = EXTRAS[unit].map((x) => x.id);
   const extras = Array.isArray(src.extras) ? allowed.filter((id) => src.extras.includes(id)) : [];
 
@@ -190,7 +210,7 @@ export function normalise(input = {}) {
       breast: clampInt(src.breast, L.breast, base.breast),
       base: clampInt(src.base, L.base, base.base),
       shelves: clampInt(src.shelves, L.shelves, base.shelves),
-      finish, colour, door, handle, extras,
+      finish, colour, door, handle, handleFinish, extras,
     };
   }
 
@@ -207,7 +227,7 @@ export function normalise(input = {}) {
     h: clampInt(src.h, L.h, base.h),
     d: clampInt(src.d, L.d, base.d),
     fit: oneOf(src.fit, FITS, base.fit),
-    finish, colour, door, handle, inside, extras,
+    finish, colour, door, handle, handleFinish, inside, extras,
   };
 }
 
@@ -295,7 +315,9 @@ export function specLines(input, finishes) {
   const finish = (finishes?.[s.finish] ?? "").replace(/^./, (c) => c.toLowerCase());
   const colour = COLOURS[s.finish][s.colour].name;
   const door = DOORS.find((x) => x.id === s.door).text;
-  const handle = HANDLES.find((x) => x.id === s.handle).text;
+  // "long bar handles in matt black"; push to open has no handles, so no finish.
+  const handle = HANDLES.find((x) => x.id === s.handle).text +
+    (s.handle === "none" ? "" : ` in ${HANDLE_FINISHES.find((x) => x.id === s.handleFinish).text}`);
   const lines = [];
   if (s.unit === "wardrobe") {
     const fit = FITS.find((x) => x.id === s.fit).text;
@@ -318,11 +340,13 @@ export function specLines(input, finishes) {
 /* ---- A design in a link ---------------------------------------------------
    Short keys and a version number, so a link someone saved still opens after
    the builder changes. Whatever comes back out goes through normalise(), so a
-   hand-edited link can only ever produce a valid design. */
+   hand-edited link can only ever produce a valid design. A new key only ever
+   goes on the END of a list: a link made before it simply lacks it, and
+   normalise() fills in the default (handleFinish, 19 Nov 2026). */
 
 const KEYS = {
-  wardrobe: ["w", "h", "d", "fit", "finish", "colour", "door", "handle", "inside", "extras"],
-  alcove: ["count", "wl", "wr", "h", "d", "breast", "base", "shelves", "finish", "colour", "door", "handle", "extras"],
+  wardrobe: ["w", "h", "d", "fit", "finish", "colour", "door", "handle", "inside", "extras", "handleFinish"],
+  alcove: ["count", "wl", "wr", "h", "d", "breast", "base", "shelves", "finish", "colour", "door", "handle", "extras", "handleFinish"],
 };
 
 const toBase64Url = (text) => {

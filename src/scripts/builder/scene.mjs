@@ -512,17 +512,19 @@ export function createView(canvas, { onLost, onRestored } = {}) {
    * the part, so a narrow stile, a wide panel and a long filler all show grain
    * of the same size, as one sheet of veneer would.
    */
-  const surface = (m, w, h, d) => {
+  const surface = (m, w, h, d, shift = 0) => {
     if (!m?.wood) return m;
     const across = m.across ? Math.max(h, d) : Math.max(w, d);
     const along = m.across ? w : h;
     const a = Math.max(0.02, Math.round(across * 50) / 50);
     const l = Math.max(0.2, Math.round(along * 5) / 5);
-    const key = `${m.key}-${m.across ? "h" : "v"}-${m.tint}-${a}-${l}`;
+    const key = `${m.key}-${m.across ? "h" : "v"}-${m.tint}-${a}-${l}${shift ? `-s${shift}` : ""}`;
     usedWood.add(key);
     if (!woodMats.has(key)) {
       const t = woodSource(m.hex).clone(); // shares the picture; only the scale is its own
       t.repeat.set(a / GRAIN_W, l / GRAIN_L);
+      // `shift` boards along: a tongue and groove door's boards carry one veneer's grain across.
+      if (shift) t.offset.x = (shift * a) / GRAIN_W;
       if (m.across) { t.center.set(0.5, 0.5); t.rotation = Math.PI / 2; }
       t.needsUpdate = true;
       const wood = m.clearcoat
@@ -606,6 +608,13 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     // Metals that reflect the room: polished chrome, soft brushed brass (fix 2).
     const chrome = flat("chrome", 0xdcdcda, 0.1, 1);
     const brass = flat("brass", 0xc09a5e, 0.26, 1);
+    // The handles' own metal, as chosen; matt black is a powder coat, so barely metallic.
+    // Handle chrome takes the room's light at full strength, not the room's dimmed
+    // share: at the dimmed share a polished plate facing the camera mirrors one dark
+    // patch of the room and reads as black, not silver.
+    const handleMetal = s.handleFinish === "black" ? flat("matt-black", 0x1c1b1a, 0.5, 0.15)
+      : s.handleFinish === "chrome" ? mat("handle-chrome", () => new THREE.MeshStandardMaterial({ color: 0xeeeff0, roughness: 0.22, metalness: 1, envMap: envTexture, envMapIntensity: 1.35 }))
+      : brass;
     const channel = flat("led-channel", 0xc9c9c6, 0.35, 0.9);
     const glow = mat("glow", () => new THREE.MeshStandardMaterial({ color: 0xfff4de, emissive: 0xffe2b0, emissiveIntensity: 4.2, roughness: 1 }));
     const mirror = flat("mirror", 0xffffff, 0.02, 1);
@@ -632,8 +641,8 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     };
 
     /** A part with eased edges, from its lower-left-back corner and its size. */
-    const piece = (m, x0, y0, z0, w, h, d, { r = 0.002, cast = true, receive = true, parent = g } = {}) => {
-      const mesh = new THREE.Mesh(rounded(w, h, d, r), surface(m, w, h, d));
+    const piece = (m, x0, y0, z0, w, h, d, { r = 0.002, cast = true, receive = true, parent = g, shift = 0 } = {}) => {
+      const mesh = new THREE.Mesh(rounded(w, h, d, r), surface(m, w, h, d, shift));
       mesh.position.set(x0 + w / 2, y0 + h / 2, z0 + d / 2);
       mesh.castShadow = cast;
       mesh.receiveShadow = receive;
@@ -684,25 +693,56 @@ export function createView(canvas, { onLost, onRestored } = {}) {
 
     /**
      * A handle on a door or drawer, in the door's own space when a parent is
-     * given: a turned knob (rose, neck, domed head), or a bar with rounded
-     * ends on two posts.
+     * given, in the metal chosen: a turned knob (rose, neck, domed head), a
+     * bar with rounded ends on two posts (a long one, about 600mm, when
+     * chosen), or an edge pull: a thin L of metal round the free edge with a
+     * lip in front of the face that fingers hook behind.
+     * `edge` is the free edge (a door's x, a drawer front's top y), `out` the
+     * way it faces (+1 right, -1 left) and `span` the door's height, so a long
+     * bar or an edge pull always fits on it.
      */
-    const handle = (x, y, z, { vertical = true, parent = g, long = 0.24 } = {}) => {
+    const handle = (x, y, z, { vertical = true, parent = g, long = 0.24, edge = null, out = 1, span = 2 } = {}) => {
       if (s.handle === "none") return;
+      const metal = handleMetal;
+      const within = (c, len, margin) => Math.min(Math.max(c, len / 2 + margin), span - len / 2 - margin);
       if (s.handle === "knob") {
-        const k = new THREE.Mesh(knobGeo, brass);
+        const k = new THREE.Mesh(knobGeo, metal);
         k.position.set(x, y, z);
         k.castShadow = true;
         parent.add(k);
         return;
       }
-      const bar = new THREE.Mesh(capsule(long), brass);
-      bar.position.set(x, y, z + 0.032);
+      if (s.handle === "edge") {
+        // A rounded lip, so it catches a line of light along each side as a real one does.
+        const reach = DOOR_T + 0.014; // from the back of the door to the lip
+        const fin = { parent, r: 0.0011 };
+        const lip = { parent, r: 0.0024 };
+        if (vertical) {
+          const len = Math.min(0.3, span * 0.4);
+          const cy = within(y, len, 0.05);
+          const ex = edge ?? x;
+          piece(metal, out > 0 ? ex - 0.0025 : ex - 0.0005, cy - len / 2, z - DOOR_T, 0.003, len, reach, fin);
+          piece(metal, out > 0 ? ex - 0.0135 : ex - 0.0005, cy - len / 2, z + 0.011, 0.014, len, 0.0052, lip);
+        } else {
+          const len = Math.min(0.2, long);
+          const ey = edge ?? y;
+          piece(metal, x - len / 2, ey - 0.0025, z - DOOR_T, len, 0.003, reach, fin);
+          piece(metal, x - len / 2, ey - 0.0135, z + 0.011, len, 0.014, 0.0052, lip);
+        }
+        return;
+      }
+      let L = long, cy = y;
+      if (s.handle === "longbar") {
+        L = vertical ? Math.min(0.6, span * 0.62) : Math.min(0.45, long * 1.9);
+        if (vertical) cy = within(y, L, 0.06);
+      }
+      const bar = new THREE.Mesh(capsule(L), metal);
+      bar.position.set(x, cy, z + 0.032);
       if (!vertical) bar.rotation.z = Math.PI / 2;
       bar.castShadow = true;
       parent.add(bar);
-      for (const o of [-long / 2 + 0.03, long / 2 - 0.03]) {
-        cylinder(brass, 0.0042, 0.03, vertical ? x : x + o, vertical ? y + o : y, z + 0.016, "z", parent);
+      for (const o of [-L / 2 + 0.03, L / 2 - 0.03]) {
+        cylinder(metal, 0.0042, 0.03, vertical ? x : x + o, vertical ? cy + o : cy, z + 0.016, "z", parent);
       }
     };
 
@@ -727,10 +767,10 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       strip(yb - ya, xb, (ya + yb) / 2, false);
     };
 
-    /** The outer face of an end panel, framed like the doors when they are Shaker. */
+    /** The outer face of an end panel, framed like the doors when they are Shaker or slim Shaker. */
     const shakerSide = (xFace, out, za, zb, ya, yb, midY) => {
-      if (s.door !== "shaker") return;
-      const t = 0.006, f = 0.085, x = out < 0 ? xFace - t : xFace;
+      if (s.door !== "shaker" && s.door !== "slim") return;
+      const t = 0.006, f = s.door === "slim" ? 0.05 : 0.085, x = out < 0 ? xFace - t : xFace;
       const opts = { r: 0.0015 };
       piece(finish, x, ya, za, t, yb - ya, f, opts);
       piece(finish, x, ya, zb - f, t, yb - ya, f, opts);
@@ -740,8 +780,11 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     };
 
     /**
-     * One door, hung on its hinge edge so it can swing. Flat, or a Shaker
-     * frame around a set-back panel. `inner` adds a mirror to its inside face.
+     * One door, hung on its hinge edge so it can swing: flat; tongue and
+     * groove (boards about 100mm wide whose eased edges meet in a V, one
+     * veneer's grain carried across them); fluted (rounded reeds about 26mm
+     * wide on a thinner slab); or a Shaker frame, slim or standard, around a
+     * set-back panel. `inner` adds a mirror to its inside face.
      */
     const door = ({ hinge, x, y0, w, h, z, handleY, inner = false, withHandle = true }) => {
       const pivot = new THREE.Group();
@@ -750,10 +793,28 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       g.add(pivot);
       const x0 = hinge === "left" ? 0 : -w;
       const opts = { parent: pivot, r: 0.0022 };
+      const plainBack = () => block(finish, x0 + 0.004, 0.004, -DOOR_T - 0.0006, w - 0.008, h - 0.008, 0.004, { parent: pivot, cast: false });
       if (s.door === "flat") {
         piece(finish, x0, 0, -DOOR_T, w, h, DOOR_T, opts);
+      } else if (s.door === "tg") {
+        const n = Math.max(2, Math.round(w / 0.1));
+        const bw = w / n;
+        for (let i = 0; i < n; i++) piece(finish, x0 + i * bw, 0, -DOOR_T, bw, h, DOOR_T, { parent: pivot, r: 0.0026, shift: i });
+        plainBack();
+      } else if (s.door === "fluted") {
+        const slab = 0.012, rd = 0.016;
+        piece(finish, x0, 0, -DOOR_T, w, h, slab, opts);
+        const n = Math.max(6, Math.round(w / 0.026));
+        const rw = w / n;
+        // One instanced shape per door: a fluted run of eight doors is eight draws, not 170.
+        const reeds = new THREE.InstancedMesh(rounded(rw, h, rd, rd / 2), surface(finish, rw, h, rd), n);
+        const m4 = new THREE.Matrix4();
+        for (let i = 0; i < n; i++) reeds.setMatrixAt(i, m4.makeTranslation(x0 + rw * (i + 0.5), h / 2, -rd / 2));
+        reeds.castShadow = true;
+        reeds.receiveShadow = true;
+        pivot.add(reeds);
       } else {
-        const f = Math.max(0.055, Math.min(0.085, w * 0.2));
+        const f = s.door === "slim" ? Math.min(0.045, w * 0.2) : Math.max(0.055, Math.min(0.085, w * 0.2));
         // A tall door has a mid rail, as most Shaker wardrobe doors do, its centre a third down.
         const mid = h > 1.5 ? h * MID_RAIL : null;
         piece(finish, x0, 0, -DOOR_T, f, h, DOOR_T, opts);
@@ -768,10 +829,13 @@ export function createView(canvas, { onLost, onRestored } = {}) {
           bevel(pivot, x0 + f, ya, x0 + w - f, yb, panel);
         }
         // The back of the door is one plain face.
-        block(finish, x0 + 0.004, 0.004, -DOOR_T - 0.0006, w - 0.008, h - 0.008, 0.004, { parent: pivot, cast: false });
+        plainBack();
       }
       if (inner) block(mirror, x0 + 0.06, 0.12, -DOOR_T - 0.004, w - 0.12, h - 0.24, 0.004, { parent: pivot, cast: false });
-      if (withHandle) handle(hinge === "left" ? w - 0.042 : -w + 0.042, handleY - y0, 0, { parent: pivot });
+      if (withHandle) {
+        handle(hinge === "left" ? w - 0.042 : -w + 0.042, handleY - y0, 0,
+          { parent: pivot, edge: hinge === "left" ? w : -w, out: hinge === "left" ? 1 : -1, span: h });
+      }
       // Two hinge plates on the carcass side, seen once the door is open.
       for (const hy of [0.12, h - 0.12]) block(chrome, hinge === "left" ? 0.002 : -0.034, hy - 0.025, -DOOR_T - 0.014, 0.032, 0.05, 0.012, { parent: pivot, cast: false });
       doorList.push(pivot);
@@ -1090,7 +1154,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         if (withDrawers) {
           const dh = 0.17;
           piece(finishAcross, ax + f + GAP / 2, doorTop - dh, baseD - DOOR_T, aw - 2 * f - GAP, dh, DOOR_T);
-          handle((ax + bx) / 2, doorTop - dh / 2, baseD, { vertical: false, long: Math.min(0.24, aw * 0.3) });
+          handle((ax + bx) / 2, doorTop - dh / 2, baseD, { vertical: false, long: Math.min(0.24, aw * 0.3), edge: doorTop });
           doorTop -= dh + GAP;
         }
         const doorH = doorTop - PLINTH - GAP;

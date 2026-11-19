@@ -111,6 +111,7 @@ export function initBuilder(root) {
       colour: Number(radio(`dyo-colour-${finish}`) ?? 0),
       door: radio("dyo-door"),
       handle: radio("dyo-handle"),
+      handleFinish: radio("dyo-handle-finish"),
       extras: $$(form, `input[name="dyo-extra-${unit}"]:checked`).map((el) => el.value),
     };
     for (const [key, name] of Object.entries(NUMBERS[unit])) out[key] = field(name).value;
@@ -134,6 +135,7 @@ export function initBuilder(root) {
     check(`dyo-colour-${d.finish}`, d.colour);
     check("dyo-door", d.door);
     check("dyo-handle", d.handle);
+    check("dyo-handle-finish", d.handleFinish);
     for (const el of $$(form, `input[name="dyo-extra-${d.unit}"]`)) el.checked = d.extras.includes(el.value);
     for (const [key, name] of Object.entries(NUMBERS[d.unit])) field(name).value = d[key];
     if (d.unit === "wardrobe") check("dyo-fit", d.fit);
@@ -228,6 +230,8 @@ export function initBuilder(root) {
   function showPanels(d) {
     for (const el of $$(root, "[data-dyo-for]")) el.hidden = el.dataset.dyoFor !== d.unit;
     for (const el of $$(form, "[data-dyo-colours]")) el.hidden = Number(el.dataset.dyoColours) !== d.finish;
+    // Push to open has no handles, so no handle finish to choose.
+    for (const el of $$(form, "[data-dyo-handle-finish]")) el.hidden = d.handle === "none";
     const one = d.unit === "alcove" && d.count === 1;
     for (const el of $$(form, "[data-dyo-right-alcove]")) el.hidden = one;
     for (const el of $$(form, "[data-dyo-left-label]")) el.textContent = one ? copy.oneWidth : copy.leftWidth;

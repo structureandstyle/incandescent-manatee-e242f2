@@ -1560,6 +1560,66 @@
    "status": "Placeholder",
    "kaspar": null,
    "builder": true
+  },
+  {
+   "code": "HANDLE_LONGBAR",
+   "category": "Hardware",
+   "item": "Long bar handle, about 600 mm, mid range, any finish (BUILDER)",
+   "unit": "each",
+   "pack": 1,
+   "price": 25.0,
+   "coverage": null,
+   "noVat": false,
+   "source": "About £30 inc a 600 mm handle: Vado Cameo 600 mm satin brass £26 inc (Sanctuary Bathrooms), Hampstead Lines matt black T-bar 600 mm long £29 (Ironmongery Direct, VAT basis not stated), a matt black 598 mm handle about £33 (TapWarehouse); solid brass at £110 is a different product (note 04) (research 2026-11-19, seen 19 Nov 2026)",
+   "grade": "C",
+   "status": "Sourced",
+   "kaspar": null,
+   "builder": true
+  },
+  {
+   "code": "HANDLE_EDGE",
+   "category": "Hardware",
+   "item": "Edge pull, mid range, any finish (BUILDER)",
+   "unit": "each",
+   "pack": 1,
+   "price": 10.83,
+   "coverage": null,
+   "noVat": false,
+   "source": "About £13 inc: Heritage Brass 100 mm matt black £10.40 inc (Trade Door Handles) or £14.36 ex (M Marcus); solid brass edge pulls £15 to £18 inc (Luxury Handles). These are 100 mm pulls: a longer one for a tall door costs more, price not found; no stainless edge pull found (note 04) (research 2026-11-19, seen 19 Nov 2026)",
+   "grade": "C",
+   "status": "Sourced",
+   "kaspar": null,
+   "builder": true
+  },
+  {
+   "code": "DOOR_TG_M2",
+   "category": "Doors",
+   "item": "Tongue and groove: V-grooving a flat door, extra over a plain door, per m2 of door (BUILDER)",
+   "unit": "m2 of door",
+   "pack": 1,
+   "price": 21.18,
+   "coverage": null,
+   "noVat": false,
+   "source": "No published V-grooving price (note 04). Placeholder worked out by us: Travis Perkins primed long grooved 9 mm MDF £69.19 ex a sheet against plain 9 mm MDF £18.74 ex is £50.45 a sheet more, about £21 per m2 of door at 80% usable. Ask Kaspar, or a cut-to-size shop for a V-grooving quote",
+   "grade": "",
+   "status": "Placeholder",
+   "kaspar": null,
+   "builder": true
+  },
+  {
+   "code": "DOOR_FLUTED_M2",
+   "category": "Doors",
+   "item": "Fluted: fluted MDF in place of a plain door board, extra per m2 of door (BUILDER)",
+   "unit": "m2 of door",
+   "pack": 1,
+   "price": 42.63,
+   "coverage": null,
+   "noVat": false,
+   "source": "Cut Workshop 18 mm MR fluted MDF £131.49 ex a 2440 x 1220 sheet (another listing £128.46) against this book's plain MR MDF 18 mm £29.96 ex is £101.53 a sheet more, £42.63 per m2 of door at 80% usable (worked out by us; note 04, grade C) (research 2026-11-19, seen 19 Nov 2026)",
+   "grade": "C",
+   "status": "Sourced",
+   "kaspar": null,
+   "builder": true
   }
  ],
  "labour": [
@@ -1826,6 +1886,30 @@
    "basis": "Assumption: London traffic and parking.",
    "confirm": true,
    "kaspar": null
+  },
+  {
+   "code": "L_TG_FINISH",
+   "task": "Finish tongue and groove doors: extra prep and paint into the grooves (BUILDER)",
+   "per": "m2 of door",
+   "hours": 0.2,
+   "qty": "AREA_TG_FINISHED",
+   "where": "Site",
+   "basis": "Assumption: about 12 minutes a m2 more than a flat door. For outsourced spraying it stands in for the finisher's extra.",
+   "confirm": true,
+   "kaspar": null,
+   "builder": true
+  },
+  {
+   "code": "L_FLUTED_FINISH",
+   "task": "Finish fluted doors: extra sanding and paint into every reed (BUILDER)",
+   "per": "m2 of door",
+   "hours": 0.5,
+   "qty": "AREA_FLUTED_FINISHED",
+   "where": "Site",
+   "basis": "Assumption: a fluted face has about half as much surface again as a flat one and every reed is sanded by hand. For outsourced spraying it stands in for the finisher's extra.",
+   "confirm": true,
+   "kaspar": null,
+   "builder": true
   }
  ],
  "updated": "2026-11-19",

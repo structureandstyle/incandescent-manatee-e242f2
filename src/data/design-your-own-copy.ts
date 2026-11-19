@@ -40,13 +40,20 @@ export const COPY = {
       title: "Example colours",
       help: "These are example colours for the picture only, not a range. Veneer is shown in example stains.",
     },
+    // 19 Nov 2026: three more door styles, two more handles and a handle
+    // finish step (a founder: "Add more styles"). These lines, and the new
+    // option labels in model.mjs, are a copy agent's, against protocol v1.4.
     doors: {
       title: "Door style",
-      help: "Shaker doors have a framed panel. Flat doors are plain.",
+      help: "Shaker doors have a framed panel, and slim Shaker a narrower frame. Tongue and groove has vertical grooves across a flat door, fluted has rounded vertical reeds, and flat is plain.",
     },
     handles: {
       title: "Handles",
       help: "",
+    },
+    handleFinish: {
+      title: "Handle finish",
+      help: "The metal finish of the handles, for the picture.",
     },
     // 19 Nov 2026: every part now moves the price (a founder). These three
     // help lines are a copy agent's, against protocol v1.4, like the rest.

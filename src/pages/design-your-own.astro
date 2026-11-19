@@ -9,12 +9,11 @@
  * picks a finish, doors, handles and an inside, and watches the picture and
  * the guide price follow. Then adds it to a project, or sends it.
  *
- * THE PRICE IS THE COST GUIDE'S. It is read from the cost guide's own tables
- * (src/data/builder.ts), shown as "from", and called a guide. A design he has
- * not published a figure for (a run past 2.4m, one alcove, an alcove past
- * about 1m) shows no figure and says why. Extras never move the figure: they
- * are listed as priced in the quotation. tests/builder-model.test.mjs holds
- * all of that.
+ * THE PRICE IS WORKED OUT PART BY PART (a founder, 19 Nov 2026) from the S&S
+ * price book (src/data/price-book.json, through src/data/builder.ts, which
+ * hands the page selling rates only), shown as "from" and called a guide.
+ * Every size, door style, handle, inside and extra moves it, line by line.
+ * tests/builder-costing.test.mjs and builder-model.test.mjs hold all of that.
  *
  * NO FORM OF ITS OWN. One form per page (site PR #41): sending opens the
  * site's Get a quote pop-up with the services ticked and the job box filled
@@ -49,6 +48,7 @@ import {
   DOORS,
   EXTRAS,
   FITS,
+  HANDLE_FINISHES,
   HANDLES,
   INSIDES,
   LIMITS,
@@ -339,6 +339,20 @@ const wardrobeNumbers = [
               {HANDLES.map((x) => (
                 <label class="dyo-chipbox">
                   <input type="radio" name="dyo-handle" value={x.id} checked={x.id === first.handle} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* Hidden while "None, push to open" is chosen (ui.mjs showPanels). */}
+          <fieldset class="dyo-step" data-dyo-handle-finish hidden={first.handle === "none"}>
+            <legend>{COPY.steps.handleFinish.title}</legend>
+            {COPY.steps.handleFinish.help && <p class="dyo-help">{COPY.steps.handleFinish.help}</p>}
+            <div class="dyo-chips">
+              {HANDLE_FINISHES.map((x) => (
+                <label class="dyo-chipbox">
+                  <input type="radio" name="dyo-handle-finish" value={x.id} checked={x.id === first.handleFinish} />
                   <span>{x.label}</span>
                 </label>
               ))}

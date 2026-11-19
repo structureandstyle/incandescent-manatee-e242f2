@@ -69,10 +69,12 @@ const coverage = (P, code) => P.items.get(code)?.coverage || 0;
  * shelving", "Drawer unit" or "Loose panel"), qty, width, height (with the
  * plinth), depth, plinth, fixed and adjustable shelves, doors, drawers,
  * drawerFrontH (0 = auto), carcassBoard, frontBoard, doorStyle ("Slab" or
- * "Shaker"), finish ("Hand paint", "Spray own", "Spray outsourced", "None"),
- * paintInside, back, fillers, ledM and railM (row totals).
+ * "Shaker"; BUILDER adds "Tongue and groove" and "Fluted", slab doors with
+ * their own extra lines), finish ("Hand paint", "Spray own", "Spray
+ * outsourced", "None"), paintInside, back, fillers, ledM and railM (row totals).
  * BUILDER columns: innerDrawers (behind the doors), rails (how many rails
- * the rail metres make), mirrors, handle ("knob", "bar", "none").
+ * the rail metres make), mirrors, handle ("knob", "bar", "longbar", "edge",
+ * "none").
  */
 function derive(u, R, lengths) {
   const valid = Boolean(u.type) && u.qty > 0;
@@ -169,6 +171,7 @@ export function cutList(units, P) {
       parts.push({
         unit: index + 1, part, name: u.name, mat, L, W, Q, areaTotal, edgeM, edgeType: edgeM > 0 ? edgeType : "",
         finishM2, finish: finishM2 > 0 ? u.finish : "", tab, rate, boardCost: areaTotal * rate,
+        style: part === "Door" ? u.doorStyle || "Slab" : "",
         hinges: part === "Door" ? Q * d.hingesPerDoor : 0,
         primed: R._priming === "Y" && finishM2 > 0 && tab === "Board + edging",
       });
@@ -186,6 +189,12 @@ export function counts(units, parts, P) {
   const live = units.filter((u) => Boolean(u.type) && u.qty > 0);
   const carcassRows = live.filter((u) => u.type !== "Loose panel");
   const Qof = (part) => sumBy(parts, "Q", (r) => r.part === part);
+  // BUILDER: what takes a handle. A long bar goes on doors and drawer fronts;
+  // a drawer behind the doors gets an ordinary bar instead.
+  const fronts = (u) => ((Number(u.doors) || 0) + (Number(u.drawers) || 0)) * u.qty;
+  const inner = (u) => (Number(u.innerDrawers) || 0) * u.qty;
+  const handled = (kind, f) => live.reduce((s, u) => s + (u.handle === kind ? f(u) : 0), 0);
+  const doorArea = (style, finishedOnly = false) => sumBy(parts, "areaTotal", (r) => r.part === "Door" && r.style === style && (!finishedOnly || r.finishM2 > 0));
   return {
     CNT_CARCASS: carcassRows.reduce((s, u) => s + u.qty, 0),
     CNT_DOORS: Qof("Door"),
@@ -217,8 +226,16 @@ export function counts(units, parts, P) {
     MIRRORS: live.reduce((s, u) => s + (Number(u.mirrors) || 0), 0),
     TIPON_DOORS: live.reduce((s, u) => s + (u.handle === "none" && u.type !== "Loose panel" ? (Number(u.doors) || 0) * u.qty : 0), 0),
     TIPON_DRAWERS: live.reduce((s, u) => s + (u.handle === "none" && u.type !== "Loose panel" ? ((Number(u.drawers) || 0) + (Number(u.innerDrawers) || 0)) * u.qty : 0), 0),
-    KNOBS: live.reduce((s, u) => s + (u.handle === "knob" ? ((Number(u.doors) || 0) + (Number(u.drawers) || 0) + (Number(u.innerDrawers) || 0)) * u.qty : 0), 0),
-    BARS: live.reduce((s, u) => s + (u.handle === "bar" ? ((Number(u.doors) || 0) + (Number(u.drawers) || 0) + (Number(u.innerDrawers) || 0)) * u.qty : 0), 0),
+    KNOBS: handled("knob", (u) => fronts(u) + inner(u)),
+    BARS: handled("bar", (u) => fronts(u) + inner(u)) + handled("longbar", inner),
+    LONGBARS: handled("longbar", fronts),
+    EDGES: handled("edge", (u) => fronts(u) + inner(u)),
+    // Door area by style: the extra for the grooves or the fluted board, and
+    // (finished doors only) the extra time finishing into them.
+    AREA_TG: doorArea("Tongue and groove"),
+    AREA_FLUTED: doorArea("Fluted"),
+    AREA_TG_FINISHED: doorArea("Tongue and groove", true),
+    AREA_FLUTED_FINISHED: doorArea("Fluted", true),
     SHOE_RACKS: live.reduce((s, u) => s + (Number(u.shoeRacks) || 0), 0),
     TROUSER_RAILS: live.reduce((s, u) => s + (Number(u.trouserRails) || 0), 0),
     FLOATING_SHELVES: live.reduce((s, u) => s + (Number(u.floatingShelves) || 0), 0),
@@ -278,6 +295,9 @@ export function costing(units, P) {
   }
   const shakerM2 = sumBy(parts, "areaTotal", (r) => r.tab === "Shaker doors");
   if (shakerM2 > 0) lines.push(line("A", "Shaker doors", shakerM2, itemEach(P, "CW_SHAKER_M2")));
+  // BUILDER: tongue and groove and fluted doors are slab doors plus these.
+  if (C.AREA_TG > 0) lines.push(line("A", "V-grooving, tongue and groove doors", C.AREA_TG, itemEach(P, "DOOR_TG_M2")));
+  if (C.AREA_FLUTED > 0) lines.push(line("A", "Fluted MDF over plain, fluted doors", C.AREA_FLUTED, itemEach(P, "DOOR_FLUTED_M2")));
   // Per hinge cup, the way the cut-to-size shops that publish it price it; the workbook had one
   // figure per job, never filled (so its worked example is unchanged).
   lines.push(line("A", "Drilling hinge cups", C.CNT_HINGES, itemEach(P, "CW_DRILL")));
@@ -290,11 +310,14 @@ export function costing(units, P) {
   lines.push(line("B", "Hanging rail", C.RAIL_M, itemEach(P, "RAIL")));
   lines.push(line("B", "Rail end supports", C.RAILS, itemEach(P, "RAIL_END")));
   // The workbook's single handle line, kept for rows that do not say which handle (its example).
-  const untold = C.CNT_DOORS + C.CNT_DRAWERS - C.KNOBS - C.BARS - C.TIPON_DOORS - C.TIPON_DRAWERS;
+  const untold = C.CNT_DOORS + C.CNT_DRAWERS - C.KNOBS - C.BARS - C.LONGBARS - C.EDGES - C.TIPON_DOORS - C.TIPON_DRAWERS;
   lines.push(line("B", "Handles / knobs", Math.max(0, untold), itemEach(P, "HANDLE")));
-  // BUILDER: the handle chosen, priced per piece; "none" is push to open.
+  // BUILDER: the handle chosen, priced per piece; "none" is push to open. The
+  // handle's metal never moves it: brass, matt black and chrome cost the same.
   if (C.KNOBS) lines.push(line("B", "Knobs", C.KNOBS, itemEach(P, "HANDLE_KNOB")));
   if (C.BARS) lines.push(line("B", "Bar handles", C.BARS, itemEach(P, "HANDLE_BAR")));
+  if (C.LONGBARS) lines.push(line("B", "Long bar handles", C.LONGBARS, itemEach(P, "HANDLE_LONGBAR")));
+  if (C.EDGES) lines.push(line("B", "Edge pulls", C.EDGES, itemEach(P, "HANDLE_EDGE")));
   if (C.TIPON_DOORS) lines.push(line("B", "Push to open, doors", C.TIPON_DOORS, itemEach(P, "TIPON_DOOR")));
   if (C.TIPON_DRAWERS) lines.push(line("B", "Push to open, drawers", C.TIPON_DRAWERS, itemEach(P, "TIPON_DRAWER")));
   lines.push(line("B", "Wall fixings", C.CNT_CARCASS * R.WALL_FIX_PER_CARCASS, itemEach(P, "WALL_SCREW")));
@@ -419,7 +442,8 @@ export function unitsFor(s, P) {
   const B = P.builder;
   const fin = B.finishes[s.finish];
   const handle = s.handle;
-  const doorStyle = s.door === "shaker" ? "Shaker" : "Slab";
+  // Slim Shaker is priced as Shaker (no slim premium found, price book note 04).
+  const doorStyle = { shaker: "Shaker", slim: "Shaker", tg: "Tongue and groove", fluted: "Fluted" }[s.door] ?? "Slab";
   const rows = [];
   if (s.unit === "wardrobe") {
     const W = B.wardrobe;

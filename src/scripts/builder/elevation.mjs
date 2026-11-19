@@ -20,19 +20,49 @@ const END = 18;
 const n = (v) => Math.round(v * 10) / 10;
 const rect = (x, y, w, h, attrs = "") => `<rect x="${n(x)}" y="${n(y)}" width="${n(w)}" height="${n(h)}" ${attrs}/>`;
 const line = (x1, y1, x2, y2, attrs = "") => `<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" ${attrs}/>`;
+/** The handles' metal, as chosen. */
+const METAL = { brass: "#B08D57", black: "#1F1E1D", chrome: "#BFC3C7" };
 
-/** A door seen from the front: the slab, a Shaker panel if it has one, its handle. */
+/**
+ * A door seen from the front: the slab; a Shaker panel (slim or standard),
+ * tongue and groove lines about every 100mm or reeds about every 26mm; its
+ * handle, in the metal chosen.
+ */
 function door(s, x, y, w, h, fill, handleSide, handleY) {
   let out = rect(x, y, w, h, `fill="${fill}" stroke="${INK}" stroke-width="6"`);
-  if (s.door === "shaker") {
-    const f = Math.min(75, w * 0.22);
+  if (s.door === "shaker" || s.door === "slim") {
+    const f = s.door === "slim" ? Math.min(45, w * 0.12) : Math.min(75, w * 0.22);
     out += rect(x + f, y + f, w - 2 * f, h - 2 * f, `fill="none" stroke="${INK}" stroke-width="4" opacity=".55"`);
+  } else if (s.door === "tg" || s.door === "fluted") {
+    // A dark line and a pale one beside it, so the relief reads on a dark finish as well as a light one.
+    const tg = s.door === "tg";
+    const count = Math.max(2, Math.round(w / (tg ? 100 : 26)));
+    const dark = tg ? `stroke="${INK}" stroke-width="3" opacity=".5"` : `stroke="${INK}" stroke-width="2.5" opacity=".38"`;
+    const pale = `stroke="#FFFFFF" stroke-width="${tg ? 3 : 2.5}" opacity="${tg ? ".22" : ".2"}"`;
+    for (let i = 1; i < count; i++) {
+      const gx = x + (w * i) / count;
+      out += line(gx, y + 3, gx, y + h - 3, dark) + line(gx + (tg ? 4 : 5), y + 3, gx + (tg ? 4 : 5), y + h - 3, pale);
+    }
   }
   if (s.handle !== "none" && handleSide) {
+    const metal = METAL[s.handleFinish] ?? METAL.brass;
     const hx = handleSide === "right" ? x + w - 40 : x + 40;
-    out += s.handle === "knob"
-      ? `<circle cx="${n(hx)}" cy="${n(handleY)}" r="14" fill="#B08D57" stroke="${INK}" stroke-width="3"/>`
-      : line(hx, handleY - 100, hx, handleY + 100, `stroke="#B08D57" stroke-width="12" stroke-linecap="round"`);
+    // A long bar or an edge pull is kept on the door, however short it is.
+    const within = (c, len, margin) => Math.min(Math.max(c, y + len / 2 + margin), y + h - len / 2 - margin);
+    const bar = (bx, cy, len, width) =>
+      line(bx, cy - len / 2, bx, cy + len / 2, `stroke="${INK}" stroke-width="${width + 5}" stroke-linecap="round" opacity=".5"`) +
+      line(bx, cy - len / 2, bx, cy + len / 2, `stroke="${metal}" stroke-width="${width}" stroke-linecap="round"`);
+    if (s.handle === "knob") {
+      out += `<circle cx="${n(hx)}" cy="${n(handleY)}" r="14" fill="${metal}" stroke="${INK}" stroke-width="3"/>`;
+    } else if (s.handle === "edge") {
+      const len = Math.min(300, h * 0.4);
+      out += bar(handleSide === "right" ? x + w - 8 : x + 8, within(handleY, len, 50), len, 9);
+    } else if (s.handle === "longbar") {
+      const len = Math.min(600, h * 0.62);
+      out += bar(hx, within(handleY, len, 60), len, 12);
+    } else {
+      out += bar(hx, handleY, 200, 12);
+    }
   }
   return out;
 }

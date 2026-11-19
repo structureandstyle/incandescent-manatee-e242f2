@@ -15,7 +15,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { prepare, priceDesign, priceUnits, sellBook } from "../src/scripts/builder/costing.mjs";
-import { DEFAULTS, EXTRAS, INSIDES, describe, guidePrice } from "../src/scripts/builder/model.mjs";
+import { DEFAULTS, DOORS, EXTRAS, HANDLE_FINISHES, HANDLES, INSIDES, describe, guidePrice } from "../src/scripts/builder/model.mjs";
 
 const json = (path) => JSON.parse(readFileSync(new URL(`../${path}`, import.meta.url), "utf8"));
 const V0 = json("tests/fixtures/price-book-v0.json");
@@ -58,7 +58,43 @@ test("every board and item the engine and the builder's rules name is in the pri
   for (const code of new Set(used)) assert.ok(items.has(code), `price book item ${code}`);
   for (const id of INSIDES.map((x) => x.id)) assert.ok(BOOK.builder.wardrobe.insides[id], `inside layout ${id}`);
   // Every labour task's quantity names a count the engine makes.
-  for (const t of BOOK.labour) assert.ok(t.hours >= 0, t.code);
+  const made = priceDesign(describe(DEFAULTS.wardrobe), P).counts;
+  for (const t of BOOK.labour) {
+    assert.ok(t.hours >= 0, t.code);
+    if (typeof t.qty !== "string" || t.code === "L_TRAVEL") continue;
+    for (const name of t.qty.replace(/^IF:/, "").split("+").map((x) => x.trim())) assert.ok(name in made, `${t.code} counts ${name}`);
+  }
+});
+
+test("every door style, handle and handle finish is priced, each on its own line", () => {
+  const base = { ...DEFAULTS.wardrobe, extras: [] };
+  const at = (change) => priceDesign(describe({ ...base, ...change }), P);
+  const line = (q, label) => q.lines.find((l) => l.label === label);
+  for (const d of DOORS) assert.ok(at({ door: d.id }).price > 0, d.id);
+  for (const h of HANDLES) assert.ok(at({ handle: h.id }).price > 0, h.id);
+  // Slim Shaker is priced as Shaker; grooves and a fluted board each cost more than a plain door.
+  assert.equal(at({ door: "slim" }).price, at({ door: "shaker" }).price);
+  assert.ok(at({ door: "tg" }).price > at({ door: "flat" }).price, "tongue and groove over flat");
+  assert.ok(at({ door: "fluted" }).price > at({ door: "flat" }).price, "fluted over flat");
+  const tg = at({ door: "tg" });
+  assert.ok(line(tg, "V-grooving, tongue and groove doors").qty > 3, "about 4 m2 of door");
+  assert.ok(tg.labour.tasks.find((t) => t.code === "L_TG_FINISH").q > 0);
+  const fluted = at({ door: "fluted" });
+  assert.ok(line(fluted, "Fluted MDF over plain, fluted doors").cost > 0);
+  assert.ok(fluted.labour.tasks.find((t) => t.code === "L_FLUTED_FINISH").q > 0);
+  // Melamine is not painted, so no finishing time into the reeds.
+  assert.equal(at({ door: "fluted", finish: 0 }).labour.tasks.find((t) => t.code === "L_FLUTED_FINISH").q, 0);
+  // Long bars and edge pulls: one per door, at their own price; long bars cost more than bars.
+  assert.equal(line(at({ handle: "longbar" }), "Long bar handles").qty, 4);
+  assert.equal(line(at({ handle: "edge" }), "Edge pulls").qty, 4);
+  assert.ok(at({ handle: "longbar" }).price > at({ handle: "bar" }).price);
+  // Drawers behind the doors take an ordinary bar, not a long one.
+  const drawers = at({ handle: "longbar", inside: ["hang-drawers", "hang"] });
+  assert.equal(line(drawers, "Long bar handles").qty, 4);
+  assert.equal(line(drawers, "Bar handles").qty, 3);
+  // The metal never moves the price.
+  const metals = HANDLE_FINISHES.map((f) => at({ handleFinish: f.id }).price);
+  assert.ok(metals.every((p) => p === metals[0]), metals.join(", "));
 });
 
 test("the selling rates give the same price as the private book, and carry none of his costs", () => {
