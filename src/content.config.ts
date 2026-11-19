@@ -50,7 +50,9 @@ const figure = z.object({
       cannot end up in a gallery. Renders inside an article use <Render>. */
   ai: z.boolean().default(false),
   /** A few plain words for the enlarged photograph ("Shaker-style wardrobe").
-      Needed when the caption is only "AI-generated example". */
+      Needed when the caption is only "AI-generated example": that label is no
+      longer shown on pictures (a founder, 19 Nov 2026), so this shows as the
+      caption instead. */
   label: z.string().optional(),
   /** A fuller description shown beneath the image, so a reader can compare
       the options (Kaspar, 20 Oct 2026). No dimensions or specifications he

@@ -56,9 +56,11 @@ interface Props {
    */
   label?: string;
   /**
-   * An AI-generated example, not a photograph of our work. The lightbox then
-   * leads with "AI-generated example · " and the label, so the disclosure is
-   * never lost when someone enlarges the picture.
+   * An AI-generated example, not a photograph of our work. Marked data-ai for
+   * the build check. Since 19 Nov 2026 (a founder: "remove the AI-GENERATED
+   * EXAMPLE from all the photos") neither the caption nor the enlarged picture
+   * says so: the page carries one visible line above its first AI image
+   * instead (scripts/verify-build.mjs, verifyAiLabels).
    */
   ai?: boolean;
   /** What is still needed, shown in the empty frame. */
@@ -151,7 +153,7 @@ const frameCss = [
 
 /** The lightbox's one-line caption, from `label` and `ai` (see Props). */
 const shortName = (label ?? (alt ?? "").split(",")[0]).trim();
-const lightboxCaption = ai ? `AI-generated example${shortName ? ` · ${shortName}` : ""}` : label;
+const lightboxCaption = ai ? shortName || undefined : label;
 
 const hasCaption = Boolean(subject || detail);
 
