@@ -32,7 +32,15 @@ function door(s, x, y, w, h, fill, handleSide, handleY) {
   let out = rect(x, y, w, h, `fill="${fill}" stroke="${INK}" stroke-width="6"`);
   if (s.door === "shaker" || s.door === "slim") {
     const f = s.door === "slim" ? Math.min(45, w * 0.12) : Math.min(75, w * 0.22);
-    out += rect(x + f, y + f, w - 2 * f, h - 2 * f, `fill="none" stroke="${INK}" stroke-width="4" opacity=".55"`);
+    const panel = `fill="none" stroke="${INK}" stroke-width="4" opacity=".55"`;
+    if (h > 1500) {
+      // A tall door's mid rail, the small panel below it, as in the 3D view (scene.mjs MID_RAIL).
+      const rail = y + h - h * 0.34;
+      out += rect(x + f, y + f, w - 2 * f, rail - f / 2 - y - f, panel);
+      out += rect(x + f, rail + f / 2, w - 2 * f, y + h - f - rail - f / 2, panel);
+    } else {
+      out += rect(x + f, y + f, w - 2 * f, h - 2 * f, panel);
+    }
   } else if (s.door === "tg" || s.door === "fluted") {
     // A dark line and a pale one beside it, so the relief reads on a dark finish as well as a light one.
     const tg = s.door === "tg";
@@ -54,6 +62,12 @@ function door(s, x, y, w, h, fill, handleSide, handleY) {
       line(bx, cy - len / 2, bx, cy + len / 2, `stroke="${metal}" stroke-width="${width}" stroke-linecap="round"`);
     if (s.handle === "knob") {
       out += `<circle cx="${n(hx)}" cy="${n(handleY)}" r="14" fill="${metal}" stroke="${INK}" stroke-width="3"/>`;
+    } else if (s.handle === "routed") {
+      // A recess routed into the face, near the free edge.
+      const len = Math.min(320, h * 0.42);
+      const sx = handleSide === "right" ? x + w - 32 : x + 32;
+      const cy = within(handleY, len, 60);
+      out += line(sx, cy - len / 2, sx, cy + len / 2, `stroke="${INK}" stroke-width="22" stroke-linecap="round" opacity=".5"`);
     } else if (s.handle === "edge") {
       const len = Math.min(300, h * 0.4);
       out += bar(handleSide === "right" ? x + w - 8 : x + 8, within(handleY, len, 50), len, 9);
@@ -87,6 +101,8 @@ function measure(x1, y1, x2, y2, label, size) {
 export function elevationSvg(design, { open = false } = {}) {
   const s = describe(design);
   const fill = COLOURS[s.finish][s.colour].hex;
+  // The inside, open, in its own finish (chosen apart from the outside).
+  const insideFill = { oakeffect: "#C8A77C", oak: "#C19A66", match: fill }[s.insideFinish] ?? "#E9E3D6";
   const wallHatch = `stroke="${INK}" stroke-width="8"`;
   let body = "";
   let W, H;
@@ -121,7 +137,10 @@ export function elevationSvg(design, { open = false } = {}) {
         }
       }
     } else {
-      body += rect(mL, top, iw, bottom - top, `fill="#E9E3D6" stroke="${INK}" stroke-width="6"`);
+      body += rect(mL, top, iw, bottom - top, `fill="${insideFill}" stroke="${INK}" stroke-width="6"`);
+      // The jewellery drawer at waist height, in the first section with shelves (scene.mjs places it the same way).
+      const shelfAt = s.inside.findIndex((k) => k === "hang-shelves" || k === "shelves" || k === "shelves-drawers");
+      const jewelleryAt = s.extras.includes("jewellery") ? Math.max(0, shelfAt) : -1;
       let x = mL;
       s.sections.forEach((count, si) => {
         const sw = count * dw;
@@ -148,6 +167,15 @@ export function elevationSvg(design, { open = false } = {}) {
         } else if (kind === "shelves") for (let k = 1; k <= 5; k++) body += shelf(top + (span * k) / 6);
         else if (kind === "hang-drawers") body += drawers() + rail(top + 80, Math.min(1200, span - 820));
         else { body += drawers(); for (let k = 1; k <= 3; k++) body += shelf(top + ((span - 600) * k) / 4); }
+        if (si === jewelleryAt) {
+          // Its top a little under waist height: under the hanging's shelf, over the drawers, or low down.
+          const at = kind === "hang-shelves" ? bottom - span * 0.44 + 10
+            : kind === "shelves" ? bottom - 1000
+            : kind === "shelves-drawers" || kind === "hang-drawers" ? bottom - 710
+            : bottom - 110;
+          body += rect(x + 14, at, sw - 28, 90, `fill="#D8D0BF" stroke="${INK}" stroke-width="4"`)
+            + line(x + sw / 2 - 60, at + 45, x + sw / 2 + 60, at + 45, `stroke="${INK}" stroke-width="8" stroke-linecap="round" opacity=".6"`);
+        }
         x += sw;
       });
     }
@@ -179,7 +207,7 @@ export function elevationSvg(design, { open = false } = {}) {
         o += door(s, x0 + 20, dTop, dw, dh, fill, "right", dTop + 120);
         o += door(s, x0 + 20 + dw, dTop, dw, dh, fill, "left", dTop + 120);
       } else {
-        o += rect(x0 + 20, dTop, aw - 40, dh, `fill="#E9E3D6" stroke="${INK}" stroke-width="6"`) + line(x0 + 20, dTop + dh / 2, x0 + aw - 20, dTop + dh / 2, `stroke="${INK}" stroke-width="6"`);
+        o += rect(x0 + 20, dTop, aw - 40, dh, `fill="${insideFill}" stroke="${INK}" stroke-width="6"`) + line(x0 + 20, dTop + dh / 2, x0 + aw - 20, dTop + dh / 2, `stroke="${INK}" stroke-width="6"`);
       }
       const step = s.shelves ? (s.h - s.base - 280) / s.shelves : 0;
       for (let k = 1; k <= s.shelves; k++) o += rect(x0, baseTop - step * k, aw, 30, `fill="${fill}" stroke="${INK}" stroke-width="4"`);

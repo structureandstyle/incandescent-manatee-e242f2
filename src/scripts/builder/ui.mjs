@@ -21,6 +21,7 @@ import {
   DEFAULTS,
   INSIDES,
   LIMITS,
+  NO_METAL,
   decode,
   describe,
   encode,
@@ -112,6 +113,7 @@ export function initBuilder(root) {
       door: radio("dyo-door"),
       handle: radio("dyo-handle"),
       handleFinish: radio("dyo-handle-finish"),
+      insideFinish: radio("dyo-inside-finish"),
       extras: $$(form, `input[name="dyo-extra-${unit}"]:checked`).map((el) => el.value),
     };
     for (const [key, name] of Object.entries(NUMBERS[unit])) out[key] = field(name).value;
@@ -136,6 +138,7 @@ export function initBuilder(root) {
     check("dyo-door", d.door);
     check("dyo-handle", d.handle);
     check("dyo-handle-finish", d.handleFinish);
+    check("dyo-inside-finish", d.insideFinish);
     for (const el of $$(form, `input[name="dyo-extra-${d.unit}"]`)) el.checked = d.extras.includes(el.value);
     for (const [key, name] of Object.entries(NUMBERS[d.unit])) field(name).value = d[key];
     if (d.unit === "wardrobe") check("dyo-fit", d.fit);
@@ -230,8 +233,8 @@ export function initBuilder(root) {
   function showPanels(d) {
     for (const el of $$(root, "[data-dyo-for]")) el.hidden = el.dataset.dyoFor !== d.unit;
     for (const el of $$(form, "[data-dyo-colours]")) el.hidden = Number(el.dataset.dyoColours) !== d.finish;
-    // Push to open has no handles, so no handle finish to choose.
-    for (const el of $$(form, "[data-dyo-handle-finish]")) el.hidden = d.handle === "none";
+    // Push to open and routed pulls have no metal, so no handle finish to choose.
+    for (const el of $$(form, "[data-dyo-handle-finish]")) el.hidden = NO_METAL.has(d.handle);
     const one = d.unit === "alcove" && d.count === 1;
     for (const el of $$(form, "[data-dyo-right-alcove]")) el.hidden = one;
     for (const el of $$(form, "[data-dyo-left-label]")) el.textContent = one ? copy.oneWidth : copy.leftWidth;
@@ -269,6 +272,10 @@ export function initBuilder(root) {
   form.addEventListener("input", (e) => {
     const el = e.target;
     if (el.matches?.('input[type="number"]')) rangeNote(el);
+    askAnother(false); // any change answers the "design another?" question
+    // Everything a wardrobe extra adds is inside it: open the doors so the visitor sees it
+    // (a founder's review, 19 Nov 2026: "nothing happens when i press it").
+    if (el.name === "dyo-extra-wardrobe" && el.checked && !open) setOpen(true);
     if (el.name === "dyo-unit") {
       // Switching unit brings back the last design of that kind.
       const unit = el.value === "alcove" ? "alcove" : "wardrobe";
@@ -333,6 +340,12 @@ export function initBuilder(root) {
         view = createView(canvas, {
           onLost: () => { setMode("drawing"); setStatus(copy.unavailable); },
           onRestored: () => setMode("3d"),
+          // While the picture's lighting is being worked out, the note under it says how far it has got.
+          onPhoto: (state, progress) => {
+            if (mode !== "3d") return;
+            const working = state === "tracing" || state === "photo";
+            setStatus(working && copy.refining ? copy.refining.replace("{n}", String(Math.round(progress * 100))) : copy.drag);
+          },
         });
         setMode("3d");
         return view;
@@ -354,9 +367,19 @@ export function initBuilder(root) {
       if (el.dataset.dyoMode === "3d") load3d().then((v) => v && setMode("3d"));
       else setMode("drawing");
     } else if (el.dataset.dyoDoors) {
-      open = el.dataset.dyoDoors === "open";
-      for (const b of $$(root, "[data-dyo-doors]")) b.setAttribute("aria-pressed", String((b.dataset.dyoDoors === "open") === open));
+      setOpen(el.dataset.dyoDoors === "open");
       drawPicture(design);
+    } else if (el.hasAttribute("data-dyo-another-yes")) {
+      // A fresh design of the same kind, the settings back to the start.
+      design = normalise(DEFAULTS[design.unit]);
+      kept[design.unit] = design;
+      editing = -1;
+      askAnother(false);
+      writeForm(design);
+      refresh({ fromForm: false });
+      root.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (el.hasAttribute("data-dyo-another-no")) {
+      askAnother(false);
     } else if (el.dataset.dyoLook) {
       view?.look(el.dataset.dyoLook);
     } else if (el.dataset.dyoZoom) {
@@ -414,6 +437,19 @@ export function initBuilder(root) {
     drawProject();
     drawActions();
     say(copy.added);
+    askAnother(true);
+  }
+
+  /** The "design another unit?" question under the actions, after a design is added. */
+  function askAnother(show) {
+    const box = $(root, "[data-dyo-another]");
+    if (box) box.hidden = !show;
+  }
+
+  /** Doors open or shut in the picture, and the two buttons saying which. */
+  function setOpen(next) {
+    open = next;
+    for (const b of $$(root, "[data-dyo-doors]")) b.setAttribute("aria-pressed", String((b.dataset.dyoDoors === "open") === open));
   }
 
   function editItem(i) {

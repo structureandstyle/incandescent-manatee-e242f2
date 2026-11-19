@@ -62,7 +62,24 @@ export const HANDLES = [
   { id: "bar", label: "Bar handles", text: "bar handles" },
   { id: "longbar", label: "Long bar handles", text: "long bar handles" },
   { id: "edge", label: "Edge pulls", text: "edge pulls" },
+  // A founder's review, 19 Nov 2026: "we can also add routed, so handless but with reccess".
+  { id: "routed", label: "Recessed pulls", text: "recessed pulls routed into the doors" },
   { id: "none", label: "None, push to open", text: "no handles, push to open" },
+];
+/** Handles with no metal: no handle finish to choose or to name. */
+export const NO_METAL = new Set(["routed", "none"]);
+
+/**
+ * The finish inside, chosen apart from the outside (a founder's review, 19 Nov
+ * 2026: "maybe i want externally spray painted and internally i want oak
+ * veneered"). Words: a copy agent's. How each is priced: the price book's
+ * builder rules, insideFinishes.
+ */
+export const INSIDE_FINISHES = [
+  { id: "white", label: "White melamine", text: "white melamine" },
+  { id: "oakeffect", label: "Oak-effect melamine", text: "oak-effect melamine" },
+  { id: "oak", label: "Oak veneer", text: "oak veneer, lacquered" },
+  { id: "match", label: "Same as outside", text: "the same finish as the outside" },
 ];
 
 /** The metal of the handles. The three cost the same (price book note 04), so the choice never moves the price. */
@@ -92,7 +109,12 @@ export const EXTRAS = {
     { id: "lighting", label: "Integrated lighting", text: "integrated lighting" },
     { id: "mirror", label: "A mirror inside a door", text: "a mirror inside a door" },
     { id: "shoes", label: "Shoe storage", text: "shoe storage" },
-    { id: "pullouts", label: "Pull-out accessories", text: "pull-out accessories" },
+    // Pull-out accessories became a choice (a founder's review, 19 Nov 2026: usually a drawer at
+    // waist height, for watches, jewellery, ties and so on). A link that still says "pullouts"
+    // opens with the trouser rail, which is what that extra drew and priced (normalise).
+    { id: "jewellery", label: "Jewellery drawer", text: "a waist-height drawer with a lined tray for watches and jewellery" },
+    { id: "ties", label: "Tie and belt rack", text: "a pull-out rack for ties and belts" },
+    { id: "trousers", label: "Trouser rail", text: "a pull-out trouser rail" },
   ],
   alcove: [
     { id: "lighting", label: "Integrated lighting", text: "integrated lighting" },
@@ -151,11 +173,11 @@ export const COLOURS = [
 export const DEFAULTS = {
   wardrobe: {
     unit: "wardrobe", w: 2400, h: 2400, d: 600, fit: "both", finish: 1, colour: 0,
-    door: "shaker", handle: "bar", handleFinish: "brass", inside: ["hang", "hang-shelves"], extras: ["lighting"],
+    door: "shaker", handle: "bar", handleFinish: "brass", insideFinish: "white", inside: ["hang", "hang-shelves"], extras: ["lighting"],
   },
   alcove: {
     unit: "alcove", count: 2, wl: 900, wr: 900, h: 2400, d: 350, breast: 1400, base: 850, shelves: 3,
-    finish: 1, colour: 0, door: "shaker", handle: "knob", handleFinish: "brass", extras: ["lighting"],
+    finish: 1, colour: 0, door: "shaker", handle: "knob", handleFinish: "brass", insideFinish: "white", extras: ["lighting"],
   },
 };
 
@@ -195,8 +217,11 @@ export function normalise(input = {}) {
   const door = oneOf(src.door, DOORS, base.door);
   const handle = oneOf(src.handle, HANDLES, base.handle);
   const handleFinish = oneOf(src.handleFinish, HANDLE_FINISHES, base.handleFinish);
+  const insideFinish = oneOf(src.insideFinish, INSIDE_FINISHES, base.insideFinish);
   const allowed = EXTRAS[unit].map((x) => x.id);
-  const extras = Array.isArray(src.extras) ? allowed.filter((id) => src.extras.includes(id)) : [];
+  // "pullouts" was one extra until 19 Nov 2026, drawn and priced as a trouser rail.
+  const asked = Array.isArray(src.extras) ? src.extras.map((id) => (id === "pullouts" ? "trousers" : id)) : [];
+  const extras = allowed.filter((id) => asked.includes(id));
 
   if (unit === "alcove") {
     const L = LIMITS.alcove;
@@ -210,7 +235,7 @@ export function normalise(input = {}) {
       breast: clampInt(src.breast, L.breast, base.breast),
       base: clampInt(src.base, L.base, base.base),
       shelves: clampInt(src.shelves, L.shelves, base.shelves),
-      finish, colour, door, handle, handleFinish, extras,
+      finish, colour, door, handle, handleFinish, insideFinish, extras,
     };
   }
 
@@ -227,7 +252,7 @@ export function normalise(input = {}) {
     h: clampInt(src.h, L.h, base.h),
     d: clampInt(src.d, L.d, base.d),
     fit: oneOf(src.fit, FITS, base.fit),
-    finish, colour, door, handle, handleFinish, inside, extras,
+    finish, colour, door, handle, handleFinish, insideFinish, inside, extras,
   };
 }
 
@@ -315,22 +340,23 @@ export function specLines(input, finishes) {
   const finish = (finishes?.[s.finish] ?? "").replace(/^./, (c) => c.toLowerCase());
   const colour = COLOURS[s.finish][s.colour].name;
   const door = DOORS.find((x) => x.id === s.door).text;
-  // "long bar handles in matt black"; push to open has no handles, so no finish.
+  // "long bar handles in matt black"; push to open and routed pulls have no metal to name.
   const handle = HANDLES.find((x) => x.id === s.handle).text +
-    (s.handle === "none" ? "" : ` in ${HANDLE_FINISHES.find((x) => x.id === s.handleFinish).text}`);
+    (NO_METAL.has(s.handle) ? "" : ` in ${HANDLE_FINISHES.find((x) => x.id === s.handleFinish).text}`);
+  const insideFinish = INSIDE_FINISHES.find((x) => x.id === s.insideFinish).text;
   const lines = [];
   if (s.unit === "wardrobe") {
     const fit = FITS.find((x) => x.id === s.fit).text;
     lines.push(`Fitted wardrobe: ${s.w} wide x ${s.h} high x ${s.d} deep (mm), ${fit}.`);
     lines.push(`${s.doors} doors, ${door}, ${handle}. Finish: ${finish}, shown in ${colour}.`);
     const inside = s.inside.map((id) => INSIDES.find((x) => x.id === id).text);
-    lines.push(`Inside, left to right: ${inside.join("; ")}.`);
+    lines.push(`Inside, left to right: ${inside.join("; ")}. Inside finish: ${insideFinish}.`);
   } else {
     const sizes = s.count === 2
       ? `left alcove ${s.wl} wide, right alcove ${s.wr} wide`
       : `one alcove ${s.wl} wide`;
     lines.push(`Alcove units: ${sizes}, ${s.d} deep, ceiling ${s.h} high (mm).`);
-    lines.push(`In each alcove: a base cupboard ${s.base} high with two ${door.replace(" doors", "")} doors, ${handle}, and ${s.shelves} open ${s.shelves === 1 ? "shelf" : "shelves"} above. Finish: ${finish}, shown in ${colour}.`);
+    lines.push(`In each alcove: a base cupboard ${s.base} high with two ${door.replace(" doors", "")} doors, ${handle}, and ${s.shelves} open ${s.shelves === 1 ? "shelf" : "shelves"} above. Finish: ${finish}, shown in ${colour}. Inside the cupboards: ${insideFinish}.`);
   }
   const extras = extrasChosen(s);
   if (extras.length) lines.push(`Extras: ${extras.join(", ")}.`);
@@ -342,11 +368,11 @@ export function specLines(input, finishes) {
    the builder changes. Whatever comes back out goes through normalise(), so a
    hand-edited link can only ever produce a valid design. A new key only ever
    goes on the END of a list: a link made before it simply lacks it, and
-   normalise() fills in the default (handleFinish, 19 Nov 2026). */
+   normalise() fills in the default (handleFinish and insideFinish, 19 Nov 2026). */
 
 const KEYS = {
-  wardrobe: ["w", "h", "d", "fit", "finish", "colour", "door", "handle", "inside", "extras", "handleFinish"],
-  alcove: ["count", "wl", "wr", "h", "d", "breast", "base", "shelves", "finish", "colour", "door", "handle", "extras", "handleFinish"],
+  wardrobe: ["w", "h", "d", "fit", "finish", "colour", "door", "handle", "inside", "extras", "handleFinish", "insideFinish"],
+  alcove: ["count", "wl", "wr", "h", "d", "breast", "base", "shelves", "finish", "colour", "door", "handle", "extras", "handleFinish", "insideFinish"],
 };
 
 const toBase64Url = (text) => {

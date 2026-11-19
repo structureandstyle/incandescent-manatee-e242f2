@@ -56,8 +56,12 @@ const DOOR_T = 0.022;
 // Just short of square to the run: two doors hinged on the same board then
 // stand back to back, as they do on a real wardrobe, instead of crossing.
 const OPEN_ANGLE = 1.54;
-/** Where a tall Shaker door's mid rail sits: its centre two thirds of the way up. */
-const MID_RAIL = 0.66;
+/**
+ * Where a tall Shaker door's mid rail sits: its centre about a third of the way
+ * up, so the small panel is at the bottom (a founder's review, 19 Nov 2026:
+ * "bottom is where the small square goes not top"; it was two thirds up).
+ */
+const MID_RAIL = 0.34;
 // The camera starts a few degrees above level, from about eye height, and a
 // little round to one side.
 const HOME_POLAR = 1.48;
@@ -292,6 +296,40 @@ function contactTexture() {
 }
 
 /**
+ * A routed finger pull seen face on (a founder's review, 19 Nov 2026:
+ * "routed, so handless but with reccess"): a long slot with rounded ends,
+ * darker on one side where its wall is in shadow, a fine light line where the
+ * other edge catches the light, and a soft shadow under its top end. Laid just
+ * over the door face, cut out by its alpha and tinted with the door's colour.
+ */
+function slotTexture() {
+  const c = document.createElement("canvas");
+  c.width = 32;
+  c.height = 512;
+  const g = c.getContext("2d");
+  g.beginPath();
+  g.roundRect(1, 1, 30, 510, 15);
+  g.clip();
+  // A groove in the door's own colour, a shade darker, not a black bar.
+  const across = g.createLinearGradient(0, 0, 32, 0);
+  across.addColorStop(0, "#8c8c8c");
+  across.addColorStop(0.35, "#a8a8a8");
+  across.addColorStop(0.85, "#d0d0d0");
+  across.addColorStop(1, "#f4f4f4");
+  g.fillStyle = across;
+  g.fillRect(0, 0, 32, 512);
+  const top = g.createLinearGradient(0, 0, 0, 70);
+  top.addColorStop(0, "rgba(0,0,0,0.3)");
+  top.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = top;
+  g.fillRect(0, 0, 32, 70);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8;
+  return t;
+}
+
+/**
  * Hanging clothes, made as a side view of the garment, thin, and hung edge-on
  * from the rail, so each has shoulders sloping from the hanger and its own
  * outline (fix 4). Unit size: 1 front to back (z), 1 tall (y, hanging down
@@ -329,7 +367,7 @@ function hangerGeometry() {
   return g;
 }
 
-export function createView(canvas, { onLost, onRestored } = {}) {
+export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
   const small = Math.min(window.innerWidth, window.innerHeight) < 700;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
   // On a computer the picture is drawn at twice its size and shrunk by the
@@ -466,6 +504,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   const shadeMap = keep(shadeTexture());
   const brushMap = keep(brushTexture());
   const contactMap = keep(contactTexture());
+  const slotMap = keep(slotTexture());
   /** A material for the inside of a carcass: it takes the room's light at the inside's dimmer share. */
   const inCarcass = (m) => {
     m.envMap = envTexture;
@@ -548,7 +587,66 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   let anim = 0;
   let fit = null;
   let lost = false;
-  const state = { design: null, options: { open: false, person: false }, bounds: null, lit: false };
+  const state = { design: null, options: { open: false, person: false }, bounds: null, lit: false, strips: [] };
+
+  /* ---- The photo: the same design traced with real light, once still ------ */
+
+  // Computers only: a phone keeps the real-time picture. It needs WebGL2 with float
+  // render targets, and stays off when the visitor has asked to save data.
+  // `?photo=off` in the address keeps the real-time picture only (for checks and screenshots).
+  const photoAllowed = !small && renderer.capabilities.isWebGL2 && renderer.extensions.has("EXT_color_buffer_float")
+    && !(typeof navigator !== "undefined" && navigator.connection?.saveData)
+    && !/[?&]photo=off\b/.test(location.search);
+  /** How strongly the photo's window and the room behind the viewer light it (tuned by eye, 19 Nov 2026). */
+  const PHOTO_KEY = 7;
+  const PHOTO_ENV = 0.55;
+  let photo = null;
+  let photoLoading = null;
+  let photoTimer = 0;
+  let photoFailed = false;
+  let sceneVersion = 0; // goes up whenever what is in the scene changes: a design, the doors
+  let keyLight = null;
+
+  let photoState = "";
+  function stopPhoto() {
+    clearTimeout(photoTimer);
+    photo?.stop();
+    // The page's note under the picture goes back to how to turn it.
+    if (photoState === "tracing" || photoState === "photo") onPhoto?.("stopped", 0);
+    photoState = "";
+  }
+  function schedulePhoto() {
+    if (!photoAllowed || photoFailed || lost) return;
+    clearTimeout(photoTimer);
+    photoTimer = setTimeout(startPhoto, 450);
+  }
+  async function startPhoto() {
+    if (lost || !group) return;
+    try {
+      if (!photo) {
+        photoLoading ??= import("./photo.mjs");
+        const { createPhoto } = await photoLoading;
+        if (lost || photo) return;
+        photo = createPhoto({
+          renderer, camera, drawRaster: drawFull,
+          onState: (kind, n, progress) => {
+            canvas.dataset.dyoPhoto = kind;
+            canvas.dataset.dyoSamples = String(n);
+            if (kind !== "tracing") canvas.dataset.dyoDrawn = "photo";
+            photoState = kind;
+            onPhoto?.(kind, progress);
+          },
+        });
+      }
+      photo.show(scene, { version: sceneVersion, strips: state.strips, key: keyLight, environmentIntensity: PHOTO_ENV });
+    } catch (e) {
+      // Anything the tracer cannot do leaves the real-time picture as it was.
+      photoFailed = true;
+      console.warn("The traced picture is not available here:", e);
+      photo?.stop();
+      requestRender();
+    }
+  }
 
   function turnFigure() {
     if (!figure) return;
@@ -575,11 +673,12 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   const requestRender = () => {
     if (lost) return;
     clearTimeout(fineTimer);
-    if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (!lost) { turnFigure(); drawFull(); } });
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (!lost) { turnFigure(); drawFull(); schedulePhoto(); } });
   };
   /** The quick picture now, and the full one once things have been still for a moment. */
   const requestQuick = () => {
     if (lost) return;
+    stopPhoto();
     turnFigure();
     drawQuick();
     clearTimeout(fineTimer);
@@ -593,15 +692,25 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     const s = describe(design);
     const g = new THREE.Group();
     const lights = [];
+    /** Every LED strip drawn, for the photo, which lights each one as a real rectangle of light (photo.mjs). */
+    const strips = [];
     const doorList = [];
     const finish = finishMaterial(s.finish, s.colour);
     const finishAcross = finishMaterial(s.finish, s.colour, true);
     const panel = finishMaterial(s.finish, s.colour, false, 0.93);
     // The inside of a carcass takes a dimmer share of the room's light, so it
     // is darker than the room and the LED strips read as the light (fix 1).
-    const carcass = inCarcass(flat("carcass", 0xece6da, 0.62));
-    const carcassEdge = inCarcass(flat("carcass-edge", 0xe2dbcd, 0.62));
-    const drawerFront = inCarcass(flat("drawer-front", 0xe6dfd1, 0.55));
+    // Its finish is chosen apart from the outside (a founder's review, 19 Nov 2026): white
+    // melamine as standard, oak-effect melamine, lacquered oak veneer, or the outside's own.
+    const insideWood = s.insideFinish === "oakeffect" ? { wood: true, hex: "#C8A77C", roughness: 0.5, clearcoat: 0, across: false, tint: 1, key: "inside-oakeffect" }
+      : s.insideFinish === "oak" ? { wood: true, hex: "#C19A66", roughness: 0.5, clearcoat: 0.32, across: false, tint: 1, key: "inside-oak" }
+      : s.insideFinish === "match" ? finish
+      : null;
+    const carcass = insideWood ?? inCarcass(flat("carcass", 0xece6da, 0.62));
+    const carcassEdge = insideWood ?? inCarcass(flat("carcass-edge", 0xe2dbcd, 0.62));
+    const drawerFront = insideWood ?? inCarcass(flat("drawer-front", 0xe6dfd1, 0.55));
+    // A routed finger pull's recess, in the door's own colour (see handle()).
+    const slot = mat(`slot-${s.finish}-${s.colour}`, () => new THREE.MeshStandardMaterial({ color: COLOURS[s.finish][s.colour].hex, map: slotMap, alphaTest: 0.5, roughness: 0.85 }));
     const wall = flat("wall", 0xefece5, 0.95);
     const trim = flat("trim", 0xf6f4ee, 0.5);
     const plinthMat = flat("plinth", 0x2a2622, 0.8);
@@ -616,7 +725,11 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       : s.handleFinish === "chrome" ? mat("handle-chrome", () => new THREE.MeshStandardMaterial({ color: 0xeeeff0, roughness: 0.22, metalness: 1, envMap: envTexture, envMapIntensity: 1.35 }))
       : brass;
     const channel = flat("led-channel", 0xc9c9c6, 0.35, 0.9);
-    const glow = mat("glow", () => new THREE.MeshStandardMaterial({ color: 0xfff4de, emissive: 0xffe2b0, emissiveIntensity: 4.2, roughness: 1 }));
+    const glow = mat("glow", () => {
+      const m = new THREE.MeshStandardMaterial({ color: 0xfff4de, emissive: 0xffe2b0, emissiveIntensity: 4.2, roughness: 1 });
+      m.userData.photo = "glow"; // the photo dims it: its light there comes from an area light
+      return m;
+    });
     const mirror = flat("mirror", 0xffffff, 0.02, 1);
     // Unlit, a shade under the walls: a lit ceiling facing away from the window goes grey.
     const ceiling = mat("ceiling", () => new THREE.MeshBasicMaterial({ color: 0xe6e1d7 }));
@@ -628,7 +741,12 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     const garmentCloth = inCarcass(mat("garment-cloth", () => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95, bumpMap: foldMap, bumpScale: 0.35 })));
     const paper = flat("paper", 0xffffff, 0.9);
     const hangerWood = inCarcass(flat("hanger", 0x6b4a32, 0.55));
-    const shadowPatch = mat("contact", () => new THREE.MeshBasicMaterial({ map: contactMap, transparent: true, depthWrite: false, opacity: 0.6, polygonOffset: true, polygonOffsetFactor: -2 }));
+    // Painted on for the real-time picture; the photo traces real shadows, so leaves it out.
+    const shadowPatch = mat("contact", () => {
+      const m = new THREE.MeshBasicMaterial({ map: contactMap, transparent: true, depthWrite: false, opacity: 0.6, polygonOffset: true, polygonOffsetFactor: -2 });
+      m.userData.photo = "skip";
+      return m;
+    });
     /** A soft shadow on the floor under a unit, from its footprint (fix 3). */
     const contact = (x0, x1, z0, z1) => {
       const m = new THREE.Mesh(plane, shadowPatch);
@@ -710,6 +828,25 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         k.position.set(x, y, z);
         k.castShadow = true;
         parent.add(k);
+        return;
+      }
+      if (s.handle === "routed") {
+        // A flat door has its pocket cut in its own geometry (door()). On other door styles and
+        // on a drawer front (under its top edge) the recess is drawn as a shaded slot over the face.
+        if (vertical && s.door === "flat") return;
+        const m = new THREE.Mesh(plane, slot);
+        m.receiveShadow = true;
+        if (vertical) {
+          const len = Math.min(0.32, span * 0.42);
+          m.scale.set(0.024, len, 1);
+          m.position.set((edge ?? x) - out * 0.032, within(y, len, 0.06), z + 0.0008);
+        } else {
+          const len = Math.min(0.3, long * 1.4);
+          m.scale.set(0.024, len, 1);
+          m.rotation.z = Math.PI / 2;
+          m.position.set(x, (edge ?? y) - 0.03, z + 0.0008);
+        }
+        parent.add(m);
         return;
       }
       if (s.handle === "edge") {
@@ -794,7 +931,21 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       const x0 = hinge === "left" ? 0 : -w;
       const opts = { parent: pivot, r: 0.0022 };
       const plainBack = () => block(finish, x0 + 0.004, 0.004, -DOOR_T - 0.0006, w - 0.008, h - 0.008, 0.004, { parent: pivot, cast: false });
-      if (s.door === "flat") {
+      if (s.door === "flat" && s.handle === "routed" && withHandle) {
+        // A flat door with a routed finger pull: a real pocket, 24mm wide and 12mm deep, near
+        // the free edge, so it shades as a recess. The face is built round it in four parts.
+        const len = Math.min(0.32, h * 0.42);
+        const cy = Math.min(Math.max(handleY - y0, len / 2 + 0.06), h - len / 2 - 0.06);
+        const free = hinge === "left" ? x0 + w : x0;
+        const px0 = hinge === "left" ? free - 0.044 : free + 0.02, px1 = px0 + 0.024;
+        const py0 = cy - len / 2, py1 = cy + len / 2, sk = 0.012;
+        const at = { parent: pivot };
+        piece(finish, x0, 0, -DOOR_T, w, h, DOOR_T - sk, opts);
+        block(finish, x0, 0, -sk, px0 - x0, h, sk, at);
+        block(finish, px1, 0, -sk, x0 + w - px1, h, sk, at);
+        block(finish, px0, 0, -sk, px1 - px0, py0, sk, at);
+        block(finish, px0, py1, -sk, px1 - px0, h - py1, sk, at);
+      } else if (s.door === "flat") {
         piece(finish, x0, 0, -DOOR_T, w, h, DOOR_T, opts);
       } else if (s.door === "tg") {
         const n = Math.max(2, Math.round(w / 0.1));
@@ -815,7 +966,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         pivot.add(reeds);
       } else {
         const f = s.door === "slim" ? Math.min(0.045, w * 0.2) : Math.max(0.055, Math.min(0.085, w * 0.2));
-        // A tall door has a mid rail, as most Shaker wardrobe doors do, its centre a third down.
+        // A tall door has a mid rail, as most Shaker wardrobe doors do, the small panel below it.
         const mid = h > 1.5 ? h * MID_RAIL : null;
         piece(finish, x0, 0, -DOOR_T, f, h, DOOR_T, opts);
         piece(finish, x0 + w - f, 0, -DOOR_T, f, h, DOOR_T, opts);
@@ -842,17 +993,44 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       return pivot;
     };
 
-    /** An LED strip in its channel, facing down or back, and the warm light it gives. */
+    /**
+     * LED strips as fitted wardrobes have them (research 2026-11-19-ss-3d-realism,
+     * note 05; a founder, 19 Nov: "the light should come around the inside, not
+     * just the top"): an aluminium profile with an opal cover that reads as one
+     * unbroken line, near the front, lighting the clothes from the front rather
+     * than from behind. In the real-time picture a few point lights stand in for
+     * the light they give (no more than LIGHT_BUDGET); the photo lights every
+     * strip as a real rectangle of light.
+     */
+    const LIGHT_BUDGET = small ? 6 : 8;
+    const pointLight = (x, y, z, intensity, reach) => {
+      if (lights.length >= LIGHT_BUDGET) return;
+      const p = new THREE.PointLight(0xffdcae, intensity, reach, 1.6);
+      p.position.set(x, y, z);
+      g.add(p);
+      lights.push(p);
+    };
+    /** A strip under a top or a shelf, facing down. */
     const led = (x0, x1, y, z, { light = true, reach = 1.4 } = {}) => {
       block(channel, x0, y - 0.006, z - 0.009, x1 - x0, 0.006, 0.018, { cast: false, receive: false });
       block(glow, x0 + 0.004, y - 0.0085, z - 0.006, x1 - x0 - 0.008, 0.003, 0.012, { cast: false, receive: false });
-      if (light && lights.length < 6) {
-        // Brighter than before: with the inside darker, these are what light it.
-        const p = new THREE.PointLight(0xffdcae, 2.0, reach, 1.6);
-        p.position.set((x0 + x1) / 2, y - 0.06, z + 0.02);
-        g.add(p);
-        lights.push(p);
-      }
+      strips.push({ kind: "down", x0: x0 + 0.004, x1: x1 - 0.004, y: y - 0.0086, z });
+      // Brighter than before: with the inside darker, these are what light it.
+      if (light) pointLight((x0 + x1) / 2, y - 0.06, z + 0.02, 2.0, reach);
+    };
+    /**
+     * A strip down the inside face of a side panel at its front edge, the full
+     * height of the hanging space, shining across the section: what most
+     * fitted-wardrobe guides describe as lighting the hanging along its whole
+     * height. `x` is the panel's face, `dir` the way it shines (+1 right).
+     */
+    const ledSide = (x, dir, y0, y1, z, { light = true } = {}) => {
+      block(channel, dir > 0 ? x : x - 0.006, y0, z - 0.009, 0.006, y1 - y0, 0.018, { cast: false, receive: false });
+      block(glow, dir > 0 ? x + 0.0045 : x - 0.0075, y0 + 0.004, z - 0.006, 0.003, y1 - y0 - 0.008, 0.012, { cast: false, receive: false });
+      strips.push({ kind: "side", x: x + dir * 0.0076, dir, y0: y0 + 0.004, y1: y1 - 0.004, z });
+      // Set well into the section and softer, so the light washes the clothes rather than
+      // making a bright spot beside the strip.
+      if (light) pointLight(x + dir * 0.16, y0 + (y1 - y0) * 0.55, z - 0.06, 0.8, Math.min(1.8, (y1 - y0) * 1.1));
     };
 
     /** A rail in its sockets, with hangers and clothes on it. */
@@ -990,7 +1168,15 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         const zf = cd - 0.012; // how far forward the inside reaches
         const lit = s.extras.includes("lighting");
         const shoes = s.extras.includes("shoes");
-        const pullouts = s.extras.includes("pullouts");
+        const trousers = s.extras.includes("trousers");
+        // The accessories go where wardrobes have them (a founder's review, 19 Nov 2026): the
+        // jewellery drawer at waist height in the first section with shelves (or low in the first
+        // section, if none has shelves); the tie and belt rack beside the first hanging space.
+        const shelfAt = s.inside.findIndex((k) => k === "hang-shelves" || k === "shelves" || k === "shelves-drawers");
+        const jewelleryAt = s.extras.includes("jewellery") ? Math.max(0, shelfAt) : -1;
+        const tiesAt = s.extras.includes("ties") ? s.inside.findIndex((k) => k !== "shelves" && k !== "shelves-drawers") : -1;
+        const ACC = 0.11; // the height a jewellery drawer takes, with its clearance
+        const felt = inCarcass(flat("felt", 0x3b393e, 0.96));
         const shelf = (ax, bx, y) => piece(carcass, ax, y, 0.008, bx - ax, T, zf - 0.02, { r: 0.0015 });
         sectionX.forEach(([sx0, sx1], si) => {
           const rnd = seeded(31 + si * 17);
@@ -1013,7 +1199,8 @@ export function createView(canvas, { onLost, onRestored } = {}) {
               const y = from + step * k;
               shelf(ax, bx, y);
               stacks(rnd, ax, bx, y + T, step - T, zf);
-              if (lit) led(ax + 0.02, bx - 0.02, y - 0.001, zf - 0.06, { light: false });
+              // Under each shelf, just behind its front edge, facing down (research 05).
+              if (lit) led(ax + 0.02, bx - 0.02, y - 0.001, zf - 0.026, { light: false });
             }
             stacks(rnd, ax, bx, from, step, zf);
           };
@@ -1036,7 +1223,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
               }
               return yBot + 0.42;
             }
-            if (pullouts && top - yBot > 0.3) {
+            if (trousers && top - yBot > 0.3) {
               // A pull-out trouser rail, drawn half out with a few pairs over it.
               block(chrome, ax + 0.01, yBot + 0.2, zf - 0.26, 0.012, 0.016, 0.42);
               block(chrome, bx - 0.022, yBot + 0.2, zf - 0.26, 0.012, 0.016, 0.42);
@@ -1049,31 +1236,108 @@ export function createView(canvas, { onLost, onRestored } = {}) {
             }
             return yBot;
           };
+          /**
+           * The jewellery drawer, pulled half out: a shallow box on runners with a felt-lined tray
+           * divided into compartments, a few watches lying in it. `y` is its underside.
+           */
+          const jewelleryDrawer = (y) => {
+            const dh = 0.085, out = 0.24, depth = Math.max(0.2, Math.min(0.42, zf - 0.06));
+            const zb = zf - depth + out, x0 = ax + 0.014, x1 = bx - 0.014, wide = x1 - x0;
+            for (const rx of [ax + 0.002, bx - 0.012]) block(chrome, rx, y + 0.014, zf - depth, 0.01, 0.012, depth + out * 0.7, { cast: false });
+            block(carcass, x0, y, zb, wide, 0.012, depth);
+            block(carcass, x0, y, zb, 0.012, dh, depth);
+            block(carcass, x1 - 0.012, y, zb, 0.012, dh, depth);
+            block(carcass, x0, y, zb, wide, dh, 0.012);
+            piece(drawerFront, x0 - 0.002, y - 0.004, zb + depth - 0.019, wide + 0.004, dh + 0.012, 0.019, { r: 0.002 });
+            block(felt, x0 + 0.012, y + 0.012, zb + 0.012, wide - 0.024, 0.008, depth - 0.031);
+            const cols = Math.max(3, Math.round(wide / 0.13)), rows = 3;
+            const cw = (wide - 0.024) / cols, cd2 = (depth - 0.031) / rows;
+            for (let c = 1; c < cols; c++) block(felt, x0 + 0.012 + c * cw - 0.003, y + 0.02, zb + 0.012, 0.006, 0.034, depth - 0.031, { cast: false });
+            for (let r = 1; r < rows; r++) block(felt, x0 + 0.012, y + 0.02, zb + 0.012 + r * cd2 - 0.003, wide - 0.024, 0.034, 0.006, { cast: false });
+            // Watches in the front row, every other compartment: a dial on a dark strap.
+            for (let c = 0; c < cols; c += 2) {
+              const cx = x0 + 0.012 + (c + 0.5) * cw, cz = zb + 0.012 + 2.5 * cd2;
+              block(flat("strap", 0x241f1c, 0.7), cx - 0.011, y + 0.021, cz - cd2 * 0.36, 0.022, 0.006, cd2 * 0.72, { cast: false });
+              cylinder(c % 4 ? brass : chrome, 0.017, 0.009, cx, y + 0.029, cz, "y");
+            }
+          };
+          /** The tie and belt rack, on the right-hand panel, pulled part way out, ties and belts hanging from its hooks. */
+          const tieRack = (yRack) => {
+            const x = bx - 0.032, len = Math.min(0.44, zf - 0.08), z0 = zf - len, out = 0.14;
+            block(chrome, bx - 0.012, yRack + 0.026, z0, 0.01, 0.026, len, { cast: false });
+            block(chrome, x - 0.004, yRack, z0 + out, 0.008, 0.012, len);
+            for (let i = 0; i < 9; i++) {
+              const z = z0 + out + 0.03 + (i * (len - 0.06)) / 8;
+              cylinder(chrome, 0.0025, 0.022, x, yRack - 0.008, z, "x");
+              const belt = i % 3 === 2;
+              soft(x, yRack - 0.012 - (belt ? 0.29 : 0.21), z, 0.006, belt ? 0.56 : 0.4, belt ? 0.03 : 0.05,
+                belt ? [0x2a2420, 0x5b3a26][i % 2] : CLOTH[Math.floor(rnd() * CLOTH.length)]);
+            }
+          };
+          const tieHere = si === tiesAt;
+          const gap = tieHere ? 0.1 : 0; // the hanging moves over for the tie rack
 
           if (kind === "hang") {
             shelf(ax, bx, yTop - 0.32);
             stacks(rnd, ax, bx, yTop - 0.32 + T, 0.3, zf);
-            const low = floorKit(yTop - 0.4);
-            hanging(rnd, ax, bx, yTop - 0.4, Math.min(1.35, yTop - 0.4 - low - 0.14), zf);
+            let low = floorKit(yTop - 0.4);
+            if (si === jewelleryAt) { jewelleryDrawer(low + 0.012); low += ACC; }
+            hanging(rnd, ax, bx - gap, yTop - 0.4, Math.min(1.35, yTop - 0.4 - low - 0.14), zf);
+            if (tieHere) tieRack(yTop - 0.62);
           } else if (kind === "double") {
-            const low = floorKit(yBot + H * 0.5);
-            hanging(rnd, ax, bx, yTop - 0.09, Math.min(0.98, H * 0.5 - 0.2), zf);
-            hanging(rnd, ax, bx, yBot + H * 0.5, Math.min(0.98, yBot + H * 0.5 - low - 0.14), zf);
+            let low = floorKit(yBot + H * 0.5);
+            if (si === jewelleryAt) { jewelleryDrawer(low + 0.012); low += ACC; }
+            hanging(rnd, ax, bx - gap, yTop - 0.09, Math.min(0.98, H * 0.5 - 0.2), zf);
+            hanging(rnd, ax, bx - gap, yBot + H * 0.5, Math.min(0.98, yBot + H * 0.5 - low - 0.14), zf);
+            if (tieHere) tieRack(yTop - 0.3);
           } else if (kind === "hang-shelves") {
             const mid = yBot + H * 0.44;
             shelf(ax, bx, mid);
-            hanging(rnd, ax, bx, yTop - 0.09, Math.min(1.05, yTop - 0.09 - mid - 0.16), zf);
-            shelves(yBot, mid, 2);
+            hanging(rnd, ax, bx - gap, yTop - 0.09, Math.min(1.05, yTop - 0.09 - mid - 0.16), zf);
+            if (si === jewelleryAt) {
+              // Just under the shelf the hanging stops at: about waist height.
+              shelves(yBot, mid - ACC, 2);
+              jewelleryDrawer(mid - ACC + 0.006);
+            } else {
+              shelves(yBot, mid, 2);
+            }
+            if (tieHere) tieRack(yTop - 0.36);
           } else if (kind === "shelves") {
-            shelves(yBot, yTop, 5);
+            if (si === jewelleryAt) {
+              const waist = Math.max(yBot + 0.45, Math.min(0.92, yTop - 0.7));
+              shelves(yBot, waist, 2);
+              jewelleryDrawer(waist + 0.006);
+              shelf(ax, bx, waist + ACC);
+              shelves(waist + ACC + T, yTop, 2);
+            } else {
+              shelves(yBot, yTop, 5);
+            }
           } else if (kind === "hang-drawers") {
-            const top = drawers();
-            hanging(rnd, ax, bx, yTop - 0.09, Math.min(1.25, yTop - 0.09 - top - 0.14), zf);
+            let top = drawers();
+            if (si === jewelleryAt) { jewelleryDrawer(top + 0.006); top += ACC; }
+            hanging(rnd, ax, bx - gap, yTop - 0.09, Math.min(1.25, yTop - 0.09 - top - 0.14), zf);
+            if (tieHere) tieRack(yTop - 0.36);
           } else {
             const top = drawers();
-            shelves(top, yTop, 3);
+            if (si === jewelleryAt) {
+              jewelleryDrawer(top + 0.006);
+              shelf(ax, bx, top + ACC);
+              shelves(top + ACC + T, yTop, 3);
+            } else {
+              shelves(top, yTop, 3);
+            }
           }
-          if (lit) led(ax + 0.02, bx - 0.02, yTop - 0.001, zf - 0.05, { reach: Math.min(2.4, H * 0.9) });
+          if (lit) {
+            // Where there is hanging, a strip down each side as well as the one along the top
+            // front, so the light comes round the clothes; the side strips stop above any drawers.
+            const hangs = kind === "hang" || kind === "double" || kind === "hang-shelves" || kind === "hang-drawers";
+            led(ax + 0.02, bx - 0.02, yTop - 0.001, zf - 0.004, { light: !hangs, reach: Math.min(2.4, H * 0.9) });
+            if (hangs) {
+              const from = kind === "hang-drawers" ? yBot + 0.6 + T + 0.01 : yBot + 0.01;
+              ledSide(ax, 1, from, yTop - 0.01, zf + 0.003);
+              ledSide(bx, -1, from, yTop - 0.01, zf + 0.003);
+            }
+          }
         });
       }
 
@@ -1173,7 +1437,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         for (let k = 1; k <= s.shelves; k++) {
           const y = base + step * k;
           piece(finishAcross, ax, y - 0.032, 0, aw, 0.032, sd, { r: 0.003 });
-          if (lit) led(ax + 0.03, bx - 0.03, y - 0.033, sd - 0.05, { reach: Math.max(0.7, step * 1.3) });
+          if (lit) led(ax + 0.03, bx - 0.03, y - 0.033, sd - 0.026, { reach: Math.max(0.7, step * 1.3) });
         }
         // Books in runs, some leaning, with a few things between them.
         for (let k = 0; k <= s.shelves; k++) {
@@ -1286,14 +1550,18 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       body.scale.set(0.688, 1.72, 1);
       body.position.y = 0.86;
       body.renderOrder = 1;
-      const underfoot = new THREE.Mesh(plane, mat("figure-shade", () => new THREE.MeshBasicMaterial({ map: shadeMap, transparent: true, opacity: 0.5, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 })));
+      const underfoot = new THREE.Mesh(plane, mat("figure-shade", () => {
+        const m = new THREE.MeshBasicMaterial({ map: shadeMap, transparent: true, opacity: 0.5, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 });
+        m.userData.photo = "skip"; // the photo traces the figure's real shadow
+        return m;
+      }));
       underfoot.scale.set(0.62, 0.3, 1);
       underfoot.rotation.x = -Math.PI / 2;
       underfoot.position.y = 0.002;
       fig.add(underfoot, body);
     }
 
-    return { g, bounds, side, doors: doorList, figure: fig, lit: lights.length > 0 };
+    return { g, bounds, side, doors: doorList, figure: fig, lit: strips.length > 0, strips };
   }
 
   /* ---- Camera ------------------------------------------------------------- */
@@ -1324,7 +1592,8 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     // A new size keeps the angle the visitor turned to, unless the picture changed sides.
     if (fit && fit.side === side) { az = controls.getAzimuthalAngle(); pol = controls.getPolarAngle(); }
     controls.target.copy(target);
-    controls.minDistance = dist * 0.45;
+    // Near enough to see a handle or a drawer close up once a spot is chosen (zoomOn).
+    controls.minDistance = dist * 0.28;
     controls.maxDistance = dist * 1.5;
     camera.position.set(
       target.x + dist * Math.sin(pol) * Math.sin(az),
@@ -1340,12 +1609,21 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     Object.assign(sun.shadow.camera, { left: -span, right: span, top: span, bottom: -span, near: 0.5, far: 16 });
     sun.shadow.camera.updateProjectionMatrix();
     fill.position.set(target.x + 3.2, h * 0.8, d + 4);
-    fit = { key: bounds.map((n) => n.toFixed(3)).join(), side, home };
+    // The photo's window: a large, soft rectangle of daylight behind the viewer's left
+    // shoulder, the side the sunlight here comes from, kept inside the room's walls.
+    const kx = target.x - Math.max(1.6, (x1 - x0) * 0.55);
+    keyLight = {
+      position: new THREE.Vector3(side === "inside" ? Math.max(kx, x0 + 0.3) : kx, h * 0.62, target.z + dist * 0.8),
+      target: new THREE.Vector3(target.x, h * 0.42, target.z * 0.5),
+      width: 1.5, height: 1.9, intensity: PHOTO_KEY,
+    };
+    fit = { key: bounds.map((n) => n.toFixed(3)).join(), side, home, target: target.clone(), dist };
   }
 
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     if (!w || !h) return;
+    stopPhoto();
     renderer.setSize(w, h, false);
     composer?.setSize(w, h);
     camera.aspect = w / h;
@@ -1357,6 +1635,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   /* ---- Doors -------------------------------------------------------------- */
 
   function setDoors(amount) {
+    sceneVersion++; // the doors moved: the photo's copy of the scene is out of date
     openAmount = amount;
     const eased = amount * amount * (3 - 2 * amount);
     for (const pivot of doors) pivot.rotation.y = pivot.userData.swing * eased * OPEN_ANGLE;
@@ -1364,6 +1643,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
 
   function animateDoors() {
     cancelAnimationFrame(anim);
+    stopPhoto();
     const still = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (still) {
       setDoors(openTarget);
@@ -1409,6 +1689,8 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     for (const [key, geo] of geos) if (!used.has(key)) { geo.dispose(); geos.delete(key); }
     for (const [key, wood] of woodMats) if (!usedWood.has(key)) { wood.map?.dispose(); wood.dispose(); woodMats.delete(key); }
     state.lit = built.lit;
+    state.strips = built.strips;
+    sceneVersion++;
     if (bloomPass) bloomPass.enabled = built.lit;
     setDoors(openAmount);
     const key = built.bounds.map((n) => n.toFixed(3)).join();
@@ -1433,6 +1715,46 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     requestRender();
   }
 
+  /**
+   * Zoom on a spot (a founder's review, 19 Nov 2026: "what if i want to zoom in on the
+   * side?"): a double click, or a double tap, on the design turns the view round the point
+   * it lands on and moves one step nearer; the + and - buttons then zoom on that point.
+   */
+  const ray = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  function zoomOn(clientX, clientY) {
+    if (!group || !state.bounds) return;
+    const r = canvas.getBoundingClientRect();
+    pointer.set(((clientX - r.left) / r.width) * 2 - 1, -((clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(pointer, camera);
+    const hit = ray.intersectObject(group, true)[0];
+    if (!hit) return;
+    const [x0, x1, h, d] = state.bounds;
+    const clamp = THREE.MathUtils.clamp;
+    const spot = new THREE.Vector3(clamp(hit.point.x, x0, x1), clamp(hit.point.y, 0.15, h - 0.1), clamp(hit.point.z, 0, d + 0.4));
+    const offset = camera.position.clone().sub(controls.target);
+    controls.target.copy(spot);
+    camera.position.copy(spot).add(offset);
+    zoom(1);
+  }
+  let lastPointer = "mouse";
+  let lastTap = { at: 0, x: 0, y: 0 };
+  const onPointerDown = (e) => { lastPointer = e.pointerType; };
+  const onDoubleClick = (e) => { if (lastPointer !== "touch") zoomOn(e.clientX, e.clientY); };
+  const onPointerUp = (e) => {
+    if (e.pointerType !== "touch") return;
+    const now = performance.now();
+    if (now - lastTap.at < 320 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30) {
+      lastTap = { at: 0, x: 0, y: 0 };
+      zoomOn(e.clientX, e.clientY);
+    } else {
+      lastTap = { at: now, x: e.clientX, y: e.clientY };
+    }
+  };
+  canvas.addEventListener("pointerdown", onPointerDown);
+  canvas.addEventListener("dblclick", onDoubleClick);
+  canvas.addEventListener("pointerup", onPointerUp);
+
   /** Nearer or further, in steps, within the limits the framing set. */
   function zoom(step) {
     const dir = new THREE.Vector3().subVectors(camera.position, controls.target);
@@ -1442,9 +1764,10 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     requestRender();
   }
 
-  /** Straight on, or the three-quarter view it opens with. */
+  /** Straight on, or the three-quarter view it opens with: the whole design again, after any spot zoomed on. */
   function look(view) {
-    const dist = camera.position.distanceTo(controls.target);
+    if (fit?.target) controls.target.copy(fit.target);
+    const dist = fit?.dist ?? camera.position.distanceTo(controls.target);
     const az = view === "front" ? 0 : (fit?.home ?? HOME_AZ), pol = view === "front" ? 1.5 : HOME_POLAR;
     camera.position.set(
       controls.target.x + dist * Math.sin(pol) * Math.sin(az),
@@ -1455,14 +1778,21 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     requestRender();
   }
 
-  /** The current view as a picture (drawn afresh first, so it is never blank). */
+  /** The current view as a picture (drawn afresh first, so it is never blank): the photo once it is showing. */
   function snapshot(type = "image/jpeg", quality = 0.88) {
     turnFigure();
-    drawFull();
+    if (!photo?.redraw()) drawFull();
     return canvas.toDataURL(type, quality);
   }
 
-  const onContextLost = (e) => { e.preventDefault(); lost = true; cancelAnimationFrame(anim); onLost?.(); };
+  const onContextLost = (e) => {
+    e.preventDefault();
+    lost = true;
+    cancelAnimationFrame(anim);
+    stopPhoto();
+    photo = null; // its GPU copies went with the context; a new one is made on the next still moment
+    onLost?.();
+  };
   const onContextRestored = () => { lost = false; onRestored?.(); if (state.design) { rebuild(); requestRender(); } };
   canvas.addEventListener("webglcontextlost", onContextLost);
   canvas.addEventListener("webglcontextrestored", onContextRestored);
@@ -1475,7 +1805,12 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     cancelAnimationFrame(raf);
     cancelAnimationFrame(anim);
     clearTimeout(fineTimer);
+    stopPhoto();
+    photo?.dispose();
     observer?.disconnect();
+    canvas.removeEventListener("pointerdown", onPointerDown);
+    canvas.removeEventListener("dblclick", onDoubleClick);
+    canvas.removeEventListener("pointerup", onPointerUp);
     canvas.removeEventListener("webglcontextlost", onContextLost);
     canvas.removeEventListener("webglcontextrestored", onContextRestored);
     controls.dispose();

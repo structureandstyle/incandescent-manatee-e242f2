@@ -93,5 +93,29 @@ export default defineConfig({
       },
     }),
   ],
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    // Development only. The design-your-own builder's 3D libraries, bundled in
+    // one pass when the dev server starts: its traced photo loads the tracer
+    // after three, and two separate passes left the page asking for an
+    // out-of-date copy of three (19 Nov 2026). The production build is not
+    // affected by this setting.
+    optimizeDeps: {
+      include: [
+        'three',
+        'three-gpu-pathtracer',
+        'three-gpu-pathtracer/src/materials/fullscreen/ClampedInterpolationMaterial.js',
+        'three-mesh-bvh',
+        'three/addons/controls/OrbitControls.js',
+        'three/addons/geometries/RoundedBoxGeometry.js',
+        'three/addons/postprocessing/EffectComposer.js',
+        'three/addons/postprocessing/RenderPass.js',
+        'three/addons/postprocessing/GTAOPass.js',
+        'three/addons/postprocessing/UnrealBloomPass.js',
+        'three/addons/postprocessing/OutputPass.js',
+        'three/addons/postprocessing/Pass.js',
+        'three/addons/utils/BufferGeometryUtils.js',
+      ],
+    },
+  },
 });

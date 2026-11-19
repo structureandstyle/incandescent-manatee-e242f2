@@ -55,6 +55,11 @@ export const COPY = {
       title: "Handle finish",
       help: "The metal finish of the handles, for the picture.",
     },
+    // 19 Nov 2026, a founder's review comments on the preview; a copy agent's, against protocol v1.4.
+    insideFinish: {
+      title: "Inside finish",
+      help: "Chosen separately from the outside, and it moves the guide price.",
+    },
     // 19 Nov 2026: every part now moves the price (a founder). These three
     // help lines are a copy agent's, against protocol v1.4, like the rest.
     inside: {
@@ -107,7 +112,10 @@ export const COPY = {
     drawing: "Drawing",
     loading: "Loading the 3D picture",
     unavailable: "3D will not run on this device. The drawing shows the same design.",
-    drag: "Drag to turn the picture",
+    // 19 Nov 2026: a spot can now be zoomed on (a founder's review); a copy agent's words.
+    drag: "Drag to turn the picture. Double-click, or double-tap on a phone, to zoom in on a spot.",
+    // While a computer works out the picture's lighting (scene.mjs, photo.mjs); a copy agent's words.
+    refining: "Refining the lighting in the picture: {n}%",
     note: "This picture is an illustration to help you decide. It is not a drawing to make from.",
   },
   // 19 Nov 2026: the figure is worked out part by part from his price list (a
@@ -127,6 +135,10 @@ export const COPY = {
     send: "Send this design",
     copyLink: "Copy link to this design",
     copied: "Link copied",
+    // 19 Nov 2026, after adding a design (a founder's review); a copy agent's words.
+    addedPrompt: "Do you want to design another unit?",
+    another: "Design another",
+    keep: "Keep this design",
   },
   project: {
     heading: "My project",

@@ -109,13 +109,20 @@ const PARTS = ["Side", "Top", "Bottom", "Fixed shelf", "Adjustable shelf", "Back
   "Inner drawer front", "Drawer box", "Filler", "Loose panel"];
 
 /** Every part of every unit, with its area, edging metres and finished faces. */
+/** BUILDER: the parts of a carcass, finished as the inside is when the inside has its own finish. */
+const CARCASS_PARTS = new Set(["Side", "Top", "Bottom", "Fixed shelf", "Adjustable shelf", "Back"]);
+
 export function cutList(units, P) {
   const { R } = P;
   const parts = [];
   units.forEach((u, index) => {
     const d = derive(u, R, P.runnerLengths);
     if (!d.valid) return;
-    const carcassFaces = d.finished && u.paintInside === "Y" && P.boards.get(u.carcassBoard)?.paintable !== "N" ? R.FACES_CARCASS : 0;
+    // BUILDER: the inside may be finished differently from the outside (insideRoute); a row that
+    // does not say is finished all one way, as the workbook's are.
+    const insideRoute = u.insideRoute || u.finish;
+    const insideFinished = d.valid && insideRoute && insideRoute !== "None";
+    const carcassFaces = insideFinished && u.paintInside === "Y" && P.boards.get(u.carcassBoard)?.paintable !== "N" ? R.FACES_CARCASS : 0;
     for (const part of PARTS) {
       let mat = u.carcassBoard, L = 0, W = 0, Q = 0, edges = [], faces = 0, tab = "Board + edging", rateMat = u.carcassBoard, area = null;
       const qty = u.qty;
@@ -168,12 +175,14 @@ export function cutList(units, P) {
       const edgeM = edged ? (Q * edges.reduce((s, e) => s + (e[0] === "L" ? L : W), 0)) / 1000 : 0;
       const finishM2 = areaTotal * faces * (board?.paintable === "N" ? 0 : 1);
       const rate = tab === "Shaker doors" ? itemEach(P, "CW_SHAKER_M2") : board?.rate ?? 0;
+      const route = CARCASS_PARTS.has(part) ? insideRoute : u.finish;
       parts.push({
         unit: index + 1, part, name: u.name, mat, L, W, Q, areaTotal, edgeM, edgeType: edgeM > 0 ? edgeType : "",
-        finishM2, finish: finishM2 > 0 ? u.finish : "", tab, rate, boardCost: areaTotal * rate,
+        finishM2, finish: finishM2 > 0 ? route : "", tab, rate, boardCost: areaTotal * rate,
         style: part === "Door" ? u.doorStyle || "Slab" : "",
         hinges: part === "Door" ? Q * d.hingesPerDoor : 0,
-        primed: R._priming === "Y" && finishM2 > 0 && tab === "Board + edging",
+        // Primed by the cutting service only where it is finished as the outside is (hand painting).
+        primed: R._priming === "Y" && finishM2 > 0 && tab === "Board + edging" && route === u.finish,
       });
     }
   });
@@ -217,6 +226,9 @@ export function counts(units, parts, P) {
     // BUILDER: oak veneer goes to a finishing shop to be stained and lacquered.
     AREA_LACQUER_OUT: sumBy(parts, "finishM2", (r) => r.finish === "Lacquer outsourced"),
     AREA_OUTSOURCED: sumBy(parts, "finishM2", (r) => r.finish === "Spray outsourced" || r.finish === "Lacquer outsourced"),
+    // BUILDER: veneer faces outside (grain matched, the calibrated hours) and inside (an oak inside).
+    AREA_VENEER_OUTSIDE: sumBy(parts, "finishM2", (r) => r.finish === "Lacquer outsourced" && !CARCASS_PARTS.has(r.part)),
+    AREA_VENEER_INSIDE: sumBy(parts, "finishM2", (r) => r.finish === "Lacquer outsourced" && CARCASS_PARTS.has(r.part)),
     AREA_PRIMED: sumBy(parts, "areaTotal", (r) => r.primed),
     // BUILDER counts.
     // The front area of every carcass, so making and fitting hours can grow with its size:
@@ -230,6 +242,9 @@ export function counts(units, parts, P) {
     BARS: handled("bar", (u) => fronts(u) + inner(u)) + handled("longbar", inner),
     LONGBARS: handled("longbar", fronts),
     EDGES: handled("edge", (u) => fronts(u) + inner(u)),
+    ROUTED: handled("routed", (u) => fronts(u) + inner(u)),
+    JEWELLERY_DRAWERS: live.reduce((s, u) => s + (Number(u.jewelleryDrawers) || 0), 0),
+    TIE_RACKS: live.reduce((s, u) => s + (Number(u.tieRacks) || 0), 0),
     // Door area by style: the extra for the grooves or the fluted board, and
     // (finished doors only) the extra time finishing into them.
     AREA_TG: doorArea("Tongue and groove"),
@@ -298,6 +313,7 @@ export function costing(units, P) {
   // BUILDER: tongue and groove and fluted doors are slab doors plus these.
   if (C.AREA_TG > 0) lines.push(line("A", "V-grooving, tongue and groove doors", C.AREA_TG, itemEach(P, "DOOR_TG_M2")));
   if (C.AREA_FLUTED > 0) lines.push(line("A", "Fluted MDF over plain, fluted doors", C.AREA_FLUTED, itemEach(P, "DOOR_FLUTED_M2")));
+  if (C.ROUTED) lines.push(line("A", "Routed finger pulls", C.ROUTED, itemEach(P, "ROUTED_PULL")));
   // Per hinge cup, the way the cut-to-size shops that publish it price it; the workbook had one
   // figure per job, never filled (so its worked example is unchanged).
   lines.push(line("A", "Drilling hinge cups", C.CNT_HINGES, itemEach(P, "CW_DRILL")));
@@ -310,7 +326,7 @@ export function costing(units, P) {
   lines.push(line("B", "Hanging rail", C.RAIL_M, itemEach(P, "RAIL")));
   lines.push(line("B", "Rail end supports", C.RAILS, itemEach(P, "RAIL_END")));
   // The workbook's single handle line, kept for rows that do not say which handle (its example).
-  const untold = C.CNT_DOORS + C.CNT_DRAWERS - C.KNOBS - C.BARS - C.LONGBARS - C.EDGES - C.TIPON_DOORS - C.TIPON_DRAWERS;
+  const untold = C.CNT_DOORS + C.CNT_DRAWERS - C.KNOBS - C.BARS - C.LONGBARS - C.EDGES - C.ROUTED - C.TIPON_DOORS - C.TIPON_DRAWERS;
   lines.push(line("B", "Handles / knobs", Math.max(0, untold), itemEach(P, "HANDLE")));
   // BUILDER: the handle chosen, priced per piece; "none" is push to open. The
   // handle's metal never moves it: brass, matt black and chrome cost the same.
@@ -332,6 +348,8 @@ export function costing(units, P) {
   }
   if (C.SHOE_RACKS) lines.push(line("B", "Shoe storage", C.SHOE_RACKS, itemEach(P, "SHOE_RACK")));
   if (C.TROUSER_RAILS) lines.push(line("B", "Pull-out trouser rail", C.TROUSER_RAILS, itemEach(P, "TROUSER_RAIL")));
+  if (C.JEWELLERY_DRAWERS) lines.push(line("B", "Jewellery and watch drawer", C.JEWELLERY_DRAWERS, itemEach(P, "JEWELLERY_DRAWER")));
+  if (C.TIE_RACKS) lines.push(line("B", "Tie and belt rack", C.TIE_RACKS, itemEach(P, "TIE_RACK")));
   if (C.FLOATING_SHELVES) lines.push(line("B", "Concealed shelf supports", C.FLOATING_SHELVES, itemEach(P, "SHELF_SUPPORT")));
 
   // C. Consumables.
@@ -441,6 +459,17 @@ export function sellBook(book) {
 export function unitsFor(s, P) {
   const B = P.builder;
   const fin = B.finishes[s.finish];
+  // The inside finish (builder rules, insideFinishes): the board inside, whether it is finished,
+  // and how. Board "" keeps the outside finish's own carcass rules (white melamine today);
+  // "front" uses its door board; route "finish" finishes it as the outside is.
+  const inner = B.insideFinishes?.[s.insideFinish] ?? { board: "", paint: "N", route: "" };
+  const inside = (ownBoard, ownPaint) => (inner.board
+    ? {
+      carcassBoard: inner.board === "front" ? fin.front : inner.board,
+      paintInside: inner.paint || "N",
+      insideRoute: inner.route === "finish" ? fin.route : inner.route || undefined,
+    }
+    : { carcassBoard: ownBoard, paintInside: ownPaint });
   const handle = s.handle;
   // Slim Shaker is priced as Shaker (no slim premium found, price book note 04).
   const doorStyle = { shaker: "Shaker", slim: "Shaker", tg: "Tongue and groove", fluted: "Fluted" }[s.door] ?? "Slab";
@@ -453,21 +482,33 @@ export function unitsFor(s, P) {
     const ends = 2 - walls;
     const carcassRun = s.w - walls * W.fillerTakes - ends * P.R.T_CARC;
     const carcassH = s.h - W.topFillerH;
+    // The hanging space's height, for the LED strips down its sides (as scene.mjs draws them).
+    const innerH = carcassH - P.R.PLINTH_H - 2 * P.R.T_CARC;
     s.sections.forEach((doors, i) => {
       const layout = W.insides[s.inside[i]] ?? W.insides.hang;
       const width = (carcassRun * doors) / s.doors;
       const insideW = width - 2 * P.R.T_CARC;
       const lit = s.extras.includes("lighting");
+      // Lighting as drawn (research 05): the top front strip; a strip down each side where there is
+      // hanging, stopping above any drawers; and one under every adjustable shelf.
+      const hangs = layout.rails > 0;
+      const sideRun = innerH - (hangs && layout.drawers > 0 ? 600 + P.R.T_CARC : 0) - 20;
+      const ledMm = insideW * (W.ledPerSection ?? 1)
+        + (hangs ? (W.ledSidesInHanging ?? 0) * sideRun : 0)
+        + (W.ledUnderShelves === "Y" ? (layout.adj || 0) * (insideW - 40) : 0);
+      const first = i === 0;
       rows.push({
         name: `Wardrobe section ${i + 1}`, type: "Cupboard", qty: 1, width, height: carcassH, depth: s.d,
         plinth: "Y", fixedShelves: layout.fixed, adjShelves: layout.adj, doors, drawers: 0, drawerFrontH: 0,
-        carcassBoard: fin.carcass, frontBoard: fin.front, doorStyle, finish: fin.route, paintInside: W.paintInside, back: "Y",
-        fillers: i === 0 ? walls : 0, ledM: lit ? (insideW / 1000) * W.ledPerSection : 0,
+        frontBoard: fin.front, doorStyle, finish: fin.route, back: "Y", ...inside(fin.carcass, W.paintInside),
+        fillers: first ? walls : 0, ledM: lit ? ledMm / 1000 : 0,
         railM: (layout.rails * insideW) / 1000, rails: layout.rails, innerDrawers: layout.drawers, handle,
-        mirrors: i === 0 && s.extras.includes("mirror") ? 1 : 0,
-        mirrorM2: i === 0 && s.extras.includes("mirror") ? mirrorArea(s, P, width, doors, carcassH) : 0,
-        shoeRacks: i === 0 && s.extras.includes("shoes") ? 1 : 0,
-        trouserRails: i === 0 && s.extras.includes("pullouts") ? 1 : 0,
+        mirrors: first && s.extras.includes("mirror") ? 1 : 0,
+        mirrorM2: first && s.extras.includes("mirror") ? mirrorArea(s, P, width, doors, carcassH) : 0,
+        shoeRacks: first && s.extras.includes("shoes") ? 1 : 0,
+        trouserRails: first && s.extras.includes("trousers") ? 1 : 0,
+        jewelleryDrawers: first && s.extras.includes("jewellery") ? 1 : 0,
+        tieRacks: first && s.extras.includes("ties") ? 1 : 0,
       });
     });
     // The strip scribed to the ceiling, and a finished end panel on each open end.
@@ -483,7 +524,8 @@ export function unitsFor(s, P) {
       rows.push({
         name: `Alcove ${i + 1} base cupboard`, type: "Cupboard", qty: 1, width, height: s.base - A.topT, depth: s.d,
         plinth: "Y", fixedShelves: 0, adjShelves: A.cupboardShelves, doors: 2, drawers: s.extras.includes("drawers") ? 1 : 0, drawerFrontH: 0,
-        carcassBoard: fin.alcoveCarcass, frontBoard: fin.front, doorStyle, finish: fin.route, paintInside: fin.alcovePaintInside, back: "Y",
+        frontBoard: fin.front, doorStyle, finish: fin.route, back: "Y",
+        ...inside(fin.alcoveCarcass, fin.alcovePaintInside),
         fillers: A.fillersPerAlcove, ledM: 0, railM: 0, handle,
       });
       rows.push({ name: `Alcove ${i + 1} top`, type: "Loose panel", qty: 1, width: w, height: s.d + A.topOverhang, carcassBoard: fin.top, finish: fin.route, fillers: 0 });

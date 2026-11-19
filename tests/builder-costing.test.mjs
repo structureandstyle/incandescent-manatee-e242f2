@@ -95,6 +95,38 @@ test("every door style, handle and handle finish is priced, each on its own line
   // The metal never moves the price.
   const metals = HANDLE_FINISHES.map((f) => at({ handleFinish: f.id }).price);
   assert.ok(metals.every((p) => p === metals[0]), metals.join(", "));
+  // Routed pulls: one routed recess a door, no handle bought.
+  const routed = at({ handle: "routed" });
+  assert.equal(line(routed, "Routed finger pulls").qty, 4);
+  assert.equal(line(routed, "Bar handles"), undefined);
+});
+
+test("a founder's review, 19 Nov 2026: the inside finish, the accessories and the light round the inside are all priced", () => {
+  const base = { ...DEFAULTS.wardrobe, extras: [] };
+  const at = (change) => priceDesign(describe({ ...base, ...change }), P);
+  const line = (q, label) => q.lines.find((l) => l.label === label);
+  // Inside finish: white melamine is the standard. Oak-effect melamine is its own board (in this book
+  // no dearer a square metre than white, its larger sheet spreading the cutting); lacquered oak veneer
+  // and the outside's own painted finish each cost more, oak veneer lacquered by the finisher.
+  const white = at({ insideFinish: "white" }).price;
+  assert.equal(white, at({}).price);
+  assert.ok(line(at({ insideFinish: "oakeffect" }), "MFC Egger decor 18mm"), "oak-effect board inside");
+  for (const f of ["oak", "match"]) assert.ok(at({ insideFinish: f }).price > white, f);
+  const oak = at({ finish: 2, insideFinish: "oak" });
+  assert.ok(oak.counts.AREA_LACQUER_OUT > 0, "oak inside is lacquered");
+  assert.ok(oak.counts.AREA_SPRAY_OUT > 0, "the outside is still sprayed");
+  assert.ok(at({ unit: "alcove", count: 2, insideFinish: "oak" }).price > at({ unit: "alcove", count: 2 }).price, "alcove cupboards too");
+  // The accessories: each its own line, each moving the price.
+  const all = at({ extras: ["jewellery", "ties", "trousers"] });
+  assert.equal(line(all, "Jewellery and watch drawer").qty, 1);
+  assert.equal(line(all, "Tie and belt rack").qty, 1);
+  assert.equal(line(all, "Pull-out trouser rail").qty, 1);
+  // The light round the inside: the default's two sections both have hanging, so each has a strip
+  // down both sides as well as the top, and the hanging-over-shelves one a strip under each shelf.
+  const lit = at({ extras: ["lighting"] });
+  const top = (2400 - 2 * 40 - 2 * 18) / 1000; // both sections' top strips, about the run's inside width
+  assert.ok(lit.counts.LED_M > top + 4 * 2, `${lit.counts.LED_M} m of LED`);
+  assert.equal(at({ extras: ["lighting"], inside: ["shelves", "shelves"] }).counts.LED_M > top, true);
 });
 
 test("the selling rates give the same price as the private book, and carry none of his costs", () => {

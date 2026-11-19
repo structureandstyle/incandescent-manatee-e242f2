@@ -1620,6 +1620,51 @@
    "status": "Sourced",
    "kaspar": null,
    "builder": true
+  },
+  {
+   "code": "JEWELLERY_DRAWER",
+   "category": "Hardware",
+   "item": "Pull-out jewellery and watch tray, velvet lined, with runners (BUILDER)",
+   "unit": "each",
+   "pack": 1,
+   "price": 95.8,
+   "coverage": null,
+   "noVat": false,
+   "source": "Buller Elite soft-close velvet-lined pull-out tray, from £114.96 inc, about 600 to 900 mm wide, runners included (search listing; a 'from' price, so a wide tray may cost more); IKEA Komplement tray with insert £39 to £73 plus a £15 jewellery insert as a low anchor (note 05) (research 2026-11-19, seen 19 Nov 2026)",
+   "grade": "C",
+   "status": "Sourced",
+   "kaspar": null,
+   "builder": true
+  },
+  {
+   "code": "TIE_RACK",
+   "category": "Hardware",
+   "item": "Pull-out tie and belt rack, side mounted (BUILDER)",
+   "unit": "each",
+   "pack": 1,
+   "price": 31.67,
+   "coverage": null,
+   "noVat": false,
+   "source": "Hafele tie racks £29.99 to £38, Hafele belt rack £44.99, Kesseboehmer Conero £49 to £50.50, Eastcoast Kitchens (VAT basis not stated, treated as inc; about £45 if they are ex) (note 05) (research 2026-11-19, seen 19 Nov 2026)",
+   "grade": "B",
+   "status": "Sourced",
+   "kaspar": null,
+   "builder": true
+  },
+  {
+   "code": "ROUTED_PULL",
+   "category": "Doors",
+   "item": "Routed finger pull machined into a door or drawer front (BUILDER)",
+   "unit": "front",
+   "pack": 1,
+   "price": 5.83,
+   "coverage": null,
+   "noVat": false,
+   "source": "No UK routing price is published (note 05). Placeholder worked out by us: Kitchen Door Workshop's handleless door £72.68 against its plain slab £66.05 (570 x 496 mm) implies about £6.63 a door, VAT basis not stated. Ask Kaspar whether he routes them himself",
+   "grade": "",
+   "status": "Placeholder",
+   "kaspar": null,
+   "builder": true
   }
  ],
  "labour": [
@@ -1842,10 +1887,10 @@
   },
   {
    "code": "L_PULLOUT",
-   "task": "Fit a pull-out or shoe storage (BUILDER)",
+   "task": "Fit a pull-out, a jewellery drawer or shoe storage (BUILDER)",
    "per": "item",
    "hours": 0.5,
-   "qty": "SHOE_RACKS+TROUSER_RAILS",
+   "qty": "SHOE_RACKS+TROUSER_RAILS+JEWELLERY_DRAWERS+TIE_RACKS",
    "where": "Site",
    "basis": "Assumption.",
    "confirm": false,
@@ -1867,9 +1912,9 @@
   {
    "code": "L_VENEER",
    "task": "Veneer work: matching grain, veneer edging, sanding and protecting the finish (BUILDER)",
-   "per": "m2 of veneered face",
+   "per": "m2 of veneered face, outside",
    "hours": 1.2,
-   "qty": "AREA_LACQUER_OUT",
+   "qty": "AREA_VENEER_OUTSIDE",
    "where": "Site",
    "basis": "Calibrated 19 Nov 2026 to his 16 published guide prices (fitted inside a plausible range); his own timing replaces it. Oak was 20 to 30% under his prices without it.",
    "confirm": true,
@@ -1907,6 +1952,18 @@
    "qty": "AREA_FLUTED_FINISHED",
    "where": "Site",
    "basis": "Assumption: a fluted face has about half as much surface again as a flat one and every reed is sanded by hand. For outsourced spraying it stands in for the finisher's extra.",
+   "confirm": true,
+   "kaspar": null,
+   "builder": true
+  },
+  {
+   "code": "L_VENEER_INSIDE",
+   "task": "Veneer work inside: edging, sanding and protecting an oak inside (BUILDER)",
+   "per": "m2 of veneered face, inside",
+   "hours": 0.35,
+   "qty": "AREA_VENEER_INSIDE",
+   "where": "Site",
+   "basis": "Assumption: an oak inside is lacquered by the finisher like the outside, but needs no grain matching.",
    "confirm": true,
    "kaspar": null,
    "builder": true
@@ -1967,6 +2024,8 @@
    "topFillerH": 60,
    "paintInside": "N",
    "ledPerSection": 1,
+   "ledSidesInHanging": 2,
+   "ledUnderShelves": "Y",
    "mirrorInset": 60,
    "insides": {
     "hang": {
@@ -2005,6 +2064,28 @@
      "rails": 0,
      "drawers": 3
     }
+   }
+  },
+  "insideFinishes": {
+   "white": {
+    "board": "",
+    "paint": "N",
+    "route": ""
+   },
+   "oakeffect": {
+    "board": "MFC Egger decor 18mm",
+    "paint": "N",
+    "route": ""
+   },
+   "oak": {
+    "board": "Oak veneered MDF 18mm",
+    "paint": "Y",
+    "route": "Lacquer outsourced"
+   },
+   "match": {
+    "board": "front",
+    "paint": "Y",
+    "route": "finish"
    }
   },
   "alcove": {

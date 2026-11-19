@@ -16,6 +16,7 @@ import {
   EXTRAS,
   HANDLE_FINISHES,
   HANDLES,
+  INSIDE_FINISHES,
   INSIDES,
   decode,
   describe,
@@ -117,7 +118,8 @@ test("a design survives a trip through a link, and a broken link gives nothing",
     { unit: "wardrobe", w: 1750, h: 2670, d: 550, fit: "left", finish: 3, colour: 2, door: "flat", handle: "none", inside: ["shelves-drawers", "double"], extras: ["mirror", "shoes"] },
     { unit: "alcove", count: 1, wl: 1240, wr: 800, h: 2810, d: 410, breast: 1620, base: 900, shelves: 5, finish: 0, colour: 4, door: "flat", handle: "bar", extras: ["drawers"] },
     { unit: "wardrobe", w: 3000, h: 2500, d: 600, fit: "right", finish: 2, colour: 1, door: "fluted", handle: "edge", handleFinish: "chrome", inside: ["hang"], extras: [] },
-    { unit: "alcove", count: 2, wl: 800, wr: 950, h: 2600, d: 380, breast: 1500, base: 800, shelves: 2, finish: 1, colour: 3, door: "tg", handle: "longbar", handleFinish: "black", extras: [] },
+    { unit: "alcove", count: 2, wl: 800, wr: 950, h: 2600, d: 380, breast: 1500, base: 800, shelves: 2, finish: 1, colour: 3, door: "tg", handle: "longbar", handleFinish: "black", insideFinish: "oak", extras: [] },
+    { unit: "wardrobe", w: 2000, h: 2300, d: 580, fit: "none", finish: 0, colour: 2, door: "flat", handle: "routed", insideFinish: "oakeffect", inside: ["shelves", "hang"], extras: ["jewellery", "ties", "trousers"] },
   ];
   for (const d of designs) {
     const code = encode(d);
@@ -138,6 +140,13 @@ test("a link saved before the handle finish was added still opens, in brushed br
   assert.deepEqual(d.extras, ["lighting"]);
   const alcove = Buffer.from(JSON.stringify([1, "a", 2, 900, 900, 2400, 350, 1400, 850, 3, 1, 0, "shaker", "knob", []])).toString("base64url");
   assert.equal(decode(alcove).handleFinish, "brass");
+  // Saved before the inside finish was added: white melamine inside, as every design was.
+  assert.equal(d.insideFinish, "white");
+  assert.equal(decode(alcove).insideFinish, "white");
+  // "Pull-out accessories" was one extra, drawn and priced as a trouser rail: it opens as that.
+  const pullouts = Buffer.from(JSON.stringify([1, "w", 2400, 2400, 600, "both", 1, 0, "shaker", "bar", ["hang"], ["lighting", "pullouts"]])).toString("base64url");
+  assert.deepEqual(decode(pullouts).extras, ["lighting", "trousers"]);
+  assert.deepEqual(normalise({ unit: "wardrobe", extras: ["pullouts", "jewellery"] }).extras, ["jewellery", "trousers"]);
 });
 
 test("a hand-edited link can only ever produce a valid design", () => {
@@ -152,9 +161,16 @@ test("the design in words: sizes, doors, finish, inside, and the extras chosen",
   assert.deepEqual(lines, [
     "Fitted wardrobe: 2400 wide x 2400 high x 600 deep (mm), wall to wall.",
     "4 doors, Shaker-style doors, bar handles in brushed brass. Finish: hand-painted MDF, shown in deep green.",
-    "Inside, left to right: long hanging with a shelf above; hanging over three drawers.",
+    "Inside, left to right: long hanging with a shelf above; hanging over three drawers. Inside finish: white melamine.",
     "Extras: integrated lighting.",
   ]);
+  // The inside finish, chosen apart from the outside (a founder's review, 19 Nov 2026).
+  assert.match(specLines({ ...DEFAULTS.wardrobe, finish: 2, insideFinish: "oak" }, PRICES.finishes)[2], /Inside finish: oak veneer, lacquered\.$/);
+  assert.match(specLines({ ...DEFAULTS.alcove, insideFinish: "match" }, PRICES.finishes)[1], /Inside the cupboards: the same finish as the outside\.$/);
+  // Routed pulls have no metal to name.
+  const routed = specLines({ ...DEFAULTS.wardrobe, handle: "routed", handleFinish: "chrome" }, PRICES.finishes)[1];
+  assert.match(routed, /recessed pulls routed into the doors\. /);
+  assert.doesNotMatch(routed, /chrome/);
   const alcove = specLines(DEFAULTS.alcove, PRICES.finishes);
   assert.equal(alcove[0], "Alcove units: left alcove 900 wide, right alcove 900 wide, 350 deep, ceiling 2400 high (mm).");
   assert.match(alcove[1], /a base cupboard 850 high with two Shaker-style doors, knobs in brushed brass, and 3 open shelves above/);
@@ -208,13 +224,15 @@ test("a project ticks the form's own service cards", () => {
 });
 
 test("every option has words for the page and for the enquiry", () => {
-  for (const list of [INSIDES, EXTRAS.wardrobe, EXTRAS.alcove, DOORS, HANDLES, HANDLE_FINISHES]) {
+  for (const list of [INSIDES, EXTRAS.wardrobe, EXTRAS.alcove, DOORS, HANDLES, HANDLE_FINISHES, INSIDE_FINISHES]) {
     for (const x of list) assert.ok(x.id && x.label && x.text, JSON.stringify(x));
   }
   // The alcove sentence turns "fluted doors" into "two fluted doors".
   for (const x of DOORS) assert.match(x.text, / doors$/, x.id);
   assert.deepEqual(DOORS.map((x) => x.id), ["shaker", "flat", "slim", "tg", "fluted"]);
-  assert.deepEqual(HANDLES.map((x) => x.id), ["knob", "bar", "longbar", "edge", "none"]);
+  assert.deepEqual(HANDLES.map((x) => x.id), ["knob", "bar", "longbar", "edge", "routed", "none"]);
+  assert.deepEqual(INSIDE_FINISHES.map((x) => x.id), ["white", "oakeffect", "oak", "match"]);
+  assert.deepEqual(EXTRAS.wardrobe.map((x) => x.id), ["lighting", "mirror", "shoes", "jewellery", "ties", "trousers"]);
   for (const set of COLOURS) {
     assert.equal(set.length, 5);
     for (const c of set) assert.match(c.hex, /^#[0-9A-F]{6}$/);

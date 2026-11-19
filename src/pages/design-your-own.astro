@@ -50,8 +50,10 @@ import {
   FITS,
   HANDLE_FINISHES,
   HANDLES,
+  INSIDE_FINISHES,
   INSIDES,
   LIMITS,
+  NO_METAL,
   describe,
   guidePrice,
   money,
@@ -83,6 +85,7 @@ const config = {
     oneWidth: COPY.fields.oneWidth,
     outOfRange: COPY.fields.outOfRange,
     drag: COPY.view.drag,
+    refining: COPY.view.refining,
     loading: COPY.view.loading,
     unavailable: COPY.view.unavailable,
     add: COPY.actions.add,
@@ -345,14 +348,28 @@ const wardrobeNumbers = [
             </div>
           </fieldset>
 
-          {/* Hidden while "None, push to open" is chosen (ui.mjs showPanels). */}
-          <fieldset class="dyo-step" data-dyo-handle-finish hidden={first.handle === "none"}>
+          {/* Hidden while a handle with no metal is chosen: push to open, routed pulls (ui.mjs showPanels). */}
+          <fieldset class="dyo-step" data-dyo-handle-finish hidden={NO_METAL.has(first.handle)}>
             <legend>{COPY.steps.handleFinish.title}</legend>
             {COPY.steps.handleFinish.help && <p class="dyo-help">{COPY.steps.handleFinish.help}</p>}
             <div class="dyo-chips">
               {HANDLE_FINISHES.map((x) => (
                 <label class="dyo-chipbox">
                   <input type="radio" name="dyo-handle-finish" value={x.id} checked={x.id === first.handleFinish} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* The inside, finished apart from the outside (a founder's review, 19 Nov 2026). */}
+          <fieldset class="dyo-step">
+            <legend>{COPY.steps.insideFinish.title}</legend>
+            {COPY.steps.insideFinish.help && <p class="dyo-help">{COPY.steps.insideFinish.help}</p>}
+            <div class="dyo-chips">
+              {INSIDE_FINISHES.map((x) => (
+                <label class="dyo-chipbox">
+                  <input type="radio" name="dyo-inside-finish" value={x.id} checked={x.id === first.insideFinish} />
                   <span>{x.label}</span>
                 </label>
               ))}
@@ -417,6 +434,14 @@ const wardrobeNumbers = [
               <button type="button" class="dyo-text-button" data-dyo-copy>{COPY.actions.copyLink}</button>
             </div>
             <p class="dyo-toast" data-dyo-toast role="status" hidden></p>
+            {/* After "Add to my project" (a founder's review, 19 Nov 2026): design another, or keep this one. */}
+            <div class="dyo-another" data-dyo-another role="group" aria-label={COPY.actions.addedPrompt} hidden>
+              <p>{COPY.actions.addedPrompt}</p>
+              <div class="dyo-actions">
+                <button type="button" class="dyo-button" data-dyo-another-yes>{COPY.actions.another}</button>
+                <button type="button" class="dyo-text-button" data-dyo-another-no>{COPY.actions.keep}</button>
+              </div>
+            </div>
           </div>
         </form>
       </div>
@@ -657,6 +682,9 @@ const wardrobeNumbers = [
   .dyo-words { margin: var(--space-8) 0 0; padding: var(--space-7) var(--space-9); list-style: none; border: var(--rule-hair); font-size: var(--type-body-sm); line-height: 1.5; color: var(--text-quiet); }
   .dyo-words li + li { margin-top: var(--space-3); }
   .dyo-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-6) var(--space-9); margin-top: var(--space-10); }
+  .dyo-another { margin-top: var(--space-9); padding: var(--space-8) var(--space-9); border: var(--rule-hair); }
+  .dyo-another p { margin: 0; font-size: var(--type-body-sm); }
+  .dyo-another .dyo-actions { margin-top: var(--space-7); }
   .dyo-button {
     display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 var(--space-12);
     font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono); text-transform: uppercase;
