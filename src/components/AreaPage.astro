@@ -62,13 +62,18 @@ import { areaPath, type Area } from "../data/areas";
 import { topicPath, type TopicPage } from "../data/topic-pages";
 import { photoAlt } from "../data/work-gallery";
 import selection from "../../public/images/_selection.json";
+import IllustrationNote from "./IllustrationNote.astro";
 
 interface Props {
   area?: Area;
   topic?: TopicPage;
+  /** The page's own content (its slot) shows illustrations, as Hampstead's
+      design section does, so the illustrations line goes at the end even when
+      every plate is a photograph. */
+  illustrations?: boolean;
 }
 
-const { area, topic } = Astro.props;
+const { area, topic, illustrations = false } = Astro.props;
 const page = (area ?? topic)!;
 if (!page) throw new Error("AreaPage needs an area or a topic.");
 const path = area ? areaPath(area.slug) : topicPath(topic!.slug);
@@ -89,6 +94,11 @@ const plates = page.plates.map((p) => {
   if (!found) throw new Error(`${page.slug} names ${p.file}, which is not in public/images/_selection.json.`);
   return { ...p, w: found.w, h: found.h, alt: ("alt" in p && p.alt) || photoAlt(p.file, p.type), ai: false };
 });
+/* The illustrations line (19 Nov 2026): "The images on this page..." when
+   every plate is an illustration and the body adds none of its own photos,
+   "Some images..." when illustrations sit beside his photographs. */
+const allIllustrations = plates.length > 0 && plates.every((p) => p.ai) && !illustrations;
+const anyIllustrations = illustrations || plates.some((p) => p.ai);
 
 /* Each photograph's own description from work-gallery.ts (6 Nov 2026), the
    same words it has on /work/. No place in it: none is a recorded job in the
@@ -206,6 +216,13 @@ const breadcrumb = {
     </Wrap>
 
     <slot />
+
+    {/* Near the end, after the page's own content (a founder, 19 Nov 2026). */}
+    {anyIllustrations && (
+      <Wrap style="padding-bottom:var(--section-y)">
+        <IllustrationNote all={allIllustrations} />
+      </Wrap>
+    )}
 
     <section id="enquire">
       <EnquireBand heading={BAND.heading} chamfer>

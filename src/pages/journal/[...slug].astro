@@ -49,6 +49,7 @@ import Guarantee from "../../components/journal/Guarantee.astro";
 import Areas from "../../components/journal/Areas.astro";
 import Render from "../../components/journal/Render.astro";
 import Renders from "../../components/journal/Renders.astro";
+import IllustrationNote from "../../components/IllustrationNote.astro";
 import { BAND } from "../../data/site-content";
 import { SITE_URL, AUTHORS, type AuthorId } from "../../data/site";
 import { isLive, isRendered, readingMinutes } from "../../data/journal";
@@ -161,6 +162,9 @@ const components = {
       </nav>
     )}
     <Content components={components} />
+    {/* The illustrations line at the end of the article (a founder, 19 Nov 2026), in place of the
+        "AI-generated examples" line that sat above the hero until that day. */}
+    {d.hero.ai && <IllustrationNote all scope="guide" style="margin-top:var(--space-12)" />}
   </div>
 
   <EnquireBand heading={d.band?.heading ?? "If you have a room in mind, start here."} chamfer>

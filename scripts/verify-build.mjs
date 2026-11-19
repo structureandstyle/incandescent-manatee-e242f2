@@ -160,8 +160,14 @@ const CASE_STUDY_TITLE = /^[A-Z][A-Za-z' -]+ in [A-Z][A-Za-z' -]+$/;
  * And the same day, the page-level notice went too (a founder: "remove all ai
  * examples descriptions pls, from everywhere"): a page with AI images now
  * fails if its visible text says "AI-generated example" anywhere.
+ *
+ * In their place, also 19 Nov 2026 (a founder: "yes add it to 67"): a page
+ * with AI images must carry the illustrations line (IllustrationNote.astro),
+ * "... are illustrations, made to help explain the design options", after its
+ * last AI image, so it sits near the end as Kas asked on 17 Nov.
  */
 const AI_LABEL = /AI-generated example/i;
+const ILLUSTRATION_NOTE = /are illustrations, made to help explain the design options/i;
 function verifyAiLabels(html, page, errors) {
   const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']*-ai-[^"']*)["'][^>]*>/gi)];
   if (!imgs.length) return;
@@ -178,6 +184,10 @@ function verifyAiLabels(html, page, errors) {
   }
   if (AI_LABEL.test(visibleText(html))) {
     errors.push(`${page}  says "AI-generated example" in its visible text (removed from every page on 19 Nov 2026)`);
+  }
+  const last = imgs[imgs.length - 1];
+  if (!ILLUSTRATION_NOTE.test(visibleText(html.slice(last.index + last[0].length)))) {
+    errors.push(`${page}  has AI images but no illustrations line after the last of them (IllustrationNote.astro)`);
   }
 }
 
