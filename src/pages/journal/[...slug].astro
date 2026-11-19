@@ -49,6 +49,7 @@ import Guarantee from "../../components/journal/Guarantee.astro";
 import Areas from "../../components/journal/Areas.astro";
 import Render from "../../components/journal/Render.astro";
 import Renders from "../../components/journal/Renders.astro";
+import IllustrationNote from "../../components/IllustrationNote.astro";
 import { BAND } from "../../data/site-content";
 import { SITE_URL, AUTHORS, type AuthorId } from "../../data/site";
 import { isLive, isRendered, readingMinutes } from "../../data/journal";
@@ -124,7 +125,8 @@ const components = {
   </div>
 
   <div class="article-hero">
-    {d.hero.ai && <p class="ai-intro">The images in this guide are AI-generated examples, shown for inspiration and to help you compare the options.</p>}
+    {/* No "The images in this guide are AI-generated examples" line since 19 Nov 2026
+        (a founder: "remove all ai examples descriptions pls, from everywhere"). */}
     <Plate
       photo={d.hero.src}
       alt={d.hero.alt}
@@ -160,6 +162,9 @@ const components = {
       </nav>
     )}
     <Content components={components} />
+    {/* The illustrations line at the end of the article (a founder, 19 Nov 2026), in place of the
+        "AI-generated examples" line that sat above the hero until that day. */}
+    {d.hero.ai && <IllustrationNote all scope="guide" style="margin-top:var(--space-12)" />}
   </div>
 
   <EnquireBand heading={d.band?.heading ?? "If you have a room in mind, start here."} chamfer>
@@ -260,9 +265,6 @@ const components = {
   /* Under an AI hero: this button takes readers to real work (Kaspar,
      18 Oct 2026). */
   .gallery-cta { margin: var(--space-9) 0 0; }
-  /* Said once, above the first render (Denis, 19 Oct 2026); each caption
-     then names what differs in that image. */
-  .ai-intro { margin: 0 0 var(--space-7); font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
   /* The hero's description, as <Render> shows one under each image. */
   .image-desc { margin: var(--space-5) 0 0; font-size: 15px; line-height: 1.55; color: var(--ink-soft); max-width: 680px; }
   /* The price panel's button, on green: the site has no shared one. */

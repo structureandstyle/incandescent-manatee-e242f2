@@ -2,10 +2,10 @@
 /**
  * An AI render shown as a style example inside an article.
  *
- * The article says once, above its first image, that the images are AI-generated
- * examples (Denis, 19 Oct 2026; the hero needs `ai: true` for that line). Each
- * caption then names what differs in that render, so a reader comparing them
- * sees the point at a glance. The gallery button under the hero takes readers
+ * Until 19 Nov 2026 the article said once, above its first image, that the
+ * images are AI-generated examples (Denis, 19 Oct 2026); a founder removed that
+ * line and every label on 19 Nov 2026. Each caption names what differs in that
+ * render, so a reader comparing them sees the point at a glance. The gallery button under the hero takes readers
  * to real work. Renders live under /images/journal/, never in a service folder,
  * so they cannot reach a gallery.
  *
@@ -48,8 +48,7 @@ interface Props {
 const { src, alt, width, height, caption, short, description, pair = false } = Astro.props;
 /* No "AI-generated example" on the picture itself (a founder, 19 Nov 2026:
    "remove the AI-GENERATED EXAMPLE from all the photos"). A caption that is
-   only that label shows the short name instead; the page's one line above the
-   first image still says the images are AI-generated examples. */
+   only that label shows the short name instead. */
 const labelOnly = /^AI-generated example$/i.test(caption);
 const label = short ?? (labelOnly ? undefined : caption);
 const shown = labelOnly ? short : caption;

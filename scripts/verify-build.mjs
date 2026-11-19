@@ -155,10 +155,19 @@ const CASE_STUDY_TITLE = /^[A-Z][A-Za-z' -]+ in [A-Z][A-Za-z' -]+$/;
  * TURNED ROUND on 19 Nov 2026 (a founder: "remove the AI-GENERATED EXAMPLE
  * from all the photos"). The label now must NOT appear on the picture: not in
  * its figure's visible caption, and not in the data-caption the lightbox shows
- * when it is enlarged. The page-level notice stays required, so a page with AI
- * images still says so in a visible line above the first one.
+ * when it is enlarged.
+ *
+ * And the same day, the page-level notice went too (a founder: "remove all ai
+ * examples descriptions pls, from everywhere"): a page with AI images now
+ * fails if its visible text says "AI-generated example" anywhere.
+ *
+ * In their place, also 19 Nov 2026 (a founder: "yes add it to 67"): a page
+ * with AI images must carry the illustrations line (IllustrationNote.astro),
+ * "... are illustrations, made to help explain the design options", after its
+ * last AI image, so it sits near the end as Kas asked on 17 Nov.
  */
 const AI_LABEL = /AI-generated example/i;
+const ILLUSTRATION_NOTE = /are illustrations, made to help explain the design options/i;
 function verifyAiLabels(html, page, errors) {
   const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']*-ai-[^"']*)["'][^>]*>/gi)];
   if (!imgs.length) return;
@@ -173,9 +182,12 @@ function verifyAiLabels(html, page, errors) {
       errors.push(`${page}  AI image ${m[1]} carries a visible "AI-generated example" label (off the pictures since 19 Nov 2026)`);
     }
   }
-  const before = visibleText(html.slice(0, imgs[0].index));
-  if (!AI_LABEL.test(before)) {
-    errors.push(`${page}  no visible line saying the images are AI-generated examples above the first AI image`);
+  if (AI_LABEL.test(visibleText(html))) {
+    errors.push(`${page}  says "AI-generated example" in its visible text (removed from every page on 19 Nov 2026)`);
+  }
+  const last = imgs[imgs.length - 1];
+  if (!ILLUSTRATION_NOTE.test(visibleText(html.slice(last.index + last[0].length)))) {
+    errors.push(`${page}  has AI images but no illustrations line after the last of them (IllustrationNote.astro)`);
   }
 }
 

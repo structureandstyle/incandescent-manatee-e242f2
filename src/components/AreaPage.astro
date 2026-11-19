@@ -38,10 +38,10 @@
  * eaves wardrobes, bookcases and shelving), passed as `topic` instead of
  * `area`. A topic page has no place in its schema. Its plates may be
  * AI-generated examples where no photograph of the work exists. Since 19 Nov
- * 2026 (a founder: "remove the AI-GENERATED EXAMPLE from all the photos") such
- * a plate is captioned with what it shows, like a photograph, and a note above
- * the plates names which pictures are AI-generated examples, so the verify
- * rule on AI images (scripts/verify-build.mjs, verifyAiLabels) holds.
+ * 2026 (a founder: "remove the AI-GENERATED EXAMPLE from all the photos", then
+ * "remove all ai examples descriptions pls, from everywhere") such a plate is
+ * captioned with what it shows, like a photograph, and the page carries no AI
+ * notice.
  */
 import Base from "../layouts/Base.astro";
 import FormProof from "./FormProof.astro";
@@ -62,13 +62,18 @@ import { areaPath, type Area } from "../data/areas";
 import { topicPath, type TopicPage } from "../data/topic-pages";
 import { photoAlt } from "../data/work-gallery";
 import selection from "../../public/images/_selection.json";
+import IllustrationNote from "./IllustrationNote.astro";
 
 interface Props {
   area?: Area;
   topic?: TopicPage;
+  /** The page's own content (its slot) shows illustrations, as Hampstead's
+      design section does, so the illustrations line goes at the end even when
+      every plate is a photograph. */
+  illustrations?: boolean;
 }
 
-const { area, topic } = Astro.props;
+const { area, topic, illustrations = false } = Astro.props;
 const page = (area ?? topic)!;
 if (!page) throw new Error("AreaPage needs an area or a topic.");
 const path = area ? areaPath(area.slug) : topicPath(topic!.slug);
@@ -89,14 +94,11 @@ const plates = page.plates.map((p) => {
   if (!found) throw new Error(`${page.slug} names ${p.file}, which is not in public/images/_selection.json.`);
   return { ...p, w: found.w, h: found.h, alt: ("alt" in p && p.alt) || photoAlt(p.file, p.type), ai: false };
 });
-const anyAi = plates.some((p) => p.ai);
-const allAi = plates.length > 0 && plates.every((p) => p.ai);
-/* With photographs and AI images side by side and no label on the pictures
-   (19 Nov 2026), the note names the AI ones by their captions:
-   "The "Grey Shaker-style wardrobes" picture below is an AI-generated example". */
-const aiNames = plates.filter((p) => p.ai).map((p) => `"${p.type}"`);
-const aiList = aiNames.length > 1 ? `${aiNames.slice(0, -1).join(", ")} and ${aiNames.at(-1)}` : aiNames[0] ?? "";
-const aiOne = aiNames.length === 1;
+/* The illustrations line (19 Nov 2026): "The images on this page..." when
+   every plate is an illustration and the body adds none of its own photos,
+   "Some images..." when illustrations sit beside his photographs. */
+const allIllustrations = plates.length > 0 && plates.every((p) => p.ai) && !illustrations;
+const anyIllustrations = illustrations || plates.some((p) => p.ai);
 
 /* Each photograph's own description from work-gallery.ts (6 Nov 2026), the
    same words it has on /work/. No place in it: none is a recorded job in the
@@ -158,24 +160,9 @@ const breadcrumb = {
         {page.h1}
       </Display>
 
-      {/* Above the plates only when one of them is an AI-generated example.
-          Mixed with photographs: Kaspar's note from the Hampstead page (10 Nov
-          2026), its opening changed on 19 Nov 2026 to name the AI pictures,
-          since they no longer carry a label (a founder: "remove the
-          AI-GENERATED EXAMPLE from all the photos"); the rest word for word.
-          All AI: the journal guides' notice (src/pages/journal/[...slug].astro),
-          changing only "guide" to "page", and a way to the real work, since
-          "all other photographs" would point at none. */}
-      {anyAi && !allAi && (
-        <p style="max-width:var(--measure);margin:0 0 var(--space-10);color:var(--text-quiet)">
-          The {aiList} {aiOne ? "picture below is an AI-generated example" : "pictures below are AI-generated examples"}, provided for design inspiration and to illustrate different fitted furniture options. All other project photographs on this page show <Link href="/work/">our completed work</Link>.
-        </p>
-      )}
-      {allAi && (
-        <p style="max-width:var(--measure);margin:0 0 var(--space-10);color:var(--text-quiet)">
-          The images on this page are AI-generated examples, shown for inspiration and to help you compare the options. Photographs of <Link href="/work/">our completed work</Link> are in our gallery.
-        </p>
-      )}
+      {/* No AI notice above the plates since 19 Nov 2026 (a founder: "remove
+          all ai examples descriptions pls, from everywhere"). Until then a
+          note here said which plates were AI-generated examples. */}
 
       {/* The plates, then the lede. data-plate-set lets the lightbox step
           through the three as one set.
@@ -229,6 +216,13 @@ const breadcrumb = {
     </Wrap>
 
     <slot />
+
+    {/* Near the end, after the page's own content (a founder, 19 Nov 2026). */}
+    {anyIllustrations && (
+      <Wrap style="padding-bottom:var(--section-y)">
+        <IllustrationNote all={allIllustrations} />
+      </Wrap>
+    )}
 
     <section id="enquire">
       <EnquireBand heading={BAND.heading} chamfer>
