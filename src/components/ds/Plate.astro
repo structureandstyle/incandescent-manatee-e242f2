@@ -201,6 +201,7 @@ const srcset =
         loading={eager ? "eager" : "lazy"}
         fetchpriority={eager ? "high" : undefined}
         decoding={eager ? "sync" : "async"}
+        data-ai={ai ? "" : undefined}
         style="width:100%;height:100%;object-fit:cover"
       />
     ) : photo ? (

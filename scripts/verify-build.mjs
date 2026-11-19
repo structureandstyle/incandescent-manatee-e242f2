@@ -165,11 +165,16 @@ const CASE_STUDY_TITLE = /^[A-Z][A-Za-z' -]+ in [A-Z][A-Za-z' -]+$/;
  * with AI images must carry the illustrations line (IllustrationNote.astro),
  * "... are illustrations, made to help explain the design options", after its
  * last AI image, so it sits near the end as Kas asked on 17 Nov.
+ *
+ * An AI image is found by Plate's data-ai marker as well as by "-ai-" in its
+ * file name (19 Nov 2026): the alcove guide's new renders (site PR #73) are
+ * named alcove-guide-*.webp, so a file-name test alone no longer saw them.
  */
 const AI_LABEL = /AI-generated example/i;
 const ILLUSTRATION_NOTE = /are illustrations, made to help explain the design options/i;
+const isAiImage = (tag, src) => /-ai-/.test(src) || /\sdata-ai(?=[\s=>\/])/i.test(tag);
 function verifyAiLabels(html, page, errors) {
-  const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']*-ai-[^"']*)["'][^>]*>/gi)];
+  const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']+)["'][^>]*>/gi)].filter((m) => isAiImage(m[0], m[1]));
   if (!imgs.length) return;
   for (const m of imgs) {
     if (/\sdata-caption=["']AI-generated example/i.test(m[0])) {
