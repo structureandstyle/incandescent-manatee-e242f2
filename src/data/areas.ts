@@ -251,7 +251,11 @@ export const AREAS: Area[] = [
            (Figma node 41:8). Then, the same day, Denis: "remove the plants from inside the alcove units":
            made again with nothing but books, bowls and jugs on the shelves (node 43:9, picked over 43:8 by
            an independent check against the render protocol: 43:8 stopped short of the cornice and had slab
-           base doors). No retouch. Original PNGs in S&S ops deliverables/ai-renders-2026-11-14/. */
+           base doors). Then Denis asked for handles on the glazed doors and for the bowl on the coffee
+           table to go: made again (node 45:11: a knob on every door, no coffee table; picked over 45:10,
+           which had an unexplained strip on the left wall). The four glazed-door knobs came out lumpy,
+           so each was replaced with a copy of the base knob below it. Original PNGs in S&S ops
+           deliverables/ai-renders-2026-11-14/. */
         file: "/images/journal/islington-ai-glazed-alcove-units.webp",
         type: "Glazed alcove cupboards",
         ai: true,
