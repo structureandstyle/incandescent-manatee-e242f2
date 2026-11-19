@@ -7,6 +7,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { blockedPaths } from './src/data/page-gates';
 import { SERVICES } from './src/data/site';
 import { SERVICE_COPY } from './src/data/service-copy';
+import { DESIGN_YOUR_OWN_LIVE } from './src/data/design-your-own-gate';
 
 // THE PRODUCTION BUILD ON CLOUDFLARE, 15 Nov 2026 (docs/cloudflare-move.md).
 // netlify.toml gave Netlify's production builds two settings. Cloudflare
@@ -61,6 +62,11 @@ for (const file of articles) {
   else blocked.add(`/journal/${file.replace(/\.mdx?$/, '')}/`);
 }
 if (liveArticles === 0) blocked.add('/journal/');
+
+// The design-your-own page stays out of the sitemap until a founder approves
+// its launch. One switch, read here and by the page's own robots tag
+// (src/data/design-your-own-gate.ts), so the two cannot disagree.
+if (!DESIGN_YOUR_OWN_LIVE) blocked.add('/design-your-own/');
 
 // The thank-you page exists only as the landing after a form submission and
 // carries the enquiry_form event. It is noindexed at the template and has no
