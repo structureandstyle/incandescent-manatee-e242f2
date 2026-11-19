@@ -164,7 +164,9 @@ const components = {
     <Content components={components} />
     {/* The illustrations line at the end of the article (a founder, 19 Nov 2026), in place of the
         "AI-generated examples" line that sat above the hero until that day. */}
-    {d.hero.ai && <IllustrationNote all scope="guide" style="margin-top:var(--space-12)" />}
+    {/* Only top and bottom margins inline, so `.article > *` still centres it in the 680px
+        column; on 19 Nov an inline margin:0 left it at the page's left edge. */}
+    {d.hero.ai && <IllustrationNote all scope="guide" style="margin-top:var(--space-12);max-width:680px" />}
   </div>
 
   <EnquireBand heading={d.band?.heading ?? "If you have a room in mind, start here."} chamfer>
