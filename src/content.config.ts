@@ -26,10 +26,14 @@ import { AUTHORS } from "./data/site";
  * the template draws itself: byline, hero, At a glance, the jump list and the
  * closing band.
  *
- * Dates: only `published` is ever shown on the page (Arthur, 13 Oct: published
- * date only, no visible "Updated" line, on every article). `updated` exists for
- * the BlogPosting's dateModified, which the verify step requires, and defaults
- * to `published`.
+ * Dates: `published` is always shown. Since 19 Nov 2026 (Arthur, on the search
+ * preview: "include the publish date, so when we update them, google reads
+ * it"), a set `updated` later than `published` also shows as "Updated <date>"
+ * in the byline, and is the BlogPosting's dateModified, so the page and the
+ * schema agree. This replaces his 13 Oct rule (published date only, no visible
+ * "Updated" line). Set `updated` only when the article's content really
+ * changes, never for a title, typo or link: Google warns against freshening a
+ * date without a real change. Absent, dateModified defaults to `published`.
  */
 const figure = z.object({
   /** Root-relative path under /images/, as Plate expects. */
@@ -79,7 +83,9 @@ const journal = defineCollection({
     /** The keyword this page is written to win. From the target sheet. */
     primary: z.string(),
     published: z.coerce.date(),
-    /** Schema only (dateModified). Never shown on the page. */
+    /** The date the content last really changed: shown as "Updated <date>"
+        in the byline when later than `published`, and the schema's
+        dateModified (19 Nov 2026; see the note at the top). */
     updated: z.coerce.date().optional(),
     author: z.string().refine((a) => a in AUTHORS, { message: "unknown author; add them to AUTHORS in src/data/site.ts" }).default("kaspar"),
     /** Show the author's name and role in the byline. Off leaves the date and
