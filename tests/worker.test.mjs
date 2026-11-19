@@ -30,6 +30,23 @@ test("www goes to the apex, and the retired addresses forward", () => {
   assert.equal(redirectFor("https://structureandstyle.co.uk/"), null);
 });
 
+test("the renamed pictures: an old ...-ai-... address forwards to the file without it (19 Nov 2026)", () => {
+  assert.equal(
+    redirectFor("https://structureandstyle.co.uk/images/journal/alcove-ai-below-cornice.webp"),
+    "https://structureandstyle.co.uk/images/journal/alcove-below-cornice.webp",
+  );
+  assert.equal(
+    redirectFor("https://structureandstyle.co.uk/images/journal/built-in-wardrobes-ai-panelled-wall-640w.webp"),
+    "https://structureandstyle.co.uk/images/journal/built-in-wardrobes-panelled-wall-640w.webp",
+  );
+  assert.equal(
+    redirectFor("http://structureandstyle.co.uk/images/journal/staircase-ai-oak-treads.webp"),
+    "https://structureandstyle.co.uk/images/journal/staircase-oak-treads.webp",
+  );
+  assert.equal(redirectFor("https://structureandstyle.co.uk/images/journal/alcove-guide-shaker.webp"), null);
+  assert.equal(redirectFor("https://structureandstyle.co.uk/images/journal/maintained-floor.webp"), null);
+});
+
 test("http goes to https in one hop, as Netlify forced it; wrangler dev on this machine is left alone", () => {
   assert.equal(redirectFor("http://structureandstyle.co.uk/contact/?a=1"), "https://structureandstyle.co.uk/contact/?a=1");
   assert.equal(redirectFor("http://www.structureandstyle.co.uk/contact/"), "https://structureandstyle.co.uk/contact/");

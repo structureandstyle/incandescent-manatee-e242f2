@@ -56,11 +56,13 @@ interface Props {
    */
   label?: string;
   /**
-   * An AI-generated example, not a photograph of our work. Marked data-ai for
-   * the build check. Since 19 Nov 2026 (a founder: "remove the AI-GENERATED
-   * EXAMPLE from all the photos", then "remove all ai examples descriptions
-   * pls, from everywhere") neither the picture nor the page says so
-   * (scripts/verify-build.mjs, verifyAiLabels).
+   * An illustration (a render), not a photograph of our work. Marked
+   * data-illustration for the build check, never "ai" in any form (a founder,
+   * 19 Nov 2026: "please do not add any AI generated stuff anywhere even in
+   * alt text"; the marker was data-ai until then). Neither the picture nor the
+   * page says it is generated; the page carries the illustrations line
+   * (IllustrationNote.astro), and scripts/verify-build.mjs (verifyAiLabels)
+   * checks both.
    */
   ai?: boolean;
   /** What is still needed, shown in the empty frame. */
@@ -201,6 +203,7 @@ const srcset =
         loading={eager ? "eager" : "lazy"}
         fetchpriority={eager ? "high" : undefined}
         decoding={eager ? "sync" : "async"}
+        data-illustration={ai ? "" : undefined}
         style="width:100%;height:100%;object-fit:cover"
       />
     ) : photo ? (
@@ -216,7 +219,7 @@ const srcset =
         decoding={eager ? "sync" : "async"}
         data-plate-photo
         data-caption={lightboxCaption}
-        data-ai={ai ? "" : undefined}
+        data-illustration={ai ? "" : undefined}
         tabindex="0"
         role="button"
         aria-label={`Enlarge: ${alt}`}

@@ -64,7 +64,7 @@ export const TOPIC_PAGES: TopicPage[] = [
        approves each on the review link before anything is published. */
     plates: [
       {
-        file: "/images/journal/staircase-ai-victorian-balustrade.webp",
+        file: "/images/journal/staircase-victorian-balustrade.webp",
         type: "Victorian balustrade",
         ai: true,
         width: 1536,
@@ -72,7 +72,7 @@ export const TOPIC_PAGES: TopicPage[] = [
         alt: "The hall of a Victorian terraced house with a straight staircase along the wall: a polished hardwood handrail, white painted spindles and a white turned newel post with a timber cap, a sisal runner held by brass stair rods, and a black and white tiled hall floor.",
       },
       {
-        file: "/images/journal/staircase-ai-oak-treads.webp",
+        file: "/images/journal/staircase-oak-treads.webp",
         type: "Oak treads and new balustrade",
         ai: true,
         width: 1536,
@@ -80,7 +80,7 @@ export const TOPIC_PAGES: TopicPage[] = [
         alt: "A straight staircase with natural oak treads over white painted risers, a square oak handrail, slim white square spindles and a white newel post with an oak cap, beside a sage green wall above an oak herringbone hall floor.",
       },
       {
-        file: "/images/journal/staircase-ai-under-stair-storage.webp",
+        file: "/images/journal/staircase-under-stair-storage.webp",
         type: "Under-stair storage",
         ai: true,
         width: 1536,
@@ -105,7 +105,7 @@ export const TOPIC_PAGES: TopicPage[] = [
     plates: [
       { file: "/images/fitted-wardrobes/fitted-wardrobes-10.webp", type: "Fitted wardrobes" },
       {
-        file: "/images/journal/built-in-wardrobes-ai-loft-oak-niches.webp",
+        file: "/images/journal/built-in-wardrobes-loft-oak-niches.webp",
         type: "Loft wardrobes with oak niches",
         ai: true,
         width: 1672,
@@ -114,7 +114,7 @@ export const TOPIC_PAGES: TopicPage[] = [
         alt: "Fitted loft wardrobes arranged symmetrically around an oak window seat. Four flat ivory doors on each side follow the changing ceiling height, while open oak shelving fills the lowest space beneath the eaves. Bronze pull handles, slim infills along the ceiling slopes and recessed plinths complete the design. The open niches provide space for books, folded items and display.",
       },
       {
-        file: "/images/journal/loft-ai-eaves-drawers-sage.webp",
+        file: "/images/journal/loft-eaves-drawers-sage.webp",
         type: "Eaves cupboards and drawers",
         ai: true,
         width: 1536,
@@ -140,7 +140,7 @@ export const TOPIC_PAGES: TopicPage[] = [
     plates: [
       { file: "/images/alcove-units/alcove-units-09.webp", type: "Bookcases" },
       {
-        file: "/images/journal/alcove-ai-full-height-bookcases.webp",
+        file: "/images/journal/alcove-full-height-bookcases.webp",
         type: "Full-height bookcases",
         ai: true,
         width: 1536,
@@ -149,7 +149,7 @@ export const TOPIC_PAGES: TopicPage[] = [
         alt: "Floor-to-ceiling alcove bookcases on both sides of a traditional fireplace, with open shelves from floor to ceiling for books, artwork and decorative pieces, and warm integrated lighting creating an inviting atmosphere.",
       },
       {
-        file: "/images/journal/alcove-ai-floating-shelves.webp",
+        file: "/images/journal/alcove-floating-shelves.webp",
         type: "Floating shelves",
         ai: true,
         width: 1536,
