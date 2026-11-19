@@ -382,6 +382,42 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "after": "What stands behind the number: the cover on the work after the invoice is paid.",
     },
     sections: [
+      /* 19 Nov 2026, the CTR plan (ops research/ctr-2026-11-19): two sections
+         straight after the price tables (after: "cost"). Written by a separate
+         copy agent to protocol v1.4, checked adversarially and revised once;
+         every price is the table's own, the fitting facts are Kas's (answers.ts
+         q30, q32) and the table note. B's heading is a People also ask question
+         on 7 of the 10 cost results pages checked live from NW3 on 19 Nov. B's
+         days line repeats "How long does it take?" further down on purpose, so
+         B answers the installation question on its own. */
+      {
+        meta: "By size",
+        heading: "What a 3-door fitted wardrobe costs",
+        after: "cost",
+        body: [
+          "Our guide price for a 3-door fitted wardrobe up to 1.8m wide starts from £3,200 in melamine board. The same size starts from £3,500 in hand-painted MDF, £4,300 in professionally sprayed MDF and £5,000 in oak veneer. From those starting points, the price moves with size, finish, the internal layout and lighting.",
+          "One size up, a 4-door wardrobe up to 2.4m wide starts from £4,000 in melamine board. Each figure is a guide starting price for a straightforward internal layout, standard shelving and hanging space, and soft-close hinges. We price drawers, integrated lighting, mirrors and pull-out accessories separately to that specification.",
+        ],
+      },
+      /* B rewritten 19 Nov 2026 on Arthur's preview comment: a price near
+         £3,000 beside "2 to 3 days on site" reads as a lot for three days, so
+         B now shows what the price pays for, first visit to guarantee, and the
+         commission's lead time. Same copy agent process. His wish to say the
+         wardrobes are pre-cut and assembled in a workshop is left out: the
+         recorded facts are no workshop and no manufacturing (protocol section
+         10), and Kas asked that the cutting arrangement is never explained
+         (Q22). The boards sentence is Arthur's approved 11 Oct wording, put on
+         this page at his comment (protocol section 16, 19 Nov 2026 row). */
+      {
+        meta: "Installation",
+        heading: "How much does it cost to install built-in wardrobes?",
+        after: "cost",
+        body: [
+          "Every guide price in the fitted wardrobe table includes delivery and installation. Before that come a visit, usually 45 to 60 minutes, and a measured survey of about an hour. Design, where needed, gets a week, with drawings at the end, up to two revision rounds and no separate fee.",
+          "We specify the materials, finishes and internal layout before anything is ordered. The boards are cut to size for your room, then the wardrobe is put together and fitted in your home. Every edge is cut to follow the line of the room, and the area is protected before work starts and tidied each day.",
+          "Afterwards, we guarantee installation and workmanship for 2 years, and the joinery's structural integrity for 10 years. A commission's lead time is typically 4 to 8 weeks, depending on size and complexity. A straightforward wardrobe wall typically takes 2 to 3 days on site, closer to a week if built up in the room or hand-painted.",
+        ],
+      },
       {
         meta: "The price",
         heading: "What moves a fitted wardrobe up its range",
