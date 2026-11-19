@@ -38,7 +38,6 @@
  */
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -200,7 +199,7 @@ function figureTexture() {
   c.width = 256;
   c.height = 640;
   const g = c.getContext("2d");
-  g.fillStyle = "#221d18";
+  g.fillStyle = "#6f6a64"; // a mid warm grey: reads as a person against walls and doors alike
   const blob = (pts) => {
     g.beginPath();
     g.moveTo(pts[0][0], pts[0][1]);
@@ -228,6 +227,106 @@ function figureTexture() {
   return t;
 }
 
+/**
+ * The room the picture is lit by and reflects: a plain bedroom with one tall
+ * window on the left, towards the viewer, the side the sunlight in the
+ * picture comes from. Generated here, as three's RoomEnvironment is, so there
+ * is no picture file to download; but with one strong window instead of a
+ * studio's even light, so lacquer, chrome, brass and the mirror show a window
+ * and the light has a direction (research 2026-11-19-ss-3d-realism, fix 1).
+ */
+function windowRoom() {
+  const room = new THREE.Scene();
+  const box = new THREE.BoxGeometry();
+  box.deleteAttribute("uv");
+  const lit = (hex, k = 1, side = THREE.FrontSide) => new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(k), side });
+  const add = (m, [sx, sy, sz], [x, y, z]) => {
+    const o = new THREE.Mesh(box, m);
+    o.scale.set(sx, sy, sz);
+    o.position.set(x, y, z);
+    room.add(o);
+  };
+  add(lit(0xe7e2d8, 0.85, THREE.BackSide), [12, 6, 12], [0, 3, 0]); // walls and ceiling
+  add(lit(0x8a6a4a, 0.7), [11.8, 0.04, 11.8], [0, 0.02, 0]); // a wooden floor
+  // A bed, a chest of drawers and a chair: darker shapes for a reflection to show.
+  for (const [size, at] of [[[2.2, 0.6, 2], [2.4, 0.3, 3.2]], [[1, 0.9, 0.5], [-4.6, 0.45, -3]], [[0.6, 0.8, 1.6], [5, 0.4, -3.5]]]) {
+    add(lit(0x5a514a, 0.55), size, at);
+  }
+  add(lit(0xf3f6ff, 16), [0.04, 2.4, 2.2], [-5.96, 2.7, 2.4]); // the window: daylight, a touch cool
+  add(lit(0xf4f2ee, 0.9), [0.06, 2.4, 0.06], [-5.93, 2.7, 2.4]); // its glazing bars
+  add(lit(0xf4f2ee, 0.9), [0.06, 0.06, 2.2], [-5.93, 3.0, 2.4]);
+  add(lit(0xfff1dd, 4), [0.7, 0.03, 0.7], [0, 5.97, 0]); // a ceiling light
+  return room;
+}
+
+/** Faint vertical brush marks, used as a bump on hand-painted parts so they are not one flat colour. */
+function brushTexture() {
+  return canvasTexture(256, (g, n) => {
+    g.fillStyle = "#808080";
+    g.fillRect(0, 0, n, n);
+    const rnd = seeded(41);
+    for (let i = 0; i < 260; i++) {
+      const x = rnd() * n;
+      const v = rnd() > 0.5 ? 255 : 0;
+      g.strokeStyle = `rgba(${v},${v},${v},${0.04 + rnd() * 0.08})`;
+      g.lineWidth = 0.5 + rnd() * 1.5;
+      g.beginPath();
+      g.moveTo(x, 0);
+      g.lineTo(x + (rnd() - 0.5) * 3, n);
+      g.stroke();
+    }
+  }, { repeat: true, srgb: false });
+}
+
+/** A soft dark patch, laid on the floor under a unit so it stands on it rather than floats (fix 3). */
+function contactTexture() {
+  return canvasTexture(256, (g, n) => {
+    g.clearRect(0, 0, n, n);
+    g.filter = "blur(22px)";
+    g.fillStyle = "rgba(20,16,12,0.85)";
+    g.fillRect(n * 0.14, n * 0.14, n * 0.72, n * 0.72);
+    g.filter = "none";
+  });
+}
+
+/**
+ * Hanging clothes, made as a side view of the garment, thin, and hung edge-on
+ * from the rail, so each has shoulders sloping from the hanger and its own
+ * outline (fix 4). Unit size: 1 front to back (z), 1 tall (y, hanging down
+ * from the hanger at 0), 1 thick (x, along the rail).
+ */
+function garmentGeometry(kind) {
+  const outline = {
+    shirt: [[-0.12, 0], [-0.5, -0.1], [-0.48, -1], [0.48, -1], [0.5, -0.1], [0.12, 0]],
+    coat: [[-0.12, 0], [-0.52, -0.08], [-0.5, -1], [0.5, -1], [0.52, -0.08], [0.12, 0]],
+    dress: [[-0.08, 0], [-0.36, -0.07], [-0.28, -0.36], [-0.5, -1], [0.5, -1], [0.28, -0.36], [0.36, -0.07], [0.08, 0]],
+    trousers: [[-0.4, 0], [-0.42, -1], [0.42, -1], [0.4, 0]],
+  }[kind];
+  const s = new THREE.Shape();
+  s.moveTo(outline[0][0], outline[0][1]);
+  for (const [u, v] of outline.slice(1)) s.lineTo(u, v);
+  s.closePath();
+  // A deep, rounded bevel: cloth has no hard edges.
+  const g = new THREE.ExtrudeGeometry(s, { depth: 1, steps: 1, bevelEnabled: true, bevelThickness: 0.45, bevelSize: 0.02, bevelSegments: 3, curveSegments: 4 });
+  g.translate(0, 0, -0.5);
+  g.rotateY(Math.PI / 2);
+  g.computeVertexNormals();
+  return g;
+}
+
+/** A wooden hanger's shoulders: a thin chevron, the same way round as the garments. */
+function hangerGeometry() {
+  const s = new THREE.Shape();
+  const pts = [[-0.5, -0.12], [0, 0], [0.5, -0.12], [0.5, -0.17], [0, -0.05], [-0.5, -0.17]];
+  s.moveTo(pts[0][0], pts[0][1]);
+  for (const [u, v] of pts.slice(1)) s.lineTo(u, v);
+  s.closePath();
+  const g = new THREE.ExtrudeGeometry(s, { depth: 1, bevelEnabled: false });
+  g.translate(0, 0, -0.5);
+  g.rotateY(Math.PI / 2);
+  return g;
+}
+
 export function createView(canvas, { onLost, onRestored } = {}) {
   const small = Math.min(window.innerWidth, window.innerHeight) < 700;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
@@ -239,18 +338,25 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   // The neutral curve keeps a paint colour the colour it was picked as.
   renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.02;
+  renderer.toneMappingExposure = 1.15;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.VSMShadowMap;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xf0ebe0);
-  /** Drawn after the shading pass: the scale figure, which must not cast a shade of its own. */
+  /** Drawn after the shading pass: kept for anything that must sit on top of the picture. */
   const overlay = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
+  const roomScene = windowRoom();
+  const envTexture = pmrem.fromScene(roomScene, 0.02).texture;
+  roomScene.traverse((o) => { if (o.isMesh) o.material.dispose(); });
+  roomScene.children[0]?.geometry.dispose();
   scene.environment = envTexture;
-  scene.environmentIntensity = 0.72;
+  // Less light from the room than before and more from the window, so the
+  // picture has contrast and the inside of a carcass is darker than the room.
+  scene.environmentIntensity = 0.62;
+  /** The inside of a carcass sees less of the room: its own, dimmer share of it. */
+  const INSIDE_ENV = 0.42;
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 60);
   const controls = new OrbitControls(camera, canvas);
@@ -265,8 +371,8 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   controls.maxPolarAngle = 1.56;
   canvas.style.touchAction = "pan-y";
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xcfc6b4, 0.32));
-  const sun = new THREE.DirectionalLight(0xfff1dc, 2.3);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xcfc6b4, 0.16));
+  const sun = new THREE.DirectionalLight(0xfff1dc, 2.6);
   sun.castShadow = true;
   sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
   sun.shadow.radius = 5;
@@ -274,7 +380,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   sun.shadow.bias = -0.00025;
   sun.shadow.normalBias = 0.012;
   scene.add(sun, sun.target);
-  const fill = new THREE.DirectionalLight(0xe9eef5, 0.5);
+  const fill = new THREE.DirectionalLight(0xe9eef5, 0.3);
   scene.add(fill);
 
   /* ---- The fuller pipeline: shading in corners, a glow on the LEDs -------- */
@@ -309,7 +415,10 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   /* ---- Shared shapes, materials and textures ----------------------------- */
 
   const unitBox = new THREE.BoxGeometry(1, 1, 1);
-  const softBox = new RoundedBoxGeometry(1, 1, 1, 3, 0.16); // scaled per garment or folded layer
+  const softBox = new RoundedBoxGeometry(1, 1, 1, 2, 0.07); // a folded layer: soft edges, flat faces
+  const GARMENTS = ["shirt", "coat", "dress", "trousers"];
+  const garmentGeos = Object.fromEntries(GARMENTS.map((k) => [k, garmentGeometry(k)]));
+  const hangerGeo = hangerGeometry();
   const ball = new THREE.SphereGeometry(1, 24, 16);
   const rod = new THREE.CylinderGeometry(1, 1, 1, 18);
   const plane = new THREE.PlaneGeometry(1, 1);
@@ -339,6 +448,14 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   const foldMap = keep(foldTexture());
   const figureMap = keep(figureTexture());
   const shadeMap = keep(shadeTexture());
+  const brushMap = keep(brushTexture());
+  const contactMap = keep(contactTexture());
+  /** A material for the inside of a carcass: it takes the room's light at the inside's dimmer share. */
+  const inCarcass = (m) => {
+    m.envMap = envTexture;
+    m.envMapIntensity = INSIDE_ENV;
+    return m;
+  };
 
   const woodSources = new Map();
   const woodMats = new Map();
@@ -356,11 +473,19 @@ export function createView(canvas, { onLost, onRestored } = {}) {
    */
   const finishMaterial = (finish, colour, across = false, tint = 1) => {
     const c = COLOURS[finish][colour];
-    // Melamine a soft sheen, hand-painted matt, sprayed a satin lacquer, veneer lacquered.
-    const roughness = [0.5, 0.82, 0.34, 0.46][finish];
-    if (c.grain) return { wood: true, hex: c.hex, roughness, across, tint, key: `${finish}-${colour}` };
+    // Melamine a soft sheen; hand-painted matt with faint brush marks; sprayed a
+    // satin lacquer with a clear coat that shows the window; veneer lacquered.
+    const roughness = [0.5, 0.8, 0.42, 0.5][finish];
+    const clearcoat = [0, 0, 0.55, 0.32][finish];
+    if (c.grain) return { wood: true, hex: c.hex, roughness, clearcoat, across, tint, key: `${finish}-${colour}` };
     return mat(`finish-${finish}-${colour}-${tint}`, () => {
-      const m = new THREE.MeshStandardMaterial({ color: c.hex, roughness, metalness: 0 });
+      const m = clearcoat
+        ? new THREE.MeshPhysicalMaterial({ color: c.hex, roughness, metalness: 0, clearcoat, clearcoatRoughness: 0.18 })
+        : new THREE.MeshStandardMaterial({ color: c.hex, roughness, metalness: 0 });
+      if (finish === 1) {
+        m.bumpMap = brushMap;
+        m.bumpScale = 0.22;
+      }
       m.color.multiplyScalar(tint);
       return m;
     });
@@ -384,7 +509,9 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       t.repeat.set(a / GRAIN_W, l / GRAIN_L);
       if (m.across) { t.center.set(0.5, 0.5); t.rotation = Math.PI / 2; }
       t.needsUpdate = true;
-      const wood = new THREE.MeshStandardMaterial({ map: t, bumpMap: t, bumpScale: 0.3, roughness: m.roughness, metalness: 0 });
+      const wood = m.clearcoat
+        ? new THREE.MeshPhysicalMaterial({ map: t, bumpMap: t, bumpScale: 0.3, roughness: m.roughness, metalness: 0, clearcoat: m.clearcoat, clearcoatRoughness: 0.3 })
+        : new THREE.MeshStandardMaterial({ map: t, bumpMap: t, bumpScale: 0.3, roughness: m.roughness, metalness: 0 });
       wood.color.setScalar(m.tint);
       woodMats.set(key, wood);
     }
@@ -403,7 +530,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   let anim = 0;
   let fit = null;
   let lost = false;
-  const state = { design: null, options: { open: false, person: true }, bounds: null, lit: false };
+  const state = { design: null, options: { open: false, person: false }, bounds: null, lit: false };
 
   function turnFigure() {
     if (!figure) return;
@@ -452,23 +579,41 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     const finish = finishMaterial(s.finish, s.colour);
     const finishAcross = finishMaterial(s.finish, s.colour, true);
     const panel = finishMaterial(s.finish, s.colour, false, 0.93);
-    const carcass = flat("carcass", 0xece6da, 0.62);
-    const carcassEdge = flat("carcass-edge", 0xe2dbcd, 0.62);
-    const drawerFront = flat("drawer-front", 0xe6dfd1, 0.55);
-    const wall = flat("wall", 0xf3efe6, 0.96);
-    const trim = flat("trim", 0xf8f6f0, 0.55);
+    // The inside of a carcass takes a dimmer share of the room's light, so it
+    // is darker than the room and the LED strips read as the light (fix 1).
+    const carcass = inCarcass(flat("carcass", 0xece6da, 0.62));
+    const carcassEdge = inCarcass(flat("carcass-edge", 0xe2dbcd, 0.62));
+    const drawerFront = inCarcass(flat("drawer-front", 0xe6dfd1, 0.55));
+    const wall = flat("wall", 0xefece5, 0.95);
+    const trim = flat("trim", 0xf6f4ee, 0.5);
     const plinthMat = flat("plinth", 0x2a2622, 0.8);
-    const chrome = flat("chrome", 0xd8d8d6, 0.18, 1);
-    const brass = flat("brass", 0xb8935a, 0.3, 1);
-    const channel = flat("led-channel", 0xc9c9c6, 0.4, 0.9);
+    // Metals that reflect the room: polished chrome, soft brushed brass (fix 2).
+    const chrome = flat("chrome", 0xdcdcda, 0.1, 1);
+    const brass = flat("brass", 0xc09a5e, 0.26, 1);
+    const channel = flat("led-channel", 0xc9c9c6, 0.35, 0.9);
     const glow = mat("glow", () => new THREE.MeshStandardMaterial({ color: 0xfff4de, emissive: 0xffe2b0, emissiveIntensity: 4.2, roughness: 1 }));
-    const mirror = flat("mirror", 0xffffff, 0.03, 1);
+    const mirror = flat("mirror", 0xffffff, 0.02, 1);
     // Unlit, a shade under the walls: a lit ceiling facing away from the window goes grey.
     const ceiling = mat("ceiling", () => new THREE.MeshBasicMaterial({ color: 0xe6e1d7 }));
     const darkInside = flat("dark-inside", 0x2a2521, 1);
-    const floor = mat("floor", () => new THREE.MeshStandardMaterial({ map: floorMap, roughness: 0.58, metalness: 0 }));
-    const cloth = mat("cloth", () => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.94, bumpMap: foldMap, bumpScale: 1.6 }));
+    // A lacquered oak floor: a soft sheen of window light along the boards.
+    const floor = mat("floor", () => new THREE.MeshPhysicalMaterial({ map: floorMap, roughness: 0.55, metalness: 0, clearcoat: 0.3, clearcoatRoughness: 0.4 }));
+    const cloth = inCarcass(mat("cloth", () => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.94, bumpMap: foldMap, bumpScale: 1.6 })));
+    // Hanging clothes: the fold bump much fainter, or their narrow edges read as stripes.
+    const garmentCloth = inCarcass(mat("garment-cloth", () => new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95, bumpMap: foldMap, bumpScale: 0.35 })));
     const paper = flat("paper", 0xffffff, 0.9);
+    const hangerWood = inCarcass(flat("hanger", 0x6b4a32, 0.55));
+    const shadowPatch = mat("contact", () => new THREE.MeshBasicMaterial({ map: contactMap, transparent: true, depthWrite: false, opacity: 0.6, polygonOffset: true, polygonOffsetFactor: -2 }));
+    /** A soft shadow on the floor under a unit, from its footprint (fix 3). */
+    const contact = (x0, x1, z0, z1) => {
+      const m = new THREE.Mesh(plane, shadowPatch);
+      // The patch's soft edge runs past the footprint by about a seventh of the texture each side.
+      m.scale.set((x1 - x0) / 0.72, (z1 - z0) / 0.72, 1);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set((x0 + x1) / 2, 0.002, (z0 + z1) / 2);
+      m.renderOrder = 1;
+      g.add(m);
+    };
 
     /** A part with eased edges, from its lower-left-back corner and its size. */
     const piece = (m, x0, y0, z0, w, h, d, { r = 0.002, cast = true, receive = true, parent = g } = {}) => {
@@ -515,6 +660,10 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     const hooks = [];
     const hards = [];
     const soft = (cx, cy, cz, w, h, d, color, ry = 0) => softs.push([cx, cy, cz, w, h, d, color, ry]);
+    // Hanging clothes by kind, each kind one instanced shape, and the hangers they hang on.
+    const garments = Object.fromEntries(GARMENTS.map((k) => [k, []]));
+    const hangers = [];
+    const wear = (kind, x, top, z, thick, len, depth, color, ry) => garments[kind].push([x, top, z, thick, len, depth, color, ry]);
     const hard = (x0, y0, z0, w, h, d, color, rz = 0) => hards.push([x0 + w / 2, y0 + h / 2, z0 + d / 2, w, h, d, color, rz]);
 
     /** A handle on a door or drawer, in the door's own space when a parent is given. */
@@ -571,7 +720,8 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       block(channel, x0, y - 0.006, z - 0.009, x1 - x0, 0.006, 0.018, { cast: false, receive: false });
       block(glow, x0 + 0.004, y - 0.0085, z - 0.006, x1 - x0 - 0.008, 0.003, 0.012, { cast: false, receive: false });
       if (light && lights.length < 6) {
-        const p = new THREE.PointLight(0xffdcae, 0.85, reach, 1.6);
+        // Brighter than before: with the inside darker, these are what light it.
+        const p = new THREE.PointLight(0xffdcae, 2.0, reach, 1.6);
         p.position.set((x0 + x1) / 2, y - 0.06, z + 0.02);
         g.add(p);
         lights.push(p);
@@ -590,10 +740,14 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         const len = Math.max(0.3, length * (0.62 + rnd() * 0.38));
         const depth = cd * (0.86 + rnd() * 0.14);
         const colour = CLOTH[Math.floor(rnd() * CLOTH.length)];
-        soft(x + thick / 2, yRail - 0.055 - len / 2, cz + (rnd() - 0.5) * 0.02, thick, len, depth, colour, (rnd() - 0.5) * 0.16);
-        hooks.push([x + thick / 2, yRail - 0.02, cz, 0.0028, 0.07]);
-        // The hanger's shoulders, a dark line across the top of each garment.
-        hard(x + thick / 2 - 0.004, yRail - 0.062, cz - depth / 2, 0.008, 0.012, depth, 0x3a2e24);
+        // A long rail carries coats and dresses among the shirts; a short one shirts and trousers.
+        const roll = rnd();
+        const kind = length > 1.1 ? (roll < 0.3 ? "coat" : roll < 0.55 ? "dress" : "shirt") : (roll < 0.35 ? "trousers" : "shirt");
+        const top = yRail - 0.038;
+        wear(kind, x + thick / 2, top, cz + (rnd() - 0.5) * 0.02, thick, kind === "trousers" ? len * 0.8 : len,
+          kind === "dress" ? depth * 0.92 : depth, colour, (rnd() - 0.5) * 0.12);
+        hooks.push([x + thick / 2, yRail - 0.02, cz, 0.0028, 0.05]);
+        hangers.push([x + thick / 2, top + 0.006, cz, 0.012, 0.24, depth * 0.94]);
         x += thick + 0.006 + rnd() * 0.012;
       }
     };
@@ -610,8 +764,8 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         if (roll < 0.16) continue;
         if (roll > 0.84 && room > 0.2) {
           const bh = Math.min(room - 0.04, 0.16 + rnd() * 0.06);
-          piece(flat("box", 0xd8ccb6, 0.9), cx - 0.14, y, zf - 0.03 - deep, 0.28, bh, deep, { r: 0.006 });
-          block(flat("box-lid", 0xcbbda3, 0.9), cx - 0.145, y + bh - 0.03, zf - 0.035 - deep, 0.29, 0.03, deep + 0.01, { cast: false });
+          piece(inCarcass(flat("box", 0xd8ccb6, 0.9)), cx - 0.14, y, zf - 0.03 - deep, 0.28, bh, deep, { r: 0.006 });
+          block(inCarcass(flat("box-lid", 0xcbbda3, 0.9)), cx - 0.145, y + bh - 0.03, zf - 0.035 - deep, 0.29, 0.03, deep + 0.01, { cast: false });
           block(brass, cx - 0.03, y + bh * 0.4, zf - 0.03, 0.06, 0.02, 0.002, { cast: false, receive: false });
           continue;
         }
@@ -661,6 +815,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       if (wallR) piece(finish, x1 - WALL_FILL, 0, d - DOOR_T, WALL_FILL, h, DOOR_T); else piece(finish, x1 - T, 0, 0, T, h, d);
       piece(finishAcross, x0 + mL, h - TOP_FILL, d - DOOR_T, iw, TOP_FILL, DOOR_T);
       block(plinthMat, x0 + mL, 0, d - 0.07, iw, PLINTH, 0.02);
+      contact(x0, x1, 0, d);
 
       // The carcass: back, top, bottom and a board between sections.
       const cd = d - DOOR_T - 0.004; // how deep the carcass runs
@@ -853,6 +1008,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         const f = 0.02;
         const topT = 0.03;
         block(plinthMat, ax, 0, baseD - 0.07, aw, PLINTH, 0.02);
+        contact(ax, bx, 0, baseD);
         block(carcass, ax, PLINTH, 0.003, aw, base - PLINTH - topT, 0.006, { cast: false });
         block(carcass, ax + f, PLINTH, 0.006, aw - 2 * f, T, baseD - DOOR_T - 0.012);
         piece(finish, ax, PLINTH, 0.006, f, base - PLINTH - topT, baseD - 0.006);
@@ -944,6 +1100,32 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       });
       g.add(im);
     }
+    // Hanging clothes, one instanced shape per kind, then the hangers (fix 4).
+    const m4g = new THREE.Matrix4(), qg = new THREE.Quaternion(), cg = new THREE.Color(), upg = new THREE.Vector3(0, 1, 0);
+    for (const kind of GARMENTS) {
+      const list = garments[kind];
+      if (!list.length) continue;
+      const im = new THREE.InstancedMesh(garmentGeos[kind], garmentCloth, list.length);
+      list.forEach(([x, top, z, thick, len, depth, color, ry], i) => {
+        qg.setFromAxisAngle(upg, ry);
+        m4g.compose(new THREE.Vector3(x, top, z), qg, new THREE.Vector3(thick, len, depth));
+        im.setMatrixAt(i, m4g);
+        im.setColorAt(i, cg.set(color));
+      });
+      im.castShadow = true;
+      im.receiveShadow = true;
+      g.add(im);
+    }
+    if (hangers.length) {
+      const im = new THREE.InstancedMesh(hangerGeo, hangerWood, hangers.length);
+      qg.identity();
+      hangers.forEach(([x, top, z, thick, tall, depth], i) => {
+        m4g.compose(new THREE.Vector3(x, top, z), qg, new THREE.Vector3(thick, tall, depth));
+        im.setMatrixAt(i, m4g);
+      });
+      im.castShadow = true;
+      g.add(im);
+    }
     if (hards.length) {
       const im = new THREE.InstancedMesh(unitBox, paper, hards.length);
       const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), c = new THREE.Color(), fwd = new THREE.Vector3(0, 0, 1);
@@ -960,14 +1142,16 @@ export function createView(canvas, { onLost, onRestored } = {}) {
 
     let fig = null;
     if (person) {
-      // About 1.72m tall, always turned to face the viewer, with a soft patch of shade at the feet.
+      // About 1.72m tall, always turned to face the viewer, with a soft patch of shade at the
+      // feet. Solid, the way an architect's scale figure is, and hidden by whatever stands in
+      // front of it: a see-through figure laid over the doors broke the photographic look (fix 5).
       fig = new THREE.Group();
       fig.position.set(personAt[0], 0, personAt[1]);
-      const body = new THREE.Mesh(plane, mat("figure", () => new THREE.MeshBasicMaterial({ map: figureMap, transparent: true, opacity: 0.44, depthTest: false, depthWrite: false })));
+      const body = new THREE.Mesh(plane, mat("figure", () => new THREE.MeshBasicMaterial({ map: figureMap, transparent: true, alphaTest: 0.5, side: THREE.DoubleSide })));
       body.scale.set(0.688, 1.72, 1);
       body.position.y = 0.86;
       body.renderOrder = 1;
-      const underfoot = new THREE.Mesh(plane, mat("figure-shade", () => new THREE.MeshBasicMaterial({ map: shadeMap, transparent: true, opacity: 0.5, depthTest: false, depthWrite: false })));
+      const underfoot = new THREE.Mesh(plane, mat("figure-shade", () => new THREE.MeshBasicMaterial({ map: shadeMap, transparent: true, opacity: 0.5, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 })));
       underfoot.scale.set(0.62, 0.3, 1);
       underfoot.rotation.x = -Math.PI / 2;
       underfoot.position.y = 0.002;
@@ -1081,12 +1265,12 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       group.traverse((o) => { if (o.isInstancedMesh) o.dispose(); });
       scene.remove(group);
     }
-    if (figure) overlay.remove(figure);
+    if (figure) scene.remove(figure);
     group = built.g;
     figure = built.figure;
     doors = built.doors;
     scene.add(group);
-    if (figure) overlay.add(figure);
+    if (figure) scene.add(figure);
     for (const [key, geo] of geos) if (!used.has(key)) { geo.dispose(); geos.delete(key); }
     for (const [key, wood] of woodMats) if (!usedWood.has(key)) { wood.map?.dispose(); wood.dispose(); woodMats.delete(key); }
     state.lit = built.lit;
@@ -1164,7 +1348,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     for (const wood of woodMats.values()) { wood.map?.dispose(); wood.dispose(); }
     for (const t of textures) t.dispose();
     for (const geo of geos.values()) geo.dispose();
-    for (const geo of [unitBox, softBox, ball, rod, plane]) geo.dispose();
+    for (const geo of [unitBox, softBox, ball, rod, plane, hangerGeo, ...Object.values(garmentGeos)]) geo.dispose();
     aoPass?.dispose();
     bloomPass?.dispose();
     composer?.dispose();

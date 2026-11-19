@@ -72,7 +72,8 @@ export function initBuilder(root) {
   const kept = { wardrobe: normalise(DEFAULTS.wardrobe), alcove: normalise(DEFAULTS.alcove) };
   kept[design.unit] = design;
   let open = false;
-  let person = true;
+  // Off to start: the picture opens as a photograph would, and the tick shows the person for scale.
+  let person = false;
   let mode = "drawing";
   let view = null;
   let loading3d = null;
