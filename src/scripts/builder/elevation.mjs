@@ -60,7 +60,9 @@ export function elevationSvg(design, { open = false } = {}) {
   const wallHatch = `stroke="${INK}" stroke-width="8"`;
   let body = "";
   let W, H;
-  const size = 62; // measurement lettering, in drawing units
+  // Measurement lettering, in drawing units. It grows with a wide design, so the
+  // figures stay readable when a long run is shrunk to fit the picture.
+  const letter = () => Math.round(Math.min(96, Math.max(62, W * 0.017)));
 
   if (s.unit === "wardrobe") {
     W = s.w; H = s.h;
@@ -119,8 +121,8 @@ export function elevationSvg(design, { open = false } = {}) {
         x += sw;
       });
     }
-    body += measure(0, H + 150, W, H + 150, `${s.w} mm`, size);
-    body += measure(-150, 0, -150, H, `${s.h} mm`, size);
+    body += measure(0, H + 150, W, H + 150, `${s.w} mm`, letter());
+    body += measure(-150, 0, -150, H, `${s.h} mm`, letter());
   } else {
     const widths = s.count === 2 ? [s.wl, s.wr] : [s.wl, s.wl];
     W = widths[0] + s.breast + widths[1]; H = s.h;
@@ -155,9 +157,9 @@ export function elevationSvg(design, { open = false } = {}) {
     };
     body += unit(0, widths[0]);
     if (s.count === 2) body += unit(bx + s.breast, widths[1]);
-    body += measure(0, H + 150, widths[0], H + 150, `${s.wl} mm`, size);
-    if (s.count === 2) body += measure(bx + s.breast, H + 150, W, H + 150, `${s.wr} mm`, size);
-    body += measure(-150, 0, -150, H, `${s.h} mm`, size);
+    body += measure(0, H + 150, widths[0], H + 150, `${s.wl} mm`, letter());
+    if (s.count === 2) body += measure(bx + s.breast, H + 150, W, H + 150, `${s.wr} mm`, letter());
+    body += measure(-150, 0, -150, H, `${s.h} mm`, letter());
   }
 
   const pad = 330;

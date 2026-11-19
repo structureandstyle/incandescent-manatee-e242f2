@@ -85,8 +85,10 @@ export const COPY = {
     outOfRange: "We can draw {min} to {max}mm here. Message us about other sizes.",
   },
   view: {
-    doorsOff: "Show inside",
-    doorsOn: "Put doors back",
+    // A founder's own words (his comment on the preview, 19 Nov 2026), in place of
+    // the copy agent's "Show inside" and "Put doors back".
+    doorsOpen: "Open doors",
+    doorsClosed: "Closed doors",
     front: "Front",
     angle: "Angle",
     zoomIn: "Zoom in",

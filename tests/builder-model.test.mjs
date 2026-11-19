@@ -107,9 +107,14 @@ test("extras and options never move the figure: they are priced in the quotation
 });
 
 test("anything typed, sent or saved becomes a complete, valid design", () => {
-  assert.deepEqual(normalise(), DEFAULTS.wardrobe);
-  assert.deepEqual(normalise({ unit: "alcove" }), DEFAULTS.alcove);
-  assert.deepEqual(normalise("nonsense"), DEFAULTS.wardrobe);
+  // The opening designs show lighting; a design made from less names no extra at all.
+  assert.deepEqual(DEFAULTS.wardrobe.extras, ["lighting"]);
+  assert.deepEqual(DEFAULTS.alcove.extras, ["lighting"]);
+  assert.deepEqual(normalise(DEFAULTS.wardrobe), DEFAULTS.wardrobe);
+  assert.deepEqual(normalise(DEFAULTS.alcove), DEFAULTS.alcove);
+  assert.deepEqual(normalise(), { ...DEFAULTS.wardrobe, extras: [] });
+  assert.deepEqual(normalise({ unit: "alcove" }), { ...DEFAULTS.alcove, extras: [] });
+  assert.deepEqual(normalise("nonsense"), { ...DEFAULTS.wardrobe, extras: [] });
   const odd = normalise({ unit: "wardrobe", w: 99999, h: -5, d: "abc", fit: "ceiling", finish: 9, colour: 77, door: "x", handle: null, inside: ["nope"], extras: ["lighting", "gold taps"] });
   assert.equal(odd.w, 4800);
   assert.equal(odd.h, 1800);
@@ -165,7 +170,9 @@ test("the design in words: sizes, doors, finish, inside, and what is priced in t
   const alcove = specLines(DEFAULTS.alcove, PRICES.finishes);
   assert.equal(alcove[0], "Alcove units: left alcove 900 wide, right alcove 900 wide, 350 deep, ceiling 2400 high (mm).");
   assert.match(alcove[1], /a base cupboard 850 high with two Shaker-style doors, knobs, and 3 open shelves above/);
-  assert.equal(alcove.length, 2);
+  // The opening design shows lighting, so it is listed at once as priced in the quotation.
+  assert.deepEqual(alcove.slice(2), ["To price in the quotation: integrated lighting."]);
+  assert.equal(specLines({ ...DEFAULTS.alcove, extras: [] }, PRICES.finishes).length, 2);
 });
 
 test("titles read as a person would say them", () => {

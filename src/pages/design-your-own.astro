@@ -55,6 +55,7 @@ import {
   describe,
   guidePrice,
   money,
+  quotedItems,
   specLines,
   title,
 } from "../scripts/builder/model.mjs";
@@ -66,6 +67,7 @@ const first = describe(DEFAULTS.wardrobe);
 const firstAlcove = describe(DEFAULTS.alcove);
 const firstPrice = guidePrice(first, PRICES);
 const firstWords = specLines(first, PRICES.finishes);
+const firstQuoted = quotedItems(first);
 const figure = (from: number | null) => (from ? `${COPY.price.from} ${money(from)}` : COPY.price.quoted);
 
 const config = {
@@ -89,8 +91,6 @@ const config = {
     drag: COPY.view.drag,
     loading: COPY.view.loading,
     unavailable: COPY.view.unavailable,
-    doorsOn: COPY.view.doorsOn,
-    doorsOff: COPY.view.doorsOff,
     add: COPY.actions.add,
     added: COPY.actions.added,
     update: COPY.actions.update,
@@ -147,7 +147,10 @@ const wardrobeNumbers = [
               <button type="button" data-dyo-mode="3d" aria-pressed="false">{COPY.view.threeD}</button>
               <button type="button" data-dyo-mode="drawing" aria-pressed="true">{COPY.view.drawing}</button>
             </div>
-            <button type="button" class="dyo-tool" data-dyo-doors aria-pressed="false">{COPY.view.doorsOff}</button>
+            <div class="dyo-seg" role="group" aria-label={`${COPY.view.doorsClosed} / ${COPY.view.doorsOpen}`}>
+              <button type="button" data-dyo-doors="closed" aria-pressed="true">{COPY.view.doorsClosed}</button>
+              <button type="button" data-dyo-doors="open" aria-pressed="false">{COPY.view.doorsOpen}</button>
+            </div>
             <div class="dyo-seg" data-dyo-3d-only hidden>
               <button type="button" data-dyo-look="front">{COPY.view.front}</button>
               <button type="button" data-dyo-look="angle">{COPY.view.angle}</button>
@@ -369,7 +372,7 @@ const wardrobeNumbers = [
             <div class="dyo-ticks" data-dyo-for="wardrobe">
               {EXTRAS.wardrobe.map((x) => (
                 <label class="dyo-tick">
-                  <input type="checkbox" name="dyo-extra-wardrobe" value={x.id} />
+                  <input type="checkbox" name="dyo-extra-wardrobe" value={x.id} checked={first.extras.includes(x.id)} />
                   <span>{x.label}</span>
                 </label>
               ))}
@@ -377,7 +380,7 @@ const wardrobeNumbers = [
             <div class="dyo-ticks" data-dyo-for="alcove" hidden>
               {EXTRAS.alcove.map((x) => (
                 <label class="dyo-tick">
-                  <input type="checkbox" name="dyo-extra-alcove" value={x.id} />
+                  <input type="checkbox" name="dyo-extra-alcove" value={x.id} checked={firstAlcove.extras.includes(x.id)} />
                   <span>{x.label}</span>
                 </label>
               ))}
@@ -388,7 +391,7 @@ const wardrobeNumbers = [
             <p class="dyo-price-label">{COPY.price.label}</p>
             <p class="dyo-price-figure" data-dyo-figure aria-live="polite">{figure(firstPrice.from)}</p>
             <p class="dyo-price-note" data-dyo-price-note>{COPY.price.includesWardrobe}</p>
-            <p class="dyo-price-note" data-dyo-extras-note hidden></p>
+            <p class="dyo-price-note" data-dyo-extras-note hidden={!firstQuoted.length}>{firstQuoted.length ? COPY.price.extras.replace("{items}", firstQuoted.join(", ")) : ""}</p>
             <p class="dyo-price-guide">{COPY.price.guide}</p>
             <ul class="dyo-words" data-dyo-words>
               {firstWords.map((line) => <li>{line}</li>)}

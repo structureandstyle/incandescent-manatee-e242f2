@@ -118,14 +118,22 @@ export const COLOURS = [
   ],
 ];
 
+/**
+ * The designs the page opens on. LIGHTING IS ON IN BOTH (a founder, 19 Nov
+ * 2026, reviewing the first build: the inside should be shown "with leds").
+ * It is an extra, so the page lists it at once as priced separately in the
+ * quotation, and it never moves the figure. A design made from anything else
+ * (a link, a saved project, a part-filled form) gets only the extras it names:
+ * normalise() adds none.
+ */
 export const DEFAULTS = {
   wardrobe: {
     unit: "wardrobe", w: 2400, h: 2400, d: 600, fit: "both", finish: 1, colour: 0,
-    door: "shaker", handle: "bar", inside: ["hang", "hang-shelves"], extras: [],
+    door: "shaker", handle: "bar", inside: ["hang", "hang-shelves"], extras: ["lighting"],
   },
   alcove: {
     unit: "alcove", count: 2, wl: 900, wr: 900, h: 2400, d: 350, breast: 1400, base: 850, shelves: 3,
-    finish: 1, colour: 0, door: "shaker", handle: "knob", extras: [],
+    finish: 1, colour: 0, door: "shaker", handle: "knob", extras: ["lighting"],
   },
 };
 

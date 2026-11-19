@@ -348,12 +348,9 @@ export function initBuilder(root) {
     if (el.dataset.dyoMode) {
       if (el.dataset.dyoMode === "3d") load3d().then((v) => v && setMode("3d"));
       else setMode("drawing");
-    } else if (el.hasAttribute("data-dyo-doors")) {
-      open = !open;
-      for (const b of $$(root, "[data-dyo-doors]")) {
-        b.textContent = open ? copy.doorsOn : copy.doorsOff;
-        b.setAttribute("aria-pressed", String(open));
-      }
+    } else if (el.dataset.dyoDoors) {
+      open = el.dataset.dyoDoors === "open";
+      for (const b of $$(root, "[data-dyo-doors]")) b.setAttribute("aria-pressed", String((b.dataset.dyoDoors === "open") === open));
       drawPicture(design);
     } else if (el.dataset.dyoLook) {
       view?.look(el.dataset.dyoLook);
@@ -553,7 +550,6 @@ export function initBuilder(root) {
   /* ---- Start ---------------------------------------------------------------- */
 
   writeForm(design);
-  for (const b of $$(root, "[data-dyo-doors]")) b.setAttribute("aria-pressed", "false");
   for (const el of $$(root, "[data-dyo-3d-only]")) el.hidden = true;
   refresh({ fromForm: false });
   drawProject();
