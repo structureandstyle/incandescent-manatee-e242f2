@@ -56,6 +56,8 @@ const DOOR_T = 0.022;
 // Just short of square to the run: two doors hinged on the same board then
 // stand back to back, as they do on a real wardrobe, instead of crossing.
 const OPEN_ANGLE = 1.54;
+/** Where a tall Shaker door's mid rail sits: its centre two thirds of the way up. */
+const MID_RAIL = 0.66;
 // The camera starts a few degrees above level, from about eye height, and a
 // little round to one side.
 const HOME_POLAR = 1.48;
@@ -419,6 +421,20 @@ export function createView(canvas, { onLost, onRestored } = {}) {
   const GARMENTS = ["shirt", "coat", "dress", "trousers"];
   const garmentGeos = Object.fromEntries(GARMENTS.map((k) => [k, garmentGeometry(k)]));
   const hangerGeo = hangerGeometry();
+  // A turned knob: rose, neck and a domed head, its axis out of the door.
+  const knobGeo = (() => {
+    const profile = [[0, 0], [0.0105, 0], [0.0105, 0.002], [0.0058, 0.0045], [0.0048, 0.012], [0.0105, 0.0165], [0.0155, 0.021], [0.0152, 0.026], [0.011, 0.0295], [0, 0.031]];
+    const geo = new THREE.LatheGeometry(profile.map(([r, y]) => new THREE.Vector2(r, y)), 28);
+    geo.rotateX(Math.PI / 2);
+    return geo;
+  })();
+  /** A bar handle with rounded ends, one shape per length. */
+  const capsules = new Map();
+  const capsule = (long) => {
+    const key = Math.round(long * 1000);
+    if (!capsules.has(key)) capsules.set(key, new THREE.CapsuleGeometry(0.0062, Math.max(0.01, long - 0.0124), 6, 16));
+    return capsules.get(key);
+  };
   const ball = new THREE.SphereGeometry(1, 24, 16);
   const rod = new THREE.CylinderGeometry(1, 1, 1, 18);
   const plane = new THREE.PlaneGeometry(1, 1);
@@ -666,22 +682,61 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     const wear = (kind, x, top, z, thick, len, depth, color, ry) => garments[kind].push([x, top, z, thick, len, depth, color, ry]);
     const hard = (x0, y0, z0, w, h, d, color, rz = 0) => hards.push([x0 + w / 2, y0 + h / 2, z0 + d / 2, w, h, d, color, rz]);
 
-    /** A handle on a door or drawer, in the door's own space when a parent is given. */
+    /**
+     * A handle on a door or drawer, in the door's own space when a parent is
+     * given: a turned knob (rose, neck, domed head), or a bar with rounded
+     * ends on two posts.
+     */
     const handle = (x, y, z, { vertical = true, parent = g, long = 0.24 } = {}) => {
       if (s.handle === "none") return;
       if (s.handle === "knob") {
-        const k = new THREE.Mesh(ball, brass);
-        k.scale.set(0.016, 0.016, 0.011);
-        k.position.set(x, y, z + 0.026);
+        const k = new THREE.Mesh(knobGeo, brass);
+        k.position.set(x, y, z);
         k.castShadow = true;
         parent.add(k);
-        cylinder(brass, 0.0055, 0.02, x, y, z + 0.01, "z", parent);
         return;
       }
-      cylinder(brass, 0.0058, long, x, y, z + 0.03, vertical ? "y" : "x", parent);
-      for (const o of [-long / 2 + 0.035, long / 2 - 0.035]) {
-        cylinder(brass, 0.0045, 0.03, vertical ? x : x + o, vertical ? y + o : y, z + 0.015, "z", parent);
+      const bar = new THREE.Mesh(capsule(long), brass);
+      bar.position.set(x, y, z + 0.032);
+      if (!vertical) bar.rotation.z = Math.PI / 2;
+      bar.castShadow = true;
+      parent.add(bar);
+      for (const o of [-long / 2 + 0.03, long / 2 - 0.03]) {
+        cylinder(brass, 0.0042, 0.03, vertical ? x : x + o, vertical ? y + o : y, z + 0.016, "z", parent);
       }
+    };
+
+    /**
+     * A fine bevel round a Shaker panel, where the frame's inner edge turns
+     * down into the recess and catches the light: four thin strips set at 45
+     * degrees along the opening, in the door's own space.
+     */
+    const bevel = (parent, xa, ya, xb, yb, m) => {
+      const size = 0.006;
+      const strip = (len, x, y, alongX) => {
+        const b = new THREE.Mesh(unitBox, surface(m, alongX ? len : size, alongX ? size : len, size));
+        b.scale.set(alongX ? len : size, alongX ? size : len, size);
+        b.rotation.set(alongX ? Math.PI / 4 : 0, alongX ? 0 : Math.PI / 4, 0);
+        b.position.set(x, y, -0.0046);
+        b.receiveShadow = true;
+        parent.add(b);
+      };
+      strip(xb - xa, (xa + xb) / 2, ya, true);
+      strip(xb - xa, (xa + xb) / 2, yb, true);
+      strip(yb - ya, xa, (ya + yb) / 2, false);
+      strip(yb - ya, xb, (ya + yb) / 2, false);
+    };
+
+    /** The outer face of an end panel, framed like the doors when they are Shaker. */
+    const shakerSide = (xFace, out, za, zb, ya, yb, midY) => {
+      if (s.door !== "shaker") return;
+      const t = 0.006, f = 0.085, x = out < 0 ? xFace - t : xFace;
+      const opts = { r: 0.0015 };
+      piece(finish, x, ya, za, t, yb - ya, f, opts);
+      piece(finish, x, ya, zb - f, t, yb - ya, f, opts);
+      piece(finish, x, ya, za + f, t, f, zb - za - 2 * f, opts);
+      piece(finish, x, yb - f, za + f, t, f, zb - za - 2 * f, opts);
+      if (midY) piece(finish, x, midY - f / 2, za + f, t, f, zb - za - 2 * f, opts);
     };
 
     /**
@@ -699,11 +754,19 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         piece(finish, x0, 0, -DOOR_T, w, h, DOOR_T, opts);
       } else {
         const f = Math.max(0.055, Math.min(0.085, w * 0.2));
+        // A tall door has a mid rail, as most Shaker wardrobe doors do, its centre a third down.
+        const mid = h > 1.5 ? h * MID_RAIL : null;
         piece(finish, x0, 0, -DOOR_T, f, h, DOOR_T, opts);
         piece(finish, x0 + w - f, 0, -DOOR_T, f, h, DOOR_T, opts);
         piece(finishAcross, x0 + f, 0, -DOOR_T, w - 2 * f, f, DOOR_T, opts);
         piece(finishAcross, x0 + f, h - f, -DOOR_T, w - 2 * f, f, DOOR_T, opts);
-        block(panel, x0 + f - 0.002, f - 0.002, -DOOR_T + 0.004, w - 2 * f + 0.004, h - 2 * f + 0.004, 0.008, { parent: pivot });
+        if (mid) piece(finishAcross, x0 + f, mid - f / 2, -DOOR_T, w - 2 * f, f, DOOR_T, opts);
+        // The panels, set back, each with a fine bevel round it.
+        const openings = mid ? [[f, mid - f / 2], [mid + f / 2, h - f]] : [[f, h - f]];
+        for (const [ya, yb] of openings) {
+          block(panel, x0 + f - 0.002, ya - 0.002, -DOOR_T + 0.004, w - 2 * f + 0.004, yb - ya + 0.004, 0.008, { parent: pivot });
+          bevel(pivot, x0 + f, ya, x0 + w - f, yb, panel);
+        }
         // The back of the door is one plain face.
         block(finish, x0 + 0.004, 0.004, -DOOR_T - 0.0006, w - 0.008, h - 0.008, 0.004, { parent: pivot, cast: false });
       }
@@ -732,7 +795,10 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     const hanging = (rnd, ax, bx, yRail, length, zf) => {
       const cd = Math.min(0.44, zf - 0.07);
       const cz = 0.03 + (zf - 0.03 - cd) / 2 + cd / 2; // centre, front to back
-      cylinder(chrome, 0.0125, bx - ax, (ax + bx) / 2, yRail, cz, "x");
+      // An oval wardrobe rail, taller than it is deep.
+      const rail = cylinder(chrome, 0.0125, bx - ax, (ax + bx) / 2, yRail, cz, "x");
+      rail.scale.x = 0.015;
+      rail.scale.z = 0.0078;
       for (const ex of [ax + 0.006, bx - 0.006]) cylinder(chrome, 0.02, 0.012, ex, yRail, cz, "x");
       let x = ax + 0.035 + rnd() * 0.02;
       while (x < bx - 0.05) {
@@ -810,11 +876,16 @@ export function createView(canvas, { onLost, onRestored } = {}) {
       if (wallL) piece(trim, x0, 0, d + 0.002, 0.016, 0.12, run - d - 0.002, { r: 0.004 });
       if (wallR) piece(trim, x1 - 0.016, 0, d + 0.002, 0.016, 0.12, run - d - 0.002, { r: 0.004 });
 
-      // Fillers to a wall, or an end panel on an open side; the strip under the ceiling; the plinth.
-      if (wallL) piece(finish, x0, 0, d - DOOR_T, WALL_FILL, h, DOOR_T); else piece(finish, x0, 0, 0, T, h, d);
-      if (wallR) piece(finish, x1 - WALL_FILL, 0, d - DOOR_T, WALL_FILL, h, DOOR_T); else piece(finish, x1 - T, 0, 0, T, h, d);
-      piece(finishAcross, x0 + mL, h - TOP_FILL, d - DOOR_T, iw, TOP_FILL, DOOR_T);
-      block(plinthMat, x0 + mL, 0, d - 0.07, iw, PLINTH, 0.02);
+      // Fillers to a wall, or an end panel on an open side (framed like the doors when they
+      // are Shaker); the strip under the ceiling, set back a little so a shadow line runs
+      // above the doors; and the plinth in the door finish, set back, as fitted work has it.
+      const midY = PLINTH + GAP + (doorH - 2 * GAP) * MID_RAIL;
+      if (wallL) piece(finish, x0, 0, d - DOOR_T, WALL_FILL, h, DOOR_T);
+      else { piece(finish, x0, 0, 0, T, h, d); shakerSide(x0, -1, 0, d, 0, h, midY); }
+      if (wallR) piece(finish, x1 - WALL_FILL, 0, d - DOOR_T, WALL_FILL, h, DOOR_T);
+      else { piece(finish, x1 - T, 0, 0, T, h, d); shakerSide(x1, 1, 0, d, 0, h, midY); }
+      piece(finishAcross, x0 + mL, h - TOP_FILL, d - DOOR_T - 0.006, iw, TOP_FILL, DOOR_T);
+      block(finishAcross, x0 + mL, 0, d - 0.03 - 0.018, iw, PLINTH, 0.018);
       contact(x0, x1, 0, d);
 
       // The carcass: back, top, bottom and a board between sections.
@@ -1007,7 +1078,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
         const aw = bx - ax;
         const f = 0.02;
         const topT = 0.03;
-        block(plinthMat, ax, 0, baseD - 0.07, aw, PLINTH, 0.02);
+        block(finishAcross, ax, 0, baseD - 0.03 - 0.018, aw, PLINTH, 0.018);
         contact(ax, bx, 0, baseD);
         block(carcass, ax, PLINTH, 0.003, aw, base - PLINTH - topT, 0.006, { cast: false });
         block(carcass, ax + f, PLINTH, 0.006, aw - 2 * f, T, baseD - DOOR_T - 0.012);
@@ -1348,7 +1419,7 @@ export function createView(canvas, { onLost, onRestored } = {}) {
     for (const wood of woodMats.values()) { wood.map?.dispose(); wood.dispose(); }
     for (const t of textures) t.dispose();
     for (const geo of geos.values()) geo.dispose();
-    for (const geo of [unitBox, softBox, ball, rod, plane, hangerGeo, ...Object.values(garmentGeos)]) geo.dispose();
+    for (const geo of [unitBox, softBox, ball, rod, plane, hangerGeo, knobGeo, ...Object.values(garmentGeos), ...capsules.values()]) geo.dispose();
     aoPass?.dispose();
     bloomPass?.dispose();
     composer?.dispose();
