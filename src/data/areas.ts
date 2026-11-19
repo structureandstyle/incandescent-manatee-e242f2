@@ -297,7 +297,7 @@ export const AREAS: Area[] = [
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Eight full-height flat wardrobe doors painted pale green, in four pairs with slim brass bar handles, running wall to wall beneath the room's cornice. A bay window with white sashes and linen curtains is to the right, with a low bench in it.",
+        alt: "Sage green full-height wardrobes with four pairs of flat doors and slim brass bar handles fill one bedroom wall, with slim matching infills under the cornice and a recessed plinth. A bay window with white sashes and a cream curtain is to the right, with a low bench beside it.",
       },
     ],
     summary: "Large Victorian villas, mansion flats and mews houses in Camden's Belsize conservation area.",
