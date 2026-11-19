@@ -99,7 +99,7 @@ const plates = page.plates.map((p) => {
      service, what it shows, then the page's area as context only, never as
      where the work was done (a founder, 19 Nov 2026; src/data/plate-services.ts).
      Pages not about an area say London. */
-  const text = plateText(p.type, p.alt, area ? area.name : "London", page.slug);
+  const text = plateText(p.type, p.alt, area ? area.name : "London", page.slug, "service" in p ? (p as { service?: string }).service : undefined);
   return { ...p, alt: text, description: text };
 });
 /* The illustrations line (19 Nov 2026): "The images on this page..." when
