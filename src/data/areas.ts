@@ -121,7 +121,7 @@ export const AREAS: Area[] = [
         alt: "White handleless fitted wardrobe with one door open showing oak interior, chrome hanging rail, top shelf and lower shelves",
       },
       {
-        file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
+        file: "/images/journal/camden-grey-shaker-wardrobes.webp",
         type: "Grey Shaker-style wardrobes",
         ai: true,
         width: 1536,

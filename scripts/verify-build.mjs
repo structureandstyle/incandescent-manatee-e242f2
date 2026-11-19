@@ -166,15 +166,32 @@ const CASE_STUDY_TITLE = /^[A-Z][A-Za-z' -]+ in [A-Z][A-Za-z' -]+$/;
  * "... are illustrations, made to help explain the design options", after its
  * last AI image, so it sits near the end as Kas asked on 17 Nov.
  *
- * An AI image is found by Plate's data-ai marker as well as by "-ai-" in its
- * file name (19 Nov 2026): the alcove guide's new renders (site PR #73) are
- * named alcove-guide-*.webp, so a file-name test alone no longer saw them.
+ * NO "AI" ANYWHERE, also 19 Nov 2026 (a founder: "please do not add any AI
+ * generated stuff anywhere even in alt text"). On every page the build fails
+ * on: a picture path with "-ai-" in it (src, srcset, the share image, the
+ * schema, anywhere in the HTML; every such file was renamed that day and the
+ * Worker forwards the old addresses); a data-ai attribute; and AI wording in
+ * any picture's alt, title, aria-label or enlarged caption. An illustration
+ * is found by Plate's neutral data-illustration marker instead.
  */
 const AI_LABEL = /AI-generated example/i;
 const ILLUSTRATION_NOTE = /are illustrations, made to help explain the design options/i;
-const isAiImage = (tag, src) => /-ai-/.test(src) || /\sdata-ai(?=[\s=>\/])/i.test(tag);
+const AI_PATH = /\/images\/[^"'\s)<>]*-ai-/i;
+const AI_WORDS = /\bA\.?I\.?\b|AI[- ]generated|artificial intelligence|(?:computer|machine)[- ]generated/;
+const AI_WORDS_ANYCASE = /ai[- ]generated|artificial intelligence|(?:computer|machine)[- ]generated/i;
 function verifyAiLabels(html, page, errors) {
-  const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']+)["'][^>]*>/gi)].filter((m) => isAiImage(m[0], m[1]));
+  const pathHit = html.match(new RegExp(AI_PATH.source + "[^\"'\\s)<>]*", "i"));
+  if (pathHit) errors.push(`${page}  a picture path says "ai": ${pathHit[0]} (no "AI" anywhere, 19 Nov 2026)`);
+  if (/\sdata-ai(?=[\s=>\/])/i.test(html)) errors.push(`${page}  carries a data-ai attribute (no "AI" anywhere, 19 Nov 2026)`);
+  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
+    for (const attr of ["alt", "title", "aria-label", "data-caption"]) {
+      const v = m[0].match(new RegExp(`\\s${attr}=["']([^"']*)["']`, "i"));
+      if (v && (AI_WORDS.test(v[1]) || AI_WORDS_ANYCASE.test(v[1]))) {
+        errors.push(`${page}  a picture's ${attr} mentions AI: "${v[1].slice(0, 80)}" (no "AI" anywhere, 19 Nov 2026)`);
+      }
+    }
+  }
+  const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']+)["'][^>]*>/gi)].filter((m) => /\sdata-illustration(?=[\s=>\/])/i.test(m[0]));
   if (!imgs.length) return;
   for (const m of imgs) {
     if (/\sdata-caption=["']AI-generated example/i.test(m[0])) {

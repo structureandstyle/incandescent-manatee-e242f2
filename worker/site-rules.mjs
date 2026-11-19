@@ -18,6 +18,11 @@ export const CANONICAL_HOST = "structureandstyle.co.uk";
 const PATH_REDIRECTS = [
   { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/carpenter-hampstead/" },
   { from: /^\/carpenter-camden(?:\/.*)?$/, to: "/areas/camden/" },
+  /* 19 Nov 2026: every picture named "...-ai-..." was renamed without it (a
+     founder: "please do not add any AI generated stuff anywhere even in alt
+     text"). The old addresses, which Google may have seen, forward to the new
+     files. Not in netlify.toml: the site no longer runs there. */
+  { from: /^(\/images\/journal\/[A-Za-z0-9-]+?)-ai-([A-Za-z0-9.-]+)$/, to: (m) => `${m[1]}-${m[2]}` },
 ];
 
 /** wrangler dev on this machine runs over plain http and is left alone. */
@@ -42,7 +47,8 @@ export function redirectFor(url) {
     u.port = "";
   }
   for (const rule of PATH_REDIRECTS) {
-    if (rule.from.test(u.pathname)) return new URL(rule.to, u.origin).toString();
+    const m = u.pathname.match(rule.from);
+    if (m) return new URL(typeof rule.to === "function" ? rule.to(m) : rule.to, u.origin).toString();
   }
   return insecure ? u.toString() : null;
 }
