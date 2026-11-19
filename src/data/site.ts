@@ -79,8 +79,11 @@ export const GA4_ID = "G-FSGVTJXMMP";
  * what was done instead, which is also the better advertisement, and
  * SiteFooter renders it after a gap rather than as another legal line.
  *
- * The link is nofollow. A followed footer link placed by one agency on every
- * client whose search it runs is the pattern Google's link spam policy names.
+ * The link is followed since 18 Nov 2026, a founder's choice for this client
+ * (f2f_credit 1.3.0 `follow`). Flow to Form's default stays nofollow: a
+ * followed footer link placed by one agency on every client whose search it
+ * runs is the pattern Google's link spam policy names, so it is chosen per
+ * client, with the brand as the anchor, and never made a contract term.
  *
  * Since 16 Oct 2026 the credit is Flow to Form's standard one, generated from
  * f2f-patterns (f2f_credit) into src/components/FlowToFormCredit.astro: the
@@ -91,6 +94,7 @@ export const GA4_ID = "G-FSGVTJXMMP";
 export const AGENCY_CREDIT = {
   enabled: true,
   line: "Site and search by",
+  follow: true,
 } as const;
 
 export type Service = {

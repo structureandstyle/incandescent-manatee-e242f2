@@ -65,6 +65,8 @@ interface Props {
    * a gap, as a sentence saying what somebody did rather than who owns what.
    */
   credit?: "Site by" | "Site and search by" | null;
+  /** A followed credit link instead of nofollow (f2f_credit 1.3.0 `follow`). */
+  creditFollow?: boolean;
   showMark?: boolean;
   brand?: boolean;
   class?: string;
@@ -79,6 +81,7 @@ const {
   legal = [],
   lines = [],
   credit = null,
+  creditFollow = false,
   showMark = true,
   brand = false,
   class: className,
@@ -179,12 +182,12 @@ const bind = (s: string) => s.replace(/ · /g, " · ");
         {credit && (
           /* The Flow to Form credit, beside the copyright line, as the
              component's own rule asks, and after a gap, as the prop note above
-             asks. The component owns the words, the link and its nofollow;
+             asks. The component owns the words, the link and its rel;
              this span gives it the faint small print of the bar. Mono and faint
              like its neighbours, but not uppercase: the credit keeps "flow to
              form" lowercase, as the wordmark is. */
           <span class="ftr-credit">
-            <FlowToFormCredit enabled line={credit} />
+            <FlowToFormCredit enabled line={credit} follow={creditFollow} />
           </span>
         )}
       </div>
