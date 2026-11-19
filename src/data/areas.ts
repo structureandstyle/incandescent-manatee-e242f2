@@ -315,7 +315,7 @@ export const AREAS: Area[] = [
     h1: "Fitted wardrobes and bespoke kitchens for Kentish Town's terraced houses",
     kicker: "Bespoke joinery in Kentish Town",
     description:
-      "Fitted wardrobes, bespoke kitchens and alcove units for Kentish Town's narrow Georgian and Victorian terraces, each one planned for its own room.",
+      "Fitted wardrobes, bespoke kitchens and alcove units for Kentish Town's Georgian and Victorian terraces, some narrow, each planned for its own room.",
     /* No measured product search exists for Kentish Town. Keyword Planner returned nothing for any
        of 22 Kentish Town phrases (London, 14 Nov 2026), and the only Kentish Town query in Search
        Console is carpenter kentish town (16 impressions at position 1.9, 11 Oct to 8 Nov 2026; one
@@ -354,7 +354,7 @@ export const AREAS: Area[] = [
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Six full-height flat wardrobe doors in matt white with no handles, running wall to wall beneath the room's cornice above a recessed plinth. A sash window with a white roller blind partly drawn is to the left, beside the end of a bed.",
+        alt: "Six matt white flat doors with no handles run along one bedroom wall under the ceiling moulding, above a recessed base. Light falls from a sash window with a white roller blind on the left, over a pale oak floor and the corner of a bed.",
       },
     ],
     summary: "Georgian and Victorian terraces, many of them listed, around Leighton Road and Kelly Street.",
