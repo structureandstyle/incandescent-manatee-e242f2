@@ -42,15 +42,18 @@ const figure = z.object({
   /** The district, never an address. Absent means Kaspar has not named it yet,
       and the caption shows an open question instead. */
   area: z.string().optional(),
-  /** An AI render, not a photograph of a job. Set, the page says once above
-      the hero that its images are AI-generated examples (Denis, 19 Oct 2026),
-      the caption names what the render shows, and a gallery button follows so
-      readers can see real work (Kaspar, 18 Oct). No district is asked for.
+  /** An AI render, not a photograph of a job. Set, the caption names what the
+      render shows, and a gallery button follows so readers can see real work
+      (Kaspar, 18 Oct). The line above the hero saying the images are
+      AI-generated examples (Denis, 19 Oct 2026) was removed by a founder on
+      19 Nov 2026. No district is asked for.
       Keep renders under /images/journal/, never in a service folder, so they
       cannot end up in a gallery. Renders inside an article use <Render>. */
   ai: z.boolean().default(false),
   /** A few plain words for the enlarged photograph ("Shaker-style wardrobe").
-      Needed when the caption is only "AI-generated example". */
+      Needed when the caption is only "AI-generated example": that label is no
+      longer shown on pictures (a founder, 19 Nov 2026), so this shows as the
+      caption instead. */
   label: z.string().optional(),
   /** A fuller description shown beneath the image, so a reader can compare
       the options (Kaspar, 20 Oct 2026). No dimensions or specifications he

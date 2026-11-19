@@ -1,0 +1,37 @@
+---
+/**
+ * The illustrations line, near the end of any page that shows an AI render
+ * (a founder, 19 Nov 2026: "put it somewhere that some of the images might
+ * [be] generated for easiness or understanding purposes ... not need to
+ * mention ai", then "yes add it to 67"). It replaces the "AI-generated
+ * example" labels and notices removed the same day (site PRs #66 and #67).
+ *
+ * Near the end, as Kas asked on 17 Nov 2026 ("a small note near the end of
+ * the article"), and only on pages that have an illustration: a site-wide
+ * footer line would cast doubt on his real photographs everywhere else.
+ *
+ * `all`: every image on the page is an illustration (both journal guides, the
+ * staircases page). Otherwise the page mixes illustrations with his real
+ * photographs, and the line says "Some images". scripts/verify-build.mjs
+ * (verifyAiLabels) fails a page with an AI render that lacks this line after
+ * its last one.
+ */
+import Link from "./ds/Link.astro";
+
+interface Props {
+  all?: boolean;
+  /** "guide" in a journal article, "page" elsewhere. */
+  scope?: "guide" | "page";
+  style?: string;
+}
+
+const { all = false, scope = "page", style = "" } = Astro.props;
+const where = scope === "guide" ? "in this guide" : "on this page";
+---
+
+<p
+  data-illustration-note
+  style={`max-width:var(--measure);margin:0;font-size:15px;line-height:1.55;color:var(--text-quiet);${style}`}
+>
+  {all ? `The images ${where} are illustrations` : `Some images ${where} are illustrations`}, made to help explain the design options. Photographs of our finished work are in <Link href="/work/">Recent work</Link>.
+</p>
