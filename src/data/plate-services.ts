@@ -72,16 +72,31 @@ function lowerFirst(text: string): string {
  * The alt text and visible description for one photo: service, what it shows,
  * the page's area as context. `place` is the area's name, or "London".
  */
-export function plateText(type: string, alt: string, place: string, where = "a page"): string {
-  const service = PLATE_SERVICE[type];
+export function plateText(type: string, alt: string, place: string, where = "a page", own?: string): string {
+  const service = own || PLATE_SERVICE[type];
   if (!service) {
     throw new Error(`${where}: the photo captioned "${type}" has no service in src/data/plate-services.ts (every photo needs one: a founder, 19 Nov 2026).`);
   }
   return photoText(service, alt, place);
 }
 
-/** The same shape for a photo outside the plates (a render in a page's body), given its service. */
+/** Style names that keep their capital anywhere in the text (the register writes "shaker"). */
+const STYLE_NAMES: [RegExp, string][] = [[/\bshaker\b/g, "Shaker"]];
+
+/**
+ * The same shape for a photo outside the plates (a render in a page's body), given its service.
+ * Where the picture's own words already name the service in their first few words ("White built-in
+ * bookcase ...", "Cream alcove units ..."), they lead on their own, as the founder's example did
+ * ("Painted wardrobes by a bay window ... an example for Belsize Park homes"); otherwise the service
+ * leads: "Walk-in wardrobes: dark oak-effect open cubby shelving ...".
+ */
 export function photoText(service: string, alt: string, place: string): string {
-  const shows = alt.trim().replace(/[.\s]+$/, "");
-  return `${service}: ${lowerFirst(shows)}. An example for ${place} homes.`;
+  let shows = alt.trim().replace(/[.\s]+$/, "");
+  for (const [pattern, word] of STYLE_NAMES) shows = shows.replace(pattern, word);
+  const stem = service.toLowerCase().replace(/s$/, "");
+  const opening = shows.toLowerCase().split(/\s+/).slice(0, 7).join(" ");
+  const lead = opening.includes(stem)
+    ? shows.charAt(0).toUpperCase() + shows.slice(1)
+    : `${service}: ${lowerFirst(shows)}`;
+  return `${lead}. An example for ${place} homes.`;
 }
