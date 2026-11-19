@@ -63,6 +63,7 @@ import { topicPath, type TopicPage } from "../data/topic-pages";
 import { photoAlt } from "../data/work-gallery";
 import selection from "../../public/images/_selection.json";
 import IllustrationNote from "./IllustrationNote.astro";
+import { plateText } from "../data/plate-services";
 
 interface Props {
   area?: Area;
@@ -93,6 +94,13 @@ const plates = page.plates.map((p) => {
   const found = sizeOf.get(p.file);
   if (!found) throw new Error(`${page.slug} names ${p.file}, which is not in public/images/_selection.json.`);
   return { ...p, w: found.w, h: found.h, alt: ("alt" in p && p.alt) || photoAlt(p.file, p.type), ai: false };
+}).map((p) => {
+  /* Every photo's alt text and visible description, in the same words: the
+     service, what it shows, then the page's area as context only, never as
+     where the work was done (a founder, 19 Nov 2026; src/data/plate-services.ts).
+     Pages not about an area say London. */
+  const text = plateText(p.type, p.alt, area ? area.name : "London", page.slug, "service" in p ? (p as { service?: string }).service : undefined);
+  return { ...p, alt: text, description: text };
 });
 /* The illustrations line (19 Nov 2026): "The images on this page..." when
    every plate is an illustration and the body adds none of its own photos,
@@ -188,6 +196,7 @@ const breadcrumb = {
             ratio="3 / 2"
             sizes="(max-width: 660px) 72vw, 33vw"
             subject={p.type}
+            description={p.description}
             ai={p.ai}
             eager={i === 0}
             style="scroll-snap-align:start"

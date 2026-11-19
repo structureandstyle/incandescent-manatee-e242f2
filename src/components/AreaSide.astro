@@ -1,0 +1,84 @@
+---
+/**
+ * One area-page section's words with something to look at beside them.
+ *
+ * A founder's comment on the Primrose Hill draft (15 Nov 2026): "add examples
+ * of what the text describes on the right side ... photos, 2d illustrations
+ * or something else". The words keep the page's reading measure on the left;
+ * the right takes either a line drawing from src/data/area-drawings.ts
+ * (drawing="id") or whatever the page passes in slot "side" (the price cards,
+ * PriceCards.astro). Line drawings rather than photographs: a photograph of a
+ * local house reads as a job there, which the page never claims, and
+ * photographs of other people's houses would need licences.
+ *
+ *   <AreaSide drawing="stucco-villa">
+ *     <p>...</p>
+ *   </AreaSide>
+ *
+ * Below 900px the side drops under the words, so a phone reads the section
+ * first and then sees the drawing. Each drawing is an <svg role="img"> with
+ * its own description (its label in area-drawings.ts) and a caption.
+ */
+import MonoLabel from "./ds/MonoLabel.astro";
+import { AREA_DRAWINGS } from "../data/area-drawings";
+
+interface Props {
+  drawing?: string;
+}
+
+const { drawing } = Astro.props;
+const d = drawing ? AREA_DRAWINGS[drawing] : undefined;
+if (drawing && !d) throw new Error(`There is no area drawing called "${drawing}" in src/data/area-drawings.ts.`);
+const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class="ad-$1"');
+---
+
+<div class="area-side">
+  <div class="area-side-text">
+    <slot />
+  </div>
+  <div class="area-side-aside">
+    {d ? (
+      <figure class="area-drawing">
+        <svg viewBox="0 0 320 240" role="img" aria-label={d.label} set:html={prefixed(d.markup)} />
+        <figcaption>
+          <MonoLabel tone="soft">{d.caption}</MonoLabel>
+        </figcaption>
+      </figure>
+    ) : (
+      <slot name="side" />
+    )}
+  </div>
+</div>
+
+<style>
+  .area-side {
+    display: grid;
+    grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
+    gap: var(--space-10) var(--gap-lg);
+    align-items: start;
+  }
+  .area-drawing {
+    margin: 0;
+    border: var(--rule-hair);
+    background: #f6f3ea;
+    padding: var(--space-9) var(--space-9) var(--space-7);
+  }
+  .area-drawing svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .area-drawing figcaption {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: var(--rule-hair);
+  }
+  @media (max-width: 900px) {
+    .area-side {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .area-side-aside {
+      max-width: 480px;
+    }
+  }
+</style>
