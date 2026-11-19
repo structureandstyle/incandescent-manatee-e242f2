@@ -546,8 +546,7 @@ const graph = [localBusiness, ...(schema ? (Array.isArray(schema) ? schema : [sc
       // name for a real photograph, a few words of what an AI image shows), and
       // falls back to the alt up to its first comma. The alt stays long for
       // screen readers. No "AI-generated example" prefix since 19 Nov 2026 (a
-      // founder: "remove the AI-GENERATED EXAMPLE from all the photos"); the
-      // page says it once in a visible line above its first AI image.
+      // founder: "remove the AI-GENERATED EXAMPLE from all the photos").
       function captionFor(el: HTMLElement, alt: string): string {
         const given = el.dataset.caption?.trim();
         return given || alt.split(",")[0].trim();

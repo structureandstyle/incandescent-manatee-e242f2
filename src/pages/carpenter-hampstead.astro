@@ -47,10 +47,9 @@
  * Street and building names (Church Row, Keats Grove, Downshire Hill,
  * Willoughby Road, Northcote Mansions) are Kaspar's words and Camden's
  * conservation area statement's, not places we claim to have worked. The three
- * renders are the journal guides' files with their approved alt text. Kaspar's
- * note at the top of the section says they are AI-generated examples; since
- * 19 Nov 2026 (a founder) the pictures themselves carry no such label, and
- * each is captioned with what it shows.
+ * renders are the journal guides' files with their approved alt text, each
+ * captioned with what it shows. Since 19 Nov 2026 (a founder) neither the
+ * pictures nor the page say they are AI-generated examples.
  */
 import AreaPage from "../components/AreaPage.astro";
 import Wrap from "../components/ds/Wrap.astro";
@@ -121,15 +120,9 @@ const SECTION = "padding-bottom:var(--section-y)";
         carries a short label above its heading, and this one needs one to match. */}
     <SectionHead meta="Design" level={4}>What fitted furniture works best in different Hampstead properties</SectionHead>
     <div style={TEXT}>
-      <p>
-        {/* Kaspar's note (10 Nov 2026). The link on "our completed work" is ours, 13 Nov 2026 (a founder):
-            a reader told the pictures below are AI examples gets a way straight to the real jobs.
-            19 Nov 2026, a founder: "remove the AI-GENERATED EXAMPLE from all the photos". The pictures no
-            longer carry that label, so the note's opening, which pointed at it ("Images labelled
-            'AI-generated example' are provided..."), now names this section instead, where all three
-            renders sit. The rest is his, word for word. */}
-        The pictures in this section are AI-generated examples, provided for design inspiration and to illustrate different fitted furniture options. All other project photographs on this page show <Link href="/work/">our completed work</Link>.
-      </p>
+      {/* 19 Nov 2026, a founder: "remove all ai examples descriptions pls, from everywhere". Kaspar's
+          note (10 Nov 2026) that opened this section, saying the pictures in it are AI-generated
+          examples, is removed; the paragraph below now opens the section, so it loses its top margin. */}
       {/* 13 November 2026, a founder: one repeat cut. Kaspar's 10 Nov rewrite opened
           here with "Hampstead has a rich variety of architectural styles, from Georgian
           houses on Church Row and Regency villas on Keats Grove to Victorian terraces
@@ -139,7 +132,7 @@ const SECTION = "padding-bottom:var(--section-y)";
           repeated, almost word for word, his 8 Nov sentence in the Fit section above,
           which stays. Willoughby Road and Northcote Mansions are still named in his
           paragraphs below. Nothing else of his is changed; Kaspar is told, not asked. */}
-      <p style={P2}>
+      <p>
         In period properties, careful attention is given to how fitted furniture integrates with the room's existing features. Wardrobes and cabinetry can be designed to finish neatly below original cornices or incorporate matching decorative details where appropriate. The aim is to create practical storage that complements the character and proportions of the property.
       </p>
       <p style={P2}>
