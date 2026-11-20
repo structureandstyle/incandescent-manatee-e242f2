@@ -41,6 +41,15 @@ const SMOOTH_UNTIL = ENOUGH * 1.6;
 /** The picture on screen is refreshed at most this often while it builds: drawing it costs samples. */
 const REFRESH_MS = 280;
 
+/**
+ * Slower than this (samples a second, once tracing has begun) and the photo is left to faster
+ * computers: 200 samples would take over 40 seconds, with the graphics chip busy and the page
+ * slow throughout (20 Nov 2026: an Intel HD 630 managed 2 a second, after 95 seconds preparing
+ * the tracer). The real-time picture stays. Measured over the first few seconds of tracing.
+ */
+const MIN_RATE = 5;
+const RATE_AFTER_MS = 4000;
+
 /** Warm white LED light, about 3000K (research 05: UK designers choose warm, 2700K to 3000K). */
 const LED_COLOUR = 0xffd9a8;
 
@@ -90,9 +99,12 @@ function roomPanorama(width = 256, height = 128) {
  * @param {THREE.WebGLRenderer} o.renderer
  * @param {THREE.Camera} o.camera
  * @param {() => void} o.drawRaster  draws the real-time picture to the canvas
- * @param {(state: "tracing"|"photo"|"done", samples: number, progress: number) => void} [o.onState]
+ * @param {boolean} [o.forced]  made however slow the computer (`?photo=on`, for checking the photo on any laptop)
+ * @param {(state: "preparing"|"tracing"|"photo"|"done"|"slow", samples: number, progress: number) => void} [o.onState]
+ *   "preparing" while the tracer is made ready (its very large shader is compiled the first time,
+ *   up to a minute and a half on a laptop's own graphics), "slow" once the computer has proved too slow.
  */
-export function createPhoto({ renderer, camera, drawRaster, onState }) {
+export function createPhoto({ renderer, camera, drawRaster, onState, forced = false }) {
   const environment = roomPanorama();
   const tracer = new WebGLPathTracer(renderer);
   tracer.renderToCanvas = false; // this file decides what reaches the canvas, and when
@@ -103,11 +115,13 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
   // A room needs several bounces for light to reach the back of a carcass; five is enough.
   tracer.bounces = 5;
   tracer.filterGlossyFactor = 0.5; // fewer sparkles off lacquer and chrome while it builds
-  // The canvas is drawn at twice its size on a computer: trace at a little under its own size,
-  // which a photograph's softness hides and which a laptop's own graphics can manage.
+  // Traced at about three quarters of the picture's size on screen (set in show(), whatever
+  // the canvas's own pixel ratio): a photograph's softness hides it, a laptop can manage it.
   tracer.renderScale = 0.4;
-  // A quarter of the picture a frame keeps the page answering while it traces.
-  tracer.tiles.set(2, 2);
+  // A sixteenth of the picture at a time (20 Nov 2026: a quarter at a time kept a laptop's
+  // graphics busy long enough to make scrolling and dragging stutter): the page gets the
+  // graphics chip back between every small piece.
+  tracer.tiles.set(4, 4);
   // No fog volumes and no depth of field here: leaving their code out of the tracer's
   // very large shader shortens the wait the first time it is compiled.
   tracer._pathTracer.material.setDefine("FEATURE_FOG", 0);
@@ -129,9 +143,12 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
     depthWrite: false,
   }));
   let beforeTex = null;
-  const owned = { geometries: [], materials: [] };
+  const owned = { geometries: [], materials: [], boxes: [] };
   let version = -1;
   let running = false;
+  let paused = false;
+  let tracingFrom = 0; // when the first sample was made, for the speed check
+  let pausedAt = 0;
   let raf = 0;
   let fadeFrom = 0;
   let shown = false;
@@ -264,6 +281,26 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
     return out;
   }
 
+  /**
+   * A plain box for a part whose edges are eased by only a millimetre or two: at the size the
+   * photo is traced, the easing is less than a pixel, and a plain box is 12 triangles where an
+   * eased one is about 300. With hundreds of parts that is most of the scene, so the photo's
+   * copy builds in a fraction of the time (20 Nov 2026: up to half a second of a frozen page on
+   * a laptop) and traces faster. Reeds and soft goods, rounded on purpose, keep their shape.
+   */
+  const boxes = new Map();
+  const lighter = (geo) => {
+    const p = geo.type === "RoundedBoxGeometry" ? geo.parameters : null;
+    if (!p || !(p.radius < 0.004)) return geo;
+    const key = [p.width, p.height, p.depth].map((v) => Math.round(v * 20000)).join("x");
+    if (!boxes.has(key)) {
+      const b = new THREE.BoxGeometry(p.width, p.height, p.depth);
+      boxes.set(key, b);
+      owned.boxes.push(b);
+    }
+    return boxes.get(key);
+  };
+
   function buildScene(live, extras) {
     for (const g of owned.geometries) g.dispose();
     owned.geometries = [];
@@ -278,7 +315,7 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
       }
       const material = forPhoto(o.material);
       if (!material) return;
-      const mesh = new THREE.Mesh(o.geometry, material);
+      const mesh = new THREE.Mesh(lighter(o.geometry), material);
       mesh.matrixAutoUpdate = false;
       mesh.matrix.copy(o.matrixWorld);
       out.add(mesh);
@@ -360,6 +397,12 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
       gl.flush();
     }
     const n = tracer.samples;
+    if (n > 0 && !tracingFrom) tracingFrom = now;
+    if (!forced && tracingFrom && now - tracingFrom > RATE_AFTER_MS && n / ((now - tracingFrom) / 1000) < MIN_RATE) {
+      running = false;
+      onState?.("slow", n, 0);
+      return;
+    }
     if (n >= SHOW_AT) {
       if (!fadeFrom) fadeFrom = now;
       const t = Math.min(1, (now - fadeFrom) / FADE_MS);
@@ -378,7 +421,7 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
         return;
       }
     } else {
-      onState?.("tracing", n, Math.min(1, n / ENOUGH));
+      onState?.(n > 0 ? "tracing" : "preparing", n, Math.min(1, n / ENOUGH));
     }
     raf = requestAnimationFrame(frame);
   }
@@ -390,6 +433,8 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
      * tracer's copy rebuilt. A camera move alone just restarts the samples.
      */
     show(live, extras) {
+      // About three quarters of the picture's on-screen size, whatever pixel ratio the canvas has.
+      tracer.renderScale = Math.min(1, 0.75 / renderer.getPixelRatio());
       if (extras.version !== version) {
         tracer.setScene(buildScene(live, extras), camera);
         version = extras.version;
@@ -401,15 +446,37 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
       lastWhole = -1;
       steps = 1;
       shown = false;
+      paused = false;
+      tracingFrom = 0;
       running = true;
       if (!raf) raf = requestAnimationFrame(frame);
     },
     stop() {
       running = false;
+      paused = false;
       cancelAnimationFrame(raf);
       raf = 0;
       fadeFrom = 0;
       shown = false;
+    },
+    /**
+     * Holds the tracing while the page is being scrolled, or the picture is off screen or in a
+     * hidden tab, without losing what it has done: the graphics chip goes back to the page.
+     */
+    pause() {
+      if (!running) return;
+      running = false;
+      paused = true;
+      pausedAt = performance.now();
+      cancelAnimationFrame(raf);
+      raf = 0;
+    },
+    resume() {
+      if (!paused) return;
+      paused = false;
+      if (tracingFrom) tracingFrom += performance.now() - pausedAt; // time held is not time tracing
+      running = true;
+      if (!raf) raf = requestAnimationFrame(frame);
     },
     /** Puts the finished photo back on the canvas (after a snapshot redrew it, say). */
     redraw() {
@@ -421,6 +488,7 @@ export function createPhoto({ renderer, camera, drawRaster, onState }) {
       this.stop();
       if (fence) { gl.deleteSync(fence); fence = null; }
       for (const g of owned.geometries) g.dispose();
+      for (const g of owned.boxes) g.dispose();
       for (const m of owned.materials) m.dispose();
       environment.dispose();
       for (const q of [smooth, toCanvas, before]) { q.material.dispose(); q.dispose(); }

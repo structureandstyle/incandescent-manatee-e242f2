@@ -44,7 +44,7 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import { COLOURS, describe } from "./model.mjs";
+import { COLOURS, DOORS, EXTRAS, HANDLES, HANDLE_FINISHES, INSIDES, INSIDE_FINISHES, describe, normalise } from "./model.mjs";
 
 const MM = 0.001;
 const T = 0.018; // carcass board
@@ -593,10 +593,27 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
 
   // Computers only: a phone keeps the real-time picture. It needs WebGL2 with float
   // render targets, and stays off when the visitor has asked to save data.
-  // `?photo=off` in the address keeps the real-time picture only (for checks and screenshots).
-  const photoAllowed = !small && renderer.capabilities.isWebGL2 && renderer.extensions.has("EXT_color_buffer_float")
-    && !(typeof navigator !== "undefined" && navigator.connection?.saveData)
-    && !/[?&]photo=off\b/.test(location.search);
+  // `?photo=off` in the address keeps the real-time picture only (for checks and screenshots);
+  // `?photo=on` makes the photo on any computer, however slowly (for checking it on a laptop).
+  /** The graphics chip's name, where the browser gives it (Chrome and Edge give it in full). */
+  const chip = (() => {
+    try {
+      const gl = renderer.getContext();
+      const info = gl.getExtension("WEBGL_debug_renderer_info");
+      return String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || "");
+    } catch {
+      return "";
+    }
+  })();
+  // Intel's HD and UHD graphics (most office laptops), phone and tablet chips and software
+  // drawing make the photo too slowly to be worth it (20 Nov 2026, an Intel HD 630: 95 seconds
+  // preparing, then 2 samples a second, the page slow throughout): they keep the real-time
+  // picture. Any other computer too slow for it is found once it starts (photo.mjs, MIN_RATE).
+  const slowChip = /\b(U?HD Graphics|Mali|Adreno|PowerVR|SwiftShader|llvmpipe|Software|Basic Render)/i.test(chip);
+  const photoForced = /[?&]photo=on\b/.test(location.search);
+  const photoAllowed = renderer.capabilities.isWebGL2 && renderer.extensions.has("EXT_color_buffer_float")
+    && !/[?&]photo=off\b/.test(location.search)
+    && (photoForced || (!small && !slowChip && !(typeof navigator !== "undefined" && navigator.connection?.saveData)));
   /** How strongly the photo's window and the room behind the viewer light it (tuned by eye, 19 Nov 2026). */
   const PHOTO_KEY = 7;
   const PHOTO_ENV = 0.55;
@@ -618,8 +635,29 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
   function schedulePhoto() {
     if (!photoAllowed || photoFailed || lost) return;
     clearTimeout(photoTimer);
-    photoTimer = setTimeout(startPhoto, 450);
+    // Not while someone is still choosing (20 Nov 2026: starting half a second after every
+    // change kept a laptop's graphics busy while the visitor was still clicking). The first
+    // time waits longest, as the tracer's very large shader is compiled then.
+    photoTimer = setTimeout(startPhoto, photo ? 2200 : 4000);
   }
+  /* While the page is scrolled, or the picture is off screen or in a hidden tab, the tracing
+     waits, so the graphics chip is the page's; it carries on where it left off. */
+  let scrollTimer = 0;
+  let onScreen = true;
+  const holdPhoto = () => photo?.pause();
+  const carryOn = () => { if (onScreen && !document.hidden) photo?.resume(); };
+  const onScroll = () => {
+    holdPhoto();
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(carryOn, 700);
+  };
+  const onVisibility = () => (document.hidden ? holdPhoto() : carryOn());
+  window.addEventListener("scroll", onScroll, { passive: true });
+  document.addEventListener("visibilitychange", onVisibility);
+  const seen = typeof IntersectionObserver === "function"
+    ? new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; if (onScreen) carryOn(); else holdPhoto(); })
+    : null;
+  seen?.observe(canvas);
   async function startPhoto() {
     if (lost || !group) return;
     try {
@@ -628,11 +666,19 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
         const { createPhoto } = await photoLoading;
         if (lost || photo) return;
         photo = createPhoto({
-          renderer, camera, drawRaster: drawFull,
+          renderer, camera, drawRaster: drawFull, forced: photoForced,
           onState: (kind, n, progress) => {
             canvas.dataset.dyoPhoto = kind;
             canvas.dataset.dyoSamples = String(n);
-            if (kind !== "tracing") canvas.dataset.dyoDrawn = "photo";
+            if (kind === "slow") {
+              // Too slow here: no more photos this visit; the real-time picture is still on screen.
+              photoFailed = true;
+              photo.stop();
+              photoState = "";
+              onPhoto?.("stopped", 0);
+              return;
+            }
+            if (kind === "photo" || kind === "done") canvas.dataset.dyoDrawn = "photo";
             photoState = kind;
             onPhoto?.(kind, progress);
           },
@@ -648,12 +694,142 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
     }
   }
 
+  /* ---- Shaders built ahead of time -------------------------------------------- */
+  /*
+   * A material's shader is built the first time it is drawn, and the page waits for it: on a
+   * laptop's own graphics 1.8 seconds when the picture first loaded, and about 120 ms whenever a
+   * style was first shown (measured 20 Nov 2026). Asked for ahead of time, the browser builds
+   * them on threads of its own (the parallel compile extension) while the page goes on answering.
+   * The first picture waits for its own shaders; every other style's are built in the background.
+   */
+  let ready = false;
+  let warming = null;
+  let gone = false;
+  function warm(root) {
+    const keep = renderer.getRenderTarget();
+    const ask = (target) => {
+      renderer.setRenderTarget(target);
+      try {
+        return renderer.compileAsync(root, camera, scene);
+      } finally {
+        renderer.setRenderTarget(keep);
+      }
+    };
+    // The full picture is drawn into a render target, the quick one (while turning) to the screen.
+    return Promise.all([composer ? ask(composer.readBuffer) : null, ask(null)]);
+  }
+  /** The shading passes' own shaders too: the corner shading's alone took 440 ms to build on a laptop. */
+  function warmPasses() {
+    if (!composer) return null;
+    // A pass draws one big triangle with corners and picture positions only (no normals, which
+    // would make it a different shader): the same here, or the shaders asked for are not the ones drawn.
+    const tri = new THREE.BufferGeometry();
+    tri.setAttribute("position", new THREE.Float32BufferAttribute([-1, 3, 0, -1, -1, 0, 3, -1, 0], 3));
+    tri.setAttribute("uv", new THREE.Float32BufferAttribute([0, 2, 0, 0, 2, 0], 2));
+    const passes = new THREE.Scene();
+    for (const m of [
+      aoPass?.gtaoMaterial, aoPass?.pdMaterial, aoPass?.blendMaterial, aoPass?.copyMaterial,
+      bloomPass?.materialHighPassFilter, ...(bloomPass?.separableBlurMaterials ?? []), bloomPass?.compositeMaterial, bloomPass?.blendMaterial,
+    ]) if (m) passes.add(new THREE.Mesh(tri, m));
+    // The corner shading draws the scene's normals first, every part in one material, lit or not.
+    const normals = new THREE.Group();
+    const instanced = aoPass ? new THREE.InstancedMesh(unitBox, aoPass.normalMaterial, 1) : null;
+    if (aoPass) normals.add(new THREE.Mesh(unitBox, aoPass.normalMaterial), instanced);
+    const keep = renderer.getRenderTarget();
+    renderer.setRenderTarget(composer.readBuffer); // every pass but the last draws into a render target
+    try {
+      return Promise.all([renderer.compileAsync(passes, camera), renderer.compileAsync(normals, camera, scene)])
+        .finally(() => { instanced?.dispose(); tri.dispose(); });
+    } finally {
+      renderer.setRenderTarget(keep);
+    }
+  }
+  function firstPicture() {
+    if (ready || warming || !group || lost) return;
+    // The room's colour on the canvas while its shaders are built.
+    const was = renderer.getClearColor(new THREE.Color());
+    const wasAlpha = renderer.getClearAlpha();
+    renderer.setRenderTarget(null);
+    renderer.setClearColor(scene.background, 1);
+    renderer.clear();
+    renderer.setClearColor(was, wasAlpha);
+    warming = Promise.all([warm(scene), warmPasses()])
+      .catch(() => {}) // drawn anyway, building them the old way
+      .then(() => {
+        warming = null;
+        if (lost || gone) return;
+        ready = true;
+        requestRender();
+        later(warmStyles, 1500);
+      });
+  }
+  const idle = typeof requestIdleCallback === "function" ? (fn) => requestIdleCallback(fn, { timeout: 1500 }) : (fn) => setTimeout(fn, 0);
+  const later = (fn, ms) => setTimeout(() => idle(fn), ms);
+  /**
+   * Designs that between them show every door, handle and handle finish, finish, inside finish,
+   * fitting and extra, of both kinds of unit, open, with the figure: built one at a time while the
+   * page is idle, their shaders asked for, then dropped.
+   */
+  let styleQueue = null;
+  function styleSamples() {
+    const d = state.design;
+    // Each finish as it looks (plain or with a grain): fluted reeds are drawn as one instanced
+    // shape, which makes a shader of its own for every look they are made in.
+    const looks = [];
+    COLOURS.forEach((list, f) => {
+      looks.push([f, 0]);
+      const other = list.findIndex((c) => Boolean(c.grain) !== Boolean(list[0].grain));
+      if (other > 0) looks.push([f, other]);
+    });
+    const sample = (unit, i, door, [finish, colour]) => normalise({
+      ...(unit === d.unit ? d : { unit }),
+      door,
+      handle: HANDLES[i % HANDLES.length].id,
+      handleFinish: HANDLE_FINISHES[i % HANDLE_FINISHES.length].id,
+      insideFinish: INSIDE_FINISHES[i % INSIDE_FINISHES.length].id,
+      finish,
+      colour,
+      inside: INSIDES.map((_, k) => INSIDES[(i + k) % INSIDES.length].id),
+      extras: EXTRAS[unit].map((x) => x.id),
+    });
+    // First the design as it is, opened: the inside is the next thing most people look at.
+    const out = [normalise(d)];
+    looks.forEach((look, i) => out.push(sample(d.unit, i, "fluted", look)));
+    for (const unit of d.unit === "alcove" ? ["alcove", "wardrobe"] : ["wardrobe", "alcove"]) {
+      for (let i = 0; i < 6; i++) out.push(sample(unit, i + 1, DOORS[i % DOORS.length].id, looks[i % looks.length]));
+    }
+    return out;
+  }
+  function warmStyles() {
+    if (gone || lost || !ready || !state.design) return;
+    styleQueue ??= styleSamples();
+    const next = styleQueue.shift();
+    if (!next) return;
+    let built = null;
+    try {
+      built = build(next, { inside: true, person: true });
+    } catch {
+      later(warmStyles, 50);
+      return;
+    }
+    const parts = [built.g, built.figure].filter(Boolean);
+    // Its own lights would count twice against the scene's (which decide each shader too).
+    for (const root of parts) root.traverse((o) => { if (o.isLight) o.visible = false; });
+    Promise.all(parts.map(warm))
+      .catch(() => {})
+      .then(() => {
+        for (const root of parts) root.traverse((o) => { if (o.isInstancedMesh) o.dispose(); });
+        later(warmStyles, 50);
+      });
+  }
+
   function turnFigure() {
     if (!figure) return;
     figure.rotation.y = Math.atan2(camera.position.x - figure.position.x, camera.position.z - figure.position.z);
   }
 
   function drawQuick() {
+    if (!ready) return;
     renderer.setRenderTarget(null);
     renderer.render(scene, camera);
     if (overlay.children.length) {
@@ -664,15 +840,39 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
     }
     canvas.dataset.dyoDrawn = "quick"; // which picture is on screen, for checks
   }
+  /*
+   * A slow graphics chip draws the picture at a lower resolution (20 Nov 2026: on a laptop's
+   * own Intel graphics the full picture at twice its size made the page feel slow). The third
+   * full picture is timed (the first two include compiling); over 70 ms it is drawn at 1.5
+   * times its size, over 140 ms at 1.25. Once a session, so the picture never jumps about.
+   */
+  let fullCount = 0;
+  let tierSet = small; // a phone already draws at its own pixel ratio
   function drawFull() {
+    if (!ready) return;
     if (!composer) { drawQuick(); return; }
+    const t0 = performance.now();
     composer.render();
     canvas.dataset.dyoDrawn = "full";
+    if (!tierSet && ++fullCount === 3) {
+      tierSet = true;
+      renderer.getContext().finish();
+      const ms = performance.now() - t0;
+      canvas.dataset.dyoFrameMs = String(Math.round(ms));
+      if (ms > 70) {
+        const ratio = ms > 140 ? 1.25 : 1.5;
+        renderer.setPixelRatio(ratio);
+        composer.setPixelRatio(ratio);
+        canvas.dataset.dyoPixelRatio = String(ratio);
+        setTimeout(resize, 0); // sized again, then drawn again, at the new ratio
+      }
+    }
   }
   /** The full picture, on the next frame. */
   const requestRender = () => {
     if (lost) return;
     clearTimeout(fineTimer);
+    if (!ready) { firstPicture(); return; }
     if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (!lost) { turnFigure(); drawFull(); schedulePhoto(); } });
   };
   /** The quick picture now, and the full one once things have been still for a moment. */
@@ -1561,6 +1761,16 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
       fig.add(underfoot, body);
     }
 
+    // Always LIGHT_BUDGET point lights, the spare ones dark (20 Nov 2026): every shader is built
+    // for the number of lights in the scene, so a design with fewer, or none (lighting not
+    // chosen), had every shader built again, freezing the page on a laptop's own graphics.
+    while (lights.length < LIGHT_BUDGET) {
+      const p = new THREE.PointLight(0xffdcae, 0, 0.01, 1.6);
+      p.position.set(0, -20, 0);
+      g.add(p);
+      lights.push(p);
+    }
+
     return { g, bounds, side, doors: doorList, figure: fig, lit: strips.length > 0, strips };
   }
 
@@ -1687,7 +1897,15 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
     scene.add(group);
     if (figure) scene.add(figure);
     for (const [key, geo] of geos) if (!used.has(key)) { geo.dispose(); geos.delete(key); }
-    for (const [key, wood] of woodMats) if (!usedWood.has(key)) { wood.map?.dispose(); wood.dispose(); woodMats.delete(key); }
+    // Wood not in this design is kept for a while (20 Nov 2026): a shader goes with the last
+    // material using it, and building it again froze the page whenever a finish came back.
+    // Only past a few hundred are the oldest let go (their pictures are shared, so they cost little).
+    if (woodMats.size > 400) {
+      for (const [key, wood] of woodMats) {
+        if (woodMats.size <= 300) break;
+        if (!usedWood.has(key)) { wood.map?.dispose(); wood.dispose(); woodMats.delete(key); }
+      }
+    }
     state.lit = built.lit;
     state.strips = built.strips;
     sceneVersion++;
@@ -1791,6 +2009,9 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
     cancelAnimationFrame(anim);
     stopPhoto();
     photo = null; // its GPU copies went with the context; a new one is made on the next still moment
+    ready = false; // the shaders went too: built again, ahead of time, once it is back
+    warming = null;
+    styleQueue = null;
     onLost?.();
   };
   const onContextRestored = () => { lost = false; onRestored?.(); if (state.design) { rebuild(); requestRender(); } };
@@ -1802,12 +2023,17 @@ export function createView(canvas, { onLost, onRestored, onPhoto } = {}) {
   resize();
 
   function dispose() {
+    gone = true;
     cancelAnimationFrame(raf);
     cancelAnimationFrame(anim);
     clearTimeout(fineTimer);
     stopPhoto();
     photo?.dispose();
     observer?.disconnect();
+    seen?.disconnect();
+    clearTimeout(scrollTimer);
+    window.removeEventListener("scroll", onScroll);
+    document.removeEventListener("visibilitychange", onVisibility);
     canvas.removeEventListener("pointerdown", onPointerDown);
     canvas.removeEventListener("dblclick", onDoubleClick);
     canvas.removeEventListener("pointerup", onPointerUp);

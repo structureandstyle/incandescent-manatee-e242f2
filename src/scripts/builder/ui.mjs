@@ -316,13 +316,11 @@ export function initBuilder(root) {
     if (mode === "3d") view.resize();
   }
 
+  // Whether the browser has 3D drawing at all. A browser that has it but cannot start it here
+  // (a blocked graphics chip) fails in createView, caught below. No trial canvas (20 Nov 2026:
+  // making one cost a laptop a fifth of a second, and it was never let go).
   function canRun3d() {
-    try {
-      const c = document.createElement("canvas");
-      return Boolean(c.getContext("webgl2") || c.getContext("webgl"));
-    } catch {
-      return false;
-    }
+    return typeof window.WebGL2RenderingContext === "function" || typeof window.WebGLRenderingContext === "function";
   }
 
   function load3d() {
@@ -350,11 +348,13 @@ export function initBuilder(root) {
         setMode("3d");
         return view;
       })
-      .catch(() => {
+      .catch((e) => {
         canvas.hidden = true;
         view = null;
         loading3d = null;
         setStatus(copy.unavailable);
+        // A browser that could not start 3D drawing here will not on a second try either.
+        if (/webgl/i.test(String(e?.message || e))) for (const el of $$(root, '[data-dyo-mode="3d"]')) el.disabled = true;
         return null;
       });
     return loading3d;
