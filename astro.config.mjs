@@ -7,6 +7,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { blockedPaths } from './src/data/page-gates';
 import { SERVICES } from './src/data/site';
 import { SERVICE_COPY } from './src/data/service-copy';
+import { DESIGN_YOUR_OWN_LIVE } from './src/data/design-your-own-gate';
 
 // THE PRODUCTION BUILD ON CLOUDFLARE, 15 Nov 2026 (docs/cloudflare-move.md).
 // netlify.toml gave Netlify's production builds two settings. Cloudflare
@@ -62,6 +63,11 @@ for (const file of articles) {
 }
 if (liveArticles === 0) blocked.add('/journal/');
 
+// The design-your-own page stays out of the sitemap until a founder approves
+// its launch. One switch, read here and by the page's own robots tag
+// (src/data/design-your-own-gate.ts), so the two cannot disagree.
+if (!DESIGN_YOUR_OWN_LIVE) blocked.add('/design-your-own/');
+
 // The thank-you page exists only as the landing after a form submission and
 // carries the enquiry_form event. It is noindexed at the template and has no
 // business in the sitemap.
@@ -87,5 +93,29 @@ export default defineConfig({
       },
     }),
   ],
-  vite: { plugins: [tailwindcss()] },
+  vite: {
+    plugins: [tailwindcss()],
+    // Development only. The design-your-own builder's 3D libraries, bundled in
+    // one pass when the dev server starts: its traced photo loads the tracer
+    // after three, and two separate passes left the page asking for an
+    // out-of-date copy of three (19 Nov 2026). The production build is not
+    // affected by this setting.
+    optimizeDeps: {
+      include: [
+        'three',
+        'three-gpu-pathtracer',
+        'three-gpu-pathtracer/src/materials/fullscreen/ClampedInterpolationMaterial.js',
+        'three-mesh-bvh',
+        'three/addons/controls/OrbitControls.js',
+        'three/addons/geometries/RoundedBoxGeometry.js',
+        'three/addons/postprocessing/EffectComposer.js',
+        'three/addons/postprocessing/RenderPass.js',
+        'three/addons/postprocessing/GTAOPass.js',
+        'three/addons/postprocessing/UnrealBloomPass.js',
+        'three/addons/postprocessing/OutputPass.js',
+        'three/addons/postprocessing/Pass.js',
+        'three/addons/utils/BufferGeometryUtils.js',
+      ],
+    },
+  },
 });

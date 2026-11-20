@@ -1,0 +1,735 @@
+---
+/**
+ * DESIGN YOUR OWN, 19 Nov 2026 (a founder, in chat: a page where people build
+ * their own wardrobe or alcove units in 3D, see the price and send it). It
+ * takes the place of the Christmas bundle page, which was never live: the
+ * builder stays, the offer is gone.
+ *
+ * What a visitor does: types rough sizes, says how the run meets the walls,
+ * picks a finish, doors, handles and an inside, and watches the picture and
+ * the guide price follow. Then adds it to a project, or sends it.
+ *
+ * THE PRICE IS WORKED OUT PART BY PART (a founder, 19 Nov 2026) from the S&S
+ * price book (src/data/price-book.json, through src/data/builder.ts, which
+ * hands the page selling rates only), shown as "from" and called a guide.
+ * Every size, door style, handle, inside and extra moves it, line by line.
+ * tests/builder-costing.test.mjs and builder-model.test.mjs hold all of that.
+ *
+ * NO FORM OF ITS OWN. One form per page (site PR #41): sending opens the
+ * site's Get a quote pop-up with the services ticked and the job box filled
+ * with the design in words and a link back to it (src/scripts/builder/ui.mjs).
+ * Field names, the Worker and Make are untouched.
+ *
+ * WITHOUT 3D. The flat drawing below is in the page's own HTML, so the design
+ * shows before any script has run. The 3D view and its library load only once
+ * the builder is on screen, and where 3D cannot run the drawing stays.
+ *
+ * THE WORDS are the copy agent's (src/data/design-your-own-copy.ts), written
+ * against protocol v1.4. Do not rewrite them here.
+ *
+ * NOT IN THE INDEX until a founder approves the launch
+ * (src/data/design-your-own-gate.ts). No schema of its own: the build check
+ * allows Service markup on the service pages only.
+ */
+import Base from "../layouts/Base.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import Display from "../components/ds/Display.astro";
+import MonoLabel from "../components/ds/MonoLabel.astro";
+import Link from "../components/ds/Link.astro";
+import Faq from "../components/ds/Faq.astro";
+import FormProof from "../components/FormProof.astro";
+import { COPY } from "../data/design-your-own-copy";
+import { PRICES, SELL_BOOK, UNIT_SERVICE, OTHER_SERVICES } from "../data/builder";
+import { DESIGN_YOUR_OWN_LIVE } from "../data/design-your-own-gate";
+import { BUSINESS } from "../data/site";
+import {
+  COLOURS,
+  DEFAULTS,
+  DOORS,
+  EXTRAS,
+  FITS,
+  HANDLE_FINISHES,
+  HANDLES,
+  INSIDE_FINISHES,
+  INSIDES,
+  LIMITS,
+  NO_METAL,
+  describe,
+  guidePrice,
+  money,
+  specLines,
+  title,
+} from "../scripts/builder/model.mjs";
+import { elevationSvg } from "../scripts/builder/elevation.mjs";
+
+/* The design the page opens on, drawn and priced at build time so it is there
+   before any script runs. The script then takes over from the same rules. */
+const first = describe(DEFAULTS.wardrobe);
+const firstAlcove = describe(DEFAULTS.alcove);
+/* The page carries the selling rates only (src/data/builder.ts): never his costs or margin. */
+const BUILDER_PRICES = { book: SELL_BOOK };
+const firstPrice = guidePrice(first, BUILDER_PRICES);
+const firstWords = specLines(first, PRICES.finishes);
+const figure = (from: number | null) => (from ? `${COPY.price.from} ${money(from)}` : COPY.price.quoted);
+
+const config = {
+  prices: BUILDER_PRICES,
+  finishes: PRICES.finishes,
+  labels: UNIT_SERVICE,
+  others: OTHER_SERVICES,
+  copy: {
+    section: COPY.steps.inside.section,
+    from: COPY.price.from,
+    quoted: COPY.price.quoted,
+    leftWidth: COPY.fields.leftWidth,
+    oneWidth: COPY.fields.oneWidth,
+    outOfRange: COPY.fields.outOfRange,
+    drag: COPY.view.drag,
+    refining: COPY.view.refining,
+    loading: COPY.view.loading,
+    unavailable: COPY.view.unavailable,
+    add: COPY.actions.add,
+    added: COPY.actions.added,
+    update: COPY.actions.update,
+    copied: COPY.actions.copied,
+    edit: COPY.project.edit,
+    remove: COPY.project.remove,
+  },
+};
+/* "<" escaped so nothing in the data can close the script element. */
+const configJson = JSON.stringify(config).replace(/</g, "\\u003c");
+
+const W = LIMITS.wardrobe;
+const A = LIMITS.alcove;
+const wardrobeNumbers = [
+  { name: "w", label: COPY.fields.width, value: first.w, range: W.w, step: 10 },
+  { name: "h", label: COPY.fields.height, value: first.h, range: W.h, step: 10 },
+  { name: "d", label: COPY.fields.depth, value: first.d, range: W.d, step: 10 },
+];
+---
+
+<Base title={COPY.meta.title} description={COPY.meta.description} noindex={!DESIGN_YOUR_OWN_LIVE}>
+  <Wrap style="padding-top:var(--space-15)">
+    <header class="dyo-hero">
+      <MonoLabel as="p" tone="green">{COPY.hero.kicker}</MonoLabel>
+      <Display level={2} as="h1" style="margin:var(--space-6) 0 0;max-width:20ch">{COPY.hero.h1}</Display>
+      <p class="dyo-lede">{COPY.hero.lede}</p>
+      <div class="dyo-hero-actions">
+        <Link href="#design" variant="button">{COPY.hero.start}</Link>
+        <Link href={BUSINESS.whatsapp} variant="cta" chamfer target="_blank" rel="noopener">{COPY.hero.whatsapp}</Link>
+      </div>
+      <FormProof />
+    </header>
+  </Wrap>
+
+  <section id="design" class="dyo" data-dyo aria-label={COPY.hero.kicker}>
+    <script type="application/json" data-dyo-config set:html={configJson} />
+    <Wrap style="max-width:1360px">
+      <noscript><p class="dyo-noscript">{COPY.fallback.noscript}</p></noscript>
+      <div class="dyo-grid">
+        <div class="dyo-stage">
+          <div class="dyo-frame">
+            <div class="dyo-picture" data-dyo-picture role="img" aria-label={`${title(first, PRICES.finishes)}. ${firstWords.join(" ")}`}>
+              <div class="dyo-drawing" data-dyo-drawing set:html={elevationSvg(first)} />
+              <canvas class="dyo-canvas" data-dyo-canvas hidden aria-hidden="true"></canvas>
+            </div>
+            <p class="dyo-chip">
+              <span class="dyo-chip-label">{COPY.price.label}</span>
+              <span class="dyo-chip-figure" data-dyo-figure>{figure(firstPrice.from)}</span>
+            </p>
+            <p class="dyo-status" data-dyo-status role="status" hidden></p>
+          </div>
+          <div class="dyo-tools">
+            <div class="dyo-seg" role="group" aria-label={`${COPY.view.threeD} / ${COPY.view.drawing}`}>
+              <button type="button" data-dyo-mode="3d" aria-pressed="false">{COPY.view.threeD}</button>
+              <button type="button" data-dyo-mode="drawing" aria-pressed="true">{COPY.view.drawing}</button>
+            </div>
+            <div class="dyo-seg" role="group" aria-label={`${COPY.view.doorsClosed} / ${COPY.view.doorsOpen}`}>
+              <button type="button" data-dyo-doors="closed" aria-pressed="true">{COPY.view.doorsClosed}</button>
+              <button type="button" data-dyo-doors="open" aria-pressed="false">{COPY.view.doorsOpen}</button>
+            </div>
+            <div class="dyo-seg" data-dyo-3d-only hidden>
+              <button type="button" data-dyo-look="front">{COPY.view.front}</button>
+              <button type="button" data-dyo-look="angle">{COPY.view.angle}</button>
+            </div>
+            <div class="dyo-seg" data-dyo-3d-only hidden>
+              <button type="button" data-dyo-zoom="-1" aria-label={COPY.view.zoomOut}><span aria-hidden="true">&minus;</span></button>
+              <button type="button" data-dyo-zoom="1" aria-label={COPY.view.zoomIn}><span aria-hidden="true">+</span></button>
+            </div>
+            <label class="dyo-tick dyo-tick-inline" data-dyo-3d-only hidden>
+              <input type="checkbox" data-dyo-person />
+              <span>{COPY.view.person}</span>
+            </label>
+          </div>
+          <p class="dyo-note">{COPY.view.note}</p>
+        </div>
+
+        <form class="dyo-controls" data-dyo-form novalidate>
+          <fieldset class="dyo-step">
+            <legend>{COPY.units.heading}</legend>
+            <div class="dyo-units">
+              <label class="dyo-card">
+                <input type="radio" name="dyo-unit" value="wardrobe" checked />
+                <span class="dyo-card-box">
+                  <span class="dyo-card-title">{COPY.units.wardrobe}</span>
+                  <span class="dyo-card-hint">{COPY.units.wardrobeHint}</span>
+                </span>
+              </label>
+              <label class="dyo-card">
+                <input type="radio" name="dyo-unit" value="alcove" />
+                <span class="dyo-card-box">
+                  <span class="dyo-card-title">{COPY.units.alcove}</span>
+                  <span class="dyo-card-hint">{COPY.units.alcoveHint}</span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="dyo-step" data-dyo-for="wardrobe">
+            <legend>{COPY.steps.size.title}</legend>
+            <p class="dyo-help">{COPY.steps.size.help}</p>
+            <div class="dyo-numbers">
+              {wardrobeNumbers.map((f) => (
+                <label class="dyo-number">
+                  <span>{f.label}</span>
+                  <span class="dyo-number-box">
+                    <input type="number" name={f.name} value={f.value} min={f.range[0]} max={f.range[1]} step={f.step} inputmode="numeric" />
+                    <span aria-hidden="true">{COPY.fields.unitMm}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            {wardrobeNumbers.map((f) => <p class="dyo-range" data-dyo-range={f.name} role="alert" hidden></p>)}
+          </fieldset>
+
+          <fieldset class="dyo-step" data-dyo-for="wardrobe">
+            <legend>{COPY.steps.walls.title}</legend>
+            <p class="dyo-help">{COPY.steps.walls.help}</p>
+            <div class="dyo-chips">
+              {FITS.map((x) => (
+                <label class="dyo-chipbox">
+                  <input type="radio" name="dyo-fit" value={x.id} checked={x.id === first.fit} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset class="dyo-step" data-dyo-for="alcove" hidden>
+            <legend>{COPY.steps.alcoveSize.title}</legend>
+            <p class="dyo-help">{COPY.steps.alcoveSize.help}</p>
+            <div class="dyo-chips">
+              <label class="dyo-chipbox">
+                <input type="radio" name="dyo-count" value="2" checked />
+                <span>{COPY.fields.alcovePair}</span>
+              </label>
+              <label class="dyo-chipbox">
+                <input type="radio" name="dyo-count" value="1" />
+                <span>{COPY.fields.alcoveOne}</span>
+              </label>
+            </div>
+            <div class="dyo-numbers">
+              <label class="dyo-number">
+                <span data-dyo-left-label>{COPY.fields.leftWidth}</span>
+                <span class="dyo-number-box">
+                  <input type="number" name="wl" value={firstAlcove.wl} min={A.w[0]} max={A.w[1]} step="10" inputmode="numeric" />
+                  <span aria-hidden="true">{COPY.fields.unitMm}</span>
+                </span>
+              </label>
+              <label class="dyo-number" data-dyo-right-alcove>
+                <span>{COPY.fields.rightWidth}</span>
+                <span class="dyo-number-box">
+                  <input type="number" name="wr" value={firstAlcove.wr} min={A.w[0]} max={A.w[1]} step="10" inputmode="numeric" />
+                  <span aria-hidden="true">{COPY.fields.unitMm}</span>
+                </span>
+              </label>
+              <label class="dyo-number">
+                <span>{COPY.fields.alcoveDepth}</span>
+                <span class="dyo-number-box">
+                  <input type="number" name="ad" value={firstAlcove.d} min={A.d[0]} max={A.d[1]} step="10" inputmode="numeric" />
+                  <span aria-hidden="true">{COPY.fields.unitMm}</span>
+                </span>
+              </label>
+              <label class="dyo-number">
+                <span>{COPY.fields.ceiling}</span>
+                <span class="dyo-number-box">
+                  <input type="number" name="ah" value={firstAlcove.h} min={A.h[0]} max={A.h[1]} step="10" inputmode="numeric" />
+                  <span aria-hidden="true">{COPY.fields.unitMm}</span>
+                </span>
+              </label>
+              <label class="dyo-number">
+                <span>{COPY.fields.breast}</span>
+                <span class="dyo-number-box">
+                  <input type="number" name="breast" value={firstAlcove.breast} min={A.breast[0]} max={A.breast[1]} step="10" inputmode="numeric" aria-describedby="dyo-breast-help" />
+                  <span aria-hidden="true">{COPY.fields.unitMm}</span>
+                </span>
+              </label>
+            </div>
+            <p class="dyo-help dyo-help-after" id="dyo-breast-help">{COPY.fields.breast}: {COPY.fields.breastHelp}</p>
+            {["wl", "wr", "ad", "ah", "breast"].map((name) => <p class="dyo-range" data-dyo-range={name} role="alert" hidden></p>)}
+          </fieldset>
+
+          <fieldset class="dyo-step" data-dyo-for="alcove" hidden>
+            <legend>{COPY.steps.alcoveUnit.title}</legend>
+            <p class="dyo-help">{COPY.steps.alcoveUnit.help}</p>
+            <div class="dyo-numbers">
+              <label class="dyo-number">
+                <span>{COPY.fields.baseHeight}</span>
+                <span class="dyo-number-box">
+                  <input type="number" name="base" value={firstAlcove.base} min={A.base[0]} max={A.base[1]} step="10" inputmode="numeric" />
+                  <span aria-hidden="true">{COPY.fields.unitMm}</span>
+                </span>
+              </label>
+              <label class="dyo-number">
+                <span>{COPY.fields.shelves}</span>
+                <span class="dyo-number-box">
+                  <input type="number" name="shelves" value={firstAlcove.shelves} min={A.shelves[0]} max={A.shelves[1]} step="1" inputmode="numeric" />
+                </span>
+              </label>
+            </div>
+            {["base", "shelves"].map((name) => <p class="dyo-range" data-dyo-range={name} role="alert" hidden></p>)}
+          </fieldset>
+
+          <fieldset class="dyo-step">
+            <legend>{COPY.steps.finish.title}</legend>
+            <p class="dyo-help">{COPY.steps.finish.help}</p>
+            <div class="dyo-rows">
+              {PRICES.finishes.map((name, f) => (
+                <label class="dyo-row">
+                  <input type="radio" name="dyo-finish" value={f} checked={f === first.finish} />
+                  <span class="dyo-row-box">
+                    <span class="dyo-row-name">{name}</span>
+                    <span class="dyo-row-price" data-dyo-finish-price={f}>{figure(guidePrice({ ...first, finish: f }, BUILDER_PRICES).from)}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset class="dyo-step">
+            <legend>{COPY.steps.colour.title}: <span class="dyo-legend-value" data-dyo-colour-name>{COLOURS[first.finish][first.colour].name}</span></legend>
+            <p class="dyo-help">{COPY.steps.colour.help}</p>
+            {COLOURS.map((set, f) => (
+              <div class="dyo-swatches" data-dyo-colours={f} hidden={f !== first.finish}>
+                {set.map((c, i) => (
+                  <label class="dyo-swatch">
+                    <input type="radio" name={`dyo-colour-${f}`} value={i} checked={i === 0} />
+                    <span class:list={["dyo-swatch-box", c.grain && "is-grain"]} style={`background-color:${c.hex}`}></span>
+                    <span class="dyo-sr">{c.name}</span>
+                  </label>
+                ))}
+              </div>
+            ))}
+          </fieldset>
+
+          <fieldset class="dyo-step">
+            <legend>{COPY.steps.doors.title}</legend>
+            {COPY.steps.doors.help && <p class="dyo-help">{COPY.steps.doors.help}</p>}
+            <div class="dyo-chips">
+              {DOORS.map((x) => (
+                <label class="dyo-chipbox">
+                  <input type="radio" name="dyo-door" value={x.id} checked={x.id === first.door} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset class="dyo-step">
+            <legend>{COPY.steps.handles.title}</legend>
+            {COPY.steps.handles.help && <p class="dyo-help">{COPY.steps.handles.help}</p>}
+            <div class="dyo-chips">
+              {HANDLES.map((x) => (
+                <label class="dyo-chipbox">
+                  <input type="radio" name="dyo-handle" value={x.id} checked={x.id === first.handle} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* Hidden while a handle with no metal is chosen: push to open, routed pulls (ui.mjs showPanels). */}
+          <fieldset class="dyo-step" data-dyo-handle-finish hidden={NO_METAL.has(first.handle)}>
+            <legend>{COPY.steps.handleFinish.title}</legend>
+            {COPY.steps.handleFinish.help && <p class="dyo-help">{COPY.steps.handleFinish.help}</p>}
+            <div class="dyo-chips">
+              {HANDLE_FINISHES.map((x) => (
+                <label class="dyo-chipbox">
+                  <input type="radio" name="dyo-handle-finish" value={x.id} checked={x.id === first.handleFinish} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* The inside, finished apart from the outside (a founder's review, 19 Nov 2026). */}
+          <fieldset class="dyo-step">
+            <legend>{COPY.steps.insideFinish.title}</legend>
+            {COPY.steps.insideFinish.help && <p class="dyo-help">{COPY.steps.insideFinish.help}</p>}
+            <div class="dyo-chips">
+              {INSIDE_FINISHES.map((x) => (
+                <label class="dyo-chipbox">
+                  <input type="radio" name="dyo-inside-finish" value={x.id} checked={x.id === first.insideFinish} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset class="dyo-step" data-dyo-for="wardrobe">
+            <legend>{COPY.steps.inside.title}</legend>
+            <p class="dyo-help">{COPY.steps.inside.help}</p>
+            <div class="dyo-selects" data-dyo-inside>
+              {first.sections.map((doors, i) => (
+                <label class="dyo-select">
+                  <span>{COPY.steps.inside.section} {i + 1}</span>
+                  <select aria-label={`${COPY.steps.inside.section} ${i + 1}, ${doors === 2 ? "two doors" : "one door"}`}>
+                    {INSIDES.map((x) => <option value={x.id} selected={x.id === first.inside[i]}>{x.label}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset class="dyo-step">
+            <legend>{COPY.steps.extras.title}</legend>
+            <p class="dyo-help">{COPY.steps.extras.help}</p>
+            <div class="dyo-ticks" data-dyo-for="wardrobe">
+              {EXTRAS.wardrobe.map((x) => (
+                <label class="dyo-tick">
+                  <input type="checkbox" name="dyo-extra-wardrobe" value={x.id} checked={first.extras.includes(x.id)} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+            <div class="dyo-ticks" data-dyo-for="alcove" hidden>
+              {EXTRAS.alcove.map((x) => (
+                <label class="dyo-tick">
+                  <input type="checkbox" name="dyo-extra-alcove" value={x.id} checked={firstAlcove.extras.includes(x.id)} />
+                  <span>{x.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div class="dyo-price">
+            <p class="dyo-price-label">{COPY.price.label}</p>
+            <p class="dyo-price-figure" data-dyo-figure aria-live="polite">{figure(firstPrice.from)}</p>
+            <div class="dyo-lines" data-dyo-lines hidden={firstPrice.lines.length < 2}>
+              <p class="dyo-lines-label">{COPY.price.breakdown}</p>
+              <ul>
+                {firstPrice.lines.map((l) => (
+                  <li><span>{l.text}</span><span>{l.from ? `${COPY.price.from} ` : "+ "}{money(l.amount)}</span></li>
+                ))}
+              </ul>
+            </div>
+            <p class="dyo-price-note">{COPY.price.parts}</p>
+            <p class="dyo-price-guide">{COPY.price.guide}</p>
+            <ul class="dyo-words" data-dyo-words>
+              {firstWords.map((line) => <li>{line}</li>)}
+            </ul>
+            <div class="dyo-actions">
+              <button type="button" class="dyo-button" data-dyo-add>{COPY.actions.add}</button>
+              <button type="button" class="dyo-button is-quiet" data-dyo-send>{COPY.actions.send}</button>
+              <button type="button" class="dyo-text-button" data-dyo-copy>{COPY.actions.copyLink}</button>
+            </div>
+            <p class="dyo-toast" data-dyo-toast role="status" hidden></p>
+            {/* After "Add to my project" (a founder's review, 19 Nov 2026): design another, or keep this one. */}
+            <div class="dyo-another" data-dyo-another role="group" aria-label={COPY.actions.addedPrompt} hidden>
+              <p>{COPY.actions.addedPrompt}</p>
+              <div class="dyo-actions">
+                <button type="button" class="dyo-button" data-dyo-another-yes>{COPY.actions.another}</button>
+                <button type="button" class="dyo-text-button" data-dyo-another-no>{COPY.actions.keep}</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </Wrap>
+
+    <Wrap style="max-width:1360px">
+      <section class="dyo-project" aria-labelledby="dyo-project-title">
+        <div class="dyo-project-main">
+          <h2 id="dyo-project-title" class="dyo-h2">{COPY.project.heading} <span class="dyo-count" data-dyo-count hidden></span></h2>
+          <p class="dyo-help" data-dyo-project-empty>{COPY.project.empty}</p>
+          <ul class="dyo-items" data-dyo-project></ul>
+          <p class="dyo-total" data-dyo-total hidden>
+            <span>{COPY.project.total}</span>
+            <span class="dyo-total-figure" data-dyo-total-figure></span>
+          </p>
+          <p class="dyo-help" data-dyo-total-note hidden>{COPY.project.totalNote}</p>
+        </div>
+        <div class="dyo-project-side">
+          <fieldset class="dyo-step dyo-step-plain">
+            <legend>{COPY.project.othersHeading}</legend>
+            <p class="dyo-help">{COPY.project.othersHelp}</p>
+            <div class="dyo-ticks">
+              {OTHER_SERVICES.map((o) => (
+                <label class="dyo-tick">
+                  <input type="checkbox" name="dyo-other" value={o.value} />
+                  <span>{o.label}{o.from && <span class="dyo-tick-from">, {o.from}</span>}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <button type="button" class="dyo-button" data-dyo-send-project disabled>{COPY.project.send}</button>
+          <p class="dyo-help">{COPY.project.sendHelp}</p>
+        </div>
+      </section>
+    </Wrap>
+  </section>
+
+  <Wrap style="padding-bottom:var(--section-y)">
+    <section class="dyo-block dyo-limits" aria-labelledby="dyo-limits-title">
+      <h2 id="dyo-limits-title" class="dyo-h2">{COPY.limits.heading}</h2>
+      <p class="dyo-body">{COPY.limits.body}</p>
+      <Link href={BUSINESS.whatsapp} variant="cta" chamfer target="_blank" rel="noopener">{COPY.limits.cta}</Link>
+    </section>
+
+    <section class="dyo-block" aria-labelledby="dyo-how-title">
+      <h2 id="dyo-how-title" class="dyo-h2">{COPY.how.heading}</h2>
+      <ol class="dyo-how">
+        {COPY.how.steps.map((step, i) => (
+          <li>
+            <MonoLabel as="span" tone="green">{String(i + 1).padStart(2, "0")}</MonoLabel>
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="dyo-block" aria-labelledby="dyo-faq-title">
+      <h2 id="dyo-faq-title" class="dyo-h2">{COPY.faq.heading}</h2>
+      <div class="dyo-faqs">
+        {COPY.faq.items.map((item) => <Faq q={item.q}>{item.a}</Faq>)}
+      </div>
+    </section>
+  </Wrap>
+</Base>
+
+<script>
+  import { initBuilder } from "../scripts/builder/ui.mjs";
+  initBuilder(document.querySelector("[data-dyo]"));
+</script>
+
+{/* Global, because the script builds some of this markup (the section
+    choosers, the project list, the drawing) and scoped styles would miss it.
+    Every rule is under .dyo or a dyo- class, so nothing else on the site is
+    touched. */}
+<style is:global>
+  .dyo-hero { padding-bottom: var(--space-15); }
+  .dyo-lede {
+    max-width: var(--measure-tight);
+    margin: var(--space-9) 0 0;
+    font-size: var(--type-lede);
+    line-height: var(--lh-body);
+    color: var(--text-quiet);
+  }
+  .dyo-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-8) var(--space-13);
+    margin: var(--space-12) 0 var(--space-10);
+  }
+
+  .dyo { scroll-margin-top: var(--dyo-top, 84px); border-top: var(--rule-structure); padding: var(--space-13) 0 var(--section-y); }
+  .dyo [hidden] { display: none !important; }
+  .dyo-noscript { margin: 0 0 var(--space-10); padding: var(--space-8) var(--space-10); border: var(--rule-structure); }
+  .dyo-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  .dyo-grid { display: grid; gap: var(--space-12); }
+  @media (min-width: 940px) {
+    .dyo-grid { grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr); gap: var(--space-17); align-items: start; }
+  }
+
+  /* The picture stays in view while the choices scroll past it. On a phone
+     only the picture sticks: its buttons scroll away, so the choices keep
+     more than half the screen. */
+  .dyo-stage { display: contents; }
+  /* --dyo-top is where the site's header really ends, measured by the script
+     (ui.mjs); the figures here stand in until it has run. */
+  .dyo-frame { position: sticky; top: var(--dyo-top, 82px); z-index: 5; border: var(--rule-structure); background: var(--paper); }
+  .dyo-tools { margin-top: calc(var(--space-6) - var(--space-12)); }
+  .dyo-picture { height: min(38vh, 300px); }
+  @media (min-width: 940px) {
+    .dyo-stage { display: block; position: sticky; top: var(--dyo-top, 96px); z-index: 5; }
+    .dyo-frame { position: relative; top: auto; }
+    .dyo-tools { margin-top: var(--space-6); }
+    .dyo-picture { height: min(68vh, 640px); }
+  }
+  .dyo-drawing, .dyo-canvas { display: block; width: 100%; height: 100%; }
+  .dyo-drawing svg { display: block; width: 100%; height: 100%; }
+  .dyo-canvas { cursor: grab; outline: none; }
+  .dyo-canvas:active { cursor: grabbing; }
+  .dyo-chip {
+    position: absolute; left: 0; top: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 2px;
+    padding: var(--space-5) var(--space-8) var(--space-6);
+    background: var(--paper); border-right: var(--rule-structure); border-bottom: var(--rule-structure);
+  }
+  .dyo-chip-label, .dyo-price-label, .dyo-step legend, .dyo-number > span:first-child, .dyo-select > span {
+    font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono);
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .dyo-chip-figure { font-family: var(--font-serif-display); font-size: 22px; line-height: 1.15; }
+  .dyo-chip-figure.is-quoted { font-size: 17px; }
+  .dyo-status {
+    position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--type-body-sm); color: var(--ink-soft); background: rgba(242, 238, 227, 0.9);
+  }
+  .dyo-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-5) var(--space-6); }
+  .dyo-seg { display: inline-flex; }
+  .dyo-seg button, .dyo-tool {
+    min-height: 40px; min-width: 44px; padding: 0 var(--space-7);
+    font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono); text-transform: uppercase;
+    color: var(--char); background: var(--paper); border: var(--rule-structure); cursor: pointer;
+  }
+  .dyo-seg button + button { border-left: 0; }
+  .dyo-seg button[aria-pressed="true"], .dyo-tool[aria-pressed="true"] { background: var(--char); color: var(--paper); }
+  .dyo-seg button:disabled { color: var(--ink-faint); cursor: default; }
+  .dyo-note { margin: var(--space-6) 0 0; font-size: var(--type-note); line-height: var(--lh-note); color: var(--ink-soft); }
+  @media (max-width: 939px) { .dyo-note { display: none; } }
+
+  .dyo-controls { min-width: 0; }
+  .dyo-step { margin: 0; padding: var(--space-10) 0 var(--space-12); border: 0; border-top: var(--rule-hair); min-width: 0; }
+  .dyo-controls > .dyo-step:first-child { border-top: 0; padding-top: 0; }
+  .dyo-step-plain { border-top: 0; padding-top: 0; }
+  .dyo-step legend { padding: 0; }
+  .dyo-legend-value { color: var(--char); }
+  .dyo-help { margin: var(--space-4) 0 var(--space-8); max-width: var(--measure-tight); font-size: var(--type-body-sm); line-height: 1.5; color: var(--text-quiet); }
+  .dyo-help-after { margin: var(--space-6) 0 0; }
+  .dyo-range { margin: var(--space-5) 0 0; font-size: var(--type-body-sm); color: var(--error); }
+
+  .dyo input[type="radio"], .dyo input[type="checkbox"] { accent-color: var(--green); }
+  .dyo-card input, .dyo-chipbox input, .dyo-row input, .dyo-swatch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .dyo-units { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-top: var(--space-6); }
+  .dyo-card { position: relative; display: block; cursor: pointer; }
+  .dyo-card-box { display: flex; flex-direction: column; gap: var(--space-3); height: 100%; padding: var(--space-8) var(--space-9); border: var(--rule-structure); }
+  .dyo-card-title { font-family: var(--font-serif-display); font-size: var(--type-serif-sm); line-height: 1.2; }
+  .dyo-card-hint { font-size: var(--type-body-sm); line-height: 1.4; color: var(--ink-soft); }
+  .dyo-card input:checked + .dyo-card-box { background: var(--char); color: var(--paper); }
+  .dyo-card input:checked + .dyo-card-box .dyo-card-hint { color: var(--ink-rev-quiet); }
+
+  .dyo-chips { display: flex; flex-wrap: wrap; gap: var(--space-5); }
+  .dyo-chipbox { position: relative; cursor: pointer; }
+  .dyo-chipbox span {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 var(--space-9);
+    border: var(--rule-structure); font-size: var(--type-body-sm);
+  }
+  .dyo-chipbox input:checked + span { background: var(--char); color: var(--paper); }
+
+  .dyo-rows { display: grid; gap: var(--space-4); }
+  .dyo-row { position: relative; cursor: pointer; }
+  .dyo-row-box { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-8); min-height: 44px; padding: var(--space-6) var(--space-9); border: var(--rule-structure); }
+  .dyo-row-name { font-size: var(--type-body); }
+  .dyo-row-price { font-family: var(--font-mono); font-size: var(--type-mono-md); letter-spacing: var(--ls-mono-md); color: var(--ink-soft); white-space: nowrap; }
+  .dyo-row input:checked + .dyo-row-box { background: var(--char); color: var(--paper); }
+  .dyo-row input:checked + .dyo-row-box .dyo-row-price { color: var(--ink-rev-soft); }
+
+  .dyo-swatches { display: flex; flex-wrap: wrap; gap: var(--space-6); }
+  .dyo-swatch { position: relative; cursor: pointer; }
+  .dyo-swatch-box { display: block; width: 44px; height: 44px; border: 1px solid var(--hair-strong); }
+  .dyo-swatch-box.is-grain { background-image: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 5px, rgba(255, 255, 255, 0.08) 5px 6px, transparent 6px 11px); }
+  .dyo-swatch input:checked + .dyo-swatch-box { outline: 2px solid var(--char); outline-offset: 3px; }
+
+  .dyo-card input:focus-visible + .dyo-card-box,
+  .dyo-chipbox input:focus-visible + span,
+  .dyo-row input:focus-visible + .dyo-row-box,
+  .dyo-swatch input:focus-visible + .dyo-swatch-box { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+
+  .dyo-numbers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .dyo-chips + .dyo-numbers { margin-top: var(--space-9); }
+  .dyo-number { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-3); min-width: 0; }
+  .dyo-number-box { display: flex; align-items: center; border: var(--rule-structure); background: var(--paper); }
+  .dyo-number-box:focus-within { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+  .dyo-number-box input {
+    flex: 1; min-width: 0; height: 44px; padding: 0 0 0 var(--space-6);
+    border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--char); outline: none;
+    -moz-appearance: textfield; appearance: textfield;
+  }
+  .dyo-number-box input::-webkit-outer-spin-button, .dyo-number-box input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .dyo-number-box input[aria-invalid="true"] { color: var(--error); }
+  .dyo-number-box > span { padding: 0 var(--space-6) 0 var(--space-3); font-family: var(--font-mono); font-size: var(--type-mono); color: var(--ink-soft); }
+
+  .dyo-selects { display: grid; gap: var(--space-5); }
+  .dyo-select { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: center; gap: var(--space-6); }
+  .dyo-select select {
+    width: 100%; height: 44px; padding: 0 var(--space-6);
+    border: var(--rule-structure); border-radius: 0; background: var(--paper); font: inherit; font-size: 16px; color: var(--char);
+  }
+  .dyo-select select:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+  .dyo-ticks { display: grid; gap: var(--space-2); }
+  .dyo-tick { display: flex; align-items: center; gap: var(--space-6); min-height: 40px; font-size: var(--type-body-sm); cursor: pointer; }
+  .dyo-tick input { width: 20px; height: 20px; margin: 0; flex: none; }
+  .dyo-tick-inline { min-height: 40px; }
+  .dyo-tick-from { color: var(--ink-soft); }
+
+  .dyo-price { margin-top: var(--space-6); padding-top: var(--space-10); border-top: var(--rule-structure); }
+  .dyo-price-label { margin: 0; }
+  .dyo-price-figure { margin: var(--space-3) 0 var(--space-6); font-family: var(--font-serif-display); font-size: var(--type-display-5); line-height: var(--lh-display-5); }
+  .dyo-price-figure.is-quoted { font-size: var(--type-serif-lg); }
+  .dyo-price-note, .dyo-price-guide { margin: 0 0 var(--space-5); max-width: var(--measure-tight); font-size: var(--type-body-sm); line-height: 1.5; color: var(--text-quiet); }
+  .dyo-lines { margin: 0 0 var(--space-6); max-width: var(--measure-tight); }
+  .dyo-lines-label { margin: 0 0 var(--space-3); font-size: var(--type-body-sm); color: var(--text-quiet); }
+  .dyo-lines ul { list-style: none; margin: 0; padding: 0; border-top: var(--rule-structure); }
+  .dyo-lines li { display: flex; justify-content: space-between; gap: var(--space-5); padding: var(--space-3) 0; border-bottom: var(--rule-structure); font-size: var(--type-body-sm); }
+  .dyo-lines li span:last-child { font-family: var(--font-mono); white-space: nowrap; }
+  .dyo-price-guide { color: var(--char); }
+  .dyo-words { margin: var(--space-8) 0 0; padding: var(--space-7) var(--space-9); list-style: none; border: var(--rule-hair); font-size: var(--type-body-sm); line-height: 1.5; color: var(--text-quiet); }
+  .dyo-words li + li { margin-top: var(--space-3); }
+  .dyo-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-6) var(--space-9); margin-top: var(--space-10); }
+  .dyo-another { margin-top: var(--space-9); padding: var(--space-8) var(--space-9); border: var(--rule-hair); }
+  .dyo-another p { margin: 0; font-size: var(--type-body-sm); }
+  .dyo-another .dyo-actions { margin-top: var(--space-7); }
+  .dyo-button {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 var(--space-12);
+    font-family: var(--font-mono); font-size: var(--type-mono); letter-spacing: var(--ls-mono); text-transform: uppercase;
+    color: var(--text-on-accent); background: var(--surface-accent); border: 1px solid var(--surface-accent); cursor: pointer;
+  }
+  .dyo-button:hover, .dyo-button:focus-visible { background: var(--char); border-color: var(--char); }
+  .dyo-button.is-quiet { color: var(--green); background: transparent; }
+  .dyo-button.is-quiet:hover, .dyo-button.is-quiet:focus-visible { color: var(--paper); background: var(--char); }
+  .dyo-button:disabled { color: var(--ink-faint); background: transparent; border-color: var(--hair); cursor: default; }
+  .dyo-text-button {
+    min-height: 40px; padding: 0; border: 0; border-bottom: 1px solid rgba(44, 74, 58, 0.4);
+    background: none; font: inherit; font-size: var(--type-body-sm); color: var(--green); cursor: pointer;
+  }
+  .dyo-text-button:hover, .dyo-text-button:focus-visible { border-bottom-color: var(--green); }
+  .dyo-toast { margin: var(--space-6) 0 0; font-size: var(--type-body-sm); color: var(--green); }
+
+  .dyo-h2 { margin: 0 0 var(--space-6); font-family: var(--font-serif-display); font-weight: var(--weight-regular); font-size: var(--type-display-5); line-height: var(--lh-display-5); }
+  .dyo-count {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; margin-left: var(--space-4); padding: 0 6px;
+    vertical-align: middle; font-family: var(--font-mono); font-size: var(--type-mono-md); color: var(--paper); background: var(--green);
+  }
+  .dyo-project { display: grid; gap: var(--space-13); margin-top: var(--space-17); padding-top: var(--space-13); border-top: var(--rule-structure); }
+  @media (min-width: 940px) { .dyo-project { grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr); gap: var(--space-17); } }
+  .dyo-items { margin: 0; padding: 0; list-style: none; }
+  .dyo-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-3) var(--space-9); padding: var(--space-8) 0; border-top: var(--rule-hair); }
+  .dyo-item:last-child { border-bottom: var(--rule-hair); }
+  .dyo-item-name { font-size: var(--type-body); }
+  .dyo-item-price { font-family: var(--font-mono); font-size: var(--type-mono-md); letter-spacing: var(--ls-mono-md); white-space: nowrap; text-align: right; }
+  .dyo-item-tools { grid-column: 1 / -1; display: flex; gap: var(--space-10); }
+  .dyo-total { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-9); margin: var(--space-9) 0 var(--space-4); font-size: var(--type-body-sm); }
+  .dyo-total-figure { font-family: var(--font-serif-display); font-size: var(--type-serif-lg); white-space: nowrap; }
+  .dyo-project-side .dyo-button { margin-top: var(--space-8); }
+  .dyo-project-side .dyo-button + .dyo-help { margin-top: var(--space-6); }
+
+  .dyo-block { padding-top: var(--space-17); }
+  .dyo-limits { padding-top: 0; }
+  .dyo-body { max-width: var(--measure); margin: 0 0 var(--space-9); color: var(--text-quiet); line-height: var(--lh-body); }
+  .dyo-how { display: grid; gap: var(--space-12); margin: var(--space-10) 0 0; padding: 0; list-style: none; }
+  @media (min-width: 760px) { .dyo-how { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-15); } }
+  .dyo-how li { padding-top: var(--space-8); border-top: var(--rule-structure); }
+  .dyo-how h3 { margin: var(--space-5) 0 var(--space-5); font-family: var(--font-serif-display); font-weight: var(--weight-regular); font-size: var(--type-serif-md); line-height: 1.25; }
+  .dyo-how p { margin: 0; font-size: var(--type-body-sm); line-height: var(--lh-body); color: var(--text-quiet); }
+  .dyo-faqs { margin-top: var(--space-8); border-bottom: var(--rule-hair); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .dyo-button, .dyo-seg button, .dyo-tool, .dyo-card-box, .dyo-chipbox span, .dyo-row-box { transition: background-color 0.15s ease, color 0.15s ease; }
+  }
+</style>
