@@ -152,12 +152,16 @@ export const AREAS: Area[] = [
       /* 19 Nov 2026, Denis: a framed picture on the wall ran into the door frame; it was painted
          out of the render (plain wall, filled from the wall above and below it). */
       {
+        /* 21 Nov 2026, Denis on the review link: "remove the plan[t] from this picture". Cropped (from
+           x 146 of the 1536 x 1024 render, 1335 x 890, still 3:2) so the plant by the window on the left
+           and the flowers on the chest of drawers on the right are out of frame, rather than painted
+           out over the window and radiator or made again. */
         file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
         type: "Grey Shaker-style wardrobes",
         ai: true,
-        width: 1536,
-        height: 1024,
-        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in three pairs, painted warm mid-grey, with slim aged-brass bar handles where each pair meets. The room's cornice runs across the top above a slim infill, slim side infills reach the floor and a recessed plinth runs beneath. A sash window and a bed sit either side.",
+        width: 1335,
+        height: 890,
+        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in three pairs, painted warm mid-grey, with slim aged-brass bar handles where each pair meets. The room's cornice runs across the top above a slim infill, slim side infills reach the floor and a recessed plinth runs beneath. The edge of a white window surround is at the left, with the foot of a bed and a wooden chest of drawers in front.",
       },
     ],
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",
