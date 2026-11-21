@@ -111,9 +111,13 @@ export const AREAS: Area[] = [
        remain the page's scope, not the borough (brief section 14, option a). */
     titleProp: "Bespoke fitted wardrobes in Camden",
     h1: "Bespoke fitted wardrobes and alcove units in Camden",
-    kicker: "Bespoke joinery in Camden",
+    /* "Bespoke carpentry", Arthur's comment on the review link, 14 Nov 2026; the footer tagline's words.
+       Kept when the page moved onto the Primrose Hill model: a founder's choice, 18 Nov 2026. The other
+       area pages say "Bespoke joinery in <Area>". */
+    kicker: "Bespoke carpentry in Camden",
+    /* 18 Nov 2026: "and flats" came out (the facts file gives no source for it) and "and shelving" went in (camden.astro). */
     description:
-      "Bespoke fitted wardrobes and alcove units for Camden homes: terraced houses and flats, measured in the room and cut to walls that are rarely straight.",
+      "Bespoke fitted wardrobes, alcove units and shelving for Camden Town's terraced houses, measured in the room and cut to walls that are rarely straight.",
     /* Search Console, 11 Oct to 8 Nov: fitted wardrobes camden 20 and bespoke wardrobes camden 20
        impressions, the area's two largest product searches. Keyword Planner (London, 14 Nov 2026):
        built in wardrobes camden 10, exact phrase; no data for fitted or bespoke wardrobes camden. */
@@ -129,18 +133,35 @@ export const AREAS: Area[] = [
         type: "Bookcases",
         alt: "White built-in bookcase in three bays with open shelves above six handleless cupboard doors, lit by two wall lights",
       },
+      /* 19 Nov 2026, Denis on the review link: "replace this image with a generated one" (it was
+         ssp-029, the white handleless wardrobe with one door open). Made in Figma the same day (file
+         d0AWnKDiTyYDbBrrCsE4NS, node 39:2, gpt-image-2.5-sunburst) to the ops AI render protocol;
+         small retouches, told to Kaspar on the card: a second handle on each closed door beside the
+         open pair was painted out (every door now has one handle, at its pair's centre); a blue-grey
+         strip under the top infill over the open bay became the oak top panel's edge, so the panel
+         meets the single infill (protocol section 4); four faint marks on the open doors and two on
+         the oak went. Checked by an independent pass against the protocol's section 5. */
       {
-        file: "/images/library/ssp-029.webp",
-        type: "Fitted wardrobes",
-        alt: "White handleless fitted wardrobe with one door open showing oak interior, chrome hanging rail, top shelf and lower shelves",
-      },
-      {
-        file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
-        type: "Grey Shaker-style wardrobes",
+        file: "/images/journal/camden-ai-blue-grey-open-wardrobes.webp",
+        type: "Blue-grey wardrobes with an oak-effect interior",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in three pairs, painted warm mid-grey, with slim aged-brass bar handles where each pair meets. The room's cornice runs across the top above a slim infill, slim side infills reach the floor and a recessed plinth runs beneath. A sash window and a bed sit either side.",
+        alt: "Six flat wardrobe doors in deep blue-grey run wall to wall in three pairs, with slim brushed-nickel bar handles where each closed pair meets. The centre pair stands open on an oak-effect interior: a top shelf, a hanging rail with shirts and jackets, and three drawers. Slim infills meet the flat ceiling and run to the floor at each end, with a recessed plinth beneath the doors. Daylight comes from a sash window on the left, and a panelled door stands to the right.",
+      },
+      /* 19 Nov 2026, Denis: a framed picture on the wall ran into the door frame; it was painted
+         out of the render (plain wall, filled from the wall above and below it). */
+      {
+        /* 21 Nov 2026, Denis on the review link: "remove the plan[t] from this picture". Cropped (from
+           x 146 of the 1536 x 1024 render, 1335 x 890, still 3:2) so the plant by the window on the left
+           and the flowers on the chest of drawers on the right are out of frame, rather than painted
+           out over the window and radiator or made again. */
+        file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
+        type: "Grey Shaker-style wardrobes",
+        ai: true,
+        width: 1335,
+        height: 890,
+        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in three pairs, painted warm mid-grey, with slim aged-brass bar handles where each pair meets. The room's cornice runs across the top above a slim infill, slim side infills reach the floor and a recessed plinth runs beneath. The edge of a white window surround is at the left, with the foot of a bed and a wooden chest of drawers in front.",
       },
     ],
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",
