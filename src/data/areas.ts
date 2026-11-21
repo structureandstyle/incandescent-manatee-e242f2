@@ -551,9 +551,12 @@ export const AREAS: Area[] = [
        alternate of ssp-058 (the same view). Plus the register's AI gap for Maida Vale, full-height
        panelled wardrobes with leather pulls (Figma node 38:2). None is a recorded job in Maida Vale.
        21 Nov 2026, Denis on the review link: ssp-057 shows "the same bookcase as the one on the left
-       side", so it is replaced by an AI built-in bookcase in a different room, painted sage (Figma
-       node 56:6, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the render protocol (sections 5
-       and 8). The register's other shelving jobs are on Hampstead or the bookcases page already. */
+       side", so it is replaced by AI built-in shelving around a doorway in a mansion flat hall,
+       painted warm stone (Figma node 58:3, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the
+       render protocol (sections 5 and 8). A first try, a sage bookcase (node 56:6), failed the
+       independent check: the same shuttered sash window and ornate cornice as the panelled wardrobe
+       render on this page, and the same layout as ssp-058. The register's other shelving jobs are on
+       Hampstead or the bookcases page already. Own service: "Built-in shelving" reads as it is. */
     plates: [
       {
         file: "/images/library/ssp-058.webp",
@@ -561,12 +564,13 @@ export const AREAS: Area[] = [
         alt: "White built-in bookcase seen at an angle, with deep open shelves above flat handleless cupboard doors.",
       },
       {
-        file: "/images/journal/maidavale-sage-bookcase.webp",
-        type: "Built-in bookcase",
+        file: "/images/journal/maidavale-doorway-shelving.webp",
+        type: "Built-in shelving",
+        service: "Built-in shelving",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Built-in bookcase along one wall of a high-ceilinged room: three bays of open shelves painted soft sage, holding books and a few plain white bowls and jugs, above a run of six flat cupboard doors with small round brass knobs. A tall sash window with white shutters is to the right, over a herringbone oak floor.",
+        alt: "Built-in shelving around a doorway in a hall: open shelves painted warm stone rise on both sides of a white door frame and bridge over the top of it, holding books and plain white jugs, with a pair of flat cupboard doors with small round brass knobs at the foot of each side. Dark oak floorboards, and white doors to the rooms either side.",
       },
       {
         file: "/images/journal/maidavale-ai-panelled-wardrobes.webp",
