@@ -570,7 +570,7 @@ export const AREAS: Area[] = [
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Built-in shelving around a doorway in a hall: open shelves painted warm stone rise on both sides of a white door frame and bridge over the top of it, holding books and plain white jugs, with a pair of flat cupboard doors with small round brass knobs at the foot of each side. Dark oak floorboards, and white doors to the rooms either side.",
+        alt: "Built-in shelving around a doorway in a hall: open shelves painted warm stone rise on both sides of a white door frame and bridge over the top of it, holding books and plain white jugs, with a pair of flat cupboard doors with small round brass knobs at the foot of each side. Dark oak floorboards, with an open doorway to a room on the left and a white panelled door on the right.",
       },
       {
         file: "/images/journal/maidavale-ai-panelled-wardrobes.webp",
