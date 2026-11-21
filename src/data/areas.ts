@@ -435,19 +435,51 @@ export const AREAS: Area[] = [
     summary: "Late Victorian houses and mansion-block flats around the Finchley Road junction.",
   },
   {
-    slug: "carpenter-highgate",
+    slug: "areas/highgate",
     name: "Highgate",
-    titleProp: "Highgate carpenter, walk-in wardrobes",
-    h1: "Carpenter in Highgate for walk-in wardrobes and fitted furniture",
-    kicker: "Carpenter in Highgate",
+    /* Product-led, 17 Nov 2026: the eighth page on the Primrose Hill model (a founder's go, 17 Nov:
+       "next"; Denis, 15 Nov: "use the same design and structure for the next articles"). No
+       "carpenter" in the title, heading or description; the kicker stays "Bespoke joinery" (Denis,
+       15 Nov: "leave joinery for now") and "bespoke carpentry" sits in the opening. */
+    titleProp: "Fitted wardrobes and alcove units in Highgate",
+    h1: "Fitted wardrobes and alcove units for Highgate's Georgian and Victorian homes",
+    kicker: "Bespoke joinery in Highgate",
     description:
-      "Carpenter in Highgate for walk-in wardrobes, fitted wardrobes and alcove units. Measured in the room, with guide prices and what each council asks of you.",
-    /* carpenter highgate cluster (carpenter highgate, carpenters highgate, carpentry highgate) 10 (Keyword Planner, London, 14 Nov 2026). Walk-in wardrobes lead because the one review that names Highgate is for a walk-in wardrobe. */
-    primary: "carpenter highgate",
+      "Fitted wardrobes and alcove units for Highgate's Georgian and Victorian homes, on both sides of the High Street, each drawn for its own room.",
+    /* No wardrobe or alcove search is measured for Highgate. Keyword Planner's only figures are the
+       carpenter highgate group (10 each, London, 14 Nov 2026), not product searches; Search Console's
+       one product search is bespoke kitchens highgate, 2 impressions at 45.5 (11 Oct to 8 Nov), and
+       the page has no kitchen photograph or kitchen section. fitted wardrobes highgate leads because
+       the register's lead photograph is a fitted wardrobe and the search returns a People also ask
+       box (17 Nov: costs and companies). Alcove units come second: the register's AI gap for Highgate
+       is alcove units, and the appraisals' Georgian houses carry the alcove section. */
+    primary: "fitted wardrobes highgate",
+    /* 17 Nov 2026: the register's allocation (ops PR #49) for Highgate is two frames from the SW7
+       flat (31 Aug 2026 drop, professional exports, already 3:2): ssp-037, the bedroom with a white
+       Shaker wardrobe, a different view of the room in the live doors-panelling-02 frame; ssp-039,
+       the bathroom with a floating vanity unit, a different view of the live bathroom-01 frame. Plus
+       the register's first AI gap for Highgate, alcove units with arched open shelving above
+       panelled cupboards, chalky white (Figma node 36:2). Its other gaps (shelving round a bay with a
+       window seat, a media wall) have no plate. None is a recorded job in Highgate. */
     plates: [
-      { file: "/images/walk-in-wardrobes/walk-in-wardrobes-02.webp", type: "Walk-in wardrobes" },
-      { file: "/images/alcove-units/alcove-units-07.webp", type: "Alcove units" },
-      { file: "/images/doors-panelling/doors-panelling-01.webp", type: "Doors and panelling" },
+      {
+        file: "/images/library/ssp-037.webp",
+        type: "Shaker fitted wardrobe",
+        alt: "White Shaker-style fitted wardrobe with brass bar handles beside wall panelling and a doorway to a marble-effect bathroom.",
+      },
+      {
+        file: "/images/library/ssp-039.webp",
+        type: "Bathroom vanity unit",
+        alt: "Floating taupe two-drawer vanity unit with a white top and brass taps against marble-effect tiles, beside a toilet and bath.",
+      },
+      {
+        file: "/images/journal/highgate-ai-arched-alcove-units.webp",
+        type: "Arched alcove shelving",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Alcove units painted chalky white either side of a chimney breast and fireplace: open shelves inside an arched frame above panelled cupboards with small brass knobs, below the room's cornice. A sash window is to the right.",
+      },
     ],
     summary: "Georgian village houses, Victorian terraces and flats, split between Camden and Haringey.",
   },

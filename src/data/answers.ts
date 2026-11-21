@@ -284,7 +284,7 @@ export const ANSWERS = {
   areaBelsizeParkCheck: { value: null, about: "Kaspar has read the Belsize Park page on the Primrose Hill model (/areas/belsize-park/) on the review link and his changes are in" },
   areaKentishTownCheck: { value: null, about: "Kaspar has read the Kentish Town page on the Primrose Hill model (/areas/kentish-town/) on the review link and his changes are in" },
   areaSwissCottageCheck: { value: null, about: "Kaspar has read the Swiss Cottage page on the Primrose Hill model (/areas/swiss-cottage/) on the review link and his changes are in" },
-  areaHighgateCheck: { value: null, about: "Kaspar has read the Highgate page (/carpenter-highgate/) on the review link and his changes are in" },
+  areaHighgateCheck: { value: null, about: "Kaspar has read the Highgate page on the Primrose Hill model (/areas/highgate/) on the review link and his changes are in" },
   areaWestHampsteadCheck: { value: null, about: "Kaspar has read the West Hampstead page (/carpenter-west-hampstead/) on the review link and his changes are in" },
   areaMaidaValeCheck: { value: null, about: "Kaspar has read the Maida Vale page (/carpenter-maida-vale/) on the review link and his changes are in" },
   staircasesCheck: { value: null, about: "Kaspar has read the bespoke staircases page (/bespoke-staircases/) on the review link and his changes are in" },
