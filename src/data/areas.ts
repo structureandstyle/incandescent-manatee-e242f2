@@ -548,7 +548,11 @@ export const AREAS: Area[] = [
        deep open shelves over flat cupboard doors; ssp-057, portrait, cropped to 3:2 from y 800: the
        angled view up the side of the shelving with the lit wall light. ssp-060 is the register's
        alternate of ssp-058 (the same view). Plus the register's AI gap for Maida Vale, full-height
-       panelled wardrobes with leather pulls (Figma node 38:2). None is a recorded job in Maida Vale. */
+       panelled wardrobes with leather pulls (Figma node 38:2). None is a recorded job in Maida Vale.
+       21 Nov 2026, Denis on the review link: ssp-057 shows "the same bookcase as the one on the left
+       side", so it is replaced by an AI built-in bookcase in a different room, painted sage (Figma
+       node 56:6, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the render protocol (sections 5
+       and 8). The register's other shelving jobs are on Hampstead or the bookcases page already. */
     plates: [
       {
         file: "/images/library/ssp-058.webp",
@@ -556,9 +560,12 @@ export const AREAS: Area[] = [
         alt: "White built-in bookcase seen at an angle, with deep open shelves above flat handleless cupboard doors.",
       },
       {
-        file: "/images/library/ssp-057.webp",
-        type: "Built-in shelving",
-        alt: "Angled view up the side of a white built-in bookcase with deep fixed shelves, beside a lit wall light.",
+        file: "/images/journal/maidavale-sage-bookcase.webp",
+        type: "Built-in bookcase",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Built-in bookcase along one wall of a high-ceilinged room: three bays of open shelves painted soft sage, holding books and a few plain white bowls and jugs, above a run of six flat cupboard doors with small round brass knobs. A tall sash window with white shutters is to the right, over a herringbone oak floor.",
       },
       {
         file: "/images/journal/maidavale-ai-panelled-wardrobes.webp",
