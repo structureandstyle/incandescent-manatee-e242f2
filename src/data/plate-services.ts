@@ -6,12 +6,13 @@
  * area as context only and the same words in both).
  *
  * The shape: the service first, then what the picture shows (the plate's own
- * alt, which already describes only what is visible), then the page's area as
- * context: "An example for Camden homes." Pages that are not about an area say
- * London, as the site's copy leads with London. The area is never stated as
- * where the work was done: the register's photographs are not recorded jobs in
- * these districts and the AI renders are no one's job (S&S protocol v1.4
- * section 4; F2F working rule 7).
+ * alt, which already describes only what is visible). Until 21 Nov 2026 it
+ * ended with the page's area as context ("An example for Camden homes.");
+ * Denis, 21 Nov 2026, on the review link: "please remove this repetitive
+ * sentence from all the descriptions on all pages", so it no longer does. The
+ * area is never stated as where the work was done: the register's photographs
+ * are not recorded jobs in these districts and the AI renders are no one's job
+ * (S&S protocol v1.4 section 4; F2F working rule 7).
  *
  * The service comes from this map, keyed by the plate's caption (`type`), so
  * every area page and topic page gets it without touching each page's data.
@@ -69,8 +70,9 @@ function lowerFirst(text: string): string {
 }
 
 /**
- * The alt text and visible description for one photo: service, what it shows,
- * the page's area as context. `place` is the area's name, or "London".
+ * The alt text and visible description for one photo: service, then what it
+ * shows. `place` (the area's name, or "London") is no longer written into the
+ * text (Denis, 21 Nov 2026); the parameter stays so every caller keeps working.
  */
 export function plateText(type: string, alt: string, place: string, where = "a page", own?: string): string {
   const service = own || PLATE_SERVICE[type];
@@ -87,10 +89,10 @@ const STYLE_NAMES: [RegExp, string][] = [[/\bshaker\b/g, "Shaker"]];
  * The same shape for a photo outside the plates (a render in a page's body), given its service.
  * Where the picture's own words already name the service in their first few words ("White built-in
  * bookcase ...", "Cream alcove units ..."), they lead on their own, as the founder's example did
- * ("Painted wardrobes by a bay window ... an example for Belsize Park homes"); otherwise the service
+ * ("Painted wardrobes by a bay window ..."); otherwise the service
  * leads: "Walk-in wardrobes: dark oak-effect open cubby shelving ...".
  */
-export function photoText(service: string, alt: string, place: string): string {
+export function photoText(service: string, alt: string, _place?: string): string {
   let shows = alt.trim().replace(/[.\s]+$/, "");
   for (const [pattern, word] of STYLE_NAMES) shows = shows.replace(pattern, word);
   const stem = service.toLowerCase().replace(/s$/, "");
@@ -98,5 +100,5 @@ export function photoText(service: string, alt: string, place: string): string {
   const lead = opening.includes(stem)
     ? shows.charAt(0).toUpperCase() + shows.slice(1)
     : `${service}: ${lowerFirst(shows)}`;
-  return `${lead}. An example for ${place} homes.`;
+  return `${lead}.`;
 }
