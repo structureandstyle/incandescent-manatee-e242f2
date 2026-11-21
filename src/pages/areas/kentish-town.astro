@@ -1,0 +1,294 @@
+---
+/**
+ * Kentish Town, 17 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaKentishTownCheck until he has read it and his changes are in. Nothing
+ * goes live before he has approved every area page (Denis, 15 Nov 2026).
+ *
+ * ON THE PRIMROSE HILL MODEL from the start (a founder's go, 17 Nov; Denis,
+ * 15 Nov: "use the same design and structure for the next articles"; ops
+ * README, "The structure rule, applied"; ops SS_AREA_PAGE_RULES_v1.0.md, a
+ * draft, read for its plan items): address /areas/kentish-town/ with 301s from
+ * /carpenter-kentish-town/; the title, heading, kicker and description lead
+ * with fitted wardrobes, then bespoke kitchens, the register's photographs
+ * (the reasons are in areas.ts); the opening carries "bespoke carpentry" and
+ * "bespoke joinery" once each; a line drawing beside each section that
+ * describes something (src/data/area-drawings.ts: three houses of different
+ * dates side by side, a terrace of five behind iron railings, a long kitchen
+ * in plan, a window seat in a canted bay), none where a section is rules or
+ * access only; the guide prices as cards; register photos and one labelled AI
+ * image (ssp-019, cropped to 3:2, AI white handleless wardrobes, Figma node
+ * 34:2, and since 21 Nov 2026 an AI painted Shaker kitchen in place of ssp-020,
+ * which showed the same kitchen as Islington's photo; areas.ts says why).
+ *
+ * Sources. Every local fact from the ops facts file
+ * research/area-pages-2026-11-14/facts-kentish-town-2026-11-14.md: Camden's
+ * Kentish Town Conservation Area Appraisal and Management Strategy (2011,
+ * "K1"), its Kelly Street appraisal (March 2011, "K2"), Camden's listed
+ * buildings, controlled parking zone, visitor permit and trade permit pages,
+ * and the Planning Portal's internal walls page, all read 14 Nov 2026.
+ *   Leighton Road: two and three storey early 19th century terraces, mostly
+ *     stucco with some brick; built plot by plot after Joshua Prole Torriano
+ *     sold small freeholds; late Georgian stock brick, 1830s stucco villas and
+ *     mid-Victorian terraces in one street; brown or buff stock brick, or
+ *     stucco in various colours; timber sashes with small panes up to the mid
+ *     19th century (Leighton Road) and larger panes later (Leverton Street)
+ *     (K1). Torriano Cottages: mid-Victorian two storey cottages (K1).
+ *   Kelly Street: a narrow cul-de-sac of small two storey houses, brightly
+ *     coloured stucco fronts, black cast-iron railings; Castlehaven Road's
+ *     three storey terraces, two windows wide, with small rear courtyard
+ *     gardens; "a rare intact example" of Victorian terraces west of Kentish
+ *     Town Road, many lost to post-war rebuilding (K2).
+ *   The northern streets (Falkland Road, Ascham Street, Lady Margaret Road):
+ *     mostly three storey brick and stucco terraces on narrow plots, longer
+ *     rear gardens, canted ground-floor bays, finished by 1894 (K1).
+ *   Listed: Leighton Road Nos 20 to 28 and 64 to 70 at Grade II; Leverton
+ *     Street Nos 2 to 26 even and 5 to 23 odd, stuccoed terraces of about
+ *     1845 (K1); every building on Kelly Street and its railings (K2).
+ *   Torriano Cottages on a winding unmade private lane (K1).
+ *   Camden: every part of a listed building protected, works without consent
+ *     a criminal offence even if the owner did not know (K8); Planning Portal:
+ *     interior work generally needs no planning permission, a listed building
+ *     can need listed building consent (K13); parking zone map, visitor
+ *     permits bought by residents (all-day permits not offered in every
+ *     zone), trade permits with no guaranteed space (K10 to K12). Camden's page did not confirm which Kentish Town streets
+ *     are controlled, so the page sends readers to the map.
+ * Left out: the Bartholomew Estate (its only description is an applicant's
+ * heritage report, not Camden's own document), Inkerman and West Kentish Town
+ * (not read), and any Article 4 Direction (none confirmed in force here).
+ *
+ * BROUGHT TO THE UPDATED COPY RULES, 19 Nov 2026 (a founder, in chat: "let's do
+ * the 4th area page"). Written on 17 Nov, the day the area page rules v1.0 were
+ * drafted. Four independent checks (copy rules with the playbook, facts, the
+ * swap test against all nine other pages, and the AI picture under the
+ * founders' 19 Nov picture rules) found, and this change fixes:
+ *   - the opening: products first, in a frame no other page uses; "narrow"
+ *     only for the terraces the sources call narrow (also in the description);
+ *     the second line is Leighton Road's own mix (K1), not a line any area
+ *     could carry;
+ *   - the access promise as on the other pages ("Parking and deliveries", no
+ *     "access"); no "we settle the layout first" (no source); the zones page
+ *     "has a postcode search" (K10); a trade permit is "another option";
+ *   - facts as the sources give them: canted bays "many", not all; the
+ *     listed-consent rule from the Planning Portal (K13) for significant work,
+ *     not for fitted furniture; plot-by-plot building, not "built separately";
+ *     the Leverton Street terraces by number; no assumed three-sided bay or
+ *     chimney breast;
+ *   - trivia out (the landowner's name, "finished by 1894", the heritage aside
+ *     on Kelly Street); "stock brick" and Grade II plain; sources named in
+ *     the sentence; Castlehaven Road's width said once;
+ *   - headings of the page's own (Kelly Street, kitchens, prices); a recheck
+ *     then split a 28-word listed-buildings sentence and kept the parking
+ *     search and the kitchens heading to what the sources say;
+ *   - the AI plate's alt text: what this picture shows, not the template the
+ *     other wardrobe alts share. The picture itself passed every rule.
+ *   Left as they were: the guarantee and price lines, the kitchen FAQ answer
+ *   (to check with Kaspar against the kitchens page), "Parking and deliveries
+ *   are agreed" (as on the other pages; not in Kaspar's conduct list).
+ *
+ * WHOSE WORDS. From what he approved: the wardrobe guide's line on top
+ * cupboards for bedding and luggage; the bespoke kitchens page's planning
+ * section ("Doorways, windows and routes through the room, together with the
+ * positions of sinks and appliances, affect where cabinet runs, tall units and
+ * islands can sit", word for word); the guarantee; the fitted wardrobe,
+ * kitchen and alcove price lines as approved on Hampstead. Window seats: his
+ * own portfolio shows one (work-gallery.ts, alcove-units-10). One conduct
+ * line: parking and deliveries agreed before installation, as on the other
+ * area pages; it is not in Kaspar's conduct list, so it waits for his word. Everything else is new copy for him to check.
+ *
+ * CHECKED 17 Nov by three independent reviewers (copy rules, facts against
+ * the facts file and approved text, the swap test against Camden, Primrose
+ * Hill, Islington, Hampstead and Belsize Park). No must-fix. Changed on their
+ * findings: the opening on the Primrose Hill pattern, its second sentence
+ * from the cottages and terraces; his 6 Sep sentence on where much of the
+ * wardrobe work is (Camden and Hampstead carry it) and the house hours
+ * (Hampstead's) left out; the rooms-differ line (our inference) replaced by
+ * the appraisal's window panes; "small houses" now "narrow" (Castlehaven Road
+ * is three storeys); the kitchen section rebuilt on Camden's plots and
+ * courtyards, without the intro line Hampstead's question already quotes or
+ * the "long" kitchen no source gives; "cut to the angle" (a making method)
+ * and "cut into the front" gone; the listed section's Planning Portal line
+ * (Belsize Park's) cut and the street names checked as Grade II; the access
+ * section's guess about section sizes cut, and the visitor permit line says
+ * all-day permits are not offered in every zone; stucco, stock brick and
+ * canted bays explained once; two drawing labels and two alts corrected.
+ *
+ * Street names are Camden's appraisals', describing the houses. None is a
+ * place we claim to have worked. No review block: the one review that names
+ * Kentish Town is left out on purpose (our reply of 13 Nov left the area out),
+ * and no quotable review names the area.
+ *
+ * FAQ sources, all three new, none on another area page: "Where should a
+ * wardrobe go in a small bedroom?" (Google People also ask on fitted wardrobes
+ * small bedroom: "Where to put a closet in a small bedroom?", "closet" made
+ * British), "How do handleless drawers work?" (People also ask, handleless
+ * kitchen) and "What is a bespoke kitchen?" (People also ask, bespoke
+ * kitchen); UK, English, desktop, the built-in browser, 17 Nov 2026. The box
+ * for fitted wardrobes kentish town held costs (the price cards answer them),
+ * a B&Q question (no other firms) and two depth questions (Camden already asks
+ * "Is 500mm deep enough for a wardrobe?"); bespoke kitchens kentish town had
+ * no box. Answers from what he approved: the wardrobe guide (the route around
+ * the bed and the view from the doorway; sliding doors where swing space is
+ * limited), the alcove units and wardrobe guides on handleless fronts
+ * (recessed finger pulls, push-to-open, agree how they open before the final
+ * detailing), and the bespoke kitchens page (its intro's first sentence and
+ * its line on confirming appliances before the final design).
+ */
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
+
+import { AREAS } from "../../data/areas";
+
+const area = AREAS.find((a) => a.slug === "areas/kentish-town")!;
+
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers, integrated lighting and more complex designs move the figure.",
+  },
+  {
+    art: "kitchens",
+    name: "Bespoke kitchens",
+    href: "/bespoke-kitchens/",
+    price: "Typically from £10,000.",
+    moves: "Kitchen size and layout, cabinetry and internal storage, worktops, appliances, and materials and finishes move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.",
+  },
+];
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      <Link href="/fitted-wardrobes/">Fitted wardrobes</Link>, <Link href="/bespoke-kitchens/">bespoke kitchens</Link> and <Link href="/alcove-units/">alcove units</Link>: that is the bespoke carpentry we take on in Kentish Town's terraces, some of them narrow.
+    </p>
+    <p style={P2}>
+      On Leighton Road, Georgian houses, stucco villas and Victorian terraces stand side by side, so each room gets bespoke joinery of its own.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Leighton Road" level={4}>Fitted wardrobes for Leighton Road's mixed terraces</SectionHead>
+    <AreaSide drawing="leighton-mix">
+      <p>
+        Camden's Kentish Town appraisal describes Leighton Road as lined with two and three storey terraces of the early 19th century. Most have stucco fronts, a painted render. Some are brick.
+      </p>
+      <p style={P2}>
+        Camden's appraisal says the road grew plot by plot after its landowner sold off small plots. Late Georgian brick houses, 1830s stucco villas and mid-Victorian terraces now share one street.
+      </p>
+      <p style={P2}>
+        The appraisal says the sash windows' pane patterns change with the date. Leighton Road keeps small panes from before the mid 19th century, and Leverton Street has the larger panes that came later. Building went plot by plot, so neighbouring houses can differ, and each <Link href="/fitted-wardrobes/">fitted wardrobe</Link> is drawn for its own room.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Kelly Street" level={4}>Kelly Street's coloured fronts and Castlehaven Road's two-window terraces</SectionHead>
+    <AreaSide drawing="kelly-street">
+      <p>
+        Camden's Kelly Street appraisal describes a narrow cul-de-sac of small two storey houses with brightly coloured stucco fronts and black cast-iron railings. Castlehaven Road, beside it, has three storey terraces two windows wide.
+      </p>
+      <p style={P2}>
+        In a house two windows wide, a fitted wardrobe that runs to the ceiling uses height a shorter one leaves empty. Separate top cupboards can give bedding and luggage their own space.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Kitchens" level={4}>Bespoke kitchens on the narrow plots of the northern streets</SectionHead>
+    <AreaSide drawing="kitchen-plan">
+      <p>
+        Camden describes the northern streets as terraces on narrow plots with longer rear gardens, and Castlehaven Road's houses as having small rear courtyards.
+      </p>
+      <p style={P2}>
+        On a plot that narrow, the shape of the room matters first in a <Link href="/bespoke-kitchens/">bespoke kitchen</Link>. Doorways, windows and routes through the room, together with the positions of sinks and appliances, affect where cabinet runs, tall units and islands can sit.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Bay windows" level={4}>Window seats in the bays of the northern streets</SectionHead>
+    <AreaSide drawing="bay-seat">
+      <p>
+        Camden's appraisal groups Falkland Road, Ascham Street and Lady Margaret Road as the northern streets, mostly three storey brick and stucco terraces. Many of their ground floors have canted bays, which are bays with angled sides.
+      </p>
+      <p style={P2}>
+        A canted bay can take a fitted window seat with storage below, and its front can follow the angled sides. In the same room, <Link href="/alcove-units/">alcove units</Link> can match the seat.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed houses on Leighton Road, Leverton Street and Kelly Street</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Camden's 2011 appraisals name listed houses, all Grade II, a national listing grade, on three Kentish Town streets. On Leighton Road they include Nos 20 to 28 and Nos 64 to 70, and on Kelly Street every building and its railings. On Leverton Street the stuccoed terraces of about 1845, Nos 2 to 26 and 5 to 23, are listed.
+      </p>
+      <p style={P2}>
+        Camden protects a listed house inside as well as out. It says work without consent is a criminal offence, even when an owner did not know of the listing.
+      </p>
+      <p style={P2}>
+        The Planning Portal says significant work inside a listed building can need listed building consent, so check the house on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden's listed buildings page</Link> first.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Parking permits and narrow streets in Kentish Town</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Kelly Street is a narrow cul-de-sac, and Camden's appraisal places Torriano Cottages on a winding, unmade private lane. Parking and deliveries are agreed with you before installation.
+      </p>
+      <p style={P2}>
+        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zones page</Link> has a postcode search for its parking zones. A resident can buy a <Link href="https://www.camden.gov.uk/visitor-parking-permits" {...EXT}>visitor permit</Link>, though all-day permits are not offered in every zone.
+      </p>
+      <p style={P2}>
+        A <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> is another option, and it does not guarantee a space.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What a wardrobe, a kitchen or an alcove pair starts at</SectionHead>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware is on the manufacturer's warranty, and doors and drawers are adjusted in the first 2 years. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> shows what moves the price of a fitted wardrobe.
+      </p>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Where should a wardrobe go in a small bedroom?">
+        On the wall that keeps the route around the bed clear and leaves space to open its doors and drawers. Place the bed and bedside tables first, then look at the room from the doorway. Sliding doors suit a room where swing space is limited.
+      </Faq>
+      <Faq q="How do handleless drawers work?">
+        A handleless drawer opens by a recessed finger grip or a push-to-open fitting, so the front stays clear. How each drawer and door will open is agreed before the design is finished.
+      </Faq>
+      <Faq q="What is a bespoke kitchen?">
+        It is a kitchen designed for one room, and it has to work as fitted furniture and as part of that room. Appliance models, sizes and service needs are confirmed before the final design, so the cabinets around them line up.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
