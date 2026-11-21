@@ -14,8 +14,9 @@
  * rewrote and Arthur signed off on the page layout of:
  *
  *   - breadcrumb, title, standfirst, byline ("By Kas, Founder & Bespoke Joiner
- *     at Structure & Style", his wording of 24 Oct, then the published date and
- *     the reading time; never an "Updated" line, Arthur 13 Oct);
+ *     at Structure & Style", his wording of 24 Oct, then the published date,
+ *     an "Updated" date when the content has really changed (Arthur, 19 Nov
+ *     2026, replacing his 13 Oct "never an Updated line"), and the reading time);
  *   - the hero photograph with a caption naming the district;
  *   - At a glance and the jump list, from front matter;
  *   - the article itself, at reading width, with the journal components
@@ -68,6 +69,11 @@ const pageUrl = new URL(`/journal/${post.id}/`, SITE_URL).href;
 const heroUrl = new URL(d.hero.src, SITE_URL).href;
 const minutes = readingMinutes(post.body);
 const published = d.published.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+/* "Updated <date>" only when `updated` is set and later than `published` (19 Nov 2026). */
+const updatedShown =
+  d.updated && d.updated.getTime() > d.published.getTime()
+    ? d.updated.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+    : undefined;
 const crumb = d.crumb ?? d.title;
 
 const schema = [
@@ -117,9 +123,13 @@ const components = {
       {d.byline && (author.photo
         ? <img class="byline-photo" src={author.photo} alt={author.name} width="42" height="42" />
         : <span class="byline-mark" aria-hidden="true">{author.initial}</span>)}
-      {d.byline && <p class="byline-who">By <b>{author.name}</b>, <span>{author.role} at Structure &amp; Style</span></p>}
+      {/* 19 Nov 2026 (Arthur: "make it look who wrote the article"): the name links to the About page,
+          the author's url in the schema too. The words stay Kas's own (decision 1). */}
+      {d.byline && <p class="byline-who">By <a class="byline-name" href={author.url} rel="author"><b>{author.name}</b></a>, <span>{author.role} at Structure &amp; Style</span></p>}
       <MonoLabel as="p" tone="soft" class="byline-when">
-        <time datetime={d.published.toISOString().slice(0, 10)}>Published {published}</time><br />{minutes} min read
+        <time datetime={d.published.toISOString().slice(0, 10)}>Published {published}</time><br />
+        {updatedShown && <><time datetime={d.updated!.toISOString().slice(0, 10)}>Updated {updatedShown}</time><br /></>}
+        {minutes} min read
       </MonoLabel>
     </div>
   </div>
@@ -164,7 +174,9 @@ const components = {
     <Content components={components} />
     {/* The illustrations line at the end of the article (a founder, 19 Nov 2026), in place of the
         "AI-generated examples" line that sat above the hero until that day. */}
-    {d.hero.ai && <IllustrationNote all scope="guide" style="margin-top:var(--space-12)" />}
+    {/* Only top and bottom margins inline, so `.article > *` still centres it in the 680px
+        column; on 19 Nov an inline margin:0 left it at the page's left edge. */}
+    {d.hero.ai && <IllustrationNote all scope="guide" style="margin-top:var(--space-12);max-width:680px" />}
   </div>
 
   <EnquireBand heading={d.band?.heading ?? "If you have a room in mind, start here."} chamfer>
@@ -254,6 +266,7 @@ const components = {
   .byline-photo { object-fit: cover; }
   .byline-who { margin: 0; font-size: 15px; line-height: 1.35; }
   .byline-who b { font-weight: var(--weight-medium); }
+  .byline-name { color: inherit; border-bottom: 1px solid var(--ink-soft); text-decoration: none; }
   .byline-who span { color: var(--ink-soft); }
   .byline-date-only .byline-when { margin-left: 0 !important; text-align: left; }
   .byline-when { margin: 0 0 0 auto !important; text-align: right; line-height: 1.8 !important; white-space: nowrap; }

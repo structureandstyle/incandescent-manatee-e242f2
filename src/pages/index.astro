@@ -499,7 +499,12 @@ const siteSchema = {
   <Wrap style="padding-top:var(--section-y);padding-bottom:var(--section-y)">
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
-      {HOMEPAGE_FAQS.map((f) => <Faq q={f.q}>{f.a}</Faq>)}
+      {HOMEPAGE_FAQS.map((f) => (
+        <Faq q={f.q}>
+          {f.a}
+          {"more" in f && f.more && <> {f.more.before}<Link href={f.more.href}>{f.more.text}</Link>{f.more.after}</>}
+        </Faq>
+      ))}
     </div>
   </Wrap>
 

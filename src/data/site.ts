@@ -334,7 +334,12 @@ export const SERVICES: Service[] = [
     slug: "fitted-wardrobe-cost",
     guide: true,
     noMinimum: true,
-    metaTitle: "Built-in wardrobe cost in north London",
+    /* 19 Nov 2026, the CTR plan (ops research/ctr-2026-11-19): the Google
+       title matches the H1 and the more searched word, "fitted" (about 300
+       London searches a month against 160 for "built-in"); it read "Built-in
+       wardrobe cost in north London" from 12 Nov. The description names the
+       starting price and that fitting is included (both from the table). */
+    metaTitle: "How much do fitted wardrobes cost in north London?",
     bandPrice: "Fitted wardrobes from £2,300",
     price:
       "From £2,300 for a 2-door wardrobe in melamine to £6,300 and up for 4 doors in oak veneer. The tables below give every step between.",
@@ -342,7 +347,7 @@ export const SERVICES: Service[] = [
     heading: "How much do fitted wardrobes cost in north London?",
     primary: "built in wardrobe cost",
     description:
-      "What fitted wardrobes and alcove units actually cost in north London, guide prices by size and finish, what moves the figure, and how to read a quotation.",
+      "Fitted and built-in wardrobe prices in north London, fitting included, from £2,300 for two doors in melamine, moved by size, finish, layout and lighting.",
     summary:
       "Honest price ranges, what moves them, and the questions worth asking before you accept any quote.",
     wave: 1,
