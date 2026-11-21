@@ -50,21 +50,75 @@
  * renders are the journal guides' files with their approved alt text, each
  * captioned with what it shows. Since 19 Nov 2026 (a founder) neither the
  * pictures nor the page say they are AI-generated examples.
+ *
+ * ON THE PRIMROSE HILL MODEL, 15 Nov 2026 (a founder's go; Denis: "use the
+ * same design and structure for the next articles"; ops README, "The structure
+ * rule, applied"). The address moved to /areas/hampstead/, with 301s from
+ * /carpenter-hampstead/ and /carpenter-hampstead-design/, and the page is held
+ * by areaHampsteadCheck until Kaspar has read it: none of it reaches the live
+ * site before he approves every area page (Denis, 15 Nov). Title, heading,
+ * kicker and description lead with bespoke wardrobes (areas.ts). His words are
+ * kept as they stand, with two changes for the model, both in the lede: "and
+ * other bespoke carpentry" added to the approved first sentence, and his
+ * "Every project" now "Every piece of bespoke joinery". Added: a line drawing
+ * beside the Fit section (a mansion block) and beside his Willoughby Road
+ * paragraph in the design section (a wardrobe in sections, his own point that
+ * the furniture can be made in sections for narrow access); the guide prices as
+ * cards, each with its approved line on what moves the figure; the cost guide
+ * sentence corrected (it gives alcove units by finish only). The design section
+ * keeps its three AI renders; the building, listing and access sections take no
+ * drawing. Plates: the three real photographs already on the page
+ * (fitted-wardrobes-08, alcove-units-08, media-walls-02; the register's ssp-091,
+ * ssp-103 and ssp-085), because the register's one Hampstead photograph,
+ * ssp-004, is a portrait of the same wardrobe as the first (areas.ts).
+ *
+ * CHECKED 15 Nov by three independent reviewers (copy, facts, swap test), told
+ * that his words are protected. Changed on their findings: the sections drawing
+ * moved beside his sentence about sections; the first FAQ no longer repeats the
+ * lede or Camden; the kitchens answer now answers; "where appropriate" and
+ * "drawer systems" left the hardware answer (the cost guide's starting
+ * specification has soft-close hinges); two drawing labels say only what is
+ * drawn; the description no longer claims cutting to the walls.
+ *
+ * FAQ, all three new, from Google People also ask (UK, English, desktop, the
+ * built-in browser, 15 Nov 2026): "What does bespoke joinery mean?" and "What
+ * is high-end joinery?" (bespoke joinery hampstead, the area's second product
+ * search, 32 impressions), "Are bespoke kitchens worth it?" (bespoke joinery).
+ * The wardrobe searches' boxes held only costs and other companies. Answers
+ * from what he approved: the materials page (the material range; the hardware
+ * section) and the bespoke kitchens page (service-copy.ts, its intro and
+ * Planning section). Dropped: "How long do the first visit and the survey
+ * take?", "Can new furniture match the woodwork already in the house?", "How
+ * long does a job take?" (not from a product search) and "What should I check
+ * before hiring a carpenter?" (a carpenter question; the guarantee is above).
  */
-import AreaPage from "../components/AreaPage.astro";
-import Wrap from "../components/ds/Wrap.astro";
-import SectionHead from "../components/ds/SectionHead.astro";
-import Reviews from "../components/ds/Reviews.astro";
-import Faq from "../components/ds/Faq.astro";
-import Link from "../components/ds/Link.astro";
-import Render from "../components/journal/Render.astro";
-import Renders from "../components/journal/Renders.astro";
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Reviews from "../../components/ds/Reviews.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import Render from "../../components/journal/Render.astro";
+import Renders from "../../components/journal/Renders.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
 
-import { AREAS } from "../data/areas";
-import { QUOTE_BANK, REVIEWS } from "../data/site-content";
-import { ANSWERS, answered } from "../data/answers";
+import { AREAS } from "../../data/areas";
+import { QUOTE_BANK, REVIEWS } from "../../data/site-content";
+import { ANSWERS, answered } from "../../data/answers";
+import { photoText } from "../../data/plate-services";
 
-const area = AREAS.find((a) => a.slug === "carpenter-hampstead")!;
+const area = AREAS.find((a) => a.slug === "areas/hampstead")!;
+
+/* The three renders in the design section: alt text and a visible description in the same words
+   (a founder, 19 Nov 2026; src/data/plate-services.ts). Their approved alt text is the middle part.
+   21 Nov 2026, Denis on the review link: the cornice pair (one wall, one view, only the top changed, lit
+   shelves) broke the rule that compared pictures come from different rooms, and "remove the leds". The
+   pair is now the alcove guide's two new renders, each a different room with no lighting (site PR #73,
+   protocol section 8), with the guide's descriptions less its closing area sentence. */
+const R_BELOW_CORNICE = photoText("Alcove units", "Alcove units stopping below the cornice: open shelving framed by side panels and a back panel, above cupboards with two flat doors in each alcove. Painted warm mushroom grey, with small black knobs. Each unit has its own flat top, finished with a small moulding, leaving a band of wall and the original cornice untouched above. The cornice runs unbroken around the room.");
+const R_CORNICE_ACROSS = photoText("Alcove units", "Alcove unit with the cornice running across: open shelving framed by side panels and a back panel, above a two-door cupboard with aged-brass cup handles. Painted a muted blue-grey against white walls. The unit runs up to the ceiling: a slim infill meets the room's white cornice, which carries on across the top of the unit and along the chimney breast. The joinery reads as part of the room.");
+const R_HANDLELESS = photoText("Fitted wardrobes", "A wall-to-wall wardrobe with six full-height flat doors in a smooth sage finish, with no visible handles and thin, even gaps between them. A slim top infill meets the flat ceiling, slim side infills run down to the floor, and one continuous recessed plinth gives the base a shadow line.", area.name);
 
 /* The reviews: every bank entry tagged with this district, in bank order,
    whole. A gated entry takes its byline from its key once answered. */
@@ -73,8 +127,45 @@ const quotes = QUOTE_BANK.filter((q) => q.areas.includes(area.name)).map((q) => 
   meta: q.gate && answered(q.gate) ? String(ANSWERS[q.gate].value) : q.meta,
 }));
 
-const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
-const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+/* The approved cost list (first version), now as cards: each card's price and
+   its line on what moves the figure are the list's own words. */
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers, integrated lighting and more complex designs move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.",
+  },
+  {
+    art: "walk-in-wardrobes",
+    name: "Walk-in wardrobes",
+    href: "/walk-in-wardrobes/",
+    price: "Typically from around £5,000.",
+    moves: "The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.",
+  },
+  {
+    art: "tv-units",
+    name: "Built-in TV units",
+    href: "/media-walls/",
+    price: "From £3,500.",
+    moves: "Overall size, cabinetry and storage, integrated lighting, cable management and specialist finishes move the figure.",
+  },
+  {
+    art: "kitchens",
+    name: "Bespoke kitchens",
+    href: "/bespoke-kitchens/",
+    price: "Typically from £10,000.",
+    moves: "Kitchen size and layout, cabinetry and internal storage, worktops, appliances, and materials and finishes move the figure.",
+  },
+];
 const P2 = "margin-top:var(--space-10)";
 const TEXT = "max-width:var(--measure)";
 const SECTION = "padding-bottom:var(--section-y)";
@@ -85,23 +176,25 @@ const SECTION = "padding-bottom:var(--section-y)";
     <p>
       {/* Not held since 9 Nov 2026: a founder ruled not to ask Kaspar about Hampstead jobs.
           This is his approved sentence, live on every service page. */}
-      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
+      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> and other bespoke carpentry across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
     </p>
     <p style={P2}>
       {/* Kaspar's words, 10 Nov 2026 (his comment on the preview); the links are ours. One word changed:
           he wrote "a seamless finish", and "seamless" is a hard-banned word (tone protocol v1.4 section 5)
           that scripts/verify-build.mjs refuses in a production build. "Neat" is his own word for the same
-          thing in his 8 Nov section below ("a neat, well-integrated finish"). */}
-      We also design and install <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>. Every project is made to measure, designed around the available space and carefully fitted to achieve a neat finish.
+          thing in his 8 Nov section below ("a neat, well-integrated finish"). 15 Nov 2026, the Primrose
+          Hill model: his "Every project" is now "Every piece of bespoke joinery". */}
+      We also design and install <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>. Every piece of bespoke joinery is made to measure, designed around the available space and carefully fitted to achieve a neat finish.
     </p>
   </Fragment>
 
-  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead1 card). */}
+  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead1 card). Denis, 21 Nov 2026: "Absolutely."
+     at the start of the answer deleted (and no answer opens with a yes). */}
   <Wrap style={SECTION}>
     <SectionHead meta="Fit" level={4}>Can bespoke fitted furniture be installed in Hampstead period homes and mansion flats?</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="mansion-block">
       <p>
-        Absolutely. Bespoke fitted furniture is particularly well suited to period properties, where walls, floors and ceilings are not always perfectly level or square. Each installation is carefully measured and designed to make the most of the available space while complementing the character of the property.
+        Bespoke fitted furniture is particularly well suited to period properties, where walls, floors and ceilings are not always perfectly level or square. Each installation is carefully measured and designed to make the most of the available space while complementing the character of the property.
       </p>
       <p style={P2}>
         Hampstead has a wide variety of architectural styles, from Georgian houses on Church Row and Regency villas on Keats Grove to Victorian terraces and traditional mansion blocks. These properties often feature original architectural details, unusual alcoves and varying ceiling heights, making made-to-measure furniture a practical choice.
@@ -109,7 +202,7 @@ const SECTION = "padding-bottom:var(--section-y)";
       <p style={P2}>
         We design and install bespoke wardrobes, alcove units, shelving and other fitted furniture in both period houses and mansion flats, taking care to achieve a neat, well-integrated finish.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   {/* Heading and first paragraph: Kaspar's (8 Nov, on the design-led copy). The
@@ -140,19 +233,21 @@ const SECTION = "padding-bottom:var(--section-y)";
       </p>
     </div>
     <Renders>
-      <Render src="/images/journal/alcove-ai-below-cornice.webp" width={1536} height={1024} caption="AI-generated example" short="Stopping below the cornice" pair alt="Built-in alcove units combining warm lit display shelving with traditional framed cupboard doors and small brass knobs. The framed shelving stops beneath the room's cornice, leaving the original moulding and a band of wall visible above the units." />
-      <Render src="/images/journal/alcove-ai-cornice-across.webp" width={1536} height={1024} caption="AI-generated example" short="Cornice across the top" pair alt="Traditional bespoke alcove units with framed shelving and panelled cupboards beneath, finished with a cornice that runs across the top of the units and around the chimney breast. Warm lighting highlights the display shelves, while the joinery complements the period fireplace." />
+      <Render src="/images/journal/alcove-guide-below-cornice.webp" width={1536} height={1024} caption="AI-generated example" short="Stopping below the cornice" pair alt={R_BELOW_CORNICE} description={R_BELOW_CORNICE} />
+      <Render src="/images/journal/alcove-guide-cornice-across.webp" width={1536} height={1024} caption="AI-generated example" short="Cornice across the top" pair alt={R_CORNICE_ACROSS} description={R_CORNICE_ACROSS} />
     </Renders>
-    <div style={TEXT}>
+    <AreaSide drawing="wardrobe-sections">
       <p style={P2}>
         Many period properties around Willoughby Road have steps leading to the entrance, along with narrow hallways and staircases. When planning a fitted furniture installation, we consider access as well as the room itself. Our furniture can be manufactured in separate sections and assembled on-site, making it easier to transport through restricted spaces.
       </p>
+    </AreaSide>
+    <div style={TEXT}>
       <p style={P2}>
         In traditional mansion flats, such as those found at Northcote Mansions, bespoke fitted wardrobes can be designed to complement both classic and contemporary interiors. Whether the preference is for traditional shaker-style doors or modern handleless cabinetry, the design can be tailored to suit the room's proportions and the client's requirements.
       </p>
     </div>
     <div style={TEXT}>
-      <Render src="/images/journal/built-in-wardrobes-ai-handleless.webp" width={1536} height={1024} caption="AI-generated example" short="Handleless flat doors" alt="A wall-to-wall wardrobe with six full-height flat doors in a smooth sage finish, with no visible handles and thin, even gaps between them. A slim top infill meets the flat ceiling, slim side infills run down to the floor, and one continuous recessed plinth gives the base a shadow line." />
+      <Render src="/images/journal/built-in-wardrobes-ai-handleless.webp" width={1536} height={1024} caption="AI-generated example" short="Handleless flat doors" alt={R_HANDLELESS} description={R_HANDLELESS} />
     </div>
     <div style={TEXT}>
       <p style={P2}>
@@ -215,17 +310,10 @@ const SECTION = "padding-bottom:var(--section-y)";
 
   <Wrap style={SECTION}>
     <SectionHead meta="Guide prices" level={4}>What does fitted furniture cost?</SectionHead>
-    <div style={TEXT}>
-      <p>Every figure below is a starting price, and a larger or more detailed project costs more.</p>
-      <ul style={LIST}>
-        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers, integrated lighting and more complex designs move the figure.</li>
-        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.</li>
-        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.</li>
-        <li style={ITEM}><Link href="/media-walls/">Built-in TV units</Link> start from £3,500. Overall size, cabinetry and storage, integrated lighting, cable management and specialist finishes move the figure.</li>
-        <li style={ITEM}><Link href="/bespoke-kitchens/">Bespoke kitchens</Link> typically start from £10,000. Kitchen size and layout, cabinetry and internal storage, worktops, appliances, and materials and finishes move the figure.</li>
-      </ul>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed project costs more.</p>
       <p style={P2}>
-        These are guide starting prices, and a fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
+        A fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> gives starting prices for fitted wardrobes by size and finish, and for alcove units by finish.
       </p>
       <p style={P2}>
         {/* Arthur's comment, 7 Nov 2026 ("u can see the elevations to get an idea how the unit would look"), drafted
@@ -235,7 +323,8 @@ const SECTION = "padding-bottom:var(--section-y)";
       <p style={P2}>
         <Link href="/process/">Our process</Link> typically includes an initial consultation and site survey, quotation and design, preparation and manufacturing, followed by installation.
       </p>
-    </div>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
   </Wrap>
 
   {/* "From N Google reviews" and the link to all of them are the component's, from REVIEWS.count. */}
@@ -261,17 +350,14 @@ const SECTION = "padding-bottom:var(--section-y)";
   <Wrap style={SECTION}>
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
-      <Faq q="How long do the first visit and the survey take?">
-        The first visit usually takes 45 to 60 minutes, and the measured survey about an hour on site. Both run longer for a larger or more complex project. Before we arrive, you do not need to know every detail: asking the right questions is our job.
+      <Faq q="What does bespoke joinery mean?">
+        It means joinery made to measure, with the materials chosen for the piece. Moisture-resistant MDF, natural wood veneer, melamine and decorative boards can be combined within a project to balance appearance, durability and cost.
       </Faq>
-      <Faq q="Can new furniture match the woodwork already in the house?">
-        Finishes are chosen to complement or closely match the furniture, joinery and flooring already in the room. Spray-painted, hand-painted, veneered and lacquered or oiled finishes are all possible, and the right one depends on the design and what it needs to match.
+      <Faq q="What is high-end joinery?">
+        It is joinery where the parts you use every day are chosen to last. We specify hardware from manufacturers such as Blum and Häfele, and soft-close hinges come as standard, so doors close smoothly and drawers run properly.
       </Faq>
-      <Faq q="How long does a job take?">
-        Installation typically takes 2 to 3 days for a straightforward wardrobe wall, and closer to a week where on-site construction or hand-painting is involved. The lead time before work starts is typically 4 to 8 weeks. Where a project needs design, one week is set aside for it, with drawings issued for you to review by the end.
-      </Faq>
-      <Faq q="What should I check before hiring a carpenter?">
-        Ask for public liability insurance, a guarantee and an itemised fixed quotation before anything is booked. We carry five million pounds of public liability cover, and our guarantee is set out above.
+      <Faq q="Are bespoke kitchens worth it?">
+        What you gain is a layout planned for your room. Cabinet runs, tall housings, islands and internal storage are resolved together, so the proportions hold across the whole room. Storage is planned around what you use and where, alongside clear worktop space, rather than added once the layout is settled.
       </Faq>
     </div>
   </Wrap>

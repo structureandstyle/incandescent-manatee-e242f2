@@ -44,16 +44,32 @@
 
 # The design-led copy of the Hampstead page (7 Nov 2026) was merged into
 # /carpenter-hampstead/ and deleted on 12 Nov 2026. It was live but noindexed
-# and unlinked; its address was on Kaspar's preview link, so it forwards here.
+# and unlinked; its address was on Kaspar's preview link, so it forwards. Since
+# the page moved to /areas/hampstead/ (15 Nov 2026), it forwards straight there,
+# never through a second redirect.
 [[redirects]]
   from = "/carpenter-hampstead-design/*"
-  to = "/carpenter-hampstead/"
+  to = "/areas/hampstead/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/carpenter-hampstead-design"
-  to = "/carpenter-hampstead/"
+  to = "/areas/hampstead/"
+  status = 301
+  force = true
+
+# Hampstead itself: live and indexed at /carpenter-hampstead/ from 12 Nov 2026,
+# moved to /areas/hampstead/ on the Primrose Hill model (15 Nov 2026).
+[[redirects]]
+  from = "/carpenter-hampstead/*"
+  to = "/areas/hampstead/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-hampstead"
+  to = "/areas/hampstead/"
   status = 301
   force = true
 
