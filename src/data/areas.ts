@@ -279,7 +279,13 @@ export const AREAS: Area[] = [
        second AI gap for Belsize Park, full-height painted wardrobes in a bay-fronted bedroom
        (Figma node 33:2). Its first gap, alcove units either side of a chimney breast, has no
        plate: the frame shows three, and Islington's AI plate is already alcove units. None is
-       a recorded job in Belsize Park. */
+       a recorded job in Belsize Park.
+       21 Nov 2026, Denis on the review link: ssp-006 "is the same walk in wardrobe as the one on the
+       left", so it is replaced by an AI walk-in wardrobe in a different room, an attic with a sloping
+       ceiling, painted putty rather than oak-effect (Figma node 56:3, file d0AWnKDiTyYDbBrrCsE4NS),
+       made and checked to the render protocol (sections 5 and 8). The register has no walk-in
+       wardrobe from another job: its other walk-in, the June 2025 white one, is on Primrose Hill and
+       West Hampstead. */
     plates: [
       {
         file: "/images/library/ssp-008.webp",
@@ -287,9 +293,12 @@ export const AREAS: Area[] = [
         alt: "Dark oak-effect walk-in wardrobe with four open cubbies along the top, a chrome hanging rail beneath them and its side run turning the corner on the left.",
       },
       {
-        file: "/images/library/ssp-006.webp",
-        type: "Walk-in wardrobe shelving",
-        alt: "Dark oak-effect open cubby shelving with neat edge banding, above an open bay, against a pale grey wall.",
+        file: "/images/journal/belsize-walk-in-attic.webp",
+        type: "Walk-in wardrobe",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Walk-in wardrobe in an attic room: open joinery painted soft putty along the tall wall, with two hanging bays on aged-brass rails, open shelves above them holding folded knitwear, and a stack of five drawers with small round brass knobs between the bays. Under the sloping ceiling opposite, a low run of six drawers with the same knobs, and a sash window at the far end.",
       },
       {
         file: "/images/journal/belsize-ai-green-wardrobes-bay.webp",
@@ -336,12 +345,20 @@ export const AREAS: Area[] = [
        ssp-022 are allocated but the frame shows three plates (ssp-022 is close to Islington's
        view); ssp-024 and ssp-025 are alternates. Plus the register's AI gap for Kentish Town,
        closed white handleless fitted wardrobes with slim infills (Figma node 34:2): the page has
-       no wardrobe photograph. None is a recorded job in Kentish Town. */
+       no wardrobe photograph. None is a recorded job in Kentish Town.
+       21 Nov 2026, Denis on the review link: ssp-020 "is the exact kitchen photo as the one in
+       Islington", so it is replaced by an AI painted Shaker kitchen in a different room (Figma node
+       57:9, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the render protocol (sections 5 and 8).
+       The register's only other kitchens are live on the site already or marked not publishable.
+       ssp-019 stays: it is a different view, but of the same May 2025 kitchen as Islington's ssp-051. */
     plates: [
       {
-        file: "/images/library/ssp-020.webp",
+        file: "/images/journal/kentish-shaker-kitchen.webp",
         type: "Bespoke kitchens",
-        alt: "Dark grey kitchen island with a marble-effect top and two white stools, tall units at left and an open room beyond.",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Painted Shaker kitchen in an L along two walls of a period room: muted green-grey doors in pairs with small round brass knobs, banks of drawers with brass cup handles, an oak worktop and a white butler sink with a brass bridge tap under the sash window. A plain oak shelf with a few plates runs above, and a white fireplace with a black cast-iron insert stands on the left.",
       },
       {
         file: "/images/library/ssp-019.webp",
