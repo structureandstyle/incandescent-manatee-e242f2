@@ -30,8 +30,9 @@
  * and description lead with bespoke wardrobes (areas.ts); the opening carries
  * "bespoke carpentry" and "bespoke joinery" once each; a line drawing beside
  * each section that describes something (src/data/area-drawings.ts: a Georgian
- * terrace, a lower-ground room in plan, shelving around a door, storage under a
- * valley roof), none where a section is rules only; the guide prices as cards;
+ * terrace, a lower-ground room in plan, alcove units either side of a chimney
+ * breast, low storage cut to a mansard's slopes; the last two redrawn 21 Nov,
+ * below), none where a section is rules only; the guide prices as cards;
  * register photos and one labelled AI image (ssp-048 and ssp-051, cropped to
  * 3:2, and AI glazed alcove units, Figma node 32:2; the reasons are in
  * areas.ts).
@@ -51,6 +52,16 @@
  * changes on our side: what changes now comes from Kaspar's comments on the
  * review link or a founder's word. Still held noindex by areaIslingtonCheck,
  * and nothing goes live before Kaspar approves.
+ *
+ * TWO DRAWINGS REDRAWN, 21 Nov 2026 (Arthur's internal comments on the review
+ * link). The alcove section showed shelving around a door: "irrelevant with the
+ * text above, maybe add a bay seating area or an illustration of the actual
+ * text". It now shows its own subject, alcove units either side of a chimney
+ * breast (a bay seat is Kentish Town's drawing, in the same batch for Kaspar).
+ * The roofs section's valley roof "looks off": it put a room with stepped units
+ * under the V of the roof, where the text puts loft rooms in a mansard. It now
+ * shows a mansard behind a parapet, low units cut to its slopes and full-height
+ * doors only under the flat part. Words unchanged.
  *
  * BROUGHT TO THE UPDATED COPY RULES, 19 Nov 2026 (a founder, in chat: "check
  * the next area page if it has the update copy protocol"). It did not: it was
@@ -185,7 +196,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Alcoves and shelving" level={4}>Alcove units either side of an Islington chimney breast</SectionHead>
-    <AreaSide drawing="door-shelving">
+    <AreaSide drawing="alcove-units-breast">
       <p>
         A Georgian or Victorian room with a fireplace usually has a chimney breast with an alcove either side. The units there are painted to the room or finished in veneer.
       </p>
@@ -197,7 +208,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Roofs and lofts" level={4}>Storage under Islington's hidden roofs</SectionHead>
-    <AreaSide drawing="valley-roof">
+    <AreaSide drawing="mansard-storage">
       <p>
         Many Islington terraces have a valley roof, two slopes meeting at a central gutter, hidden behind a low front wall called a parapet. Islington Council's Barnsbury guidelines do not allow new dormer windows on the front or side slopes of exposed roofs. Canonbury and Duncan Terrace have similar controls.
       </p>
