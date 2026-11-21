@@ -348,7 +348,8 @@ export const AREAS: Area[] = [
        no wardrobe photograph. None is a recorded job in Kentish Town.
        21 Nov 2026, Denis on the review link: ssp-020 "is the exact kitchen photo as the one in
        Islington", so it is replaced by an AI painted Shaker kitchen in a different room (Figma node
-       57:9, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the render protocol (sections 5 and 8).
+       57:9, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the render protocol (sections 5 and 8);
+       an oak shelf that ran past the corner and was not level was painted off the plain wall.
        The register's only other kitchens are live on the site already or marked not publishable.
        ssp-019 stays: it is a different view, but of the same May 2025 kitchen as Islington's ssp-051. */
     plates: [
@@ -358,7 +359,7 @@ export const AREAS: Area[] = [
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Painted Shaker kitchen in an L along two walls of a period room: muted green-grey doors in pairs with small round brass knobs, banks of drawers with brass cup handles, an oak worktop and a white butler sink with a brass bridge tap under the sash window. A plain oak shelf with a few plates runs above, and a white fireplace with a black cast-iron insert stands on the left.",
+        alt: "Painted Shaker kitchen in an L along two walls of a period room: deep olive-green doors in pairs with small round brass knobs, banks of drawers with brass cup handles, an oak worktop with a chopping board, and a white butler sink with a brass bridge tap under the sash window. A white fireplace with a black cast-iron insert stands on the left.",
       },
       {
         file: "/images/library/ssp-019.webp",
