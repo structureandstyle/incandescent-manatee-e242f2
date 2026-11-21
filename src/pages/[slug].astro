@@ -22,6 +22,8 @@ import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
 import MonoLabel from "../components/ds/MonoLabel.astro";
 import SectionHead from "../components/ds/SectionHead.astro";
+import ServiceSide from "../components/ServiceSide.astro";
+import ServiceLayouts from "../components/ServiceLayouts.astro";
 import SpecTable from "../components/ds/SpecTable.astro";
 import EnquireBand from "../components/ds/EnquireBand.astro";
 import Faq from "../components/ds/Faq.astro";
@@ -460,13 +462,32 @@ const SECTIONS: Section[] = [
         {copy?.sections.filter((sec) => sec.after === section.id).map((sec) => (
           <Wrap style="padding-bottom:var(--section-y)">
             <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
-            <div style="max-width:var(--measure)">
-              {sec.body.map((p, i) => (
-                <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
-              ))}
-            </div>
+            {sec.drawing ? (
+              /* A line drawing beside the words, 17 Nov 2026 (the kitchens page). */
+              <ServiceSide drawing={sec.drawing}>
+                {sec.body.map((p, i) => (
+                  <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
+                ))}
+              </ServiceSide>
+            ) : (
+              <div style="max-width:var(--measure)">
+                {sec.body.map((p, i) => (
+                  <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
+                ))}
+              </div>
+            )}
           </Wrap>
         ))}
+
+        {copy?.layouts && copy.layouts.after === section.id && (
+          <ServiceLayouts
+            meta={copy.layouts.meta}
+            heading={copy.layouts.heading}
+            lead={copy.layouts.lead}
+            note={copy.layouts.note}
+            items={copy.layouts.items}
+          />
+        )}
       </>
     ))}
 

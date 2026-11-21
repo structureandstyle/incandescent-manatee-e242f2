@@ -37,8 +37,23 @@ export type ServiceCopy = {
    * to the template's generic lead.
    */
   leads?: Record<string, string>;
-  /** Extra sections. Set `after` to place one after a named shared section. */
-  sections: { meta: string; heading: string; body: string[]; after?: string }[];
+  /**
+   * Extra sections. Set `after` to place one after a named shared section, and
+   * `drawing` (an id in service-drawings.ts) to put a line drawing beside it.
+   */
+  sections: { meta: string; heading: string; body: string[]; after?: string; drawing?: string }[];
+  /**
+   * Layouts as cards, each with a plan drawing (17 Nov 2026, the kitchens page),
+   * placed after the extra sections that follow the shared section `after`.
+   */
+  layouts?: {
+    after: string;
+    meta: string;
+    heading: string;
+    lead: string;
+    note?: string;
+    items: { drawing: string; name: string; text: string }[];
+  };
   /**
    * Guide-price tables, rendered directly after the cost section. Source:
    * the client's pricing document, 31 Aug 2026 (ops repo,
@@ -303,6 +318,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         meta: "Planning",
         heading: "What is planned into a bespoke kitchen?",
         after: "cost",
+        drawing: "kitchen-run",
         body: [
           "The layout is resolved before the cabinet sizes are fixed. Doorways, windows and routes through the room, together with the positions of sinks and appliances, affect where cabinet runs, tall units and islands can sit.",
           "Internal storage is planned around what is used and where it is needed. The balance of drawers, shelves and cupboards is considered alongside clear worktop space rather than added after the main layout is settled.",
@@ -320,6 +336,53 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         ],
       },
     ],
+    /* LAYOUTS, 17 Nov 2026: Arthur's internal comment on the review link ("add
+       different layouts, and make it more visual"). The six usual starting
+       points, each with a plan drawing (service-drawings.ts). The words are new
+       copy for Kaspar to check on the review link: principles only, no sizes
+       (his 20 Oct 2026 line: "Please avoid adding dimensions or specifications
+       that haven't been confirmed"). The corner line follows his wardrobe
+       guide's point that a corner needs a planned way in; the island line
+       follows this page's own "routes through the room". */
+    layouts: {
+      after: "cost",
+      meta: "Layouts",
+      heading: "Which kitchen layout suits the room?",
+      lead: "The room's shape usually decides it. A narrow room suits one wall or a galley, and a squarer room an L, a U or an island. A bespoke kitchen can also combine two of these six.",
+      note: "Illustrative plans, not to scale.",
+      items: [
+        {
+          drawing: "kitchen-one-wall",
+          name: "One wall",
+          text: "Every cabinet and appliance sits along a single wall. It suits a narrow room, or an open-plan room where the rest of the floor stays clear.",
+        },
+        {
+          drawing: "kitchen-galley",
+          name: "Galley",
+          text: "Two runs face each other across a walkway. It suits a long, narrow room, with the sink, hob and storage all a short reach apart.",
+        },
+        {
+          drawing: "kitchen-l-shaped",
+          name: "L-shaped",
+          text: "Cabinets run along two walls that meet in a corner, leaving the rest of the room open. The corner cupboard needs a planned way in, so its storage stays usable.",
+        },
+        {
+          drawing: "kitchen-u-shaped",
+          name: "U-shaped",
+          text: "Cabinets wrap round three walls, giving plenty of worktop and storage for the floor space. The walkway in the middle has to leave room for doors and drawers to open.",
+        },
+        {
+          drawing: "kitchen-island",
+          name: "Island",
+          text: "A run along the wall faces a separate block in the middle of the room. The island can hold the sink, the hob or seating, and needs a clear walkway on every side.",
+        },
+        {
+          drawing: "kitchen-peninsula",
+          name: "Peninsula",
+          text: "A second run juts out from the first into the room, joined at one end and free at the other. It gives an island's extra worktop and seating where there is no room to walk round one.",
+        },
+      ],
+    },
     faqs: [
       {
         q: "Do I need a finished kitchen plan before enquiring?",
