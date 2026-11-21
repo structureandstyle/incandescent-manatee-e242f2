@@ -111,9 +111,13 @@ import { photoText } from "../../data/plate-services";
 const area = AREAS.find((a) => a.slug === "areas/hampstead")!;
 
 /* The three renders in the design section: alt text and a visible description in the same words
-   (a founder, 19 Nov 2026; src/data/plate-services.ts). Their approved alt text is the middle part. */
-const R_BELOW_CORNICE = photoText("Alcove units", `Built-in alcove units combining warm lit display shelving with traditional framed cupboard doors and small brass knobs. The framed shelving stops beneath the room's cornice, leaving the original moulding and a band of wall visible above the units.`, area.name);
-const R_CORNICE_ACROSS = photoText("Alcove units", "Traditional bespoke alcove units with framed shelving and panelled cupboards beneath, finished with a cornice that runs across the top of the units and around the chimney breast. Warm lighting highlights the display shelves, while the joinery complements the period fireplace.", area.name);
+   (a founder, 19 Nov 2026; src/data/plate-services.ts). Their approved alt text is the middle part.
+   21 Nov 2026, Denis on the review link: the cornice pair (one wall, one view, only the top changed, lit
+   shelves) broke the rule that compared pictures come from different rooms, and "remove the leds". The
+   pair is now the alcove guide's two new renders, each a different room with no lighting (site PR #73,
+   protocol section 8), with the guide's descriptions less its closing area sentence. */
+const R_BELOW_CORNICE = photoText("Alcove units", "Alcove units stopping below the cornice: open shelving framed by side panels and a back panel, above cupboards with two flat doors in each alcove. Painted warm mushroom grey, with small black knobs. Each unit has its own flat top, finished with a small moulding, leaving a band of wall and the original cornice untouched above. The cornice runs unbroken around the room.");
+const R_CORNICE_ACROSS = photoText("Alcove units", "Alcove unit with the cornice running across: open shelving framed by side panels and a back panel, above a two-door cupboard with aged-brass cup handles. Painted a muted blue-grey against white walls. The unit runs up to the ceiling: a slim infill meets the room's white cornice, which carries on across the top of the unit and along the chimney breast. The joinery reads as part of the room.");
 const R_HANDLELESS = photoText("Fitted wardrobes", "A wall-to-wall wardrobe with six full-height flat doors in a smooth sage finish, with no visible handles and thin, even gaps between them. A slim top infill meets the flat ceiling, slim side infills run down to the floor, and one continuous recessed plinth gives the base a shadow line.", area.name);
 
 /* The reviews: every bank entry tagged with this district, in bank order,
@@ -184,12 +188,13 @@ const SECTION = "padding-bottom:var(--section-y)";
     </p>
   </Fragment>
 
-  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead1 card). */}
+  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead1 card). Denis, 21 Nov 2026: "Absolutely."
+     at the start of the answer deleted (and no answer opens with a yes). */}
   <Wrap style={SECTION}>
     <SectionHead meta="Fit" level={4}>Can bespoke fitted furniture be installed in Hampstead period homes and mansion flats?</SectionHead>
     <AreaSide drawing="mansion-block">
       <p>
-        Absolutely. Bespoke fitted furniture is particularly well suited to period properties, where walls, floors and ceilings are not always perfectly level or square. Each installation is carefully measured and designed to make the most of the available space while complementing the character of the property.
+        Bespoke fitted furniture is particularly well suited to period properties, where walls, floors and ceilings are not always perfectly level or square. Each installation is carefully measured and designed to make the most of the available space while complementing the character of the property.
       </p>
       <p style={P2}>
         Hampstead has a wide variety of architectural styles, from Georgian houses on Church Row and Regency villas on Keats Grove to Victorian terraces and traditional mansion blocks. These properties often feature original architectural details, unusual alcoves and varying ceiling heights, making made-to-measure furniture a practical choice.
@@ -228,8 +233,8 @@ const SECTION = "padding-bottom:var(--section-y)";
       </p>
     </div>
     <Renders>
-      <Render src="/images/journal/alcove-ai-below-cornice.webp" width={1536} height={1024} caption="AI-generated example" short="Stopping below the cornice" pair alt={R_BELOW_CORNICE} description={R_BELOW_CORNICE} />
-      <Render src="/images/journal/alcove-ai-cornice-across.webp" width={1536} height={1024} caption="AI-generated example" short="Cornice across the top" pair alt={R_CORNICE_ACROSS} description={R_CORNICE_ACROSS} />
+      <Render src="/images/journal/alcove-guide-below-cornice.webp" width={1536} height={1024} caption="AI-generated example" short="Stopping below the cornice" pair alt={R_BELOW_CORNICE} description={R_BELOW_CORNICE} />
+      <Render src="/images/journal/alcove-guide-cornice-across.webp" width={1536} height={1024} caption="AI-generated example" short="Cornice across the top" pair alt={R_CORNICE_ACROSS} description={R_CORNICE_ACROSS} />
     </Renders>
     <AreaSide drawing="wardrobe-sections">
       <p style={P2}>

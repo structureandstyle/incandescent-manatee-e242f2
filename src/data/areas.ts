@@ -279,7 +279,13 @@ export const AREAS: Area[] = [
        second AI gap for Belsize Park, full-height painted wardrobes in a bay-fronted bedroom
        (Figma node 33:2). Its first gap, alcove units either side of a chimney breast, has no
        plate: the frame shows three, and Islington's AI plate is already alcove units. None is
-       a recorded job in Belsize Park. */
+       a recorded job in Belsize Park.
+       21 Nov 2026, Denis on the review link: ssp-006 "is the same walk in wardrobe as the one on the
+       left", so it is replaced by an AI walk-in wardrobe in a different room, an attic with a sloping
+       ceiling, painted putty rather than oak-effect (Figma node 56:3, file d0AWnKDiTyYDbBrrCsE4NS),
+       made and checked to the render protocol (sections 5 and 8). The register has no walk-in
+       wardrobe from another job: its other walk-in, the June 2025 white one, is on Primrose Hill and
+       West Hampstead. */
     plates: [
       {
         file: "/images/library/ssp-008.webp",
@@ -287,9 +293,12 @@ export const AREAS: Area[] = [
         alt: "Dark oak-effect walk-in wardrobe with four open cubbies along the top, a chrome hanging rail beneath them and its side run turning the corner on the left.",
       },
       {
-        file: "/images/library/ssp-006.webp",
-        type: "Walk-in wardrobe shelving",
-        alt: "Dark oak-effect open cubby shelving with neat edge banding, above an open bay, against a pale grey wall.",
+        file: "/images/journal/belsize-walk-in-attic.webp",
+        type: "Walk-in wardrobe",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Walk-in wardrobe in an attic room: open joinery painted soft putty along the tall wall, with two hanging bays on aged-brass rails, open shelves above them holding folded knitwear, and a stack of five drawers with small round brass knobs between the bays. Under the sloping ceiling opposite, a low run of six drawers with the same knobs, and a sash window at the far end.",
       },
       {
         file: "/images/journal/belsize-ai-green-wardrobes-bay.webp",
