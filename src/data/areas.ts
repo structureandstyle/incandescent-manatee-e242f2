@@ -533,21 +533,62 @@ export const AREAS: Area[] = [
     summary: "Red-brick Victorian and Edwardian houses and mansion flats around West End Lane.",
   },
   {
-    slug: "carpenter-maida-vale",
+    slug: "areas/maida-vale",
     name: "Maida Vale",
-    titleProp: "Maida Vale carpenter, fitted wardrobes",
-    h1: "Carpenter in Maida Vale for fitted wardrobes in mansion flats and houses",
-    kicker: "Carpenter in Maida Vale",
+    /* Product-led, 17 Nov 2026: the tenth and last page on the Primrose Hill model (a founder's go,
+       17 Nov: "Yes, Maida Vale"; Denis, 15 Nov: "use the same design and structure for the next
+       articles"). No "carpenter" in the title, heading or description; the kicker stays "Bespoke
+       joinery" (Denis, 15 Nov: "leave joinery for now") and "bespoke carpentry" sits in the opening. */
+    titleProp: "Fitted wardrobes and built-in shelving in Maida Vale",
+    h1: "Fitted wardrobes and built-in shelving for Maida Vale's stucco houses and mansion flats",
+    kicker: "Bespoke joinery in Maida Vale",
     description:
-      "Fitted wardrobes, alcove units and shelving for Maida Vale mansion flats and period houses, measured in the room and cut to follow its walls.",
-    /* carpenter maida vale cluster (carpenter maida vale, carpenters maida vale, carpentry maida vale) 10 (Keyword Planner, London, 14 Nov 2026). No map pack on 14 Nov. City of Westminster. */
-    primary: "carpenter maida vale",
+      "Fitted wardrobes, alcove units and built-in shelving for Maida Vale's canal-side villas, stucco crescents and early mansion flats in Westminster.",
+    /* No product search is measured for Maida Vale. Keyword Planner has only the carpenter maida vale
+       group (carpenter, carpenters and carpentry maida vale, 10 a month, London, 14 Nov 2026); Search
+       Console has no Maida Vale query. Fitted wardrobes lead, the broad product and the register's AI
+       gap (panelled wardrobes with leather pulls); built-in shelving comes second because the
+       register's photographs for this page are one built-in bookcase wall. City of Westminster. */
+    primary: "fitted wardrobes maida vale",
+    /* 17 Nov 2026: the register's allocation (ops PR #49) for Maida Vale is the December 2025 white
+       bookcase wall, split with Camden in different views (Camden shows ssp-027, the whole wall in
+       three bays). ssp-058, its lead, landscape, cropped to 3:2 from y 333: the angled close view of
+       deep open shelves over flat cupboard doors; ssp-057, portrait, cropped to 3:2 from y 800: the
+       angled view up the side of the shelving with the lit wall light. ssp-060 is the register's
+       alternate of ssp-058 (the same view). Plus the register's AI gap for Maida Vale, full-height
+       panelled wardrobes with leather pulls (Figma node 38:2). None is a recorded job in Maida Vale.
+       21 Nov 2026, Denis on the review link: ssp-057 shows "the same bookcase as the one on the left
+       side", so it is replaced by AI built-in shelving around a doorway in a mansion flat hall,
+       painted warm stone (Figma node 58:3, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the
+       render protocol (sections 5 and 8). A first try, a sage bookcase (node 56:6), failed the
+       independent check: the same shuttered sash window and ornate cornice as the panelled wardrobe
+       render on this page, and the same layout as ssp-058. The register's other shelving jobs are on
+       Hampstead or the bookcases page already. Own service: "Built-in shelving" reads as it is. */
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-01.webp", type: "Fitted wardrobes" },
-      { file: "/images/alcove-units/alcove-units-02.webp", type: "Alcove units" },
-      { file: "/images/media-walls/media-walls-04.webp", type: "Built-in TV units" },
+      {
+        file: "/images/library/ssp-058.webp",
+        type: "Built-in bookcase",
+        alt: "White built-in bookcase seen at an angle, with deep open shelves above flat handleless cupboard doors.",
+      },
+      {
+        file: "/images/journal/maidavale-doorway-shelving.webp",
+        type: "Built-in shelving",
+        service: "Built-in shelving",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Built-in shelving around a doorway in a hall: open shelves painted warm stone rise on both sides of a white door frame and bridge over the top of it, holding books and plain white jugs, with a pair of flat cupboard doors with small round brass knobs at the foot of each side. Dark oak floorboards, with an open doorway to a room on the left and a white panelled door on the right.",
+      },
+      {
+        file: "/images/journal/maidavale-ai-panelled-wardrobes.webp",
+        type: "Panelled fitted wardrobes",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Six full-height two-panel wardrobe doors in a deep blue-grey, with tan leather pulls where each pair meets, below an ornate plaster cornice. A tall sash window with folding shutters is to the left, and the foot of a bed to the right.",
+      },
     ],
-    summary: "Stucco crescents, red-brick terraces and early mansion flats in the City of Westminster.",
+    summary: "Canal-side villas, stucco crescents and early mansion flats in the City of Westminster.",
   },
 ];
 

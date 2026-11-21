@@ -186,6 +186,20 @@
   status = 301
   force = true
 
+# Maida Vale, the tenth and last (17 Nov 2026); its first address also reached production as a
+# noindexed draft with PR #42.
+[[redirects]]
+  from = "/carpenter-maida-vale/*"
+  to = "/areas/maida-vale/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-maida-vale"
+  to = "/areas/maida-vale/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

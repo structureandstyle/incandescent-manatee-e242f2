@@ -26,6 +26,7 @@ const PATH_REDIRECTS = [
   { from: /^\/carpenter-swiss-cottage(?:\/.*)?$/, to: "/areas/swiss-cottage/" },
   { from: /^\/carpenter-highgate(?:\/.*)?$/, to: "/areas/highgate/" },
   { from: /^\/carpenter-west-hampstead(?:\/.*)?$/, to: "/areas/west-hampstead/" },
+  { from: /^\/carpenter-maida-vale(?:\/.*)?$/, to: "/areas/maida-vale/" },
 ];
 
 /** wrangler dev on this machine runs over plain http and is left alone. */

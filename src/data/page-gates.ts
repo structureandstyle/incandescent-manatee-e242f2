@@ -119,7 +119,7 @@ export const PAGE_GATES = {
   "/areas/swiss-cottage/": [...BAND_QUESTIONS, "areaSwissCottageCheck"],
   "/areas/highgate/": [...BAND_QUESTIONS, "areaHighgateCheck"],
   "/areas/west-hampstead/": [...BAND_QUESTIONS, "areaWestHampsteadCheck"],
-  "/carpenter-maida-vale/": [...BAND_QUESTIONS, "areaMaidaValeCheck"],
+  "/areas/maida-vale/": [...BAND_QUESTIONS, "areaMaidaValeCheck"],
   "/bespoke-staircases/": [...BAND_QUESTIONS, "staircasesCheck"],
   "/loft-wardrobes/": [...BAND_QUESTIONS, "loftWardrobesCheck"],
   "/built-in-bookcases/": [...BAND_QUESTIONS, "bookcasesCheck"],

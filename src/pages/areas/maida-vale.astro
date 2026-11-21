@@ -1,0 +1,252 @@
+---
+/**
+ * Maida Vale, 17 November 2026. A draft for Kaspar to read on the review link
+ * (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaMaidaValeCheck until he has read it and his changes are in. Nothing
+ * goes live before he has approved every area page (Denis, 15 Nov 2026).
+ *
+ * ON THE PRIMROSE HILL MODEL from the start (a founder's go, 17 Nov: "Yes,
+ * Maida Vale"; Denis, 15 Nov: "use the same design and structure for the
+ * next articles"; ops README, "The structure rule, applied"; ops
+ * SS_AREA_PAGE_RULES_v1.0.md, a draft, read for its plan items): address
+ * /areas/maida-vale/ with 301s from /carpenter-maida-vale/ (netlify.toml and
+ * the Worker's list); the title, heading, kicker and description lead with
+ * fitted wardrobes, then built-in shelving (the reasons are in areas.ts); the
+ * opening carries "bespoke carpentry" and "bespoke joinery" once each; a line
+ * drawing beside each section that describes something
+ * (src/data/area-drawings.ts: villas across a canal, a curved stucco terrace,
+ * wardrobes and cupboards around a bed), none where a section is rules or
+ * access only; the guide prices as cards; register photos and one labelled AI
+ * image (ssp-058, cropped to 3:2, AI panelled wardrobes with leather pulls,
+ * Figma node 38:2, and since 21 Nov 2026 AI shelving around a doorway in place
+ * of ssp-057, which showed the same bookcase as ssp-058; areas.ts says why).
+ *
+ * Sources. Maida Vale is in the City of Westminster, so nothing here is
+ * Camden's. Every local fact from the ops facts file
+ * research/area-pages-2026-11-14/facts-maida-vale-2026-11-14.md, read
+ * 14 Nov 2026:
+ *   Westminster's Maida Vale Conservation Area Information Leaflet (May 2004,
+ *     "S1"): the Regent's Canal and the Grand Union Canal set the earliest
+ *     layout; building got under way in the 1830s and the south was
+ *     virtually complete by the mid-1860s; Little Venice, "white stucco,
+ *     greenery and water"; early mansion blocks around Elgin Avenue; over 350
+ *     listed buildings, mostly Grade II, around Warwick Avenue, Warrington
+ *     Crescent, Formosa Street and Clifton Gardens (its 2004 count, stated as
+ *     its own with the year).
+ *   Westminster's Conservation Areas Character Overview, entry 27 ("S2"):
+ *     "The imposing stucco crescents of Warrington Crescent and Formosa
+ *     Street are the most notable features".
+ *   The Victoria County History, Middlesex vol 9, Paddington: Maida Vale
+ *     (1989, "S3", used for dates and building types only): stuccoed villas
+ *     on the southern avenues; the first flats planned in 1890 at Nos 1 and 3
+ *     Maida Vale; Carlton, Elgin and Ashworth Mansions by 1902.
+ *   Historic England, Nos 2 to 18 Formosa Street (list entry 1211906, "S4"):
+ *     a mid-19th century terrace of three storeys in brick and stucco, upper
+ *     sash windows "in architraves with cornices on consoles", Grade II.
+ *   Westminster's listed buildings and listed building consent pages ("S5";
+ *     the consent page re-read 17 Nov for its Certificate of Lawfulness line,
+ *     "to establish if proposed works to a listed building would be lawful"),
+ *     the Planning Portal's internal alterations page ("S6"), Westminster's
+ *     visitor parking and trade parking pages ("S7").
+ * Left out: Article 4 (the 2004 leaflet says none; not re-checked), the
+ * Lauderdale Mansions rooftop refusal (a news report, year not shown), the
+ * Randolph Avenue terrace and the red-brick avenues (no drawing or product
+ * fits them here), lifts, porters and managing agents (not in the sources;
+ * the managing agent line is Swiss Cottage's), who applies for the trade
+ * permit (a search snippet only).
+ *
+ * WHOSE WORDS. From what he approved: the wardrobe guide's lines on
+ * traditional panelled doors ("A cornice, suitable handles and carefully
+ * chosen panel proportions can connect the wardrobe with existing woodwork.
+ * The details should suit the scale of the room rather than compete with
+ * it.") and on storage around the bed; the alcove guide's lines on
+ * traditional alcove units, on the scale of mouldings, on combining the two
+ * styles, and on the balance of base cupboards and shelving (the first FAQ,
+ * said there of alcove units); the guarantee as worded on the other area
+ * pages (Hampstead's fuller approved form says "structural integrity" and
+ * "return and adjust"); the fitted wardrobe and alcove price lines as
+ * approved on Hampstead. One conduct line: parking, deliveries and access
+ * agreed before installation, as on the other area pages. Everything else
+ * is new copy for him to check.
+ *
+ * Street and building names are Westminster's, Historic England's and the
+ * published history's, describing the homes. None is a place we claim to have
+ * worked. No review names Maida Vale.
+ *
+ * FAQ sources, all three new, none on another area page: "Is built-in
+ * shelving a good idea?" (Google People also ask, built in bookcase: "Are
+ * built-ins a good idea?", made specific), "Are built-in shelves still in
+ * style?" (People also ask, built in bookshelves living room: "Are
+ * built-ins still in style?") and "How can you add storage above a bed?"
+ * (People also ask, over bed storage cupboards: "How to add storage above
+ * bed?", made a whole question); UK, English, desktop, 17 Nov 2026.
+ * The other questions in those boxes were costs, "cheaper" or "cheapest"
+ * (the area rules item 10), retailers, or do-it-yourself. Answers from what
+ * he approved: the alcove guide's layout and style sections, and the
+ * wardrobe guide's storage around the bed.
+ *
+ * CHECKED 17 Nov by three independent reviewers (copy rules, facts against
+ * the facts file and approved text, the swap test against the nine other
+ * area pages). Changed on their findings: the first FAQ answer no longer
+ * repeats Primrose Hill's alcove answer; the opening lost a "from X to Y"
+ * sweep and West Hampstead's "as well as its room" shape; the description
+ * is under 155 characters; the crescent drawing now has three floors over a
+ * basement, as the Formosa Street text beside it says; the listed count
+ * says what the leaflet says (it includes houses, villas and flats around
+ * the four streets); listed and Grade II are explained at first use; the
+ * Planning Portal sentence is no longer West Hampstead's; the certificate
+ * line is Westminster's own; the trade permit's zone is the source's words;
+ * each section's product paragraph opens on a local hinge (a mid-19th
+ * century villa, the moulded window detail, a mansion-flat bedroom); the
+ * third FAQ answers its question first; the leaflet and overview are named;
+ * the stucco gloss, the third meta and the prices heading differ from the
+ * other pages. Kept: his guide lines word for word, hedges included, as on
+ * the other area pages, with two bracketed glosses (cornice, plinths) added
+ * after a re-check; the three FAQ answers stay on his approved wording (area
+ * rules item 10), so they carry no local fact on purpose. The re-check also
+ * named Historic England in the Formosa Street line, put the bed recess in
+ * the text to match the drawing, and gave the conservation area, mansion
+ * block and "measured in its room" lines wording no other page uses.
+ */
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
+
+import { AREAS } from "../../data/areas";
+
+const area = AREAS.find((a) => a.slug === "areas/maida-vale")!;
+
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers, integrated lighting and more complex designs move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.",
+  },
+];
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      Our bespoke carpentry in Maida Vale covers <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and built-in shelving for stucco villas by the canal and early mansion flats.
+    </p>
+    <p style={P2}>
+      Maida Vale sits in the City of Westminster, not Camden, so the listing and parking rules below are Westminster's. Every piece of bespoke joinery is measured in its room, whether a canal-side villa or a mansion flat.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Canal and villas" level={4}>Fitted wardrobes for the stucco villas by the canal</SectionHead>
+    <AreaSide drawing="canal-villas">
+      <p>
+        Maida Vale is a conservation area: Westminster protects the whole district for its character. Westminster's leaflet on it says the Regent's Canal and the Grand Union Canal set the earliest layout. Building got under way in the 1830s, and the south was virtually complete by the mid-1860s.
+      </p>
+      <p style={P2}>
+        At the canal end is Little Venice, which the leaflet sums up as "white stucco, greenery and water". Stucco is the painted render that gives these fronts their smooth white finish. A published history of Paddington describes stuccoed detached and semi-detached villas along the southern avenues.
+      </p>
+      <p style={P2}>
+        In a mid-19th century villa, traditional panelled doors give <Link href="/fitted-wardrobes/">fitted wardrobes</Link> a more detailed front. A cornice (the moulded band along the top), suitable handles and carefully chosen panel proportions can connect the wardrobe with existing woodwork. The details should suit the scale of the room rather than compete with it.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Stucco crescents" level={4}>Built-in shelving for Warrington Crescent and Formosa Street</SectionHead>
+    <AreaSide drawing="stucco-crescent">
+      <p>
+        Westminster's character overview of its conservation areas calls the imposing stucco crescents of Warrington Crescent and Formosa Street the area's most notable features.
+      </p>
+      <p style={P2}>
+        Nos 2 to 18 Formosa Street is a mid-19th century terrace of three storeys in brick and stucco. Historic England lists it at Grade II, so the law protects it for its special interest. Its sash windows above the ground floor sit in moulded surrounds, each under a cornice on brackets.
+      </p>
+      <p style={P2}>
+        Built-in shelving and <Link href="/alcove-units/">alcove units</Link> can take their cue from that moulded detail. Panelled doors, framed shelving, decorative mouldings and shaped plinths (the base a unit stands on) can echo the woodwork in a period home. A large moulding may work alongside substantial cornicing, while a smaller room with simpler woodwork may suit less ornament.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Early flats" level={4}>Wardrobes around the bed in Maida Vale's early mansion flats</SectionHead>
+    <AreaSide drawing="bed-recess-wardrobes">
+      <p>
+        Flats came early to Maida Vale. A published history of Paddington records the first flats planned in 1890, at Nos 1 and 3 Maida Vale. Carlton, Elgin and Ashworth Mansions stood by 1902.
+      </p>
+      <p style={P2}>
+        Westminster's leaflet places early mansion blocks around Elgin Avenue. These are large blocks of flats.
+      </p>
+      <p style={P2}>
+        Where a mansion-flat bedroom has a recess for the bed, <Link href="/fitted-wardrobes/">wardrobes</Link> on either side can combine clothes storage with bedside shelves or drawers. Cupboards above the headboard add space for less frequently used items.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed buildings and Westminster's rules</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Westminster's May 2004 leaflet counted over 350 listed buildings in the area, mostly Grade II. They include stuccoed houses, villas and flats around Warwick Avenue, Warrington Crescent, Formosa Street and Clifton Gardens.
+      </p>
+      <p style={P2}>
+        Fitted furniture in an unlisted home does not generally need planning permission, as the <Link href="https://www.planningportal.co.uk/info/200130/common_projects/33/internal_walls" {...EXT}>Planning Portal</Link> notes for internal alterations. In a listed building, work affecting its special architectural or historic interest needs listed building consent, inside as well as out. Working without it is a criminal offence, even if you did not know the building was listed.
+      </p>
+      <p style={P2}>
+        <Link href="https://www.westminster.gov.uk/planning-building-control-and-environmental-regulations-menu/design-and-heritage/listed-buildings" {...EXT}>Westminster's listed buildings page</Link> links a map for checking a street, and suggests asking for its advice before applying. You can also apply for a Certificate of Lawfulness of Proposed Works, which establishes whether planned work to a listed building would be lawful.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Parking for the fitting days in Westminster</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Westminster does not run an on-street visitor permit scheme. Its daily <Link href="https://www.westminster.gov.uk/parking/trade-parking-businesses/apply-trade-parking-permit" {...EXT}>trade parking permit</Link> is for people having work done or doing it. It covers pay-to-park and resident bays in the zone it was bought for.
+      </p>
+      <p style={P2}>
+        The permit is not meant for deliveries, so Westminster asks you to check its loading and unloading allowances first. Parking, deliveries and access are agreed with you before installation.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What a fitted wardrobe or alcove unit costs in Maida Vale</SectionHead>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware is on the manufacturer's warranty, and doors and drawers are adjusted in the first 2 years. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> shows what moves the price of a fitted wardrobe.
+      </p>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Is built-in shelving a good idea?">
+        Built-in shelving gives books and display a fixed place, with cupboards below for what you keep out of sight. A taller base unit gives more enclosed storage but reduces the height available for shelving. A lower base leaves more room for display.
+      </Faq>
+      <Faq q="Are built-in shelves still in style?">
+        Built-in shelving is not tied to one style. Simple panelled doors beneath plain shelving can bridge traditional architecture and contemporary furnishings. Painted cupboards with timber shelves can add texture without elaborate mouldings, and a period property does not require period-style cabinetry.
+      </Faq>
+      <Faq q="How can you add storage above a bed?">
+        Cupboards can bridge the wall above the headboard, between wardrobes on either side of the bed. Leave comfortable room to sit up against the headboard, reach bedside storage and use reading lights. Overhead cupboards should sit at a deliberate height, with their support and fixings resolved in the design.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
