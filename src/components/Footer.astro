@@ -124,7 +124,8 @@ const contact = [
     { heading: "Services", links: serviceLinks },
     { heading: "The company", links: pageLinks },
     { heading: "Guides", links: guideLinks },
-    ...(areaLinks.length ? [{ heading: "Areas", links: areaLinks }] : []),
+    /* Two columns once the list is long enough to need them (Arthur, 14 Nov 2026). */
+    ...(areaLinks.length ? [{ heading: "Areas", links: areaLinks, columns: areaLinks.length > 5 ? (2 as const) : undefined }] : []),
   ]}
   legal={[
     { label: "Privacy notice", href: "/privacy/" },
