@@ -37,6 +37,7 @@ export const PLATE_SERVICE: Record<string, string> = {
   "Walk-in wardrobe shelving": "Walk-in wardrobes",
   "Painted wardrobes by a bay window": "Fitted wardrobes",
   "Handleless kitchen units": "Bespoke kitchens",
+  "Sage Shaker kitchen": "Bespoke kitchens",
   "White handleless wardrobes": "Fitted wardrobes",
   "Fitted wardrobe drawers": "Fitted wardrobes",
   "Wardrobe drawer interior": "Fitted wardrobes",
