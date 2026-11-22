@@ -1,0 +1,244 @@
+---
+/**
+ * Highgate, 17 November 2026. A draft for Kaspar to read on the review link
+ * (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaHighgateCheck until he has read it and his changes are in. Nothing goes
+ * live before he has approved every area page (Denis, 15 Nov 2026).
+ *
+ * ON THE PRIMROSE HILL MODEL from the start (a founder's go, 17 Nov: "next";
+ * Denis, 15 Nov: "use the same design and structure for the next articles";
+ * ops README, "The structure rule, applied"; ops SS_AREA_PAGE_RULES_v1.0.md,
+ * a draft, read for its plan items): address /areas/highgate/ with 301s from
+ * /carpenter-highgate/ (netlify.toml and the Worker's list); the title,
+ * heading, kicker and description lead with fitted wardrobes, then alcove
+ * units (the reasons are in areas.ts); the opening carries "bespoke
+ * carpentry" and "bespoke joinery" once each; a line drawing beside each
+ * section that describes something (src/data/area-drawings.ts: a row of
+ * narrow shops on a high street, a terrace of Georgian houses reached up
+ * steps, a mansard room in section with a wardrobe under its slope, id
+ * "mansard-section"), none
+ * where a section is rules or access only; the guide prices as cards;
+ * register photos and one labelled AI image (ssp-037 and ssp-039, and AI
+ * arched alcove units, Figma node 36:2).
+ *
+ * Sources. Every local fact from the ops facts file
+ * research/area-pages-2026-11-14/facts-highgate-2026-11-14.md, read 14 Nov
+ * 2026:
+ *   Camden's Highgate Conservation Area Appraisal and Management Strategy
+ *     ("C1"): the borough boundary through the middle of the High Street,
+ *     the Camden side's Pond Square, The Grove and Highgate West Hill; The
+ *     Grove, Nos 1 to 6 built in the 1680s, "the finest group in Highgate"
+ *     (Pevsner and Cherry); Holly Terrace, eleven listed houses of c1806 to
+ *     1813 reached up steps from Highgate West Hill; Nos 17 to 21 High
+ *     Street, a red brick terrace of 1733 with raised ground floors; Bisham
+ *     Gardens, two-storey red brick terraces with projecting square bays,
+ *     built with a mansard attic behind the front gable; Highgate Hill at
+ *     129.2 m above sea level; Nos 45 and 46 Highgate West Hill (1729), "high
+ *     mansard roofs behind parapets"; Bisham Gardens' dormers and rooflights;
+ *     the large chimneys of Nos 81 and 82 Highgate West Hill; Grove Lodge,
+ *     Nos 7 to 15 The Grove, an 1880s terrace converted to flats.
+ *   Haringey's Highgate Conservation Area Character Appraisal, October 2012
+ *     ("H1"): the north side of the High Street, North Road, North Hill and
+ *     Southwood Lane in Haringey; "the three storey narrow fronted terrace
+ *     townhouse, frequently with a shop at street level" as the primary
+ *     building type (2.2); both sides "a single, unified historic village
+ *     core, divided only by an early political boundary" (6.4); Southwood
+ *     Terrace, grade II narrow two-storey townhouses of the early 19th
+ *     century, "Most of the houses in the terrace have added mansard roofs"
+ *     (6.78); Highpoint I and II, grade I, by Lubetkin and Tecton, 1935 and
+ *     1938, Highpoint II with duplex flats of two-storey living rooms (6.128);
+ *     the Archway Road's late Victorian and Edwardian shop parades with flats
+ *     above (2.4). Islington's Highgate Hill / Hornsey Lane guidelines ("I7").
+ *   Haringey's permission to park page: "ideal for landlords or tradespeople",
+ *     valid on a chosen street ("H3").
+ *   Camden's listed buildings and trade permit pages ("C2", "C3"); Haringey's
+ *     planning permission and permission to park pages ("H6", "H3").
+ * Left out: Selina S's Highgate review (it names Kas, so it cannot be quoted
+ * whole, and the founders ruled out describing a review in our words), the
+ * Islington corner (one guideline document only), Holly Lodge (not read),
+ * and any Article 4 claim (Haringey's 2012 appraisal had none in force;
+ * current position not read).
+ *
+ * WHOSE WORDS. From what he approved: the alcove units page's lines "No two
+ * alcoves in a period house are the same width. Each unit is built to its own
+ * measurements and cut to follow the wall."; the wardrobe guide's lines
+ * on sloping ceilings ("Check how every door opens beneath the slope and
+ * what can be reached through it. A clean arrangement of usable compartments
+ * is more valuable than a complicated pattern of small doors following every
+ * change in ceiling height."), his Shaker doors paragraph, and the alcove
+ * guide's lines on narrow recesses and on colour (the questions); the
+ * guarantee; the fitted wardrobe and alcove price lines as approved on
+ * Hampstead. One conduct line: parking, deliveries and access agreed before
+ * installation, as on Camden, Belsize Park, Kentish Town and Swiss Cottage.
+ * Everything else is new copy for him to check.
+ *
+ * CHECKED 17 Nov by three independent reviewers (copy rules, facts against
+ * the facts file and approved text, the swap test against the seven other
+ * area pages). Changed on their findings: the new drawing's first id,
+ * "mansard-wardrobe", clashed with Primrose Hill's and replaced it there, so
+ * it is "mansard-section"; The Grove's 1680s houses are not "Georgian", so
+ * that section says period houses; "eleven" is 11; Nos 17, 19 and 21, not
+ * "17 to 21"; the Archway Road's late Victorian and Edwardian parades (H1
+ * 2.4) back the heading's "Victorian"; the Islington corner is named;
+ * Highpoint is not called "the highest grade"; the alcove and colour lines
+ * are his words; the mansard and alcove sections carry Highgate-only facts
+ * (Nos 45 and 46 Highgate West Hill's high mansards, Bisham Gardens' dormers,
+ * Nos 81 and 82's large chimneys); the lease line hangs on Grove Lodge's
+ * conversion; the altitude went; borough, appraisal, listed and listed
+ * building consent are explained once.
+ *
+ * Street names are the councils' documents', describing the houses. None is
+ * a place we claim to have worked.
+ *
+ * FAQ sources, all three new, none on another area page: "What are Shaker
+ * style wardrobe doors?" (Google People also ask, shaker wardrobe doors),
+ * "What can go in a narrow alcove?" and "Should alcoves be lighter or
+ * darker?" (People also ask, alcove shelving ideas: "What to put in a narrow
+ * alcove?", made a whole question); UK, English, desktop, 17 Nov 2026. The
+ * boxes for fitted wardrobes highgate and bespoke wardrobes highgate held
+ * only costs and other companies' names. Answers from what he approved: his
+ * Shaker doors paragraph (word for word), and the alcove guide's lines on a
+ * narrow recess, unequal alcoves and colour.
+ */
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import AreaSide from "../../components/AreaSide.astro";
+import PriceCards from "../../components/PriceCards.astro";
+
+import { AREAS } from "../../data/areas";
+
+const area = AREAS.find((a) => a.slug === "areas/highgate")!;
+
+const PRICES = [
+  {
+    art: "fitted-wardrobes",
+    name: "Fitted wardrobes",
+    href: "/fitted-wardrobes/",
+    price: "From £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors.",
+    moves: "Width, finish, internal drawers, integrated lighting and more complex designs move the figure.",
+  },
+  {
+    art: "alcove-units",
+    name: "Alcove units",
+    href: "/alcove-units/",
+    price: "From £3,300 for a pair in melamine, and from £6,000 in oak veneer.",
+    moves: "Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.",
+  },
+];
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We take on bespoke carpentry in Highgate, on both sides of the High Street: <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving.
+    </p>
+    <p style={P2}>
+      Each piece of bespoke joinery is drawn for its own room, whichever council's side of the High Street the house is on.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Two councils" level={4}>Highgate High Street and its two councils</SectionHead>
+    <AreaSide drawing="high-street-shops">
+      <p>
+        A borough boundary, the line between two councils, runs through the middle of Highgate High Street. Haringey Council covers the north side, with North Road, North Hill and Southwood Lane. Camden Council covers the south, with Pond Square, The Grove and Highgate West Hill.
+      </p>
+      <p style={P2}>
+        Haringey's conservation area appraisal is its study of the area's buildings. It names the three-storey, narrow-fronted townhouse, often with a shop at street level, as the main building type. It calls both sides one historic village core, divided only by an early political boundary.
+      </p>
+      <p style={P2}>
+        On the Haringey side, the Archway Road has late Victorian and Edwardian shop parades with flats above. Which side a house is on decides which council to ask about listing and parking, and a corner by Hornsey Lane falls under Islington.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Period houses" level={4}>Alcove units for The Grove, Holly Terrace and Highgate's period houses</SectionHead>
+    <AreaSide drawing="holly-terrace">
+      <p>
+        Camden's Highgate appraisal quotes Pevsner and Cherry calling the group at The Grove "the finest group in Highgate". Nos 1 to 6 were built in the 1680s.
+      </p>
+      <p style={P2}>
+        Holly Terrace is a row of 11 listed houses, on the national list of protected buildings. They were built about 1806 to 1813 and are reached up steps from Highgate West Hill. On the High Street, Nos 17, 19 and 21 are a red brick terrace of 1733 with raised ground floors.
+      </p>
+      <p style={P2}>
+        The appraisal also notes the large chimneys of Nos 81 and 82 Highgate West Hill. No two alcoves in a period house are the same width. Each <Link href="/alcove-units/">alcove unit</Link> is built to its own measurements and cut to follow the wall.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Under the slope" level={4}>Wardrobes for Highgate's mansard rooms</SectionHead>
+    <AreaSide drawing="mansard-section">
+      <p>
+        On the Haringey side, Southwood Terrace is a listed row of narrow two-storey townhouses of the early 19th century. Haringey's 2012 appraisal says most have added mansards, steep-sided roofs with a room inside.
+      </p>
+      <p style={P2}>
+        On the Camden side, Nos 45 and 46 Highgate West Hill, of 1729, have high mansard roofs behind parapets. The terraces of Bisham Gardens were built with a mansard attic, and many now have dormers or rooflights.
+      </p>
+      <p style={P2}>
+        In a room like that, a <Link href="/fitted-wardrobes/">fitted wardrobe</Link> needs thought about how every door opens beneath the slope and what can be reached through it. A clean arrangement of usable compartments is more valuable than a complicated pattern of small doors following every change in ceiling height.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Highpoint and consent" level={4}>Highpoint, Grove Lodge and listed homes on both sides</SectionHead>
+    <div style={TEXT}>
+      <p>
+        On North Hill, Highpoint I and Highpoint II are blocks of flats of 1935 and 1938, both listed at Grade I. Their architects were Lubetkin and Tecton. Some Highpoint II flats have living rooms two storeys high.
+      </p>
+      <p style={P2}>
+        On the Camden side, the council's <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>listed buildings page</Link> covers consent. On the Haringey side, the council says altering a listed building inside or out will probably need listed building consent. That is its permission for the work (<Link href="https://haringey.gov.uk/planning-building-control/planning/planning-applications/pre-application-guidance/when-you-need-planning-permission" {...EXT}>Haringey's planning page</Link>).
+      </p>
+      <p style={P2}>
+        Grove Lodge, an 1880s terrace on The Grove, was converted into flats. In a flat, the lease can also set its own rules on alterations, separate from planning.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Steps, two councils and their parking permits</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Holly Terrace is reached up steps from Highgate West Hill. Parking, deliveries and access are agreed with you before installation.
+      </p>
+      <p style={P2}>
+        On the Camden side, the council's <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> runs for 1 to 40 days and does not guarantee a space. On the Haringey side, its <Link href="https://haringey.gov.uk/parking/parking-permits/daily-temp/permission-park" {...EXT}>permission to park</Link> permit, which it calls ideal for landlords or tradespeople, is valid on a chosen street.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>Starting prices for Highgate wardrobes and alcove units</SectionHead>
+    <AreaSide>
+      <p>Every figure here is a starting price, and a larger or more detailed piece costs more.</p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware is on the manufacturer's warranty, and doors and drawers are adjusted in the first 2 years. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> shows what moves the price of a fitted wardrobe.
+      </p>
+      <PriceCards slot="side" items={PRICES} />
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="What are Shaker style wardrobe doors?">
+        Shaker doors have a flat centre panel surrounded by a simple frame. They give the fronts definition without heavy decoration and work with both period details and contemporary furnishings. A slimmer frame creates a lighter look; wider framing gives the doors more presence.
+      </Faq>
+      <Faq q="What can go in a narrow alcove?">
+        A narrow recess may benefit from fewer divisions. Repeating the finish and door style from one alcove to the next can tie the pair together. Each unit is still laid out for its own recess.
+      </Faq>
+      <Faq q="Should alcoves be lighter or darker?">
+        Painting the units in the wall colour can help them blend into the scheme, and a contrasting colour gives them more emphasis. Samples viewed in daylight and under the room's evening lighting are more useful than a colour shown on a screen.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
