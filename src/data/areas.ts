@@ -312,19 +312,92 @@ export const AREAS: Area[] = [
     summary: "Large Victorian villas, mansion flats and mews houses in Camden's Belsize conservation area.",
   },
   {
-    slug: "carpenter-kentish-town",
+    slug: "areas/kentish-town",
     name: "Kentish Town",
-    titleProp: "Kentish Town carpenter, fitted wardrobes",
-    h1: "Carpenter in Kentish Town for fitted wardrobes and shelving",
-    kicker: "Carpenter in Kentish Town",
+    /* Product-led, 17 Nov 2026: the sixth page on the Primrose Hill model (a founder's go, 17 Nov:
+       "continue with the next Area page"; Denis, 15 Nov: "use the same design and structure for the
+       next articles"). No "carpenter" in the title, heading or description; the kicker stays
+       "Bespoke joinery" (Denis, 15 Nov: "leave joinery for now") and "bespoke carpentry" sits in
+       the opening. The title drops "bespoke" before kitchens so the full title stays near 65
+       characters with the business name. */
+    titleProp: "Fitted wardrobes and kitchens in Kentish Town",
+    h1: "Fitted wardrobes and bespoke kitchens for Kentish Town's terraced houses",
+    kicker: "Bespoke joinery in Kentish Town",
     description:
-      "Carpenter in Kentish Town: fitted wardrobes, alcove units and shelving for Georgian and Victorian terraces. Guide prices and a fixed itemised quotation.",
-    /* No Keyword Planner volume for any of 22 Kentish Town phrases (London, 14 Nov 2026). Search Console: carpenter kentish town 16 impressions at position 1.9, 11 Oct to 8 Nov; third in the map pack on 14 Nov. */
-    primary: "carpenter kentish town",
+      "Fitted wardrobes, bespoke kitchens and alcove units for Kentish Town's Georgian and Victorian terraces, some narrow, each planned for its own room.",
+    /* No measured product search exists for Kentish Town. Keyword Planner returned nothing for any
+       of 22 Kentish Town phrases (London, 14 Nov 2026), and the only Kentish Town query in Search
+       Console is carpenter kentish town (16 impressions at position 1.9, 11 Oct to 8 Nov 2026; one
+       impression at position 2 in the 20 Aug 2026 export), which is not a product search. fitted wardrobes
+       kentish town leads because it is the product search the 14 Nov research checked live (ops
+       serps-areas-2: page 1 is directories, one Islington page and one Camden case study, so
+       nobody holds it) and the area plan's first product; Kaspar's own sentence of 6 Sep 2026
+       names Kentish Town among the areas with much of the wardrobe work. Bespoke kitchens come
+       second because the register's photographs for this page are all of one kitchen (as walk-in
+       wardrobes on Belsize Park). bespoke kitchens kentish town showed no People also ask box on
+       17 Nov (UK, desktop, the built-in browser). */
+    primary: "fitted wardrobes kentish town",
+    /* 17 Nov 2026: the register's allocation (ops PR #49) for Kentish Town is the May 2025 grey
+       handleless kitchen, split with Islington in different views (Islington shows ssp-051, the
+       L-shaped run from the far corner). ssp-020, its lead, cropped to 3:2 from y 520 of the
+       portrait original: the view down the long room past the island to the glazed wall; ssp-019,
+       the sink corner with the wall units and metro tiles, cropped to 3:2 from y 600. ssp-021 and
+       ssp-022 are allocated but the frame shows three plates (ssp-022 is close to Islington's
+       view); ssp-024 and ssp-025 are alternates. Plus the register's AI gap for Kentish Town,
+       closed white handleless fitted wardrobes with slim infills (Figma node 34:2): the page has
+       no wardrobe photograph. None is a recorded job in Kentish Town.
+       21 Nov 2026, Denis on the review link: ssp-020 "is the exact kitchen photo as the one in
+       Islington", so it is replaced by an AI painted Shaker kitchen in a different room (Figma node
+       57:9, file d0AWnKDiTyYDbBrrCsE4NS), made and checked to the render protocol (sections 5 and 8);
+       an oak shelf that ran past the corner and was not level was painted off the plain wall.
+       21 Nov 2026, evening, Arthur on the review link: with the shelf gone the top "looks empty ...
+       unfinished", and could read as the client choosing no upper cabinets or as where the job's scope
+       stopped. Made again with the upper wall finished (Figma node 59:4, same file and protocol): an
+       open shelving unit in the base units' green, corner to corner from the tiles to the cornice,
+       three oak shelves ending into matching end panels, plain crockery only. Picked over 59:3 (its
+       left end panel ran down to the worktop, the right one did not), 59:5 (rows of identical upright
+       plates) and 59:2 (wall cupboards: clean, but Arthur asked for shelves). Same file name.
+       The register's only other kitchens are live on the site already or marked not publishable.
+       22 Nov 2026, Denis on the review link, on ssp-019: "swap this kitchen with one from real
+       projects. We cannot use this, it is the same as in Islington". The register held no other
+       kitchen to give (every other job's kitchen frame is live, near-identical to a live frame or
+       marked not publishable), so Drive was searched beyond it: the 31 Aug 2026 drop's E3 5AP job
+       folder has a finished kitchen nobody had triaged, a sage-green Shaker kitchen with an oak
+       worktop, a different job from the May 2025 grey kitchen and on no page of the site. It is
+       ssp-152 (Kitchen(1).jpg, a WhatsApp copy, 1600x1200), cropped 3:2 from x 160, y 130 to drop
+       a loose ceiling wire at the top right and the client's wallpaper at the left. Left as taken:
+       the oven's and dishwasher's guarantee stickers, a plug lead in the left socket, the strip
+       lights under the wall units, and an open wall compartment with no door left of the hood (a
+       question for Kas: open by design, or a door fitted later?). An independent check the same day
+       found no person, reflection or street in the frame and no repeat of any /work/ or Islington
+       kitchen; its wording points (three drawers, not deep; a basketweave pattern; "freestanding"
+       not provable) are in the alt. Seen
+       and not used: the same job's sink close-up (bare boxing above the sink), Kas's old portfolio
+       kitchen (live on /work/ as bespoke-kitchens-09; ssp-151 is the same kitchen), the white Shaker
+       kitchen in Projects by Space / Kitchen (the unsourced screenshot work-gallery.ts holds back
+       until Kas confirms it is his) and the grey-gloss flat's other frames (staging, no joinery). */
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-07.webp", type: "Fitted wardrobes" },
-      { file: "/images/alcove-units/alcove-units-01.webp", type: "Alcove units" },
-      { file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp", type: "Bespoke kitchens" },
+      {
+        file: "/images/journal/kentish-shaker-kitchen.webp",
+        type: "Bespoke kitchens",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Painted Shaker kitchen in an L along two walls of a period room: deep olive-green doors with small round brass knobs, a bank of drawers with brass cup handles, an oak worktop with a chopping board, and a white butler sink with a brass bridge tap under the sash window. Above the white tiles, an open shelving unit in the same green runs up to the cornice, its oak shelves holding white plates and bowls, two grey cups, a cream jug and two glass jars. A white fireplace with a black cast-iron insert stands on the left.",
+      },
+      {
+        file: "/images/library/ssp-152.webp",
+        type: "Sage Shaker kitchen",
+        alt: "Sage-green Shaker kitchen in an L along two walls: framed doors with long steel bar handles, an oak block worktop, and a white ceramic sink with a brushed steel mixer tap. A gas hob sits under a steel chimney hood, with a built-in oven below and three drawers beside it. White bevelled metro tiles are laid in a basketweave pattern and lit by strip lights under the wall units, with a white dishwasher at the left end.",
+      },
+      {
+        file: "/images/journal/kentish-ai-white-handleless-wardrobes.webp",
+        type: "White handleless wardrobes",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Six matt white flat doors with no handles run along one bedroom wall under the ceiling moulding, above a recessed base. Light falls from a sash window with a white roller blind on the left, over a pale oak floor and the corner of a bed.",
+      },
     ],
     summary: "Georgian and Victorian terraces, many of them listed, around Leighton Road and Kelly Street.",
   },
