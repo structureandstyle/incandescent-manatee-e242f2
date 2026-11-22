@@ -358,7 +358,19 @@ export const AREAS: Area[] = [
        left end panel ran down to the worktop, the right one did not), 59:5 (rows of identical upright
        plates) and 59:2 (wall cupboards: clean, but Arthur asked for shelves). Same file name.
        The register's only other kitchens are live on the site already or marked not publishable.
-       ssp-019 stays: it is a different view, but of the same May 2025 kitchen as Islington's ssp-051. */
+       22 Nov 2026, Denis on the review link, on ssp-019: "swap this kitchen with one from real
+       projects. We cannot use this, it is the same as in Islington". The register held no other
+       kitchen to give (every other job's kitchen frame is live, near-identical to a live frame or
+       marked not publishable), so Drive was searched beyond it: the 31 Aug 2026 drop's E3 5AP job
+       folder has a finished kitchen nobody had triaged, a sage-green Shaker kitchen with an oak
+       worktop, a different job from the May 2025 grey kitchen and on no page of the site. It is
+       ssp-152 (Kitchen(1).jpg, a WhatsApp copy, 1600x1200), cropped 3:2 from x 160, y 130 to drop
+       a loose ceiling wire at the top right and the client's wallpaper at the left. Left as taken:
+       the oven's and dishwasher's guarantee stickers and the strip lights under the wall units. Seen
+       and not used: the same job's sink close-up (bare boxing above the sink), Kas's old portfolio
+       kitchen (live on /work/ as bespoke-kitchens-09; ssp-151 is the same kitchen), the white Shaker
+       kitchen in Projects by Space / Kitchen (the unsourced screenshot work-gallery.ts holds back
+       until Kas confirms it is his) and the grey-gloss flat's other frames (staging, no joinery). */
     plates: [
       {
         file: "/images/journal/kentish-shaker-kitchen.webp",
@@ -369,9 +381,9 @@ export const AREAS: Area[] = [
         alt: "Painted Shaker kitchen in an L along two walls of a period room: deep olive-green doors with small round brass knobs, a bank of drawers with brass cup handles, an oak worktop with a chopping board, and a white butler sink with a brass bridge tap under the sash window. Above the white tiles, an open shelving unit in the same green runs up to the cornice, its oak shelves holding white plates and bowls, two grey cups, a cream jug and two glass jars. A white fireplace with a black cast-iron insert stands on the left.",
       },
       {
-        file: "/images/library/ssp-019.webp",
-        type: "Handleless kitchen units",
-        alt: "Matt grey handleless kitchen units with a white marble-effect worktop, a black sink and spring tap, and white metro tiles.",
+        file: "/images/library/ssp-152.webp",
+        type: "Sage Shaker kitchen",
+        alt: "Sage-green Shaker kitchen in an L along two walls: framed doors with long steel bar handles, an oak block worktop, and a white ceramic sink with a brushed steel mixer tap. A gas hob sits under a steel chimney hood, with a built-in oven below and three deep drawers beside it. White bevelled metro tiles are laid in a woven pattern and lit by strip lights under the wall units, with a white freestanding dishwasher at the left end.",
       },
       {
         file: "/images/journal/kentish-ai-white-handleless-wardrobes.webp",
