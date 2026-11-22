@@ -501,19 +501,51 @@ export const AREAS: Area[] = [
     summary: "Georgian village houses, Victorian terraces and flats, split between Camden and Haringey.",
   },
   {
-    slug: "carpenter-west-hampstead",
+    slug: "areas/west-hampstead",
     name: "West Hampstead",
-    titleProp: "West Hampstead carpenter, wardrobes",
-    h1: "Carpenter in West Hampstead for fitted wardrobes and alcove units",
-    kicker: "Carpenter in West Hampstead",
+    /* Product-led, 17 Nov 2026: the ninth page on the Primrose Hill model (a founder's go, 17 Nov:
+       "Yes, West Hampstead"; Denis, 15 Nov: "use the same design and structure for the next
+       articles"). No "carpenter" in the title, heading or description; the kicker stays "Bespoke
+       joinery" (Denis, 15 Nov: "leave joinery for now") and "bespoke carpentry" sits in the opening. */
+    titleProp: "Fitted and walk-in wardrobes in West Hampstead",
+    h1: "Fitted and walk-in wardrobes for West Hampstead's mansion flats and houses",
+    kicker: "Bespoke joinery in West Hampstead",
     description:
-      "West Hampstead carpenter for fitted wardrobes, alcove units and built-in TV units in mansion flats and houses. Guide prices and a 2-year guarantee.",
-    /* No Keyword Planner volume for any of 22 West Hampstead phrases (London, 14 Nov 2026) and no Search Console impressions: the page serves the service-area list and the map. */
-    primary: "carpenter west hampstead",
+      "Fitted wardrobes, walk-in wardrobes and alcove units for the mansion flats, Edwardian houses and Victorian streets either side of West End Lane.",
+    /* No product search is measured for West Hampstead. Keyword Planner returned nothing for any
+       West Hampstead phrase (London, 14 Nov 2026); Search Console's only area queries are carpenter
+       south hampstead (12 impressions at 1.9, 11 Oct to 8 Nov; 24 at 7.96, 18 Aug to 25 Sep) and
+       carpenter west hampstead (1), neither a product search. Fitted wardrobes lead, the broad
+       product and the register's AI gap (Shaker wardrobes in an alcove); walk-in wardrobes come
+       second because the register's photographs for this page are one walk-in. */
+    primary: "fitted wardrobes west hampstead",
+    /* 17 Nov 2026: the register's allocation (ops PR #49) for West Hampstead is the June 2025 white
+       LED walk-in, split with Primrose Hill in different views (Primrose Hill shows ssp-014, the view
+       from the doorway). ssp-042, its lead, portrait, cropped to 3:2 from y 1700: shelves over five
+       black-handled drawers, lit shoe cubbies and a rail at the right; ssp-044, cropped from y 1300:
+       hanging rails at the left, shelves and drawers at the right. ssp-043 is close to ssp-042;
+       ssp-041 (an internal door) has no service page to show. Plus the register's AI gap for West
+       Hampstead, Shaker wardrobes in the alcoves projecting past the chimney breast (Figma node
+       37:2). None is a recorded job in West Hampstead. */
     plates: [
-      { file: "/images/fitted-wardrobes/fitted-wardrobes-05.webp", type: "Fitted wardrobes" },
-      { file: "/images/alcove-units/alcove-units-04.webp", type: "Alcove units" },
-      { file: "/images/bespoke-kitchens/bespoke-kitchens-08.webp", type: "Bespoke kitchens" },
+      {
+        file: "/images/library/ssp-042.webp",
+        type: "Walk-in wardrobe",
+        alt: "White fitted walk-in shelving with LED strips, a column of narrow lit cubbies and five black-handled drawers, with hanging rails at each side.",
+      },
+      {
+        file: "/images/library/ssp-044.webp",
+        type: "Walk-in wardrobe drawers and rails",
+        alt: "White walk-in wardrobe with hanging rails at the left and LED-lit shelves above black-handled drawers at the right.",
+      },
+      {
+        file: "/images/journal/westhampstead-ai-shaker-alcove-wardrobes.webp",
+        type: "Shaker alcove wardrobes",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Shaker wardrobes in a soft stone colour either side of a chimney breast and black cast-iron fireplace, each standing slightly forward of the breast with a finished side panel and brass bar handles. A sash window is to the right.",
+      },
     ],
     summary: "Red-brick Victorian and Edwardian houses and mansion flats around West End Lane.",
   },
