@@ -233,12 +233,19 @@ const components = {
   }
   .crumbs a { border-bottom: var(--rule-hair); }
   .crumbs span[aria-hidden] { margin: 0 var(--space-4); color: var(--ink-faint); }
+  /* The same size as every other page's main heading, the design system's
+     display level 1 (Display.astro, level 1). Until 22 Nov 2026 articles had
+     their own smaller size, clamp(34px, 5vw, 58px), against clamp(40px, 6.4vw,
+     84px) everywhere else; Denis, 22 Nov 2026, on the review link: "is this
+     font the same size as the rest of the pages? it seems to me it's smaller".
+     It stays in the reading column, so a long title takes more lines. */
   .article-head h1 {
     font-family: var(--font-serif-display);
     font-weight: var(--weight-regular);
-    font-size: clamp(34px, 5vw, 58px);
-    line-height: 1.08;
-    letter-spacing: -0.005em;
+    font-size: var(--type-display-1);
+    line-height: var(--lh-display-1);
+    letter-spacing: var(--ls-display-1);
+    text-wrap: balance;
     margin: var(--space-11) 0 var(--space-9);
   }
   .standfirst { font-size: 19px; line-height: 1.55; color: var(--ink-soft); margin: 0 0 var(--space-12); max-width: 36em; }
