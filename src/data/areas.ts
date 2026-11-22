@@ -366,7 +366,12 @@ export const AREAS: Area[] = [
        worktop, a different job from the May 2025 grey kitchen and on no page of the site. It is
        ssp-152 (Kitchen(1).jpg, a WhatsApp copy, 1600x1200), cropped 3:2 from x 160, y 130 to drop
        a loose ceiling wire at the top right and the client's wallpaper at the left. Left as taken:
-       the oven's and dishwasher's guarantee stickers and the strip lights under the wall units. Seen
+       the oven's and dishwasher's guarantee stickers, a plug lead in the left socket, the strip
+       lights under the wall units, and an open wall compartment with no door left of the hood (a
+       question for Kas: open by design, or a door fitted later?). An independent check the same day
+       found no person, reflection or street in the frame and no repeat of any /work/ or Islington
+       kitchen; its wording points (three drawers, not deep; a basketweave pattern; "freestanding"
+       not provable) are in the alt. Seen
        and not used: the same job's sink close-up (bare boxing above the sink), Kas's old portfolio
        kitchen (live on /work/ as bespoke-kitchens-09; ssp-151 is the same kitchen), the white Shaker
        kitchen in Projects by Space / Kitchen (the unsourced screenshot work-gallery.ts holds back
@@ -383,7 +388,7 @@ export const AREAS: Area[] = [
       {
         file: "/images/library/ssp-152.webp",
         type: "Sage Shaker kitchen",
-        alt: "Sage-green Shaker kitchen in an L along two walls: framed doors with long steel bar handles, an oak block worktop, and a white ceramic sink with a brushed steel mixer tap. A gas hob sits under a steel chimney hood, with a built-in oven below and three deep drawers beside it. White bevelled metro tiles are laid in a woven pattern and lit by strip lights under the wall units, with a white freestanding dishwasher at the left end.",
+        alt: "Sage-green Shaker kitchen in an L along two walls: framed doors with long steel bar handles, an oak block worktop, and a white ceramic sink with a brushed steel mixer tap. A gas hob sits under a steel chimney hood, with a built-in oven below and three drawers beside it. White bevelled metro tiles are laid in a basketweave pattern and lit by strip lights under the wall units, with a white dishwasher at the left end.",
       },
       {
         file: "/images/journal/kentish-ai-white-handleless-wardrobes.webp",
