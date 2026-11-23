@@ -50,13 +50,15 @@ export const PAGE_GATES = {
   "/fitted-wardrobe-cost/": SERVICE_PAGE,
   "/media-walls/": SERVICE_PAGE,
   "/bespoke-kitchens/": SERVICE_PAGE,
-  /* Home office and under-stair storage, built 6 Nov 2026 as a draft. Six keys
-     of its own gate it: homeOffice1, 2 and 6 are sentences shown through a
-     <Value>, 3 to 5 only hold the page (price, photographs, the illustrations).
-     It lifts itself when all six have values. */
-  "/home-office-understairs-storage/": [
+  /* Under-stairs storage, split on 23 Nov 2026 from the combined home office
+     and under-stair draft of 6 Nov (site PR #24). Five keys of its own gate it:
+     underStairsFit and underStairsAccess are sentences shown through a <Value>;
+     underStairsPhotos, underStairsPrice and underStairsCheck (Kas has read the
+     page, illustrations included) only hold it. It lifts itself when all five
+     have values. The home office page has no route yet (DEFERRED_SERVICES). */
+  "/under-stairs-storage/": [
     ...SERVICE_PAGE,
-    "homeOffice1", "homeOffice2", "homeOffice3", "homeOffice4", "homeOffice5", "homeOffice6",
+    "underStairsFit", "underStairsAccess", "underStairsPhotos", "underStairsPrice", "underStairsCheck",
   ],
 
   /**

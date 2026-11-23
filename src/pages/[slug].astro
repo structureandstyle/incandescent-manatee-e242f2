@@ -129,7 +129,13 @@ const sel = selection as Record<string, { file: string; w: number; h: number; il
  * picture is named "-ai-" (the founders' rule of 19 Nov 2026: no "AI"
  * anywhere, file names included); the page carries the illustrations line.
  */
-const hasIllustrations = (copy?.sections ?? []).some((sec) => (sec.figures ?? []).some((g) => g.items.some((f) => f.ai)));
+const allFigures = (copy?.sections ?? []).flatMap((sec) => (sec.figures ?? []).flatMap((g) => g.items));
+const hasIllustrations = allFigures.some((f) => f.ai);
+/* Service pages show no pictures outside their copy sections (Kas, 6 Sep
+   2026), so when every figure is an illustration, every image on the page is
+   one, and the line says "The images" rather than "Some images" (the
+   under-stairs page, 23 Nov 2026). */
+const allIllustrations = allFigures.length > 0 && allFigures.every((f) => f.ai);
 const registered = new Map(Object.values(sel).flat().map((s) => [s.file, s]));
 for (const sec of copy?.sections ?? []) {
   for (const group of sec.figures ?? []) {
@@ -214,7 +220,7 @@ const SECTIONS: Section[] = [
     heading:
       service.slug === "fitted-wardrobe-cost"
         ? "The guide prices, by size and finish"
-        : `What do ${service.title.toLowerCase().replace(/\btv\b/g, "TV")} cost?`,
+        : service.costHeading ?? `What do ${service.title.toLowerCase().replace(/\btv\b/g, "TV")} cost?`,
     lead: service.costLead ?? "The honest answer is a range, because the room decides it.",
     rows: [
       { label: "Guide price", text: service.price },
@@ -529,11 +535,11 @@ const SECTIONS: Section[] = [
 
     {/* The illustrations line (IllustrationNote.astro), near the end and before
         the enquiry band, on a page whose copy sections hold an illustration:
-        today only the home office and under-stair page. "Some images",
-        because the page also shows his real photographs. */}
+        today only the under-stairs page. "The images" when every figure is
+        an illustration, "Some images" when his photographs sit beside them. */}
     {hasIllustrations && (
       <Wrap style="padding-bottom:var(--section-y)">
-        <IllustrationNote />
+        <IllustrationNote all={allIllustrations} />
       </Wrap>
     )}
 

@@ -30,6 +30,12 @@ test("www goes to the apex, and the retired addresses forward", () => {
   assert.equal(redirectFor("https://structureandstyle.co.uk/"), null);
 });
 
+test("the combined home office and under-stair address forwards to the under-stairs page (23 Nov 2026)", () => {
+  assert.equal(redirectFor("https://structureandstyle.co.uk/home-office-understairs-storage/"), "https://structureandstyle.co.uk/under-stairs-storage/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/home-office-understairs-storage"), "https://structureandstyle.co.uk/under-stairs-storage/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/under-stairs-storage/"), null);
+});
+
 test("the renamed pictures: an old ...-ai-... address forwards to the file without it (19 Nov 2026)", () => {
   assert.equal(
     redirectFor("https://structureandstyle.co.uk/images/journal/alcove-ai-below-cornice.webp"),

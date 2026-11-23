@@ -18,6 +18,11 @@ export const CANONICAL_HOST = "structureandstyle.co.uk";
 const PATH_REDIRECTS = [
   { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/carpenter-hampstead/" },
   { from: /^\/carpenter-camden(?:\/.*)?$/, to: "/areas/camden/" },
+  /* 23 Nov 2026: the combined home office and under-stair page was split (a
+     founder, "Yes, split it"). Its address was in the sitemap until the 31 Aug
+     deferral and Search Console still asks for it, so it forwards to the
+     under-stairs page, which carries the same signed target search. */
+  { from: /^\/home-office-understairs-storage(?:\/.*)?$/, to: "/under-stairs-storage/" },
   /* 19 Nov 2026: every picture named "...-ai-..." was renamed without it (a
      founder: "please do not add any AI generated stuff anywhere even in alt
      text"). The old addresses, which Google may have seen, forward to the new

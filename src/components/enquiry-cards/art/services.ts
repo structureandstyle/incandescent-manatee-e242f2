@@ -59,6 +59,20 @@ export const SERVICE_ART: Record<string, string> = {
     '<path class="g" d="M10 71L112 20"/>' +
     '<path class="t" d="M34 61h22v10h-22zM58 49h22v11h-22zM58 60h22v11h-22zM82 37h26v12h-26zM82 49h26v11h-26zM82 60h26v11h-26z"/>' +
     '<path class="f" d="M42 65h6v1.4h-6zM66 53h6v1.4h-6zM66 64h6v1.4h-6zM92 41h6v1.4h-6zM92 53h6v1.4h-6zM92 64h6v1.4h-6z"/>',
+  /* Home office (23 Nov 2026, when the home office card split from under-stairs):
+     a desk run under a window, green desk top, a three-drawer pedestal, two
+     shelves of books above, a tall two-door cupboard at the right end. */
+  "home-office":
+    '<path class="h" d="M6 9H114M6 71H114"/>' +
+    '<rect class="k" x="46" y="15" width="30" height="22"/>' +
+    '<path class="t" d="M61 15V37M46 26H76"/>' +
+    '<path class="g" d="M10 46H84"/>' +
+    '<rect class="k" x="12" y="48" width="22" height="23"/>' +
+    '<path class="t" d="M12 55.7H34M12 63.3H34M80 48V71"/>' +
+    '<path class="t" d="M12 20H40M12 32H40M15 22h3v10h-3zM19 23h3v9h-3zM24 21h3v11h-3z"/>' +
+    '<rect class="k" x="88" y="11" width="22" height="60"/>' +
+    '<path class="t" d="M99 11V71"/>' +
+    '<circle class="f" cx="23" cy="51.8" r="1"/><circle class="f" cx="23" cy="59.5" r="1"/><circle class="f" cx="23" cy="67.2" r="1"/><circle class="f" cx="96" cy="42" r="1"/><circle class="f" cx="102" cy="42" r="1"/>',
   /* Wall with panelled lower half, green dado rail and skirting, beside a four-panel door in an architrave with a knob. */
   "panelling-doors":
     '<path class="h" d="M6 9H114M6 71H114"/>' +

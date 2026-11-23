@@ -504,48 +504,56 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       },
     ],
   },
-  /* Home office and under-stair storage, 6 Nov 2026. Copy from the ops repo's
-     deliverables/home-office/copy.md; every sentence about what we fit is a
-     {{q:...}} that stays an open question until Kaspar confirms it. The four
-     illustrations carried a label and a notice until 23 Nov 2026; they now
-     read like photographs, and the page ends with the illustrations line. */
-  "home-office-understairs-storage": {
+  /* Under-stairs storage, 23 Nov 2026: split from the combined home office and
+     under-stair draft of 6 Nov (site PR #24) on a founder's "Yes, split it".
+     Written by a separate copy agent against the S&S protocol, checked three
+     ways (truth and claims, house rules, search fit), revised, and verified on
+     the hard rules; one FAQ answer was then merged into one sentence so it
+     answers both halves of its question first. Every sentence about what we
+     fit comes from underStairsFit and underStairsAccess (answers.ts); the rest
+     is about the space itself. Search evidence: ops research/semrush-2026-11-23
+     and the split research of 23 Nov (London volumes, rival pages). Kas reads
+     the whole page on a review link before it can lift (underStairsCheck). */
+  "under-stairs-storage": {
     intro: [
-      "The space under a staircase slopes, narrows and rarely sits square to the walls around it. A home office has its own fixed points: the window, the radiator and the sockets. Fitted joinery is designed around those, so the storage or the desk suits the room as it is.",
+      "We design and fit under-stairs storage for north London homes, planned around the slope of the stair and what you keep in the hall. In most halls that means coats and shoes, with cupboard space for bags and the vacuum cleaner.",
+      "The space under a stair runs a long way back and drops low at one end. We plan the layout around both before we fit anything.",
     ],
     leads: {
-      cost: "Under-stair storage and home offices are priced per project, because the stair, the room and what goes in them decide the figure.",
-      fitting: "A staircase is rarely square to the walls around it, so each unit is cut to the stair as it actually is.",
+      cost: "No two stairs leave the same space, so we price bespoke under-stairs storage to the stair in your hall.",
+      "how-long": "Time on site depends on the length of the stair, the materials and the finish.",
+      "made-from": "Hall storage takes knocks from bags and boots. We choose the board and finish for everyday use as well as looks.",
+      fitting: "A stair is rarely square to the walls beside it, so we fit each unit to both as they actually are.",
+      after: "The doors and drawers under the stairs get used most days, and the terms below say who covers each part.",
     },
     sections: [
       {
-        meta: "Under-stair",
-        heading: "Under-stair storage that follows the stair",
+        meta: "What fits",
+        heading: "Under-stairs storage ideas that follow the stair",
         after: "intro",
         body: [
-          "{{q:homeOffice1}}",
-          "The stair sets the height, so the tall end can take full-height cupboards and the low end can take drawers. Each unit is cut to follow the line of the stair and the walls beside it.",
+          "{{q:underStairsFit}} The stair sets the height, so the layout starts at the tall end and follows the slope down.",
+          "Coats need the most height, so coat storage goes where the stair is highest. Shoes and boots need far less, and fit the lower part of the space.",
+          "The back of a plain understairs cupboard is where things go to be forgotten. Pull-out drawers bring what is stored there out into the hall.",
         ],
         figures: [
           {
-            afterParagraph: 0,
+            afterParagraph: 1,
             items: [
               {
-                src: "/images/home-office/home-office-understairs-drawers.webp",
-                alt: "Painted sage green fitted cupboards and drawers under a straight staircase in a Victorian hallway, with brass bar pulls and the tops of the units following the slope of the stairs.",
+                src: "/images/journal/under-stairs-drawers.webp",
+                alt: "Matt sage green cupboards and drawers under a straight staircase: two drawers at the low end and two doors whose tops follow the slope. Each front has a long brass-coloured bar handle, with white turned spindles above and a herringbone floor below.",
                 width: 1400,
                 height: 906,
-                caption: "Cupboards and drawers",
+                caption: "Cupboards and drawers under a straight stair",
                 ai: true,
               },
               {
-                src: "/images/home-office/home-office-understairs-coats-shoes.webp",
-                alt: "Warm off-white fitted cupboard doors under a straight staircase in an Edwardian hallway, with a low oak-topped bench drawer and an open shelf of shoes at the shallow end.",
+                src: "/images/journal/under-stairs-bench-shoe-shelf.webp",
+                alt: "Warm off-white cupboards fitted under a straight staircase, with three doors carrying long brass-coloured bar handles and an open recess at the low end. In the recess, a wood-topped bench sits over a drawer, with a shelf of shoes above it and white turned spindles overhead.",
                 width: 1400,
                 height: 933,
-                /* The picture shows hinged doors, a bench drawer and an open
-                   shoe shelf, so the caption says that and not "coats". */
-                caption: "Cupboards, bench and open shoe shelf",
+                caption: "Cupboards, with a drawer and shoe storage at the low end",
                 ai: true,
               },
             ],
@@ -553,63 +561,36 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         ],
       },
       {
-        meta: "Home office",
-        heading: "Fitted home offices",
+        meta: "Stair shapes",
+        heading: "Storage under straight, turning and winder stairs",
         after: "intro",
         body: [
-          "{{q:homeOffice2}} The window, radiator and sockets decide where a desk can sit, so we measure those before the layout is drawn.",
-          "Drawers, shelving and cupboards are planned around what you keep, so the desk run works as storage as well as a surface.",
+          "A straight stair drops at one steady angle, so the storage under it follows a single sloping line. A stair that turns changes height in two directions. Winders, the wedge-shaped steps at a turn, leave an irregular space beneath them.",
+          "We measure the stair, the walls beside it and the floor at the survey. We then design the layout to those measurements, following each change in height under a turning stair.",
         ],
-        figures: [
-          {
-            items: [
-              {
-                src: "/images/home-office/home-office-01.webp",
-                alt: "Home office joinery, completed installation: a desk run with drawers, a tall cupboard and shelving.",
-                width: 1400,
-                height: 1867,
-                caption: "Finished built-in home office",
-              },
-            ],
-          },
-          {
-            afterParagraph: 0,
-            items: [
-              {
-                src: "/images/home-office/home-office-alcove-desk.webp",
-                alt: "A fitted oak desk spanning the right-hand alcove beside a central chimney breast with a fireplace, with three off-white drawers under one side, open shelves above and a task lamp, in a Victorian room.",
-                width: 1400,
-                height: 933,
-                caption: "Desk run with drawers and shelving in an alcove",
-                ai: true,
-              },
-              {
-                src: "/images/home-office/home-office-study-wall.webp",
-                alt: "A full study wall in a light room, with a long oak desk and three drawers in the middle, open shelves above and a tall two-door cupboard at each end, all painted off-white with brass bar pulls.",
-                width: 1400,
-                height: 933,
-                caption: "Full study wall with tall cupboards",
-                ai: true,
-              },
-            ],
-          },
+      },
+      {
+        meta: "Access",
+        heading: "Meters, fuse boxes and boilers under the stairs",
+        after: "intro",
+        body: [
+          "The space under a stair often holds the gas or electricity meter and the fuse box, and in some houses the boiler. We fit storage around all three.",
+          "{{q:underStairsAccess}}",
         ],
       },
     ],
     faqs: [
       {
-        q: "Can you fit under-stair storage around a meter or fuse box?",
-        a: "{{q:homeOffice6}}",
-      },
-      {
         q: "Do I need to arrive with a layout?",
-        a: "A rough idea is enough: we ask the right questions at the consultation and survey. Where a project needs design work, we issue drawings for you to review, with up to two rounds of revisions included.",
+        a: "A rough idea is enough: we ask the right questions at the consultation and survey. Drawings, where needed, include up to two rounds of revisions.",
       },
       {
-        /* Replaces "how long" and "awkward shape" (6 Nov 2026): both repeated the page's own
-           sections. Asked in his enquiry inbox (2 of 9) and in search results; sources q24, q28. */
-        q: "Can it match the woodwork I already have, and include lighting?",
-        a: "Finishes are chosen to complement or closely match the furniture and joinery already in the room, and lighting can be built in, with Häfele fittings.",
+        q: "Can the cupboard doors match the woodwork in the hall, and can lighting be built in?",
+        a: "Door and drawer fronts can complement or closely match the joinery in the hall, and lighting can be built in, with Häfele fittings.",
+      },
+      {
+        q: "What do you need from us before fitting?",
+        a: "Clear your belongings out of the space under the stairs and make sure we can reach it. Anything specific to your project is agreed before installation.",
       },
     ],
   },

@@ -83,7 +83,7 @@ const SERVICE_PATHS = new Set([
   "/alcove-units/",
   "/media-walls/",
   "/bespoke-kitchens/",
-  "/home-office-understairs-storage/",
+  "/under-stairs-storage/",
 ]);
 /* The area pages (src/data/areas.ts). Read from that file's slugs since
    14 November 2026, when nine more were added at once: a hand-kept list here
