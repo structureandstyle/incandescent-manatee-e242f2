@@ -20,8 +20,22 @@
  * Factual and style breaches fail everywhere, indexable or not, because they are
  * errors rather than incompleteness. A draft page carrying a claim the client
  * has told us is false is not a draft, it is wrong.
+ *
+ * Two checks added with the first area page, 3 October 2026, both failing
+ * everywhere because both are errors rather than incompleteness:
+ *
+ *   1. Every <blockquote> on every page must be, whole, one entry of the
+ *      review bank (src/data/quote-bank.json). Reviews are quoted unedited or
+ *      not at all; this is what makes "never trim a review" mechanical rather
+ *      than a matter of someone remembering it.
+ *   2. Every £ figure on an area page must also appear on one of the service
+ *      pages or the cost guide in the same build. An area page types its
+ *      guide prices; this stops them drifting from the pages that own them.
+ *      An area path registered below with no built page fails too, since
+ *      otherwise its rules would silently never run.
  */
 
+import { readFileSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join, sep } from "node:path";
 
@@ -71,8 +85,134 @@ const SERVICE_PATHS = new Set([
   "/bespoke-kitchens/",
   "/home-office-understairs-storage/",
 ]);
-const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
+/* The area pages (src/data/areas.ts). Read from that file's slugs since
+   14 November 2026, when nine more were added at once: a hand-kept list here
+   would drift from it, and a page missing from it would skip the WebPage and
+   price rules. The file is read beside this script, as the review bank is. */
+const AREA_SLUGS = [...readFileSync(new URL("../src/data/areas.ts", import.meta.url), "utf8")
+  .matchAll(/^\s*slug:\s*"([a-z0-9/-]+)"/gm)].map((m) => m[1]);
+const AREA_PATHS = new Set(AREA_SLUGS.map((slug) => `/${slug}/`));
+/* The pages built on the area page frame that are not about a district
+   (src/data/topic-pages.ts, 14 Nov 2026), and the /areas/ hub: each carries
+   Home > page, as an area page does. Read the same way. */
+const TOPIC_SLUGS = [...(() => {
+  try { return readFileSync(new URL("../src/data/topic-pages.ts", import.meta.url), "utf8"); } catch { return ""; }
+})().matchAll(/^\s*slug:\s*"([a-z0-9-]+)"/gm)].map((m) => m[1]);
+const TOPIC_PATHS = new Set(TOPIC_SLUGS.map((slug) => `/${slug}/`));
+const BREADCRUMB_PATHS = new Set([...SERVICE_PATHS, ...AREA_PATHS, ...TOPIC_PATHS, "/areas/", "/fitted-wardrobe-cost/"]);
 const isArticle = (page) => page.startsWith("/journal/") && page !== "/journal/";
+/* Area pages under the /areas/ hub (14 Nov 2026) carry Home > Areas > page. */
+const isUnderAreasHub = (page) => page.startsWith("/areas/") && page !== "/areas/";
+/** The pages that own the guide prices an area page repeats. */
+const PRICE_SOURCE_PATHS = new Set([...SERVICE_PATHS, "/fitted-wardrobe-cost/"]);
+
+/** Whitespace collapsed to single spaces and trimmed: how quote text is compared. */
+const squash = (s) => s.replace(/\s+/g, " ").trim();
+
+/* The review bank, read from beside this script rather than from the working
+   directory, so the gate checks against the bank whatever it is run from. */
+const QUOTE_BANK = new Set(
+  JSON.parse(readFileSync(new URL("../src/data/quote-bank.json", import.meta.url), "utf8")).map((q) =>
+    squash(q.text)
+  )
+);
+
+/** Entity decoding for the text inside a tag: the five named ones Astro emits, and numeric forms. */
+function decodeEntities(s) {
+  return s
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
+}
+
+/** Every blockquote's text, tags stripped, entities decoded, whitespace squashed. */
+function blockquotes(html) {
+  return [...html.matchAll(/<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>/gi)].map((m) =>
+    squash(decodeEntities(m[1].replace(/<[^>]+>/g, " ")))
+  );
+}
+
+/** £ figures as written: £2,300, £10,000, £5. A trailing comma is punctuation, not the figure. */
+const prices = (text) => [...new Set([...text.matchAll(/£\d{1,3}(?:,\d{3})+|£\d+/g)].map((m) => m[0]))];
+const isCaseStudy = (page) => page.startsWith("/case-studies/") && page !== "/case-studies/";
+/** The title rule for a case study: "[Service] in [Area]". */
+const CASE_STUDY_TITLE = /^[A-Z][A-Za-z' -]+ in [A-Z][A-Za-z' -]+$/;
+
+/**
+ * AI-generated images must be labelled on the page (6 Nov 2026, home office
+ * and under-stair page, site PR #24; the journal guides already do it). Any
+ * built <img> whose src contains "-ai-" must sit in a <figure> whose visible
+ * text says "AI-generated example", and the page must say, in visible text
+ * before the first such image, that the images are AI-generated examples. A
+ * future edit that drops the label or the notice fails the build instead of
+ * showing an unlabelled render as if it were his work. Brought onto the area
+ * pages branch on 14 Nov 2026 unchanged; whichever of the two merges second
+ * keeps one copy.
+ *
+ * TURNED ROUND on 19 Nov 2026 (a founder: "remove the AI-GENERATED EXAMPLE
+ * from all the photos"). The label now must NOT appear on the picture: not in
+ * its figure's visible caption, and not in the data-caption the lightbox shows
+ * when it is enlarged.
+ *
+ * And the same day, the page-level notice went too (a founder: "remove all ai
+ * examples descriptions pls, from everywhere"): a page with AI images now
+ * fails if its visible text says "AI-generated example" anywhere.
+ *
+ * In their place, also 19 Nov 2026 (a founder: "yes add it to 67"): a page
+ * with AI images must carry the illustrations line (IllustrationNote.astro),
+ * "... are illustrations, made to help explain the design options", after its
+ * last AI image, so it sits near the end as Kas asked on 17 Nov.
+ *
+ * NO "AI" ANYWHERE, also 19 Nov 2026 (a founder: "please do not add any AI
+ * generated stuff anywhere even in alt text"). On every page the build fails
+ * on: a picture path with "-ai-" in it (src, srcset, the share image, the
+ * schema, anywhere in the HTML; every such file was renamed that day and the
+ * Worker forwards the old addresses); a data-ai attribute; and AI wording in
+ * any picture's alt, title, aria-label or enlarged caption. An illustration
+ * is found by Plate's neutral data-illustration marker instead.
+ */
+const AI_LABEL = /AI-generated example/i;
+const ILLUSTRATION_NOTE = /are illustrations, made to help explain the design options/i;
+const AI_PATH = /\/images\/[^"'\s)<>]*-ai-/i;
+const AI_WORDS = /\bA\.?I\.?\b|AI[- ]generated|artificial intelligence|(?:computer|machine)[- ]generated/;
+const AI_WORDS_ANYCASE = /ai[- ]generated|artificial intelligence|(?:computer|machine)[- ]generated/i;
+function verifyAiLabels(html, page, errors) {
+  const pathHit = html.match(new RegExp(AI_PATH.source + "[^\"'\\s)<>]*", "i"));
+  if (pathHit) errors.push(`${page}  a picture path says "ai": ${pathHit[0]} (no "AI" anywhere, 19 Nov 2026)`);
+  if (/\sdata-ai(?=[\s=>\/])/i.test(html)) errors.push(`${page}  carries a data-ai attribute (no "AI" anywhere, 19 Nov 2026)`);
+  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
+    for (const attr of ["alt", "title", "aria-label", "data-caption"]) {
+      const v = m[0].match(new RegExp(`\\s${attr}=["']([^"']*)["']`, "i"));
+      if (v && (AI_WORDS.test(v[1]) || AI_WORDS_ANYCASE.test(v[1]))) {
+        errors.push(`${page}  a picture's ${attr} mentions AI: "${v[1].slice(0, 80)}" (no "AI" anywhere, 19 Nov 2026)`);
+      }
+    }
+  }
+  const imgs = [...html.matchAll(/<img\b[^>]*?\ssrc=["']([^"']+)["'][^>]*>/gi)].filter((m) => /\sdata-illustration(?=[\s=>\/])/i.test(m[0]));
+  if (!imgs.length) return;
+  for (const m of imgs) {
+    if (/\sdata-caption=["']AI-generated example/i.test(m[0])) {
+      errors.push(`${page}  AI image ${m[1]} says "AI-generated example" when enlarged (off the pictures since 19 Nov 2026)`);
+    }
+    const start = html.lastIndexOf("<figure", m.index);
+    const end = html.indexOf("</figure>", m.index);
+    const fig = start === -1 || end === -1 || html.indexOf("</figure>", start) < m.index ? "" : html.slice(start, end);
+    if (AI_LABEL.test(visibleText(fig.replace(/<img\b[^>]*>/gi, " ")))) {
+      errors.push(`${page}  AI image ${m[1]} carries a visible "AI-generated example" label (off the pictures since 19 Nov 2026)`);
+    }
+  }
+  if (AI_LABEL.test(visibleText(html))) {
+    errors.push(`${page}  says "AI-generated example" in its visible text (removed from every page on 19 Nov 2026)`);
+  }
+  const last = imgs[imgs.length - 1];
+  if (!ILLUSTRATION_NOTE.test(visibleText(html.slice(last.index + last[0].length)))) {
+    errors.push(`${page}  has AI images but no illustrations line after the last of them (IllustrationNote.astro)`);
+  }
+}
 
 function verifySchema(html, page, errors) {
   const scripts = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
@@ -149,6 +289,22 @@ function verifySchema(html, page, errors) {
         items[2]?.position !== 3 || items[2]?.item !== `${SITE_URL}${page}`) {
       errors.push(`${page}  article breadcrumb schema is missing or does not match the page`);
     }
+  } else if (isCaseStudy(page)) {
+    // Case studies carry Home > Case studies > page (briefs/case-study-2026-11.md, section 6).
+    const items = breadcrumbs[0]?.itemListElement;
+    if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 3 ||
+        items[0]?.item !== `${SITE_URL}/` || items[1]?.item !== `${SITE_URL}/case-studies/` ||
+        items[2]?.item !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  case study breadcrumb schema is missing or does not match the page`);
+    }
+  } else if (isUnderAreasHub(page)) {
+    const items = breadcrumbs[0]?.itemListElement;
+    if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 3 ||
+        items[0]?.position !== 1 || items[0]?.item !== `${SITE_URL}/` ||
+        items[1]?.position !== 2 || items[1]?.item !== `${SITE_URL}/areas/` ||
+        items[2]?.position !== 3 || items[2]?.item !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  area breadcrumb schema is missing or does not match Home > Areas > page`);
+    }
   } else if (BREADCRUMB_PATHS.has(page)) {
     const items = breadcrumbs[0]?.itemListElement;
     if (breadcrumbs.length !== 1 || !Array.isArray(items) || items.length !== 2 ||
@@ -158,6 +314,29 @@ function verifySchema(html, page, errors) {
     }
   } else if (breadcrumbs.length) {
     errors.push(`${page}  unexpected breadcrumb schema`);
+  }
+
+  /* An area page describes itself as a WebPage about the one business. It
+     adds no business node of its own (the single HomeAndConstructionBusiness
+     check above holds for it too), and Service stays banned off the service
+     paths. */
+  if (AREA_PATHS.has(page) || TOPIC_PATHS.has(page)) {
+    const pages = ofType("WebPage");
+    if (pages.length !== 1 || pages[0].url !== `${SITE_URL}${page}` || pages[0].about?.["@id"] !== BUSINESS_ID) {
+      errors.push(`${page}  area page needs one WebPage node with this page's url, about the business`);
+    }
+  }
+
+  if (isCaseStudy(page)) {
+    const articles = ofType("Article");
+    const a = articles[0];
+    if (articles.length !== 1 || !a.headline || a.publisher?.["@id"] !== BUSINESS_ID || a.mainEntityOfPage !== `${SITE_URL}${page}`) {
+      errors.push(`${page}  case study needs one Article with headline, publisher and page URL`);
+    }
+    if ("author" in (a ?? {})) errors.push(`${page}  case study has no byline; the business is the author`);
+    if (ofType("Review").length || ofType("AggregateRating").length || JSON.stringify(nodes).includes('"Review"') || JSON.stringify(nodes).includes("AggregateRating")) {
+      errors.push(`${page}  Review or AggregateRating markup on a case study`);
+    }
   }
 
   if (isArticle(page)) {
@@ -229,8 +408,42 @@ async function verifyReviews(errors) {
   const home = visibleText(await readFile(join(DIST, "index.html"), "utf8").catch(() => ""));
   // Same rounding as REVIEWS.average in site-content.ts: halves round up.
   const shown = (Math.round(average * 10) / 10).toFixed(1);
-  if (!new RegExp(`\\b${count} reviews\\b`).test(home) || !home.includes(`average ${shown}`)) {
-    errors.push(`/  homepage does not show ${count} reviews at average ${shown}, as ${REVIEWS_FILE} says`);
+  // Wording since 6 Nov 2026 (Reviews.astro): "5.0 out of 5", the last words
+  // for screen readers, and "From 20 Google reviews".
+  if (!new RegExp(`\\b${count} Google reviews\\b`).test(home) || !home.includes(`${shown} out of 5`)) {
+    errors.push(`/  homepage does not show ${count} Google reviews at ${shown} out of 5, as ${REVIEWS_FILE} says`);
+  }
+}
+
+/**
+ * Case-study cross-checks: the sitemap and each page's own robots tag must
+ * agree, and no case-study image may carry an EXIF block (which is where
+ * location data lives). Images are expected under public/images/case-studies/.
+ */
+async function verifyCaseStudies(errors, files) {
+  const sitemapText = (await Promise.all(
+    (await readdir(DIST).catch(() => [])).filter((f) => /^sitemap.*\.xml$/.test(f)).map((f) => readFile(join(DIST, f), "utf8"))
+  )).join("\n");
+  for (const file of files) {
+    const page = file.split(sep).join("/").replace(/^dist/, "").replace(/index\.html$/, "") || "/";
+    if (page !== "/case-studies/" && !page.startsWith("/case-studies/")) continue;
+    const noindex = /<meta[^>]+name=["']robots["'][^>]*noindex/i.test(await readFile(file, "utf8"));
+    const inMap = sitemapText.includes(`${SITE_URL}${page}`);
+    if (noindex && inMap) errors.push(`${page}  noindex but listed in the sitemap`);
+    if (!noindex && !inMap) errors.push(`${page}  indexable but missing from the sitemap`);
+  }
+  const walk = async (dir) => {
+    const out = [];
+    for (const e of await readdir(dir, { withFileTypes: true }).catch(() => [])) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) out.push(...(await walk(full)));
+      else if (/\.jpe?g$/i.test(e.name)) out.push(full);
+    }
+    return out;
+  };
+  for (const img of await walk("public/images/case-studies")) {
+    const buf = await readFile(img);
+    if (buf.includes(Buffer.from("Exif\0\0"))) errors.push(`${img}  still holds EXIF data (location); strip it before committing`);
   }
 }
 
@@ -300,6 +513,8 @@ const errors = [];
 const drafts = [];
 const held = [];
 const openQuestions = new Set();
+/** Visible text by page, for the checks that compare one page with another. */
+const texts = new Map();
 
 for (const file of files) {
   const html = await readFile(file, "utf8");
@@ -317,8 +532,28 @@ for (const file of files) {
 
   // A draft article renders only on preview builds (src/data/journal.ts). If
   // one reaches a production build, the gate has failed: stop the deploy.
-  if (process.env.CONTEXT === "production" && html.includes("data-journal-draft")) {
+  // Production is Netlify's CONTEXT, or Cloudflare building main (15 Nov 2026).
+  const production = process.env.CONTEXT === "production" || process.env.WORKERS_CI_BRANCH === "main";
+  if (production && html.includes("data-journal-draft")) {
     errors.push(`${page}  draft journal content in a production build`);
+  }
+
+  if (isCaseStudy(page)) {
+    const draftBar = html.includes("data-case-study-draft");
+    if (!noindex && draftBar) errors.push(`${page}  INDEXABLE case study still under the draft bar`);
+    if (noindex && !draftBar) errors.push(`${page}  noindexed case study without the draft bar`);
+    if (!noindex) {
+      const title = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1].replace(/<[^>]+>/g, "").trim() ?? "";
+      if (!CASE_STUDY_TITLE.test(title)) errors.push(`${page}  title ${JSON.stringify(title)} breaks the "[Service] in [Area]" pattern`);
+      if (!html.includes('"datePublished"')) errors.push(`${page}  cleared case study has no published date`);
+    }
+    for (const img of html.match(/<img\b[^>]*>/gi) ?? []) {
+      if (!/\bsrc=/i.test(img)) continue; // the shared lightbox <img> has no src until opened
+      if (!/\balt=["'][^"']+["']/i.test(img)) errors.push(`${page}  image without alt text`);
+    }
+    // Address-shaped strings: a full UK postcode, or a number followed by a road word.
+    const addr = [...text.matchAll(/\b[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}\b|\b\d{1,4} [A-Z][a-z]+ (?:Road|Street|Lane|Avenue|Gardens|Close|Terrace|Crescent|Place|Mews|Way)\b/g)].map((m) => m[0]);
+    if (addr.length) errors.push(`${page}  address-shaped text: ${addr.join(", ")}`);
   }
 
   asks.forEach((q) => openQuestions.add(q));
@@ -357,16 +592,44 @@ for (const file of files) {
     const hits = [...new Set([...text.matchAll(re)].map((m) => m[0]))];
     if (hits.length) errors.push(`${page}  ${why}: ${hits.map((h) => JSON.stringify(h)).join(", ")}`);
   }
+
+  // Reviews are quoted whole or not at all, on every page.
+  for (const quote of blockquotes(html)) {
+    if (!QUOTE_BANK.has(quote)) {
+      errors.push(`${page}  blockquote text is not a verbatim bank entry: ${JSON.stringify(quote.slice(0, 60))}...`);
+    }
+  }
+
+  texts.set(page, text);
+}
+
+// An area page's guide prices must each appear on a page that owns them.
+for (const page of AREA_PATHS) {
+  const text = texts.get(page);
+  // A registered area path with no built page means its WebPage and price
+  // rules never ran: a renamed or deleted page must not pass silently.
+  if (text === undefined) {
+    errors.push(`${page}  registered in AREA_PATHS but not in this build`);
+    continue;
+  }
+  const owned = new Set([...PRICE_SOURCE_PATHS].flatMap((p) => prices(texts.get(p) ?? "")));
+  const stray = prices(text).filter((p) => !owned.has(p));
+  if (stray.length) {
+    errors.push(`${page}  price(s) not on any service page or the cost guide in this build: ${stray.join(", ")}`);
+  }
 }
 
 await verifyReviews(errors);
+await verifyCaseStudies(errors, files);
 
 console.log(`Scanned ${files.length} page(s) in ${DIST}/.`);
 
 if (drafts.length) {
   console.log(`\n${drafts.length} page(s) held back as drafts, correctly noindexed:`);
   for (const d of drafts) {
-    const bits = [...d.asks.map(label), ...d.raw];
+    // Sorted as the site-wide line below is, not in markup order.
+    const asks = [...d.asks].sort((a, b) => a.localeCompare(b, "en", { numeric: true }));
+    const bits = [...asks.map(label), ...d.raw];
     console.log(`  ${d.page}  waiting on ${bits.join(", ")}`);
   }
 }

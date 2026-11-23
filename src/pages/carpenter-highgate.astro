@@ -1,0 +1,196 @@
+---
+/**
+ * Highgate, 14 November 2026. A draft for Kaspar to read on the review link
+ * (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaHighgateCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Highgate), with every local fact from facts-highgate-2026-11-14.md:
+ * Camden's Highgate Conservation Area Appraisal and Management Strategy
+ * (2007), Haringey's Highgate Conservation Area Character Appraisal
+ * (October 2012), and Camden's listed buildings, trade permit and controlled
+ * parking zone pages and Haringey's permission to park, controlled parking
+ * zone and planning permission pages, all read 14 Nov 2026. Highgate sits in
+ * three boroughs, so the page names Camden and Haringey and mentions the
+ * Islington corner without linking it. One customer line comes from a Google
+ * review that names Highgate (Selina S, 22 Oct 2026: ops
+ * reviews-by-area-2026-11-14.md). Its whole text cannot be quoted (it names
+ * the owner and says "he"), so the page says what the customer described and
+ * where it was said, with no name. No review block: no quotable review names
+ * Highgate, and the rating line sits under the hero buttons already.
+ *
+ * WHOSE WORDS. His facts reworded to fit: q31 (walls rarely straight), the
+ * hanging depth and alcove line from the wardrobe guide he approved, the
+ * cornice line from his Hampstead section (10 Nov 2026), q24 and q23
+ * (finishes), q07, q35, the walk-in days on site, and his working hours. The one conduct line (building hours in a managed block) is
+ * the protocol's approved form 4. Everything else is new copy for him to
+ * check.
+ *
+ * Street and estate names are the councils' own descriptions of the houses.
+ * None is a place we claim to have worked. Highpoint is described from
+ * Haringey's appraisal only: no lift, porter or managing agent is claimed for
+ * it.
+ *
+ * FAQ sources: "What is the going rate for a carpenter in London?" (People also
+ * ask, carpenter west hampstead, London, 14 Nov 2026: ops serps-areas-2);
+ * "What working hours apply to fitting furniture in a block of flats?" (ops
+ * deliverables/faq-research-2026-11-06.md, B7, reworded); "How long does a
+ * walk-in wardrobe take to fit?" (same file, B4, reworded for a walk-in).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-highgate")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/fitted-wardrobes/">fitted wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link> for Highgate homes. Many are Georgian and Victorian terraces and villas around the village, with flats in converted houses and a few 20th century blocks.
+    </p>
+    <p style={P2}>
+      Each piece of bespoke joinery is measured in the room and cut to follow its walls, which are rarely straight.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Village houses" level={4}>Fitted furniture for Highgate's Georgian village houses</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The High Street is lined with narrow terraces of three storeys, often with a shop at street level. Haringey's appraisal calls this the village's main type of building, mostly from the 17th to the 19th century.
+      </p>
+      <p style={P2}>
+        Camden's appraisal also describes some of the village's oldest houses. Nos 17 to 21 High Street are a red brick terrace of 1733 with raised ground floors. Nos 1 to 6 The Grove were built in the 1680s.
+      </p>
+      <p style={P2}>
+        Camden's appraisal notes large chimneys on Nos 81 and 82 Highgate West Hill. Where a room has a chimney breast, each alcove is measured on its own, and a hanging wardrobe often stands forward of it. Layouts and finishes are on the <Link href="/alcove-units/">alcove units</Link> page.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Walk-in wardrobes" level={4}>A walk-in wardrobe stained to match the doors and floor</SectionHead>
+    <div style={TEXT}>
+      <p>
+        One Highgate customer's Google review describes a walk-in wardrobe in cherry veneer, stained to match the existing doors and flooring. The room was small, and the review says the space was well used.
+      </p>
+      <p style={P2}>
+        Veneer can be natural or stained, so it can follow the wood already in the house. The other finishes are spray-painted, hand-painted, melamine and decorative boards, lacquered or oiled.
+      </p>
+      <p style={P2}>
+        Layouts are on the <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> page.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Attic rooms" level={4}>Storage under Highgate's mansard roofs</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Mansard roofs are common in the village. Camden's appraisal says Nos 45 and 46 Highgate West Hill, built in 1729, have high mansards behind their parapets. Haringey's says most houses in Southwood Terrace have added mansards.
+      </p>
+      <p style={P2}>
+        The red brick terraces of Bisham Gardens were built with a mansard attic, and Camden's appraisal notes that many now have dormers or rooflights.
+      </p>
+      <p style={P2}>
+        In an attic bedroom the ceiling slopes with the roof, so a fitted run can step down with it. Tall doors go where the ceiling is full height, and drawers and low cupboards go under the eaves.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Two councils" level={4}>Camden or Haringey: which council covers your street?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        It depends which side of the High Street the home is on, because the borough boundary runs through the middle of it. Haringey covers the north side, North Road, North Hill and Southwood Lane. Camden covers Highgate West Hill, Pond Square, The Grove, South Grove and Fitzroy Park.
+      </p>
+      <p style={P2}>
+        A small part of Highgate Hill and Hornsey Lane is in Islington. The two main councils publish separate conservation area appraisals, and each tells applicants to read the other's.
+      </p>
+      <p style={P2}>
+        Fitted furniture in an ordinary house or flat usually does not need planning permission. Camden says every part of a <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>listed building</Link> is protected, interior included. Haringey says internal changes to a <Link href="https://haringey.gov.uk/planning-building-control/planning/planning-applications/pre-application-guidance/when-you-need-planning-permission" {...EXT}>listed building</Link> will probably need listed building consent.
+      </p>
+      <p style={P2}>
+        Highgate has many listed houses, among them Holly Terrace and The Grove. Holly Terrace is 11 Grade II houses of the early 19th century, reached up steps from Highgate West Hill. In a listed house a wardrobe can stop below an original cornice rather than cut into it.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Flats" level={4}>Fitted storage in Highpoint and converted Highgate houses</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Highpoint I and II on North Hill are both Grade I, designed by Lubetkin and Tecton in 1935 and 1938. Haringey's appraisal gives Highpoint I 56 flats, and Highpoint II 12, some of them duplexes with two storey living rooms.
+      </p>
+      <p style={P2}>
+        A wall twice the height of an ordinary room is planned as sections, with the upper part used for things you reach less often. In a Grade I building, ask <Link href="https://haringey.gov.uk/planning-building-control/planning/planning-applications/pre-application-guidance/when-you-need-planning-permission" {...EXT}>Haringey Council</Link> before work begins.
+      </p>
+      <p style={P2}>
+        Camden's appraisal describes Grove Lodge, Nos 7 to 15 The Grove, as an 1880s terrace converted sideways into a series of flats. A flat can have lease rules of its own, separate from planning, so read the lease before you commission anything.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Parking for the fitting days in Camden and Haringey</SectionHead>
+    <div style={TEXT}>
+      <p>
+        We agree where the van can load and unload before installation, along with deliveries and access. Each council sells its own permits, so tell us which side of the High Street the home is on.
+      </p>
+      <p style={P2}>
+        Across much of its borough Camden controls parking by <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>zone</Link>. A resident can buy a visitor permit, or the van can use a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link>, which Camden sells by the day. Neither one guarantees a space.
+      </p>
+      <p style={P2}>
+        Haringey sells a <Link href="https://haringey.gov.uk/parking/parking-permits/daily-temp/permission-park" {...EXT}>permission to park permit</Link> to tradespeople, valid on one street chosen when it is bought. Its <Link href="https://haringey.gov.uk/parking/cpzs" {...EXT}>parking zones</Link> can be searched by street.
+      </p>
+      <p style={P2}>
+        Holly Terrace's houses are reached up steps, so the way in matters. A piece prepared as sections can be carried up in parts and assembled in the room.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What walk-in wardrobes, fitted wardrobes and alcove units cost</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, the number of runs, the layout and the finishes move the figure.</li>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
+      </p>
+      <p style={P2}>
+        The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years. Hardware stays on the manufacturer's warranty.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="What is the going rate for a carpenter in London?">
+        There is no single rate, because fitted furniture is quoted as a whole job rather than by the day. Size, finish and detail move the figure, and a fixed, itemised quotation follows the measured survey.
+      </Faq>
+      <Faq q="What working hours apply to fitting furniture in a block of flats?">
+        In a house we normally work 8am to 5pm on weekdays. In a managed block, we work the hours the building sets. Ask your managing agent for the building's rules on lifts and deliveries, and pass them to us before installation.
+      </Faq>
+      <Faq q="How long does a walk-in wardrobe take to fit?">
+        A walk-in wardrobe typically takes around 3 to 5 days on site. The lead time before that is typically 4 to 8 weeks.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

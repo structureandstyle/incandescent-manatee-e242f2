@@ -1,0 +1,52 @@
+---
+/**
+ * Every enquiry card drawing, once per page, as SVG symbols. The cards point
+ * at them with <use>, so a page that shows the form twice (the page form and
+ * the Get a quote pop-up) carries each drawing once. Render this once per
+ * page, before or after the forms: <use> finds its symbol anywhere in the
+ * document.
+ *
+ * The drawings take their colours from the classes styled below, which are
+ * the site palette (./art/README.md has the table). Each class is prefixed
+ * here ("k" becomes "ecd-k") and styled with a bare class selector: a <use>
+ * copy lives in its own shadow tree, so a selector that names an ancestor,
+ * such as ".ec-sprite .k", never reaches it. Colours are read through
+ * --ec-ink, --ec-accent and --ec-paper so a card can change them for its
+ * selected state: custom properties inherit from the <use> element into the
+ * drawing, where a selector on the card could not reach.
+ */
+import { SERVICE_ART } from "./art/services";
+import { AREA_ART } from "./art/areas";
+import { SOURCE_ART } from "./art/sources";
+import { ART_IDS } from "./choices";
+
+const ART: Record<string, string> = { ...SERVICE_ART, ...AREA_ART, ...SOURCE_ART };
+const prefixed = (markup = "") => markup.replace(/class="([a-z]+)"/g, 'class="ecd-$1"');
+---
+
+<svg class="ec-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  {ART_IDS.map((id) => <symbol id={`ec-art-${id}`} viewBox="0 0 120 80" set:html={prefixed(ART[id])} />)}
+</svg>
+
+<style is:global>
+  .ec-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .ecd-k, .ecd-t, .ecd-h, .ecd-g, .ecd-gt, .ecd-w, .ecd-r, .ecd-s, .ecd-rl {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ecd-k { stroke: var(--ec-ink, #221d18); stroke-width: 1.6; }
+  .ecd-t { stroke: var(--ec-ink, #221d18); stroke-opacity: 0.55; stroke-width: 1; }
+  .ecd-h { stroke: var(--ec-ink, #221d18); stroke-opacity: 0.24; stroke-width: 1; }
+  .ecd-g { stroke: var(--ec-accent, #2c4a3a); stroke-width: 1.8; }
+  .ecd-gt { stroke: var(--ec-accent, #2c4a3a); stroke-width: 1; }
+  .ecd-f { fill: var(--ec-ink, #221d18); stroke: none; }
+  .ecd-pf { fill: var(--ec-paper, #f2eee3); stroke: none; }
+  .ecd-gw { fill: var(--ec-accent, #2c4a3a); fill-opacity: 0.14; stroke: none; }
+  .ecd-gd { fill: var(--ec-accent, #2c4a3a); fill-opacity: 0.34; stroke: none; }
+  .ecd-w { stroke: var(--ec-accent, #2c4a3a); stroke-width: 2.6; }
+  .ecd-r { stroke: var(--ec-ink, #221d18); stroke-width: 2.4; }
+  .ecd-s { stroke: var(--ec-ink, #221d18); stroke-opacity: 0.45; stroke-width: 1; }
+  .ecd-rl { stroke: var(--ec-ink, #221d18); stroke-opacity: 0.7; stroke-width: 1.2; stroke-dasharray: 4 2.5; stroke-linecap: butt; }
+  .ecd-m { fill: var(--ec-accent, #2c4a3a); stroke: none; }
+</style>

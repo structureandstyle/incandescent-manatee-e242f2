@@ -101,10 +101,16 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
        (difficulty 7, the highest CPC on the sheet, a top-three floor at month
        12) and appeared nowhere on the site until 5 Sep. So it ends "...and
        surrounding areas of north London", which is true of all four districts
-       and keeps the term in body copy. Told, not asked. */
+       and keeps the term in body copy. Told, not asked.
+       ISLINGTON ADDED, 10 November 2026, at a founder's request. Four of the
+       first nine real enquiries came from Islington, Angel, EC1V and N19, and
+       Search Console (UK, 11 Oct to 8 Nov) shows "bespoke wardrobes islington"
+       at 36 impressions and "fitted wardrobes islington" at 9. Islington is on
+       his Where we work list and his Business Profile service area. Kaspar's
+       own sentence stays as he wrote it; the new one follows it. */
     intro: [
       "A fitted wardrobe is designed and made specifically for your room, taking into account the available space, the proportions of the room and what you need to store. The interior is planned around how you use it, from hanging space and shelving to drawers and other storage. You don't need to have everything worked out before getting in touch: understanding what you need and helping develop the right layout is part of the service.",
-      "We design and fit wardrobes across London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.",
+      "We design and fit wardrobes across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London. We also fit wardrobes in Islington.",
     ],
     /* THE COST AND MADE-FROM LEADS NAME THE WARDROBE THE WAY IT IS SEARCHED,
        27 September 2026. Search Console, 18 Aug to 25 Sep: 45 wardrobe
@@ -410,6 +416,42 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
       "after": "What stands behind the number: the cover on the work after the invoice is paid.",
     },
     sections: [
+      /* 19 Nov 2026, the CTR plan (ops research/ctr-2026-11-19): two sections
+         straight after the price tables (after: "cost"). Written by a separate
+         copy agent to protocol v1.4, checked adversarially and revised once;
+         every price is the table's own, the fitting facts are Kas's (answers.ts
+         q30, q32) and the table note. B's heading is a People also ask question
+         on 7 of the 10 cost results pages checked live from NW3 on 19 Nov. B's
+         days line repeats "How long does it take?" further down on purpose, so
+         B answers the installation question on its own. */
+      {
+        meta: "By size",
+        heading: "What a 3-door fitted wardrobe costs",
+        after: "cost",
+        body: [
+          "Our guide price for a 3-door fitted wardrobe up to 1.8m wide starts from £3,200 in melamine board. The same size starts from £3,500 in hand-painted MDF, £4,300 in professionally sprayed MDF and £5,000 in oak veneer. From those starting points, the price moves with size, finish, the internal layout and lighting.",
+          "One size up, a 4-door wardrobe up to 2.4m wide starts from £4,000 in melamine board. Each figure is a guide starting price for a straightforward internal layout, standard shelving and hanging space, and soft-close hinges. We price drawers, integrated lighting, mirrors and pull-out accessories separately to that specification.",
+        ],
+      },
+      /* B rewritten 19 Nov 2026 on Arthur's preview comment: a price near
+         £3,000 beside "2 to 3 days on site" reads as a lot for three days, so
+         B now shows what the price pays for, first visit to guarantee, and the
+         commission's lead time. Same copy agent process. His wish to say the
+         wardrobes are pre-cut and assembled in a workshop is left out: the
+         recorded facts are no workshop and no manufacturing (protocol section
+         10), and Kas asked that the cutting arrangement is never explained
+         (Q22). The boards sentence is Arthur's approved 11 Oct wording, put on
+         this page at his comment (protocol section 16, 19 Nov 2026 row). */
+      {
+        meta: "Installation",
+        heading: "How much does it cost to install built-in wardrobes?",
+        after: "cost",
+        body: [
+          "Every guide price in the fitted wardrobe table includes delivery and installation. Before that come a visit, usually 45 to 60 minutes, and a measured survey of about an hour. Design, where needed, gets a week, with drawings at the end, up to two revision rounds and no separate fee.",
+          "We specify the materials, finishes and internal layout before anything is ordered. The boards are cut to size for your room, then the wardrobe is put together and fitted in your home. Every edge is cut to follow the line of the room, and the area is protected before work starts and tidied each day.",
+          "Afterwards, we guarantee installation and workmanship for 2 years, and the joinery's structural integrity for 10 years. A commission's lead time is typically 4 to 8 weeks, depending on size and complexity. A straightforward wardrobe wall typically takes 2 to 3 days on site, closer to a week if built up in the room or hand-painted.",
+        ],
+      },
       {
         meta: "The price",
         heading: "What moves a fitted wardrobe up its range",
@@ -457,7 +499,7 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         /* The homepage's answer, chosen by Denis on 7 Sep 2026 from the
            value-to-a-house research; this page carried an older draft of the
            same answer until 8 Sep. One question, one answer, both pages. */
-        a: "Not in a way anyone can honestly put a figure on, and we would rather say so than invent one. Buyers do ask about storage, and a fitted room is one of the things they notice at a viewing. Valuers price floor area, condition and location, so a fitted room supports the asking price rather than adding a line to it. Have them made for the years you live with them.",
+        a: "They can, when they are planned properly. Fitted storage that makes the most of the space and is built to last is one of the things buyers notice at a viewing, and storage is high on the list of what they ask about. That helps a home sell and supports the asking price. What nobody can honestly do is put a figure on it, so we won't make one up.",
       },
     ],
   },

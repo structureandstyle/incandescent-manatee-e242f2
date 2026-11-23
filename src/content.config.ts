@@ -26,10 +26,14 @@ import { AUTHORS } from "./data/site";
  * the template draws itself: byline, hero, At a glance, the jump list and the
  * closing band.
  *
- * Dates: only `published` is ever shown on the page (Arthur, 13 Oct: published
- * date only, no visible "Updated" line, on every article). `updated` exists for
- * the BlogPosting's dateModified, which the verify step requires, and defaults
- * to `published`.
+ * Dates: `published` is always shown. Since 19 Nov 2026 (Arthur, on the search
+ * preview: "include the publish date, so when we update them, google reads
+ * it"), a set `updated` later than `published` also shows as "Updated <date>"
+ * in the byline, and is the BlogPosting's dateModified, so the page and the
+ * schema agree. This replaces his 13 Oct rule (published date only, no visible
+ * "Updated" line). Set `updated` only when the article's content really
+ * changes, never for a title, typo or link: Google warns against freshening a
+ * date without a real change. Absent, dateModified defaults to `published`.
  */
 const figure = z.object({
   /** Root-relative path under /images/, as Plate expects. */
@@ -42,15 +46,18 @@ const figure = z.object({
   /** The district, never an address. Absent means Kaspar has not named it yet,
       and the caption shows an open question instead. */
   area: z.string().optional(),
-  /** An AI render, not a photograph of a job. Set, the page says once above
-      the hero that its images are AI-generated examples (Denis, 19 Oct 2026),
-      the caption names what the render shows, and a gallery button follows so
-      readers can see real work (Kaspar, 18 Oct). No district is asked for.
+  /** An AI render, not a photograph of a job. Set, the caption names what the
+      render shows, and a gallery button follows so readers can see real work
+      (Kaspar, 18 Oct). The line above the hero saying the images are
+      AI-generated examples (Denis, 19 Oct 2026) was removed by a founder on
+      19 Nov 2026. No district is asked for.
       Keep renders under /images/journal/, never in a service folder, so they
       cannot end up in a gallery. Renders inside an article use <Render>. */
   ai: z.boolean().default(false),
   /** A few plain words for the enlarged photograph ("Shaker-style wardrobe").
-      Needed when the caption is only "AI-generated example". */
+      Needed when the caption is only "AI-generated example": that label is no
+      longer shown on pictures (a founder, 19 Nov 2026), so this shows as the
+      caption instead. */
   label: z.string().optional(),
   /** A fuller description shown beneath the image, so a reader can compare
       the options (Kaspar, 20 Oct 2026). No dimensions or specifications he
@@ -62,6 +69,12 @@ const journal = defineCollection({
   loader: glob({ base: "./src/content/journal", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
     title: z.string(),
+    /** The Google title (the <title> tag), when it should differ from the
+        H1: literal, the words people search first, about 55 to 65 characters
+        before " | Structure & Style" (a founder, 17 Nov 2026: "match the
+        keywords people search"; SS_JOURNAL_ARTICLE_RULES_v1.0 section 4).
+        Absent, the title is used for both. */
+    seoTitle: z.string().optional(),
     description: z.string(),
     /** Shown under the title. Defaults to the description. */
     standfirst: z.string().optional(),
@@ -70,7 +83,9 @@ const journal = defineCollection({
     /** The keyword this page is written to win. From the target sheet. */
     primary: z.string(),
     published: z.coerce.date(),
-    /** Schema only (dateModified). Never shown on the page. */
+    /** The date the content last really changed: shown as "Updated <date>"
+        in the byline when later than `published`, and the schema's
+        dateModified (19 Nov 2026; see the note at the top). */
     updated: z.coerce.date().optional(),
     author: z.string().refine((a) => a in AUTHORS, { message: "unknown author; add them to AUTHORS in src/data/site.ts" }).default("kaspar"),
     /** Show the author's name and role in the byline. Off leaves the date and

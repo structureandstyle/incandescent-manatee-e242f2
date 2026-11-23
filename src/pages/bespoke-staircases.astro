@@ -1,0 +1,148 @@
+---
+/**
+ * Bespoke staircases, 14 November 2026. Approved by a founder on 14 Nov 2026
+ * (roadmap Part C, D12) and built as a draft for Kaspar to read on the review
+ * link; held noindex by staircasesCheck until he has read it.
+ *
+ * Data and structure: ops repo research/area-pages-2026-11-14/README.md
+ * (Priority 3) and serps-extras-2026-11-14.md.
+ *
+ * WHAT WE DO NOT KNOW. Nothing on record says which staircase work Kaspar
+ * takes on. The page sets out the joinery most often asked for (repairing or
+ * replacing a balustrade, refacing an old stair with oak treads, a new stair,
+ * storage underneath) and the review link's question card asks him which of
+ * these he does. What he does not take on comes off the page. Under-stair
+ * storage is already one of his listed services (the home office and
+ * under-stair page, site PR #24).
+ *
+ * WHOSE WORDS. New copy for him to check, around his confirmed facts: q31
+ * (walls and floors rarely straight, scribed), stage04 (sections or built up
+ * in the room), q12 (projects generally from £2,000), q11 (what moves a
+ * price), q14 and q17 (visit and survey times). The Part K figures are from
+ * the government's Approved Document K (2013 edition, as amended), for a stair
+ * in a home: rise no more than 220mm, going at least 220mm, pitch no more than
+ * 42 degrees, handrail 900 to 1000mm above the pitch line, and no gap in the
+ * guarding a 100mm sphere could pass through. The meter and fuse box line is
+ * the home office page's (faq-research A3).
+ *
+ * FAQ sources: "Why do UK houses have 13 stairs?" and "Where can I buy a
+ * pre-made staircase?" (Google People also ask, bespoke staircases london,
+ * London, 14 Nov 2026); "How much does a bespoke staircase cost?" (the same
+ * page's related searches: "bespoke staircases london cost", "... prices").
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { TOPIC_PAGES } from "../data/topic-pages";
+
+const topic = TOPIC_PAGES.find((t) => t.slug === "bespoke-staircases")!;
+
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage topic={topic}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit staircase joinery for north London homes. That means new balustrades and handrails, oak treads over an old stair, and storage built underneath.
+    </p>
+    <p style={P2}>
+      A staircase is rarely straight or square, so every piece is measured on the stair itself and cut to follow it.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Period stairs" level={4}>Staircase joinery for Victorian and Edwardian houses</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many period houses in north London keep their original staircase, with a moulded handrail, turned or square spindles and a newel post at the foot. Over a century, spindles split or go missing and handrails loosen.
+      </p>
+      <p style={P2}>
+        New spindles and handrail sections can be matched to the old profile, so a repair sits in with the rest of the stair. Where the balustrade has gone, a new one can follow the style of the house.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Refacing" level={4}>Oak treads and a new balustrade over an old stair</SectionHead>
+    <div style={TEXT}>
+      <p>
+        A sound staircase that looks tired can be refaced rather than replaced. Oak treads go over the old ones, the risers are painted, and a new handrail and spindles finish it.
+      </p>
+      <p style={P2}>
+        Refacing keeps the structure of the stair, so the steps stay where they are and the work stays inside the house. The finish is chosen with the floors and doors around it, so the hall reads as one.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Under the stairs" level={4}>Storage built under the stairs</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The space under a staircase can take a coat cupboard, pull-out drawers or shelving, with every front cut to the slope of the stair. Meters and fuse boxes often live there, so the design keeps them reachable.
+      </p>
+      <p style={P2}>
+        The fronts can be painted to match the hall or finished in veneer to sit with an oak stair. It is measured and fitted the same way as our <Link href="/fitted-wardrobes/">fitted wardrobes</Link>.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="New staircases" level={4}>What the rules ask of a new staircase</SectionHead>
+    <div style={TEXT}>
+      <p>
+        A new staircase in a home has to meet Part K of the Building Regulations. Each step may rise no more than 220mm, and the going (the part you stand on) must be at least 220mm deep. The pitch can be no steeper than 42 degrees.
+      </p>
+      <p style={P2}>
+        The handrail sits 900 to 1000mm above the line of the steps, and no gap in the balustrade may let a 100mm sphere pass through. The government's <Link href="https://www.gov.uk/government/publications/protection-from-falling-collision-and-impact-approved-document-k" {...EXT}>Approved Document K</Link> sets out the full rules.
+      </p>
+      <p style={P2}>
+        In a listed house the staircase is often part of what is protected, so check with your council before anything original is changed.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="On site" level={4}>How a staircase job runs</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The first visit usually takes 45 to 60 minutes, and the measured survey about an hour on site. Parts are prepared as sections ready to assemble or built up and finished on the stair, whichever gives the better result.
+      </p>
+      <p style={P2}>
+        We agree with you how the house is used while the stair is being worked on, so there is a safe way up and down.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What staircase joinery costs</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Staircase work is priced per project, and projects generally start from £2,000. The materials, the number of steps, the design of the balustrade and whether the old stair stays all move the figure.
+      </p>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. See the <Link href="/process/">process</Link> for what happens at each stage.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="How much does a bespoke staircase cost?">
+        It depends on whether the old stair is refaced or replaced, the materials, the number of steps and the balustrade. Projects generally start from £2,000, and the measured survey gives a fixed, itemised figure.
+      </Faq>
+      <Faq q="Why do UK houses have 13 stairs?">
+        There is no rule of 13. A typical floor-to-floor height of about 2.6m needs at least 12 steps under the 220mm limit on each rise. With 13 steps, each rise is a more comfortable 200mm or so.
+      </Faq>
+      <Faq q="Where can I buy a pre-made staircase?">
+        Timber merchants and staircase suppliers sell standard staircases in set sizes. A period house rarely matches a standard size, which is where a staircase drawn to your own measurements comes in.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

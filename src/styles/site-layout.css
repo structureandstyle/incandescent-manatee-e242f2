@@ -57,59 +57,7 @@ a[href="#main"]:focus,a[href="#main"]:focus-visible{color:var(--paper)}
 /* Two-column editorial grids (case studies, statements, material chips) fold. */
 @media (max-width:820px){main [style*="7fr"],main [style*="5fr"],main [style*="repeat(3"]{grid-template-columns:minmax(0,1fr)!important}}
 
-/* Below 860px the primary nav drops to its own full-bleed row beneath the
-   wordmark: every link stays reachable, a hairline above it, the door green call
-   to action last in the row, and the row scrolls sideways rather than wrapping.
-   No hamburger. The one thing behind a toggle is the Services menu (27 Sep
-   2026, NavBar.astro), which sits up beside the wordmark at these widths.
-
-   Was 820px. The Services toggle made the one-line row six slots, and at 821px
-   it ran 17px into the right gutter. Measured: with a 15px classic scrollbar
-   the six fit from about 844px, with an overlay scrollbar from about 824px, so
-   860 clears both, and an 834px tablet gets the two-row header rather than a
-   row with 8px to spare. NavBar.astro's own breakpoint moves with this one. */
-@media (max-width:860px){
-[data-site-header] [data-nav-row]{flex-wrap:wrap;padding-bottom:0!important;row-gap:0}
-[data-site-header] nav[aria-label="Primary"]{width:100%;margin:0 calc(var(--gutter) * -1);padding:0 var(--gutter);border-top:var(--rule-hair);align-items:center!important;justify-content:space-between;gap:var(--space-10)!important;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
-[data-site-header] nav[aria-label="Primary"]::-webkit-scrollbar{display:none}
-[data-site-header] nav[aria-label="Primary"] a{display:flex;align-items:center;min-height:44px;white-space:nowrap}
-}
-/* The nav slots do not fit beside the wordmark below that width (820px with five,
-   860px with six), so the row breaks there rather than at the phone breakpoint.
-
-   Below 430px the five slots used to WRAP onto two lines, which put three bands
-   in the sticky header and cost 154px of an 812px phone screen, about a fifth of
-   it, permanently. They now hold one line (3 Sep 2026): the mono label steps down
-   to 11px, loses half its tracking, and the row spreads what is left. Header
-   height goes to roughly 104px. Nothing is hidden and nothing is behind a
-   hamburger. If a narrower phone still cannot hold the line, the row scrolls
-   sideways, which is the rule inherited from the 860px block above, rather than
-   wrapping again.
-
-   Raised from 430px to 559px on 4 Sep 2026. Between the two the full-size
-   labels overflowed and the item they clipped was Enquire, the one that
-   matters: a 443px screen offers 399px of row, a 500px screen offers 450, and
-   the labels need about 453. Measured, not guessed, which is how the second
-   number was found after 479px was set on the first. The row is 0.9 of the
-   viewport once the 5vw gutter is taken off both sides, so the crossover sits
-   near 505px and 559 clears it. */
-@media (max-width:559px){
-[data-site-header] nav[aria-label="Primary"]{justify-content:space-between;gap:0 var(--space-3)!important;flex-wrap:nowrap}
-[data-site-header] nav[aria-label="Primary"] a{font-size:11px;letter-spacing:.07em}
-}
-/* One more step for the narrower Android widths. At 375px the five labels hold
-   the line with room to spare; at 360px they were 8px over and Enquire, the one
-   that matters, was the one clipped. Measured, not guessed. Below 320px the row
-   still scrolls, which is the documented fallback. */
-@media (max-width:400px){
-[data-site-header] nav[aria-label="Primary"] a{font-size:10.5px;letter-spacing:.05em}
-}
-/* The 320px Android viewport is still in use. Its five labels were only 30px
-   wider than the available row, which left part of Enquire off-screen behind a
-   deliberately hidden scrollbar. Keep the same type size and touch targets;
-   the full-bleed row simply borrows 12px from each side and tightens tracking
-   enough for all five links to remain immediately visible. */
-@media (max-width:360px){
-[data-site-header] nav[aria-label="Primary"]{padding-inline:var(--space-4)}
-[data-site-header] nav[aria-label="Primary"] a{letter-spacing:.02em}
-}
+/* Below 860px the header is one row: wordmark, WhatsApp and a Menu button
+   (NavBar.astro, 6 Nov 2026). The full-bleed row of links that sat under the
+   wordmark from 3 Sep, and its four width steps here, went with it: Journal
+   made it six slots on 13 Oct and Enquire was cut off on most phones. */

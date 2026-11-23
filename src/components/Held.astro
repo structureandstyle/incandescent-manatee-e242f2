@@ -1,0 +1,24 @@
+---
+/**
+ * Words held by a client key: shown in the open-question brackets (<Ask>) while
+ * the key is open, and plain once it is answered in src/data/answers.ts.
+ *
+ * <Ask> alone suits a placeholder that will be replaced. This suits finished
+ * wording that only waits on the client's yes, such as new copy he has not yet
+ * approved: answering the key releases the same words, with no second edit.
+ * The page gate (src/data/page-gates.ts) must list the key too, so the page
+ * stays noindexed while any of its words are held. (9 Nov 2026.)
+ *
+ * Usage:
+ *   <Held k="areaHampsteadMerge">Sentence awaiting approval.</Held>
+ */
+import Ask from "./Ask.astro";
+import { answered, questionLabel, type QuestionKey } from "../data/answers";
+
+interface Props {
+  k: QuestionKey;
+}
+const { k } = Astro.props;
+const open = !answered(k);
+---
+{open ? <Ask q={questionLabel(k)}><slot /></Ask> : <slot />}

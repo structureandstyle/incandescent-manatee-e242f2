@@ -19,7 +19,12 @@
  * a job in Hampstead. Rafael C's says the work turned up when promised, the
  * worry named most (62% in a Which? Trusted Traders survey), but the job was
  * panelling and doors, so it gave way. Svetlozar Z's walk-in wardrobe review
- * waits on Kaspar's consent (question C5 in the ops repo).
+ * was left out (question C5 in the ops repo, removed 6 Nov 2026). Since
+ * 14 Nov 2026 /contact/ shows the rating alone above its full-width form (a
+ * founder relaying Arthur). Since 19 Nov 2026 the Get a quote pop-up shows
+ * the rating alone too (Denis: by the form "the lead already decided to fill
+ * in the form and contact Kas", so a quote there only clutters it). Quotes
+ * stay where people are still deciding: the closing band (EnquireBand.astro).
  *
  * WHERE, AND WHY. Beside the form or above it, never at the submit button.
  * A rating people can check carries more weight than quotes a business picks
@@ -189,6 +194,9 @@ const filled = Math.round(Number(REVIEWS.average) || 0);
     color: var(--char);
     text-wrap: pretty;
   }
+  /* Quote marks, as on the reviews block (Reviews.astro, 6 Nov 2026). */
+  .fp-quote blockquote::before { content: "\201C"; }
+  .fp-quote blockquote::after { content: "\201D"; }
 
   .fp-quote figcaption {
     margin-top: var(--space-5);

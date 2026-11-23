@@ -1,0 +1,278 @@
+---
+/**
+ * Hampstead, the merged area page, 9 November 2026. Built hidden; released
+ * 12 November 2026 once Kaspar had rewritten the new copy (see THE GATE).
+ *
+ * WHY MERGED. Two versions went to Kaspar: this page on 6 Nov and a design-led
+ * copy at /carpenter-hampstead-design/ on 7 Nov. Five independent reviews and
+ * three skeptics found this one the better base for search (ops repo PR #32,
+ * deliverables/area-pages/carpenter-hampstead-v1-v2-merge-plan.md), and a
+ * founder asked on 9 Nov for the merged page: Step 1 (this page plus Kaspar's
+ * 8 Nov answers) and Step 2 (a short Hampstead design section, which his own
+ * heading and note for the design-led copy asked for).
+ *
+ * WHOSE WORDS.
+ *   - Kaspar's, word for word: the four sections he rewrote on 8 Nov (period
+ *     houses, how the work runs, conservation areas and listed buildings,
+ *     parking and access), headings included, and the design section's heading
+ *     and first paragraph. Tone protocol v1.4 section 1: the client wins. Where
+ *     his words break one of the protocol's hard bans (a 9 Nov check found six,
+ *     in all four sections), they go back to him rather than being reworded:
+ *     the preview's question cards ask him to keep or drop them (F2F repo,
+ *     clients/structure-and-style/hampstead-preview/questions.json). What he
+ *     keeps is logged as a section 16 exception; what he drops comes out here.
+ *     Nothing of his is reworded here.
+ *   - Kaspar's again, 10 Nov 2026: on the preview he rewrote every line of new
+ *     copy we had held for his yes (the design section's body, the parking
+ *     line, the drawings and process lines) and the lede's second sentence.
+ *     His words replace ours as he wrote them; the only additions are links on
+ *     words he wrote ("parking zones", "trade permits", "Our process", the
+ *     service names). His tone-guide breaks are logged as section 16
+ *     exceptions in the ops repo, not reworded.
+ *   - The approved first-version copy, unchanged: the lede's first sentence,
+ *     the cost list, the guarantee and the four questions.
+ *   - Ours, which he read and left as it was: the line to the two guides that
+ *     closes the design section.
+ *   - Cut, 13 Nov 2026 (a founder): the design section's opening sentence on
+ *     Hampstead's architectural styles, a near repeat of his Fit section
+ *     sentence. The removed words are kept in a comment where they stood.
+ *
+ * THE GATE. areaHampsteadMerge held the new copy until he approved it. He
+ * answered on 10 Nov by rewriting it, so the key is answered and the page is
+ * indexable: in the sitemap, in the footer's Areas group and linked from the
+ * where-we-work lines. areaHampstead1 (Hampstead jobs) was dropped on 9 Nov by
+ * a founder's ruling, and the design-led copy at /carpenter-hampstead-design/
+ * was deleted with this release (netlify.toml forwards its address here).
+ *
+ * Street and building names (Church Row, Keats Grove, Downshire Hill,
+ * Willoughby Road, Northcote Mansions) are Kaspar's words and Camden's
+ * conservation area statement's, not places we claim to have worked. The three
+ * renders are the journal guides' files with their approved alt text, each
+ * captioned with what it shows. Since 19 Nov 2026 (a founder) neither the
+ * pictures nor the page say they are AI-generated examples.
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Reviews from "../components/ds/Reviews.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+import Render from "../components/journal/Render.astro";
+import Renders from "../components/journal/Renders.astro";
+
+import { AREAS } from "../data/areas";
+import { QUOTE_BANK, REVIEWS } from "../data/site-content";
+import { ANSWERS, answered } from "../data/answers";
+
+const area = AREAS.find((a) => a.slug === "carpenter-hampstead")!;
+
+/* The reviews: every bank entry tagged with this district, in bank order,
+   whole. A gated entry takes its byline from its key once answered. */
+const quotes = QUOTE_BANK.filter((q) => q.areas.includes(area.name)).map((q) => ({
+  text: q.text,
+  meta: q.gate && answered(q.gate) ? String(ANSWERS[q.gate].value) : q.meta,
+}));
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+---
+
+<AreaPage area={area} illustrations>
+  <Fragment slot="lede">
+    <p>
+      {/* Not held since 9 Nov 2026: a founder ruled not to ask Kaspar about Hampstead jobs.
+          This is his approved sentence, live on every service page. */}
+      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
+    </p>
+    <p style={P2}>
+      {/* Kaspar's words, 10 Nov 2026 (his comment on the preview); the links are ours. One word changed:
+          he wrote "a seamless finish", and "seamless" is a hard-banned word (tone protocol v1.4 section 5)
+          that scripts/verify-build.mjs refuses in a production build. "Neat" is his own word for the same
+          thing in his 8 Nov section below ("a neat, well-integrated finish"). */}
+      We also design and install <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>. Every project is made to measure, designed around the available space and carefully fitted to achieve a neat finish.
+    </p>
+  </Fragment>
+
+  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead1 card). */}
+  <Wrap style={SECTION}>
+    <SectionHead meta="Fit" level={4}>Can bespoke fitted furniture be installed in Hampstead period homes and mansion flats?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Absolutely. Bespoke fitted furniture is particularly well suited to period properties, where walls, floors and ceilings are not always perfectly level or square. Each installation is carefully measured and designed to make the most of the available space while complementing the character of the property.
+      </p>
+      <p style={P2}>
+        Hampstead has a wide variety of architectural styles, from Georgian houses on Church Row and Regency villas on Keats Grove to Victorian terraces and traditional mansion blocks. These properties often feature original architectural details, unusual alcoves and varying ceiling heights, making made-to-measure furniture a practical choice.
+      </p>
+      <p style={P2}>
+        We design and install bespoke wardrobes, alcove units, shelving and other fitted furniture in both period houses and mansion flats, taking care to achieve a neat, well-integrated finish.
+      </p>
+    </div>
+  </Wrap>
+
+  {/* Heading and first paragraph: Kaspar's (8 Nov, on the design-led copy). The
+      body: Kaspar's rewrite of our draft (10 Nov), as he wrote it. The closing
+      line to the guides is ours; he left it unchanged. */}
+  <Wrap as="section" id="design" style={SECTION}>
+    {/* "Design" is the only builder-chosen word on the page: every other section
+        carries a short label above its heading, and this one needs one to match. */}
+    <SectionHead meta="Design" level={4}>What fitted furniture works best in different Hampstead properties</SectionHead>
+    <div style={TEXT}>
+      {/* 19 Nov 2026, a founder: "remove all ai examples descriptions pls, from everywhere". Kaspar's
+          note (10 Nov 2026) that opened this section, saying the pictures in it are AI-generated
+          examples, is removed; the paragraph below now opens the section, so it loses its top margin. */}
+      {/* 13 November 2026, a founder: one repeat cut. Kaspar's 10 Nov rewrite opened
+          here with "Hampstead has a rich variety of architectural styles, from Georgian
+          houses on Church Row and Regency villas on Keats Grove to Victorian terraces
+          around Willoughby Road and traditional mansion blocks such as Northcote
+          Mansions. These properties often have distinctive architectural features
+          that need to be considered when designing bespoke fitted furniture." It
+          repeated, almost word for word, his 8 Nov sentence in the Fit section above,
+          which stays. Willoughby Road and Northcote Mansions are still named in his
+          paragraphs below. Nothing else of his is changed; Kaspar is told, not asked. */}
+      <p>
+        In period properties, careful attention is given to how fitted furniture integrates with the room's existing features. Wardrobes and cabinetry can be designed to finish neatly below original cornices or incorporate matching decorative details where appropriate. The aim is to create practical storage that complements the character and proportions of the property.
+      </p>
+      <p style={P2}>
+        For listed buildings, any proposed alterations affecting their special architectural or historic interest may require listed building consent. We recommend confirming any necessary permissions with Camden Council before work begins.
+      </p>
+    </div>
+    <Renders>
+      <Render src="/images/journal/alcove-below-cornice.webp" width={1536} height={1024} caption="AI-generated example" short="Stopping below the cornice" pair alt="Built-in alcove units combining warm lit display shelving with traditional framed cupboard doors and small brass knobs. The framed shelving stops beneath the room's cornice, leaving the original moulding and a band of wall visible above the units." />
+      <Render src="/images/journal/alcove-cornice-across.webp" width={1536} height={1024} caption="AI-generated example" short="Cornice across the top" pair alt="Traditional bespoke alcove units with framed shelving and panelled cupboards beneath, finished with a cornice that runs across the top of the units and around the chimney breast. Warm lighting highlights the display shelves, while the joinery complements the period fireplace." />
+    </Renders>
+    <div style={TEXT}>
+      <p style={P2}>
+        Many period properties around Willoughby Road have steps leading to the entrance, along with narrow hallways and staircases. When planning a fitted furniture installation, we consider access as well as the room itself. Our furniture can be manufactured in separate sections and assembled on-site, making it easier to transport through restricted spaces.
+      </p>
+      <p style={P2}>
+        In traditional mansion flats, such as those found at Northcote Mansions, bespoke fitted wardrobes can be designed to complement both classic and contemporary interiors. Whether the preference is for traditional shaker-style doors or modern handleless cabinetry, the design can be tailored to suit the room's proportions and the client's requirements.
+      </p>
+    </div>
+    <div style={TEXT}>
+      <Render src="/images/journal/built-in-wardrobes-handleless.webp" width={1536} height={1024} caption="AI-generated example" short="Handleless flat doors" alt="A wall-to-wall wardrobe with six full-height flat doors in a smooth sage finish, with no visible handles and thin, even gaps between them. A slim top infill meets the flat ceiling, slim side infills run down to the floor, and one continuous recessed plinth gives the base a shadow line." />
+    </div>
+    <div style={TEXT}>
+      <p style={P2}>
+        For layouts, shelf spacing and materials, see our <Link href="/journal/alcove-units-guide/">alcove units guide</Link> and <Link href="/journal/built-in-wardrobe-ideas/">built-in wardrobe ideas</Link>.
+      </p>
+    </div>
+  </Wrap>
+
+  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead3 card). */}
+  <Wrap style={SECTION}>
+    <SectionHead meta="In your building" level={4}>How do installations work in period houses and managed apartment buildings?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Working in period properties and managed apartment buildings can require additional planning, particularly around access, deliveries, working hours and protecting the property.
+      </p>
+      <p style={P2}>
+        We normally work between 8am and 5pm on weekdays, although working hours can be adjusted to accommodate the client's preferences and any building requirements. Where necessary, we can coordinate with the building's managing agent and provide relevant insurance and safety documentation before installation begins.
+      </p>
+      <p style={P2}>
+        During installation, we take care to protect floors and surrounding areas, minimise dust and disruption, and keep the workspace clean and organised. When cutting materials indoors, we always use dust extraction equipment. We also make suitable arrangements for deliveries and access depending on the property.
+      </p>
+    </div>
+  </Wrap>
+
+  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead2 card). */}
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listing and consent" level={4}>Do conservation areas and listed buildings affect fitted furniture?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many properties in Hampstead are located within conservation areas, including those around Church Row, Keats Grove and Downshire Hill. Being in a conservation area does not normally prevent homeowners from installing bespoke fitted furniture. Internal installations, such as fitted wardrobes, alcove units and shelving, generally do not require planning permission simply because a property is in a conservation area.
+      </p>
+      <p style={P2}>
+        Listed buildings have additional protections, including their interiors. If an installation affects the building's special architectural or historic character, listed building consent may be required. This can include alterations to original features such as historic panelling, fireplaces or fitted cupboards.
+      </p>
+      <p style={P2}>
+        If your property is listed, we recommend checking with Camden Council before work begins to establish whether any permissions are necessary. We take care to respect existing architectural features and design fitted furniture to complement the character of the property.
+      </p>
+      <p style={P2}>
+        For further information, visit <Link href="https://www.camden.gov.uk/listed-buildings" target="_blank" rel="noopener">Camden Council's listed buildings guidance</Link>.
+      </p>
+    </div>
+  </Wrap>
+
+  {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead4 card), then his
+      rewrite of our parking line (10 Nov), as he wrote it; the two links are ours. */}
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>How do parking and access work for installations in Hampstead?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        We discuss parking, deliveries and access arrangements with the client before installation begins. This includes identifying suitable loading and unloading areas and checking whether there are any access restrictions.
+      </p>
+      <p style={P2}>
+        Where necessary, we may ask the client to arrange parking permits or provide information about building access, lifts and any restrictions on deliveries. This helps us plan the installation efficiently and minimise disruption.
+      </p>
+      <p style={P2}>
+        Parking restrictions vary across Hampstead, with many streets falling within Camden's controlled parking zones, including CA-H. We check local parking arrangements before installation and discuss any permits or access requirements with the client where necessary. Further information about <Link href="https://www.camden.gov.uk/controlled-parking-zones" target="_blank" rel="noopener">parking zones</Link> and <Link href="https://www.camden.gov.uk/trade-permits" target="_blank" rel="noopener">trade permits</Link> is available on Camden Council's website.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What does fitted furniture cost?</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed project costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers, integrated lighting and more complex designs move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Finish, shelving detail, drawers and lighting move the figure. It assumes base cupboards with shelving over, up to about 1m per alcove.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, number of fitted runs, internal layout, materials and finishes, and integrated lighting move the figure.</li>
+        <li style={ITEM}><Link href="/media-walls/">Built-in TV units</Link> start from £3,500. Overall size, cabinetry and storage, integrated lighting, cable management and specialist finishes move the figure.</li>
+        <li style={ITEM}><Link href="/bespoke-kitchens/">Bespoke kitchens</Link> typically start from £10,000. Kitchen size and layout, cabinetry and internal storage, worktops, appliances, and materials and finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        These are guide starting prices, and a fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
+      </p>
+      <p style={P2}>
+        {/* Arthur's comment, 7 Nov 2026 ("u can see the elevations to get an idea how the unit would look"), drafted
+            9 Nov, then rewritten by Kaspar on 10 Nov: his words, as he wrote them; the process link is ours. */}
+        For projects requiring detailed design work, we can provide scaled drawings and elevations to help you visualise the finished furniture before manufacturing begins. The level of design work depends on the complexity of the project and is discussed during the quotation process.
+      </p>
+      <p style={P2}>
+        <Link href="/process/">Our process</Link> typically includes an initial consultation and site survey, quotation and design, preparation and manufacturing, followed by installation.
+      </p>
+    </div>
+  </Wrap>
+
+  {/* "From N Google reviews" and the link to all of them are the component's, from REVIEWS.count. */}
+  <Wrap style={SECTION}>
+    <Reviews
+      title=""
+      average={REVIEWS.average}
+      count={REVIEWS.count}
+      href={REVIEWS.profileUrl}
+      quotes={quotes}
+    />
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guarantee" level={4}>What guarantee comes with the work?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The guarantee covers installation and workmanship for 2 years and the structural integrity of the joinery for 10 years. Hinges, runners and other hardware carry their manufacturer's warranty. If doors, drawers or other moving parts require adjustment during the 2-year aftercare period, we will return and adjust them.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="How long do the first visit and the survey take?">
+        The first visit usually takes 45 to 60 minutes, and the measured survey about an hour on site. Both run longer for a larger or more complex project. Before we arrive, you do not need to know every detail: asking the right questions is our job.
+      </Faq>
+      <Faq q="Can new furniture match the woodwork already in the house?">
+        Finishes are chosen to complement or closely match the furniture, joinery and flooring already in the room. Spray-painted, hand-painted, veneered and lacquered or oiled finishes are all possible, and the right one depends on the design and what it needs to match.
+      </Faq>
+      <Faq q="How long does a job take?">
+        Installation typically takes 2 to 3 days for a straightforward wardrobe wall, and closer to a week where on-site construction or hand-painting is involved. The lead time before work starts is typically 4 to 8 weeks. Where a project needs design, one week is set aside for it, with drawings issued for you to review by the end.
+      </Faq>
+      <Faq q="What should I check before hiring a carpenter?">
+        Ask for public liability insurance, a guarantee and an itemised fixed quotation before anything is booked. We carry five million pounds of public liability cover, and our guarantee is set out above.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

@@ -53,6 +53,7 @@
 
 import type { QuestionKey } from "./answers";
 import reviewsData from "./reviews.json";
+import QUOTE_BANK_JSON from "./quote-bank.json";
 
 /* ------------------------------------------------------------------ nav */
 
@@ -62,8 +63,15 @@ import reviewsData from "./reviews.json";
  * notes-post. Settled on Journal because "guides" already means something else
  * on this site: the cost guide is one of the seven contracted service pages.
  */
+/**
+ * Process left the header on 14 November 2026 (a founder: "replace Process
+ * with Areas"). The header shows it again only while there is no Areas menu
+ * (Header.astro), and the footer lists it explicitly (Footer.astro), so the
+ * page stays one tap away from every page.
+ */
+export const PROCESS_LINK = { label: "Process", href: "/process/" } as const;
+
 export const NAV = [
-  { label: "Process", href: "/process/" },
   { label: "Materials", href: "/materials/" },
   { label: "Work", href: "/work/" },
   /* Was Maker. The client's Part 6 direction change, 30 Aug 2026: company
@@ -95,6 +103,30 @@ export const BAND = {
 
 /* ------------------------------------------------------------ reviews */
 
+/**
+ * The review bank. Each entry is one Google review, verbatim and whole: `text`
+ * carries a blank line (two newlines) wherever the original has a paragraph
+ * break, and the Reviews component keeps them. `areas` is explicit, never
+ * matched on the text, because a "West Hampstead" review must not land on the
+ * Hampstead page. `gate`, where present, is the answers.ts key holding the
+ * reviewer's consent and byline for the page that quotes it.
+ */
+export type BankQuote = {
+  id: string;
+  text: string;
+  meta: string;
+  areas: readonly string[];
+  home: boolean;
+  gate?: QuestionKey;
+};
+export const QUOTE_BANK = QUOTE_BANK_JSON as readonly BankQuote[];
+
+/**
+ * Read live from the public profile on 28 September 2026: 16 reviews, all five
+ * stars. The count was 15 at the 22 August baseline and 14 on 1 September,
+ * when Arthur Kvasnei's review left the profile (ops repo baseline, A6.1). Two
+ * wardrobe reviews arrived in the week to 23 September. The site states what
+ * the profile shows today.
 /**
  * THE COUNT AND AVERAGE ARE NOT TYPED HERE. They are read from
  * src/data/reviews.json, which F2F's Make scenario "S&S Google review count to
@@ -389,16 +421,27 @@ export const HOMEPAGE_FAQS = [
   {
     q: "What does a fitted wardrobe cost?",
     a: "A fitted wardrobe typically starts from £2,300 for a 2-door wardrobe, with 4-door wardrobes starting from around £4,000. The final price depends on the size, internal layout, material and finish, with drawers, lighting and other details priced as required.",
+    /* 19 Nov 2026, the CTR plan: a link to the cost guide from the home
+       page, the site's strongest page. The sentence is the copy agent's;
+       Kas's answer above is unchanged. index.astro renders it after the
+       answer, with the link on `text`. */
+    more: { before: "Guide prices by size and finish, with fitting included, are in our ", text: "fitted wardrobe cost guide", href: "/fitted-wardrobe-cost/", after: "." },
   },
   /* His answer, 7 September 2026, under a screenshot of this question. The
      same screenshot came on 6 September with nothing typed beneath it. It
      replaces "The person who measures your room is the person who draws it
      and the person who fits it. Nobody is sent in their place", which was the
      one-person line and its only place on the site. Removed on his
-     instruction: do not put it back without his word. */
+     instruction: do not put it back without his word.
+
+     6 Nov 2026: the measured survey leads (Denis's preview comment asked for
+     reassurance that a real visit happens; Arthur: Kaspar wants it to read as
+     a company, but the survey can be said). "Measured survey" and "about an
+     hour on site" are the Process section's own words (stage 02). Still
+     company voice, no name. Put to Kaspar on the preview link. */
   {
     q: "Who actually does the work?",
-    a: "Each project is managed by Structure & Style from the initial survey through to installation and aftercare. We remain responsible for the work and the finished result throughout.",
+    a: "Every project starts with a measured survey at your home, about an hour on site, so the piece is planned around your exact space. Structure & Style manages it from that survey through to installation and aftercare, and we remain responsible for the work and the finished result throughout.",
   },
   /* His answer, 6 September 2026. */
   {
@@ -420,10 +463,18 @@ export const HOMEPAGE_FAQS = [
      holds refits at "supports the asking price" (RICS Registered Valuer,
      June 2026), and fitted wardrobes are fixtures that go with the house
      (HomeOwners Alliance, TA10). Denis chose the plain version over the two
-     that name the sources; the sources stay in the note. */
+     that name the sources; the sources stay in the note.
+
+     REWRITTEN 6 Nov 2026, Arthur on Denis's preview comment ("I don't
+     understand this sentence", on its last line, "Have them made for the
+     years you live with them"): lead with yes, when planned properly, because
+     well-planned fitted furniture does help a home sell. Still no figure, and
+     every claim is one the note supports: buyers notice and ask about storage
+     (Rightmove), it supports the asking price (RICS valuer). The same answer
+     is on the fitted wardrobes page (service-copy.ts). */
   {
     q: "Do fitted wardrobes add value to a house?",
-    a: "Not in a way anyone can honestly put a figure on, and we would rather say so than invent one. Buyers do ask about storage, and a fitted room is one of the things they notice at a viewing. Valuers price floor area, condition and location, so a fitted room supports the asking price rather than adding a line to it. Have them made for the years you live with them.",
+    a: "They can, when they are planned properly. Fitted storage that makes the most of the space and is built to last is one of the things buyers notice at a viewing, and storage is high on the list of what they ask about. That helps a home sell and supports the asking price. What nobody can honestly do is put a figure on it, so we won't make one up.",
   },
 ] as const;
 

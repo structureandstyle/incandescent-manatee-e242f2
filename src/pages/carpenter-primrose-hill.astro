@@ -1,0 +1,157 @@
+---
+/**
+ * Primrose Hill, 14 November 2026. A draft for Kaspar to read on the review
+ * link (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaPrimroseHillCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Primrose Hill), every local fact from facts-primrose-hill-2026-11-14.md:
+ * Camden's Primrose Hill Conservation Area Statement (the 2000 statement, read
+ * 14 Nov 2026 where the 6 Nov read could not), the Historic England entries it
+ * quotes, and Camden's listed buildings and parking pages. The one customer
+ * line comes from a Google review that names Primrose Hill (James M, 12 Oct
+ * 2026: ops reviews-by-area-2026-11-14.md). Its whole text cannot be quoted
+ * (it says "the guys", a headcount ban), so the page says what the customer
+ * described and where it was said, with no name. Our own reply on the profile
+ * names the same job and area.
+ *
+ * WHOSE WORDS. His facts reworded to fit: q31 (walls rarely straight), the
+ * hanging depth from the wardrobe guide he approved, q33 and q34 (floors and
+ * preparation), q07, q18, q30. The lease sentence is the Leasehold Advisory
+ * Service's point, as the Hampstead brief carried it. Everything else is new
+ * copy for him to check.
+ *
+ * Street names are Camden's statement's, describing the houses. None is a
+ * place we claim to have worked. No review block: no quotable review names
+ * Primrose Hill, and the rating line sits under the hero buttons already.
+ *
+ * FAQ sources: "Do I need my freeholder's permission ...?" (ops
+ * deliverables/faq-research-2026-11-06.md, B6, and People also ask "What
+ * alterations can you make to a leasehold property?"); "Will you protect the
+ * floors ...?" (B8); "How soon could you start, and how long does it take?"
+ * (B4).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-primrose-hill")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/alcove-units/">alcove units</Link>, <Link href="/fitted-wardrobes/">fitted wardrobes</Link> and shelving for Primrose Hill homes. Most are stucco villas and terraces built between the 1840s and 1870, and many are now flats.
+    </p>
+    <p style={P2}>
+      Every piece of bespoke joinery is measured in the room and cut to its walls, which in a house of this age are rarely straight.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Villas and terraces" level={4}>Fitted furniture for Primrose Hill's villas and terraces</SectionHead>
+    <div style={TEXT}>
+      <p>
+        The south of Primrose Hill is mostly Italianate villas in painted stucco, three to four storeys over a basement. Many have raised ground floors and bay windows. Further in, Camden's statement describes long mid-19th century terraces of three storeys over a basement, each with a half-width closet wing at the back.
+      </p>
+      <p style={P2}>
+        A raised ground floor and a tall first floor give the height for full-height wardrobes and floor-to-ceiling shelving. Rooms in a closet wing are smaller, so storage there is usually shallow and built in.
+      </p>
+      <p style={P2}>
+        In a bay window, a fitted seat with drawers or cupboards beneath can take the curve of the bay.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Alcoves" level={4}>Alcove cupboards and shelving in Primrose Hill</SectionHead>
+    <div style={TEXT}>
+      <p>
+        One Primrose Hill customer's Google review describes alcove cupboards with floating shelves in their living room, and a drawer unit for the bedroom.
+      </p>
+      <p style={P2}>
+        Houses of this age were built with chimney breasts in the front and back rooms. Many living rooms have a pair of alcoves to fill. Cupboards below keep everyday things out of sight, and the shelves above can be floating, framed or lit.
+      </p>
+      <p style={P2}>
+        Each alcove is measured on its own, and the cupboards can be painted to the colour of the room. Our <Link href="/alcove-units/">alcove units</Link> page shows the layouts and finishes.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Top floors" level={4}>Fitted wardrobes for attic and mansard rooms</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Several terraces around Chalcot Square have attic or mansard rooms above their three main storeys. Where the ceiling slopes, a fitted wardrobe follows it, with full-height doors under the flat part and lower cupboards towards the eaves.
+      </p>
+      <p style={P2}>
+        For clothes on a rail, around 550 to 600mm of clear inside depth is a starting point. Under a low slope, drawers and shelves use the space better than hanging.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed houses" level={4}>What permission does fitted furniture need in a listed house?</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Inside an ordinary house, fitted furniture does not normally need planning permission, even in a conservation area. Much of Primrose Hill is listed, though. Camden's statement names every house in Chalcot Crescent, Nos 1 to 33 Chalcot Square, St George's Terrace and St Mark's Square, among others.
+      </p>
+      <p style={P2}>
+        In a listed house the interior is protected too, so work that affects its character can need listed building consent. If your home is listed, check with <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council</Link> before work begins.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Steps, stairs and parking</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many Primrose Hill houses have steps up to a raised ground floor and a separate stair down to the basement. Long panels and doors have to come up those steps and through the hall. The route in is checked at the survey, and the pieces are sized for it.
+      </p>
+      <p style={P2}>
+        We agree parking and deliveries with you before installation. Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zones</Link> cover large areas of the borough. The van can use a visitor permit you buy as a resident, or a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> sold by the day.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What alcove units and fitted wardrobes cost</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, the number of runs, the layout and the finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. The guarantee covers installation and workmanship for 2 years and the structure of the joinery for 10 years.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Do I need my freeholder's permission for fitted furniture in a flat?">
+        It depends on your lease, so read it before you commission anything. Many leases ask for the freeholder's consent before alterations, and some include work that is not structural, such as furniture fixed to the walls.
+      </Faq>
+      <Faq q="Will you protect the floors, and what do I need to do beforehand?">
+        Floors and the surrounding area are protected before work starts, and dust extraction runs throughout. Beforehand, clear your belongings from the area being fitted and make sure we can reach it.
+      </Faq>
+      <Faq q="How soon could you start, and how long does it take?">
+        The lead time is typically 4 to 8 weeks. Where a design is needed, one week is set aside for drawings, and a straightforward wardrobe wall then takes 2 to 3 days on site.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

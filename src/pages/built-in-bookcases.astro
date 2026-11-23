@@ -1,0 +1,143 @@
+---
+/**
+ * Built-in bookcases and bespoke shelving, 14 November 2026. One of the pages
+ * "chosen from what people search for" that the month 3 report told Kaspar
+ * about (roadmap Part C); built as a draft for him to read on the review link
+ * and held noindex by bookcasesCheck until he has read it.
+ *
+ * Data and structure: ops repo research/area-pages-2026-11-14/README.md
+ * (Priority 3) and serps-extras-2026-11-14.md. Kept apart from /alcove-units/,
+ * which owns shelving either side of a chimney breast: this page is whole
+ * walls, doorways, windows and stairs, and links there for alcoves.
+ *
+ * WHOSE WORDS. The shelf spacing, depth and support lines are his, from the
+ * alcove units guide he approved on 18 Oct 2026, reworded to fit (openings of
+ * around 250 to 350mm for books, 350 to 450mm or more for display; deeper
+ * shelves for books; span, material, thickness and fixings decide what a shelf
+ * carries). Also his: q31 (scribed), q24 (finishes), q28 (Hafele lighting),
+ * q12 (projects from £2,000), the cornice line from his Hampstead section and
+ * the alcove prices. Everything else is new copy for him to check.
+ *
+ * Plates: alcove-units-09, a real lit bookcase wall already on /work/, and
+ * two of the alcove guide's approved AI examples. Provisional until the photo
+ * register allocates (it lists ten library photos for this page).
+ *
+ * FAQ sources: "How much does bespoke shelving cost?" (Google related
+ * searches, bespoke shelving london, London, 14 Nov 2026: "bespoke shelving
+ * london cost"); "Can the shelves have lighting built in?" and "Can new
+ * shelving match the woodwork already in the room?" (ops deliverables/
+ * faq-research-2026-11-06.md, A9: 2 of 9 enquiries asked for built-in lighting
+ * or a matched finish). No People also ask box showed for either search.
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { TOPIC_PAGES } from "../data/topic-pages";
+
+const topic = TOPIC_PAGES.find((t) => t.slug === "built-in-bookcases")!;
+
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+---
+
+<AreaPage topic={topic}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit built-in bookcases and shelving for north London homes: whole walls of books, and shelving that frames a door or a window.
+    </p>
+    <p style={P2}>
+      Every bookcase is measured in the room and cut to follow its walls, floor and ceiling.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Whole walls" level={4}>Built-in bookshelves across a whole wall</SectionHead>
+    <div style={TEXT}>
+      <p>
+        A wall of shelving from floor to ceiling uses the full height of the room. It reads as part of the house rather than furniture against a wall. Cupboards along the bottom keep the things you do not want on show.
+      </p>
+      <p style={P2}>
+        In a period room the bookcase can stop below the cornice or carry it across the top, and the skirting can run round its base.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Doors, windows, stairs" level={4}>Shelving around doors, windows and under the stairs</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Shelving can frame a doorway and run over the top of it, turning a plain wall into a library. Either side of a window, it can sit beside a seat with drawers beneath.
+      </p>
+      <p style={P2}>
+        Under the stairs, open shelves or a mix of shelves and cupboards follow the slope of the stair.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Alcoves" level={4}>Alcove shelving either side of the chimney breast</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Most north London period rooms have an alcove either side of the chimney breast. Shelving above cupboards is the usual way to use them. Our <Link href="/alcove-units/">alcove units</Link> page covers the layouts and finishes for those.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Shelves" level={4}>Spacing, depth and what a shelf can carry</SectionHead>
+    <div style={TEXT}>
+      <p>
+        For a first layout, openings of around 250 to 350mm suit books and smaller objects, with 350 to 450mm or more for larger pieces. Books need deeper shelves than a few decorative objects.
+      </p>
+      <p style={P2}>
+        What a shelf can carry depends on its span, material, thickness and fixings, not on how thick it looks. Wide shelves for books may need hidden reinforcement or an upright partway along.
+      </p>
+      <p style={P2}>
+        Shelves can be floating, with no visible support, or framed by uprights, and either kind can be lit along its length.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Fit and finish" level={4}>Fitted to walls that are rarely straight</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Walls, floors and ceilings are rarely straight. A built-in bookcase is scribed: cut to follow the line of the room rather than left with gaps. Fitted and finished, it should look like one piece that belongs in the room.
+      </p>
+      <p style={P2}>
+        Finishes include paint, natural and stained veneers, and melamine. The right one depends on the design and what it needs to match.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What built-in bookcases cost</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Bookcases are priced per project, and projects generally start from £2,000. As a guide, a pair of <Link href="/alcove-units/">alcove units</Link> with cupboards and shelves starts from £3,300 in melamine and from £6,000 in oak veneer.
+      </p>
+      <p style={P2}>
+        The size of the wall, the finish, cupboards and drawers, and lighting move the figure. A fixed, itemised quotation follows the measured survey.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="How much does bespoke shelving cost?">
+        Projects generally start from £2,000, and the figure follows the size of the wall, the finish and what goes in with the shelves. The measured survey gives a fixed, itemised quotation.
+      </Faq>
+      <Faq q="Can the shelves have lighting built in?">
+        Lighting can run along each shelf or down the uprights. It is planned with the joinery, so the cables are hidden and the power supply can still be reached. Hafele supplies the lighting we fit, where a project calls for it.
+      </Faq>
+      <Faq q="Can new shelving match the woodwork already in the room?">
+        Finishes are chosen to complement or closely match the joinery, furniture and floors already there. Real wood varies naturally, so compare a finished sample against what it needs to match.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

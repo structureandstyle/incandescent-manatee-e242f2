@@ -1,0 +1,167 @@
+---
+/**
+ * Islington, 14 November 2026. A draft for Kaspar to read on the review link
+ * (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaIslingtonCheck until he has read it and his changes are in. Islington
+ * is outside the signed area list; a founder approved the page on 14 Nov 2026.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Islington), every local fact from facts-islington-2026-11-14.md: Islington
+ * Council's conservation area design guidelines for Barnsbury, Highbury
+ * Fields, Canonbury and Duncan Terrace (2002), its conservation areas, listed
+ * buildings and planning permission pages, its tradesperson permit page and its
+ * 2015 parking policy statement, all read 14 Nov 2026. Islington is its own
+ * borough, so nothing here is Camden's.
+ *
+ * WHOSE WORDS. His facts reworded to fit: q31 (scribing, in his words), q16
+ * (budget), q09 (insurance), q35, q20, the cornice line from his Hampstead
+ * section (10 Nov 2026). Everything else is new copy for him to check. No
+ * review names Islington, so there is no review block; the rating line sits
+ * under the hero buttons. Four of the nine real enquiries since launch came
+ * from Islington and nearby postcodes: that is why the page exists, and it
+ * stays internal.
+ *
+ * Street and square names are the council's, describing the houses. None is a
+ * place we claim to have worked.
+ *
+ * FAQ sources: "How do I find a good carpenter?" (People also ask, carpenter
+ * kentish town, London, 14 Nov 2026); "Can you fit furniture to walls that
+ * are not straight in an old house?" (ops deliverables/faq-research-2026-11-06.md,
+ * B2); "What if the design costs more than my budget?" (B9).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-islington")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit bespoke joinery for Islington homes: <Link href="/fitted-wardrobes/">wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving. Most are Georgian and Victorian terraces and villas, and many are now divided into flats.
+    </p>
+    <p style={P2}>
+      Every piece is measured in the room and cut to follow its walls.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Georgian and Victorian houses" level={4}>Bespoke wardrobes in Islington's Georgian and Victorian houses</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Barnsbury is Islington's largest conservation area. The council counts its squares, Lonsdale, Gibson and Thornhill among them, as some of the best late Georgian and early Victorian housing in London.
+      </p>
+      <p style={P2}>
+        Highbury Fields is lined with Georgian terraces, with Victorian villas to the north, and Canonbury Square is one of the borough's earliest squares. The council asks owners to keep the timber sash windows in all of them.
+      </p>
+      <p style={P2}>
+        The main rooms in these houses are tall, so a bespoke wardrobe can run to the ceiling. Its doors and drawers are planned so the sash beside it still opens fully.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Flats and lower floors" level={4}>Fitted furniture in Islington flats and lower-ground floors</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many of these houses are now flats. The same tall rooms and chimney breasts often belong to a first-floor flat rather than a whole house.
+      </p>
+      <p style={P2}>
+        In Barnsbury and Canonbury the lower-ground floor takes its light from a front area behind cast-iron railings. The council will not normally let owners cover those areas over. Built-in furniture there keeps that window clear, with the storage along the side walls instead.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Alcoves and shelving" level={4}>Alcove units, shelving and bespoke furniture in Islington</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Georgian and Victorian rooms were built with a chimney breast and an alcove either side. Each alcove is measured on its own and fitted with cupboards, shelves or both, painted to the room or finished in veneer.
+      </p>
+      <p style={P2}>
+        Bespoke furniture here also means a seat in a bay window, shelving around a door or a desk in a recess. A <Link href="/media-walls/">built-in TV unit</Link> can sit on the chimney breast wall. Our <Link href="/alcove-units/">alcove units</Link> page shows the layouts and finishes.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Roofs and lofts" level={4}>Storage under Islington's hidden roofs</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Many Islington terraces have a valley roof hidden behind the front parapet. In Barnsbury, Canonbury and Duncan Terrace the council does not allow new dormers on front roof slopes. Loft rooms there tend to sit at the back or inside an existing mansard.
+      </p>
+      <p style={P2}>
+        Storage under those slopes is built low, with drawers and cupboards cut to the angle of the ceiling. Full-height doors go only where the ceiling allows them.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed buildings and conservation areas in Islington</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Islington has 42 conservation areas and around 4,500 listed buildings. Fitted wardrobes, alcove units and shelving inside an ordinary home do not normally need planning permission, even in a conservation area.
+      </p>
+      <p style={P2}>
+        If the house is listed, Islington Council says internal alterations may need listed building consent, especially work that affects its character. Check with <Link href="https://www.islington.gov.uk/planning/designandconservation/listed_buildings" {...EXT}>Islington Council</Link> before work begins.
+      </p>
+      <p style={P2}>
+        A wardrobe can stop below an original cornice rather than cut into it, and the fixings can be planned around anything that needs to stay.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Parking" level={4}>Parking for the fitting days</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Islington's parking policy puts controlled parking zones across the whole borough, so the van needs a permit on fitting days. The council sells a <Link href="https://www.islington.gov.uk/parking/parking-permits/permission-to-park" {...EXT}>permission to park permit</Link> for tradespeople, tied to the van's number plate and bought through RingGo.
+      </p>
+      <p style={P2}>
+        Either you or we can buy it, and residents can also buy visitor vouchers. We agree which one with you before installation, along with where the van can unload.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What bespoke wardrobes and alcove units cost</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Painted, sprayed and oak veneer finishes step up from there.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/bespoke-kitchens/">Bespoke kitchens</Link> typically start from £10,000. Size, layout, worktops, appliances and finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. Our <Link href="/fitted-wardrobe-cost/">cost guide</Link> sets out every step for fitted wardrobes and alcove units by size and finish.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="How do I find a good carpenter?">
+        Look for reviews you can read in full, public liability insurance, a written guarantee and an itemised quotation before anything is booked. We carry five million pounds of public liability cover, and our guarantee covers workmanship for 2 years and the structure of the joinery for 10.
+      </Faq>
+      <Faq q="Can you fit furniture to walls that are not straight in an old house?">
+        Walls, floors and ceilings are rarely straight, so the furniture is scribed: cut to follow the line of the room rather than left with gaps. Fitted and finished, it should look like one piece that belongs in the room.
+      </Faq>
+      <Faq q="What if the design costs more than my budget?">
+        We say what is driving the cost and adjust the design, materials or specification without compromising the finished piece. The fixed, itemised quotation shows where each part of the figure comes from.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>

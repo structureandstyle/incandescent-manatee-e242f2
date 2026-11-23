@@ -41,7 +41,8 @@ interface Props {
   alt?: string;
   width?: number;
   height?: number;
-  /** What the plate is of, e.g. "Plate 02 · Fitted wardrobes". */
+  /** What the plate is of, e.g. "Fitted wardrobes". No "Plate 02" numbering
+      on the site since 6 Nov 2026 (Denis). */
   subject?: string;
   /** The right-hand half of the caption. */
   detail?: string;
@@ -55,9 +56,13 @@ interface Props {
    */
   label?: string;
   /**
-   * An AI-generated example, not a photograph of our work. The lightbox then
-   * leads with "AI-generated example · " and the label, so the disclosure is
-   * never lost when someone enlarges the picture.
+   * An illustration (a render), not a photograph of our work. Marked
+   * data-illustration for the build check, never "ai" in any form (a founder,
+   * 19 Nov 2026: "please do not add any AI generated stuff anywhere even in
+   * alt text"; the marker was data-ai until then). Neither the picture nor the
+   * page says it is generated; the page carries the illustrations line
+   * (IllustrationNote.astro), and scripts/verify-build.mjs (verifyAiLabels)
+   * checks both.
    */
   ai?: boolean;
   /** What is still needed, shown in the empty frame. */
@@ -150,7 +155,7 @@ const frameCss = [
 
 /** The lightbox's one-line caption, from `label` and `ai` (see Props). */
 const shortName = (label ?? (alt ?? "").split(",")[0]).trim();
-const lightboxCaption = ai ? `AI-generated example${shortName ? ` · ${shortName}` : ""}` : label;
+const lightboxCaption = ai ? shortName || undefined : label;
 
 const hasCaption = Boolean(subject || detail);
 
@@ -198,6 +203,7 @@ const srcset =
         loading={eager ? "eager" : "lazy"}
         fetchpriority={eager ? "high" : undefined}
         decoding={eager ? "sync" : "async"}
+        data-illustration={ai ? "" : undefined}
         style="width:100%;height:100%;object-fit:cover"
       />
     ) : photo ? (
@@ -213,7 +219,7 @@ const srcset =
         decoding={eager ? "sync" : "async"}
         data-plate-photo
         data-caption={lightboxCaption}
-        data-ai={ai ? "" : undefined}
+        data-illustration={ai ? "" : undefined}
         tabindex="0"
         role="button"
         aria-label={`Enlarge: ${alt}`}

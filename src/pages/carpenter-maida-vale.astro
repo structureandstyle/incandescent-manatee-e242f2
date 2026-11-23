@@ -1,0 +1,159 @@
+---
+/**
+ * Maida Vale, 14 November 2026. A draft for Kaspar to read on the review link
+ * (F2F ops clients/structure-and-style/areas-review); held noindex by
+ * areaMaidaValeCheck until he has read it and his changes are in.
+ *
+ * Structure and sources: ops repo research/area-pages-2026-11-14/README.md
+ * (Maida Vale), every local fact from facts-maida-vale-2026-11-14.md:
+ * Westminster City Council's Maida Vale Conservation Area Information Leaflet
+ * (May 2004) and its Conservation Areas Character Overview (entry 27),
+ * Historic England's entry for Nos 2 to 18 Formosa Street, the Victoria County
+ * History volume on Paddington (1989, used for dates and building types only),
+ * and Westminster's listed buildings, visitor parking and trade parking pages,
+ * all read 14 Nov 2026. Maida Vale is in the City of Westminster, so nothing
+ * here is Camden's. The leaflet is 2004 text: its listed-building count is
+ * stated as its own, with the year.
+ *
+ * WHOSE WORDS. His facts reworded to fit: q31 (walls rarely straight), the
+ * cornice and alcove lines from his Hampstead section (10 Nov 2026), q20
+ * (itemised quotation), the wardrobe depth, and his design week and two
+ * revisions. The one conduct line (insurance and safety paperwork to the
+ * managing agent, in the FAQ) is the protocol's approved form 5. Everything else, including the general advice on
+ * mansion blocks and tall houses, is new copy for him to check.
+ *
+ * Street names are Westminster's and Historic England's, describing the
+ * houses. None is a place we claim to have worked. No review block: no
+ * quotable review names Maida Vale, and the rating line sits under the hero
+ * buttons already.
+ *
+ * FAQ sources: "Do I need plans, or do you handle the design?" (ops
+ * deliverables/faq-research-2026-11-06.md, A7); "What does the managing agent
+ * need before a fitting in a mansion block?" (same file, B7, reworded);
+ * "Is 55cm deep enough for a wardrobe?" (People also ask, fitted wardrobes
+ * maida vale, ops serps-areas-2, 14 Nov 2026).
+ */
+import AreaPage from "../components/AreaPage.astro";
+import Wrap from "../components/ds/Wrap.astro";
+import SectionHead from "../components/ds/SectionHead.astro";
+import Faq from "../components/ds/Faq.astro";
+import Link from "../components/ds/Link.astro";
+
+import { AREAS } from "../data/areas";
+
+const area = AREAS.find((a) => a.slug === "carpenter-maida-vale")!;
+
+const LIST = "list-style:none;margin:var(--space-10) 0 0;padding:0;border-bottom:var(--rule-hair)";
+const ITEM = "border-top:var(--rule-hair);padding:var(--space-6) 0";
+const P2 = "margin-top:var(--space-10)";
+const TEXT = "max-width:var(--measure)";
+const SECTION = "padding-bottom:var(--section-y)";
+const EXT = { target: "_blank", rel: "noopener" };
+---
+
+<AreaPage area={area}>
+  <Fragment slot="lede">
+    <p>
+      We design and fit <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving for Maida Vale homes. Many are stucco and red-brick houses built from the 1830s, with early mansion flats around Elgin Avenue.
+    </p>
+    <p style={P2}>
+      Every piece of bespoke joinery is measured in the room and cut to the lines of its walls, floors and ceilings, which are rarely straight.
+    </p>
+  </Fragment>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Mansion blocks" level={4}>Fitted wardrobes in Maida Vale's early mansion blocks</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Flats came early to Maida Vale. Westminster's leaflet describes early mansion blocks around Elgin Avenue, and a published history of Paddington has Carlton, Elgin and Ashworth Mansions standing by 1902.
+      </p>
+      <p style={P2}>
+        A mansion block usually has a freeholder or a residents' management company. Read your lease, and ask the managing agent for the building's rules before you book. The lift and the stair often set the size of the pieces, so tell us both measurements at the survey.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Stucco crescents" level={4}>Stucco crescents and tall rooms in Maida Vale</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Westminster's overview calls the stucco crescents of Warrington Crescent and Formosa Street the area's most notable features. Historic England describes Nos 2 to 18 Formosa Street as a mid-19th century terrace of three storeys in brick and stucco, listed Grade II.
+      </p>
+      <p style={P2}>
+        In a period room with a high ceiling and a cornice, a wardrobe can stop below the cornice rather than cut into it. Full-height doors then use the wall to the top.
+      </p>
+      <p style={P2}>
+        A chimney breast with an alcove on each side suits <Link href="/alcove-units/">alcove units</Link> or a <Link href="/media-walls/">built-in TV unit</Link>. A hanging wardrobe in an alcove often stands forward of the chimney breast.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Red-brick avenues" level={4}>Red-brick terraces and tall houses on the avenues</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Westminster's leaflet says the later streets are in red stock brick, where the earlier ones are brick and stucco. A published history of Paddington describes a red-brick terrace in Randolph Avenue that is 21 bays long and five storeys high.
+      </p>
+      <p style={P2}>
+        The upper floors of a tall house are reached by stairs, so long panels and doors have to be carried up. Tell us about the stairs at the survey.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed buildings" level={4}>Listed building consent for fitted furniture in Westminster</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Fitted furniture inside a home generally does not need planning permission. Westminster's May 2004 leaflet counted over 350 listed buildings in the area, mostly Grade II. They sit around Warwick Avenue, Warrington Crescent, Formosa Street and Clifton Gardens.
+      </p>
+      <p style={P2}>
+        If your building is listed, work that affects its character needs listed building consent, inside as well as out. Working without it is a criminal offence, even if you did not know the building was listed. <Link href="https://www.westminster.gov.uk/planning-building-control-and-environmental-regulations-menu/design-and-heritage/listed-buildings" {...EXT}>Westminster's listed buildings page</Link> explains how to check and who to ask.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Parking and deliveries in Westminster</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Maida Vale is in the City of Westminster, which does not run an on-street visitor permit scheme. Visitors use pay-to-park bays, or single yellow lines outside controlled hours, as set out on Westminster's <Link href="https://www.westminster.gov.uk/parking/visitor-parking-information" {...EXT}>visitor parking page</Link>.
+      </p>
+      <p style={P2}>
+        For people working at a home, Westminster offers a daily <Link href="https://www.westminster.gov.uk/parking/trade-parking-businesses/apply-trade-parking-permit" {...EXT}>trade parking permit</Link>. It is not meant for deliveries, so Westminster asks you to check its loading and unloading allowances first. When you book, we agree who applies for the permit.
+      </p>
+      <p style={P2}>
+        Before installation we settle parking, deliveries and access with you, and that covers where the van stops to load.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Guide prices" level={4}>What fitted wardrobes, alcove units and walk-in wardrobes cost</SectionHead>
+    <div style={TEXT}>
+      <p>Every figure below is a starting price, and a larger or more detailed piece costs more.</p>
+      <ul style={LIST}>
+        <li style={ITEM}><Link href="/fitted-wardrobes/">Fitted wardrobes</Link> start from £2,300 for a 2-door run up to 1.2m in melamine, and from £4,000 at 4 doors. Width, finish, internal drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/alcove-units/">Alcove units</Link> start from £3,300 for a pair in melamine and from £6,000 in oak veneer. Shelving detail, drawers and lighting move the figure.</li>
+        <li style={ITEM}><Link href="/walk-in-wardrobes/">Walk-in wardrobes</Link> typically start from around £5,000. The size of the room, the number of runs, the layout and the finishes move the figure.</li>
+      </ul>
+      <p style={P2}>
+        A fixed, itemised quotation follows the measured survey. The <Link href="/fitted-wardrobe-cost/">fitted wardrobe cost guide</Link> sets out what moves a price, and the <Link href="/process/">process page</Link> shows the steps in order.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
+    <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      <Faq q="Do I need plans, or do you handle the design?">
+        Design is part of the job, so you do not need to bring plans. A week is set aside for drawings, and you review them at the end. Up to two rounds of design revisions are included.
+      </Faq>
+      <Faq q="What does the managing agent need before a fitting in a mansion block?">
+        Insurance and the safety paperwork go to the managing agent before the start date, and the building's sign-off is in place before anything begins. Ask the managing agent early about lift booking, delivery hours and any limit on noisy work.
+      </Faq>
+      <Faq q="Is 55cm deep enough for a wardrobe?">
+        55cm sits at the low end of a workable range for hanging clothes. Around 550 to 600mm of clear inside depth is a starting point.
+      </Faq>
+    </div>
+  </Wrap>
+</AreaPage>
