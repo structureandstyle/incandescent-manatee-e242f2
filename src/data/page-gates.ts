@@ -52,7 +52,7 @@ export const PAGE_GATES = {
   "/bespoke-kitchens/": SERVICE_PAGE,
   /* Home office and under-stair storage, built 6 Nov 2026 as a draft. Six keys
      of its own gate it: homeOffice1, 2 and 6 are sentences shown through a
-     <Value>, 3 to 5 only hold the page (price, photographs, the AI examples).
+     <Value>, 3 to 5 only hold the page (price, photographs, the illustrations).
      It lifts itself when all six have values. */
   "/home-office-understairs-storage/": [
     ...SERVICE_PAGE,

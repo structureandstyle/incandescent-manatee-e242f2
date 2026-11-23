@@ -417,7 +417,9 @@ export const SERVICES: Service[] = [
   },
   /* Home office and under-stair storage. Deferred 31 Aug 2026 (no photographs),
      built 6 Nov 2026 on a founder's decision, illustrated with one real
-     photograph and four AI-generated examples, each labelled on the page. It
+     photograph and four illustrations. They were labelled on the page until
+     23 Nov 2026, when it was brought under the founders' 19 Nov rule (no
+     "AI" anywhere); the page now ends with the illustrations line. It
      stays a noindexed draft until Kaspar answers homeOffice1 to homeOffice6
      (page-gates.ts). The H1, metaTitle and kicker lead with under-stair; the
      title stays the signed scope name, because the enquiry form's tick box and

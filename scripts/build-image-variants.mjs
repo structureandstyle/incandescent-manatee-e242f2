@@ -103,10 +103,12 @@ const OG_DIR = join(ROOT, "public/og");
 if (!existsSync(OG_DIR)) mkdirSync(OG_DIR, { recursive: true });
 
 for (const [slug, allShots] of Object.entries(selection)) {
-  /* An AI-generated example (`ai: true`) is never the share card: a link
+  /* An illustration (`illustration: true`) is never the share card: a link
      shared into WhatsApp must show his real work, not a render. A service
-     whose only photographs are AI gets no card and falls back to the default. */
-  const shots = Array.isArray(allShots) ? allShots.filter((s) => !s.ai) : [];
+     whose only pictures are illustrations gets no card and falls back to the
+     default. The key was `ai` until 23 Nov 2026; this file is served at
+     /images/_selection.json, so no "ai" in it (a founder, 19 Nov 2026). */
+  const shots = Array.isArray(allShots) ? allShots.filter((s) => !s.illustration) : [];
   if (!shots.length) continue;
   const landscape = shots.find((s) => s.w / s.h >= 1.2) ?? shots[0];
   const src = join(ROOT, "public", landscape.file.replace(/^\//, ""));

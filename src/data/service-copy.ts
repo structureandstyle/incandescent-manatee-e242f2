@@ -28,18 +28,21 @@
 
 /**
  * One image placed inside a section (home office and under-stair page, 6 Nov
- * 2026). `ai` marks an AI-generated example: it is rendered with the visible
- * caption "AI-generated example", the page template refuses to build if the
- * flag disagrees with public/images/_selection.json, and scripts/verify-build.mjs
- * fails any built image with "-ai-" in its path that is not labelled. An AI
- * image is never his work and never goes on the Google Business Profile.
+ * 2026). `ai` marks an illustration (a render, not his work): the page
+ * template refuses to build if the flag disagrees with the `illustration` flag
+ * in public/images/_selection.json, the picture is marked data-illustration,
+ * and the page carries the illustrations line near its end. Since 23 Nov 2026
+ * nothing on the page says the picture is generated, in the caption, the alt
+ * text or the file name (the founders' 19 Nov rule, site PRs #66, #67, #74).
+ * An illustration is never his work and never goes on the Google Business
+ * Profile.
  */
 export type Figure = {
   src: string;
   alt: string;
   width: number;
   height: number;
-  /** What it shows, in a few words. An AI figure's label is added in front. */
+  /** What it shows, in a few words, as for a photograph. */
   caption: string;
   ai?: true;
 };
@@ -68,8 +71,6 @@ export type ServiceCopy = {
     body: string[];
     /** A shared section id, or "intro" to sit straight after the intro. */
     after?: string;
-    /** One line saying the images below are AI-generated; drawn once, just before the first AI image. */
-    aiNotice?: string;
     /** Images in this section. No `afterParagraph` means above the body. */
     figures?: { afterParagraph?: number; items: Figure[] }[];
   }[];
@@ -505,9 +506,9 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
   },
   /* Home office and under-stair storage, 6 Nov 2026. Copy from the ops repo's
      deliverables/home-office/copy.md; every sentence about what we fit is a
-     {{q:...}} that stays an open question until Kaspar confirms it. The
-     "AI-generated example" sentence sits above the first AI image and says it
-     once; each AI image repeats the label in its caption. */
+     {{q:...}} that stays an open question until Kaspar confirms it. The four
+     illustrations carried a label and a notice until 23 Nov 2026; they now
+     read like photographs, and the page ends with the illustrations line. */
   "home-office-understairs-storage": {
     intro: [
       "The space under a staircase slopes, narrows and rarely sits square to the walls around it. A home office has its own fixed points: the window, the radiator and the sockets. Fitted joinery is designed around those, so the storage or the desk suits the room as it is.",
@@ -521,11 +522,6 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
         meta: "Under-stair",
         heading: "Under-stair storage that follows the stair",
         after: "intro",
-        /* Said once, above the first AI image, in the journal guides' words
-           changed only where this page differs: it is not a guide, and one
-           photograph below is real. */
-        aiNotice:
-          "Apart from the photograph of a finished home office, the images on this page are AI-generated examples, shown for inspiration and to help you compare the options.",
         body: [
           "{{q:homeOffice1}}",
           "The stair sets the height, so the tall end can take full-height cupboards and the low end can take drawers. Each unit is cut to follow the line of the stair and the walls beside it.",
@@ -535,16 +531,16 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
             afterParagraph: 0,
             items: [
               {
-                src: "/images/home-office/home-office-ai-understairs-drawers.webp",
-                alt: "AI-generated example: painted sage green fitted cupboards and drawers under a straight staircase in a London Victorian hallway, with brass bar pulls and the tops of the units following the slope of the stairs.",
+                src: "/images/home-office/home-office-understairs-drawers.webp",
+                alt: "Painted sage green fitted cupboards and drawers under a straight staircase in a Victorian hallway, with brass bar pulls and the tops of the units following the slope of the stairs.",
                 width: 1400,
                 height: 906,
                 caption: "Cupboards and drawers",
                 ai: true,
               },
               {
-                src: "/images/home-office/home-office-ai-understairs-coats-shoes.webp",
-                alt: "AI-generated example: warm off-white fitted cupboard doors under a straight staircase in a London Edwardian hallway, with a low oak-topped bench drawer and an open shelf of shoes at the shallow end.",
+                src: "/images/home-office/home-office-understairs-coats-shoes.webp",
+                alt: "Warm off-white fitted cupboard doors under a straight staircase in an Edwardian hallway, with a low oak-topped bench drawer and an open shelf of shoes at the shallow end.",
                 width: 1400,
                 height: 933,
                 /* The picture shows hinged doors, a bench drawer and an open
@@ -580,16 +576,16 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
             afterParagraph: 0,
             items: [
               {
-                src: "/images/home-office/home-office-ai-alcove-desk.webp",
-                alt: "AI-generated example: a fitted oak desk spanning the right-hand alcove beside a central chimney breast with a fireplace, with three off-white drawers under one side, open shelves above and a task lamp, in a London Victorian room.",
+                src: "/images/home-office/home-office-alcove-desk.webp",
+                alt: "A fitted oak desk spanning the right-hand alcove beside a central chimney breast with a fireplace, with three off-white drawers under one side, open shelves above and a task lamp, in a Victorian room.",
                 width: 1400,
                 height: 933,
                 caption: "Desk run with drawers and shelving in an alcove",
                 ai: true,
               },
               {
-                src: "/images/home-office/home-office-ai-study-wall.webp",
-                alt: "AI-generated example: a full study wall in a light London room, with a long oak desk and three drawers in the middle, open shelves above and a tall two-door cupboard at each end, all painted off-white with brass bar pulls.",
+                src: "/images/home-office/home-office-study-wall.webp",
+                alt: "A full study wall in a light room, with a long oak desk and three drawers in the middle, open shelves above and a tall two-door cupboard at each end, all painted off-white with brass bar pulls.",
                 width: 1400,
                 height: 933,
                 caption: "Full study wall with tall cupboards",

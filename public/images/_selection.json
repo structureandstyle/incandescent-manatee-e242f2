@@ -359,44 +359,44 @@
       "bytes": 115516
     },
     {
-      "file": "/images/home-office/home-office-ai-understairs-drawers.webp",
+      "file": "/images/home-office/home-office-understairs-drawers.webp",
       "w": 1400,
       "h": 906,
-      "source": "AI-generated example (Figma generate_image, ops deliverables/home-office/renders.json, id understairs-drawers). Not a photograph of his work.",
+      "source": "Illustration made for this page (ops deliverables/home-office/renders.json, id understairs-drawers). Not a photograph of his work.",
       "date": "20261106",
-      "quality": "ai",
+      "quality": "illustration",
       "bytes": 64618,
-      "ai": true
+      "illustration": true
     },
     {
-      "file": "/images/home-office/home-office-ai-understairs-coats-shoes.webp",
+      "file": "/images/home-office/home-office-understairs-coats-shoes.webp",
       "w": 1400,
       "h": 933,
-      "source": "AI-generated example (Figma generate_image, ops deliverables/home-office/renders.json, id understairs-coats-shoes). Not a photograph of his work.",
+      "source": "Illustration made for this page (ops deliverables/home-office/renders.json, id understairs-coats-shoes). Not a photograph of his work.",
       "date": "20261106",
-      "quality": "ai",
+      "quality": "illustration",
       "bytes": 58500,
-      "ai": true
+      "illustration": true
     },
     {
-      "file": "/images/home-office/home-office-ai-alcove-desk.webp",
+      "file": "/images/home-office/home-office-alcove-desk.webp",
       "w": 1400,
       "h": 933,
-      "source": "AI-generated example (Figma generate_image, ops deliverables/home-office/renders.json, id alcove-desk). Not a photograph of his work.",
+      "source": "Illustration made for this page (ops deliverables/home-office/renders.json, id alcove-desk). Not a photograph of his work.",
       "date": "20261106",
-      "quality": "ai",
+      "quality": "illustration",
       "bytes": 112676,
-      "ai": true
+      "illustration": true
     },
     {
-      "file": "/images/home-office/home-office-ai-study-wall.webp",
+      "file": "/images/home-office/home-office-study-wall.webp",
       "w": 1400,
       "h": 933,
-      "source": "AI-generated example (Figma generate_image, ops deliverables/home-office/renders.json, id study-wall). Not a photograph of his work.",
+      "source": "Illustration made for this page (ops deliverables/home-office/renders.json, id study-wall). Not a photograph of his work.",
       "date": "20261106",
-      "quality": "ai",
+      "quality": "illustration",
       "bytes": 69380,
-      "ai": true
+      "illustration": true
     }
   ],
   "bathroom": [

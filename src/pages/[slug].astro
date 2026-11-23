@@ -19,6 +19,7 @@ import Base from "../layouts/Base.astro";
 import Value from "../components/Value.astro";
 import CopyText from "../components/CopyText.astro";
 import CopySection from "../components/CopySection.astro";
+import IllustrationNote from "../components/IllustrationNote.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
@@ -117,25 +118,28 @@ const copy = SERVICE_COPY[service.slug];
  * card this page sends. The gallery it used to build came off on 6 September
  * 2026, see the note in the markup below.
  */
-const sel = selection as Record<string, { file: string; w: number; h: number; ai?: boolean }[]>;
+const sel = selection as Record<string, { file: string; w: number; h: number; illustration?: boolean }[]>;
 
 /**
  * Figures placed inside a copy section (home office and under-stair page,
- * 6 Nov 2026). Each must be a registered photograph in _selection.json, and
- * its `ai` flag must match the selection's, so a flag cannot be dropped from
- * one place and left in the other. An AI figure is drawn by <Render> with the
- * visible caption "AI-generated example"; a real one by a plain <Plate>.
+ * 6 Nov 2026). Each must be registered in _selection.json, and its `ai` flag
+ * must match the selection's `illustration` flag, so a flag cannot be dropped
+ * from one place and left in the other. An illustration is drawn by <Render>,
+ * captioned with what it shows; a real photograph by a plain <Plate>. No
+ * picture is named "-ai-" (the founders' rule of 19 Nov 2026: no "AI"
+ * anywhere, file names included); the page carries the illustrations line.
  */
+const hasIllustrations = (copy?.sections ?? []).some((sec) => (sec.figures ?? []).some((g) => g.items.some((f) => f.ai)));
 const registered = new Map(Object.values(sel).flat().map((s) => [s.file, s]));
 for (const sec of copy?.sections ?? []) {
   for (const group of sec.figures ?? []) {
     for (const f of group.items) {
       const entry = registered.get(f.src);
       if (!entry) throw new Error(`${service.slug}: figure ${f.src} is not in public/images/_selection.json`);
-      if (Boolean(entry.ai) !== Boolean(f.ai)) {
-        throw new Error(`${service.slug}: figure ${f.src} has ai=${Boolean(f.ai)} in service-copy.ts but ai=${Boolean(entry.ai)} in _selection.json`);
+      if (Boolean(entry.illustration) !== Boolean(f.ai)) {
+        throw new Error(`${service.slug}: figure ${f.src} has ai=${Boolean(f.ai)} in service-copy.ts but illustration=${Boolean(entry.illustration)} in _selection.json`);
       }
-      if (f.src.includes("-ai-") && !f.ai) throw new Error(`${service.slug}: ${f.src} is named -ai- but is not flagged ai`);
+      if (/-ai-/i.test(f.src)) throw new Error(`${service.slug}: ${f.src} has "-ai-" in its name; name it for what it shows (no "AI" anywhere, 19 Nov 2026)`);
     }
   }
 }
@@ -152,7 +156,7 @@ for (const sec of copy?.sections ?? []) {
  * WebP. The cost guide borrows the wardrobe card for the same reason it
  * borrows the wardrobe photography.
  */
-const ogSlug = sel[service.slug]?.some((x) => !x.ai)
+const ogSlug = sel[service.slug]?.some((x) => !x.illustration)
   ? service.slug
   : service.slug === "fitted-wardrobe-cost"
     ? "fitted-wardrobes"
@@ -520,6 +524,16 @@ const SECTIONS: Section[] = [
         <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
           {copy.faqs.map((f) => <Faq q={f.q}><CopyText text={f.a} /></Faq>)}
         </div>
+      </Wrap>
+    )}
+
+    {/* The illustrations line (IllustrationNote.astro), near the end and before
+        the enquiry band, on a page whose copy sections hold an illustration:
+        today only the home office and under-stair page. "Some images",
+        because the page also shows his real photographs. */}
+    {hasIllustrations && (
+      <Wrap style="padding-bottom:var(--section-y)">
+        <IllustrationNote />
       </Wrap>
     )}
 

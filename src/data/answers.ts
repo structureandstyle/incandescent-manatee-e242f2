@@ -206,7 +206,7 @@ export const ANSWERS = {
   q54: { value: null, about: "What he turns down. Declined 30 Aug 2026: covered by the About-page direction change" },
   q55: { value: null, about: "The piece he is proudest of. Declined 30 Aug 2026: covered by the About-page direction change" },
   q56: { value: null, about: "Whether he is happy to be photographed. No portrait at this stage, 30 Aug 2026" },
-  // Home office and under-stair storage page, drafted 6 Nov 2026. 1, 2, 4 and 6 answered by a founder the same day; 3 (price) and 5 (the AI examples) are still to ask Kaspar and hold the page.
+  // Home office and under-stair storage page, drafted 6 Nov 2026. 1, 2, 4 and 6 answered by a founder the same day; 3 (price) and 5 (the illustrations) are still to ask Kaspar and hold the page. 5 reworded on 23 Nov 2026, when the page's labels came off under the founders' 19 Nov rule.
   // homeOffice1, 2 and 6 render through a <Value> in service-copy.ts; 3 to 5 only hold the page.
   homeOffice1: {
     // Answered by a founder for Kaspar, 6 Nov 2026: "yes he does, everything".
@@ -229,13 +229,13 @@ export const ANSWERS = {
   },
   homeOffice4: {
     // Answered by a founder for Kaspar, 6 Nov 2026: "whatever photos we have in the drive".
-    value: "Use the photographs in the Drive. The folder holds one finished home office, already on the page, and three close-ups of the same desk; there are no under-stair photographs, so the AI examples stay.",
-    about: "Do you have photographs of a finished under-stair job, or more photographs of home offices you have fitted? If you do, send them and they replace the AI examples. If not, say so.",
+    value: "Use the photographs in the Drive. The folder holds one finished home office, already on the page, and three close-ups of the same desk; there are no under-stair photographs, so the illustrations stay.",
+    about: "Do you have photographs of a finished under-stair job, or more photographs of home offices you have fitted? If you do, send them and they replace the illustrations. If not, say so.",
   },
   homeOffice5: {
     value: null,
     blocking: true,
-    about: "Are you happy for this page to show four AI-generated example images, each labelled 'AI-generated example', as the two journal guides do, with the page saying plainly they are not photographs of your work?",
+    about: "Are you happy for this page to show four illustrations of possible layouts, with no label on each picture and one line near the end saying the images are illustrations, as the two journal guides now do?",
   },
   homeOffice6: {
     // Answered by a founder for Kaspar, 6 Nov 2026: "yes".
