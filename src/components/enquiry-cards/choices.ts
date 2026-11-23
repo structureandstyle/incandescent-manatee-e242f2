@@ -9,7 +9,7 @@
  * field name. A card's `value` is what lands in the log; its `label` is what a
  * visitor reads. The two only differ on "How did you hear about us?".
  */
-import { SERVICES, DEFERRED_SERVICES, BUSINESS, serviceLabel } from "../../data/site";
+import { SERVICES, BUSINESS, serviceLabel } from "../../data/site";
 
 export type Choice = {
   /** What the form sends. */
@@ -25,11 +25,12 @@ export type Choice = {
 /**
  * "What do you need?" The same list, in the same order, as the checkboxes the
  * form had before the cards (2 Sep 2026, Denis's call: tick everything that
- * applies): every service page except the cost guide, the deferred home
- * office page, then three with no page of their own. Panelling and doors
- * (28 Sep 2026) and flooring are work he takes, named on his Business Profile
- * and in his reviews, with no page because there are no photographs yet; the
- * home office page is deferred, the work is not. serviceLabel, so media walls
+ * applies): every service page except the cost guide, then three with no
+ * page of their own. Panelling and doors (28 Sep 2026) and flooring are work
+ * he takes, named on his Business Profile and in his reviews, with no page
+ * because there are no photographs yet. The home office and under-stair page
+ * moved from DEFERRED_SERVICES into SERVICES when it was built (6 Nov 2026),
+ * so its card keeps the same place in the list. serviceLabel, so media walls
  * reads "Built-in TV units", the label the log already records.
  */
 const SERVICE_ART: Record<string, string> = {
@@ -48,7 +49,6 @@ const serviceArt = (label: string) => SERVICE_ART[label] ?? "service-other";
 
 export const SERVICE_CHOICES: Choice[] = [
   ...SERVICES.filter((s) => s.slug !== "fitted-wardrobe-cost").map(serviceLabel),
-  ...DEFERRED_SERVICES.map(serviceLabel),
   "Panelling and doors",
   "Flooring",
   "Something else",
