@@ -50,8 +50,16 @@ export const PAGE_GATES = {
   "/fitted-wardrobe-cost/": SERVICE_PAGE,
   "/media-walls/": SERVICE_PAGE,
   "/bespoke-kitchens/": SERVICE_PAGE,
-  /* home-office-understairs-storage deferred 31 Aug 2026 with its SERVICES
-     entry: no route, no gate. See DEFERRED_SERVICES in site.ts. */
+  /* Under-stairs storage, split on 23 Nov 2026 from the combined home office
+     and under-stair draft of 6 Nov (site PR #24). Five keys of its own gate it:
+     underStairsFit and underStairsAccess are sentences shown through a <Value>;
+     underStairsPhotos, underStairsPrice and underStairsCheck (Kas has read the
+     page, illustrations included) only hold it. It lifts itself when all five
+     have values. The home office page has no route yet (DEFERRED_SERVICES). */
+  "/under-stairs-storage/": [
+    ...SERVICE_PAGE,
+    "underStairsFit", "underStairsAccess", "underStairsPhotos", "underStairsPrice", "underStairsCheck",
+  ],
 
   /**
    * The brand pages. Each list is that page read section by section, plus the

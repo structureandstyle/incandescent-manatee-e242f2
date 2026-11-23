@@ -1,0 +1,34 @@
+---
+/**
+ * A string from service-copy.ts, with its `{{q:KEY}}` markers resolved.
+ *
+ * Each marker becomes <Value q="KEY" />, so the sentence it stands for shows
+ * our provisional wording inside an Ask until Kaspar's answer lands in
+ * answers.ts, and finished copy after. A key that is not in answers.ts fails
+ * the build here, so a raw {{...}} can never reach a page that could be
+ * indexed. Text without a marker renders as it is.
+ */
+import Value from "./Value.astro";
+import { ANSWERS, type QuestionKey } from "../data/answers";
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+
+const parts = text.split(/\{\{q:([A-Za-z0-9]+)\}\}/);
+// split() with one capture group alternates: text, key, text, key, ...
+const segments = parts.map((part, i) => {
+  if (i % 2 === 0) return { text: part } as const;
+  if (!(part in ANSWERS)) {
+    throw new Error(`CopyText: "{{q:${part}}}" is not a key in src/data/answers.ts (in: "${text.slice(0, 60)}...")`);
+  }
+  return { q: part as QuestionKey } as const;
+});
+if (/\{\{|\}\}/.test(segments.map((s) => ("text" in s ? s.text : "")).join(""))) {
+  throw new Error(`CopyText: unresolved {{ }} marker in: "${text.slice(0, 60)}..."`);
+}
+---
+
+{segments.map((s) => ("q" in s ? <Value q={s.q} /> : s.text))}

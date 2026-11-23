@@ -17,6 +17,9 @@
  */
 import Base from "../layouts/Base.astro";
 import Value from "../components/Value.astro";
+import CopyText from "../components/CopyText.astro";
+import CopySection from "../components/CopySection.astro";
+import IllustrationNote from "../components/IllustrationNote.astro";
 import Wrap from "../components/ds/Wrap.astro";
 import Display from "../components/ds/Display.astro";
 import Kicker from "../components/ds/Kicker.astro";
@@ -80,10 +83,15 @@ const isIndexable = indexable(path) && Boolean(SERVICE_COPY[service.slug]);
  */
 const SERVICE_ONLY = SERVICES.filter((s) => !s.guide);
 const at = SERVICE_ONLY.findIndex((s) => s.slug === service.slug);
+/* Rotated from this page's position as before, then only pages that are live
+   (a draft held by its gate, such as home office and under-stair on 6 Nov
+   2026, is not linked from a finished page), then the first three. */
 const others = Array.from(
-  { length: Math.min(3, SERVICE_ONLY.length) },
+  { length: SERVICE_ONLY.length },
   (_, i) => SERVICE_ONLY[(Math.max(at, -1) + 1 + i) % SERVICE_ONLY.length]
-).filter((s) => s.slug !== service.slug);
+)
+  .filter((s) => s.slug !== service.slug && indexable(servicePath(s)))
+  .slice(0, 3);
 
 /**
  * The cost guide, offered as a guide rather than as a fourth service, and only
@@ -110,7 +118,37 @@ const copy = SERVICE_COPY[service.slug];
  * card this page sends. The gallery it used to build came off on 6 September
  * 2026, see the note in the markup below.
  */
-const sel = selection as Record<string, { file: string; w: number; h: number }[]>;
+const sel = selection as Record<string, { file: string; w: number; h: number; illustration?: boolean }[]>;
+
+/**
+ * Figures placed inside a copy section (home office and under-stair page,
+ * 6 Nov 2026). Each must be registered in _selection.json, and its `ai` flag
+ * must match the selection's `illustration` flag, so a flag cannot be dropped
+ * from one place and left in the other. An illustration is drawn by <Render>,
+ * captioned with what it shows; a real photograph by a plain <Plate>. No
+ * picture is named "-ai-" (the founders' rule of 19 Nov 2026: no "AI"
+ * anywhere, file names included); the page carries the illustrations line.
+ */
+const allFigures = (copy?.sections ?? []).flatMap((sec) => (sec.figures ?? []).flatMap((g) => g.items));
+const hasIllustrations = allFigures.some((f) => f.ai);
+/* Service pages show no pictures outside their copy sections (Kas, 6 Sep
+   2026), so when every figure is an illustration, every image on the page is
+   one, and the line says "The images" rather than "Some images" (the
+   under-stairs page, 23 Nov 2026). */
+const allIllustrations = allFigures.length > 0 && allFigures.every((f) => f.ai);
+const registered = new Map(Object.values(sel).flat().map((s) => [s.file, s]));
+for (const sec of copy?.sections ?? []) {
+  for (const group of sec.figures ?? []) {
+    for (const f of group.items) {
+      const entry = registered.get(f.src);
+      if (!entry) throw new Error(`${service.slug}: figure ${f.src} is not in public/images/_selection.json`);
+      if (Boolean(entry.illustration) !== Boolean(f.ai)) {
+        throw new Error(`${service.slug}: figure ${f.src} has ai=${Boolean(f.ai)} in service-copy.ts but illustration=${Boolean(entry.illustration)} in _selection.json`);
+      }
+      if (/-ai-/i.test(f.src)) throw new Error(`${service.slug}: ${f.src} has "-ai-" in its name; name it for what it shows (no "AI" anywhere, 19 Nov 2026)`);
+    }
+  }
+}
 
 /**
  * This page's own share image, 5 September 2026.
@@ -124,7 +162,7 @@ const sel = selection as Record<string, { file: string; w: number; h: number }[]
  * WebP. The cost guide borrows the wardrobe card for the same reason it
  * borrows the wardrobe photography.
  */
-const ogSlug = sel[service.slug]
+const ogSlug = sel[service.slug]?.some((x) => !x.illustration)
   ? service.slug
   : service.slug === "fitted-wardrobe-cost"
     ? "fitted-wardrobes"
@@ -182,7 +220,7 @@ const SECTIONS: Section[] = [
     heading:
       service.slug === "fitted-wardrobe-cost"
         ? "The guide prices, by size and finish"
-        : `What do ${service.title.toLowerCase().replace(/\btv\b/g, "TV")} cost?`,
+        : service.costHeading ?? `What do ${service.title.toLowerCase().replace(/\btv\b/g, "TV")} cost?`,
     lead: service.costLead ?? "The honest answer is a range, because the room decides it.",
     rows: [
       { label: "Guide price", text: service.price },
@@ -340,11 +378,14 @@ const SECTIONS: Section[] = [
       <Wrap style="padding-bottom:var(--section-y)">
         <div style="max-width:var(--measure)">
           {copy.intro.map((p, i) => (
-            <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
+            <p style={i ? "margin-top:var(--space-10)" : undefined}><CopyText text={p} /></p>
           ))}
         </div>
       </Wrap>
     )}
+
+    {/* Sections that sit straight after the intro (after: "intro"). */}
+    {copy?.sections.filter((sec) => sec.after === "intro").map((sec) => <CopySection sec={sec} />)}
 
     <!-- Question-shaped sections -->
     {SECTIONS.map((section) => (
@@ -457,29 +498,11 @@ const SECTIONS: Section[] = [
           </Wrap>
         )}
 
-        {copy?.sections.filter((sec) => sec.after === section.id).map((sec) => (
-          <Wrap style="padding-bottom:var(--section-y)">
-            <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
-            <div style="max-width:var(--measure)">
-              {sec.body.map((p, i) => (
-                <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
-              ))}
-            </div>
-          </Wrap>
-        ))}
+        {copy?.sections.filter((sec) => sec.after === section.id).map((sec) => <CopySection sec={sec} />)}
       </>
     ))}
 
-    {copy && copy.sections.filter((sec) => !sec.after).map((sec) => (
-      <Wrap style="padding-bottom:var(--section-y)">
-        <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
-        <div style="max-width:var(--measure)">
-          {sec.body.map((p, i) => (
-            <p style={i ? "margin-top:var(--space-10)" : undefined}>{p}</p>
-          ))}
-        </div>
-      </Wrap>
-    ))}
+    {copy && copy.sections.filter((sec) => !sec.after).map((sec) => <CopySection sec={sec} />)}
 
     <Wrap style="padding-bottom:var(--section-y)">
       <SectionHead meta="Portfolio" level={5}>Selected work</SectionHead>
@@ -505,8 +528,18 @@ const SECTIONS: Section[] = [
       <Wrap style="padding-bottom:var(--section-y)">
         <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
         <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
-          {copy.faqs.map((f) => <Faq q={f.q}>{f.a}</Faq>)}
+          {copy.faqs.map((f) => <Faq q={f.q}><CopyText text={f.a} /></Faq>)}
         </div>
+      </Wrap>
+    )}
+
+    {/* The illustrations line (IllustrationNote.astro), near the end and before
+        the enquiry band, on a page whose copy sections hold an illustration:
+        today only the under-stairs page. "The images" when every figure is
+        an illustration, "Some images" when his photographs sit beside them. */}
+    {hasIllustrations && (
+      <Wrap style="padding-bottom:var(--section-y)">
+        <IllustrationNote all={allIllustrations} />
       </Wrap>
     )}
 

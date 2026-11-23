@@ -196,6 +196,12 @@ export type Service = {
    */
   costLead?: string;
   /**
+   * The cost section's heading, where the template's "What do <title> cost?"
+   * reads wrongly: a singular name gives "What do under-stairs storage cost?"
+   * (23 Nov 2026, the under-stairs page). Left out, the template builds it.
+   */
+  costHeading?: string;
+  /**
    * Per-section lead lines for the shared spec sections, keyed by section id
    * (made-from, fitting, after), for a wave-two page that has no SERVICE_COPY
    * entry: the same reason as costLead, since an entry there would lift the
@@ -415,6 +421,42 @@ export const SERVICES: Service[] = [
       "Made-to-measure kitchen cabinetry with tall units, islands, internal storage and surrounding finishes resolved around the room.",
     wave: 2,
   },
+  /* Under-stairs storage, split on 23 Nov 2026 (a founder: "Yes, split it")
+     from the combined "Home office and under-stair storage" page drafted on
+     6 Nov 2026 (site PR #24), the sixth page of the signed scope. Under-stairs
+     comes first because it carries the signed target search ("understairs
+     storage", page 1 by 10 Feb 2027) and about 2,400 London searches a month
+     (Google Ads, 23 Nov 2026); the home office page comes later, and until
+     then it is a card on the enquiry form (DEFERRED_SERVICES below).
+     Illustrated with two illustrations and no photograph: there are no
+     under-stair photographs (underStairsPhotos). It stays a noindexed draft
+     until Kas has read it (underStairsCheck) and answered the price
+     (underStairsPrice); when he gives a figure, edit price and bandPrice in
+     the same commit. The title is the enquiry card's value, the breadcrumb and
+     the menu name; costHeading and madeFrom are set because the template
+     builds both sentences from the title, which reads wrongly in the singular. */
+  {
+    slug: "under-stairs-storage",
+    metaTitle: "Under-stairs storage in north London",
+    noMinimum: true,
+    bandPrice: "Projects generally from £2,000",
+    price:
+      "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
+    priceMovers:
+      "The length, height and shape of the stair, how many drawers and cupboards go under it, the finish and any integrated lighting.",
+    madeFrom:
+      "Under-stairs storage is available in painted moisture-resistant MDF, melamine and decorative boards, or natural wood veneer, with a wide choice of colours and finishes.",
+    title: "Under-stairs storage",
+    heading: "Under-stairs storage in north London, fitted to the stair",
+    kicker: "Under-stairs storage, north London",
+    primary: "under stairs storage north london",
+    costHeading: "How much does under-stairs storage cost?",
+    description:
+      "Fitted and built-in under-stairs storage for north London homes: cupboards, pull-out drawers, and coat and shoe storage, designed around the stair.",
+    summary:
+      "Cupboards, pull-out drawers, and coat and shoe storage, designed around any meter or boiler beneath the stairs.",
+    wave: 2,
+  },
 ];
 
 /**
@@ -426,20 +468,27 @@ export const SERVICES: Service[] = [
  * that brings it back is him photographing an under-stair or home office job.
  * To restore: move the entry back into SERVICES and re-add its gate in
  * page-gates.ts.
+ *
+ * 23 Nov 2026: the combined page was split (a founder, "Yes, split it").
+ * Under-stairs storage is in SERVICES above as its own draft page; the home
+ * office half stays here, a card on the enquiry form with no route, until its
+ * own page is built. Its draft copy, real photograph and two illustrations
+ * are kept on the branch flowtoform/home-office-page (site PR #24). It has no
+ * SERVICE_COPY entry and no gate, so nothing builds a page for it.
  */
 export const DEFERRED_SERVICES: Service[] = [
   {
-    slug: "home-office-understairs-storage",
+    slug: "home-office",
     bandPrice: "Projects generally from £2,000",
     price:
       "Priced per project. A measured survey, usually about an hour on site, gives a firm, itemised figure, and projects generally start at £2,000 of value.",
-    title: "Home office and under-stair storage",
-    heading: "Home office and under-stair storage",
-    primary: "under stairs storage north london",
+    title: "Home offices",
+    heading: "Fitted home offices",
+    primary: "fitted home office",
     description:
-      "Built-in desks, study storage and under-stair storage that uses the whole void, fitted around windows, radiators and the stair pitch.",
+      "Built-in desks with drawers, shelving and tall cupboards, planned around the window, the radiator and the sockets.",
     summary:
-      "Desks and storage fitted around windows, radiators and sloped ceilings, and under-stair storage that uses the whole void.",
+      "Built-in desks with drawers, shelving and tall cupboards, planned around the room.",
     wave: 2,
   },
 ];

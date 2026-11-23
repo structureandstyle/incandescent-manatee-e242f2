@@ -359,6 +359,28 @@
       "bytes": 115516
     }
   ],
+  "under-stairs-storage": [
+    {
+      "file": "/images/journal/under-stairs-drawers.webp",
+      "w": 1400,
+      "h": 906,
+      "source": "Illustration made for this page (id understairs-drawers; first drafted for the combined home office and under-stair page, 6 Nov 2026). Not a photograph of his work.",
+      "date": "20261106",
+      "quality": "illustration",
+      "bytes": 64618,
+      "illustration": true
+    },
+    {
+      "file": "/images/journal/under-stairs-bench-shoe-shelf.webp",
+      "w": 1400,
+      "h": 933,
+      "source": "Illustration made for this page (id understairs-coats-shoes; first drafted for the combined home office and under-stair page, 6 Nov 2026). Not a photograph of his work.",
+      "date": "20261106",
+      "quality": "illustration",
+      "bytes": 58500,
+      "illustration": true
+    }
+  ],
   "bathroom": [
     {
       "file": "/images/bathroom/bathroom-01.webp",

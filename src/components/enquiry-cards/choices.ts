@@ -31,6 +31,14 @@ export type Choice = {
  * and in his reviews, with no page because there are no photographs yet; the
  * home office page is deferred, the work is not. serviceLabel, so media walls
  * reads "Built-in TV units", the label the log already records.
+ *
+ * SPLIT, 23 Nov 2026 (a founder: "Yes, split it"). The one card "Home office
+ * and under-stair storage" became two: "Under-stairs storage", the service
+ * page (/under-stairs-storage/, a draft until Kas reads it), and "Home
+ * offices", which stays in DEFERRED_SERVICES until its own page is built.
+ * Enquiries sent before the split keep the old value in the log; none of
+ * the nine real enquiries to date chose it. Make maps by field name, so the
+ * new values need no change there.
  */
 const SERVICE_ART: Record<string, string> = {
   "Fitted wardrobes": "fitted-wardrobes",
@@ -38,7 +46,8 @@ const SERVICE_ART: Record<string, string> = {
   "Alcove units and shelving": "alcove-units",
   "Built-in TV units": "tv-units",
   "Bespoke kitchens": "kitchens",
-  "Home office and under-stair storage": "under-stairs",
+  "Under-stairs storage": "under-stairs",
+  "Home offices": "home-office",
   "Panelling and doors": "panelling-doors",
   Flooring: "flooring",
   "Something else": "service-other",
@@ -126,6 +135,8 @@ export const JOB_EXAMPLES: Record<string, string> = {
     "Living room chimney wall, 65 inch TV. Cables and a console to hide, sockets already there.",
   "Bespoke kitchens":
     "Galley kitchen about 4m long. One wall of units and a tall run for the oven and fridge.",
-  "Home office and under-stair storage":
+  "Under-stairs storage":
     "Under the stairs, about 2m along and sloping. Coats, shoes and a bit of shelving.",
+  "Home offices":
+    "Spare room about 3m wide. A desk under the window, drawers, and shelves for files.",
 };

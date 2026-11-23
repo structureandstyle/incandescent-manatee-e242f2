@@ -206,6 +206,47 @@ export const ANSWERS = {
   q54: { value: null, about: "What he turns down. Declined 30 Aug 2026: covered by the About-page direction change" },
   q55: { value: null, about: "The piece he is proudest of. Declined 30 Aug 2026: covered by the About-page direction change" },
   q56: { value: null, about: "Whether he is happy to be photographed. No portrait at this stage, 30 Aug 2026" },
+  /**
+   * UNDER-STAIRS STORAGE, /under-stairs-storage/. Split on 23 Nov 2026 (a
+   * founder: "Yes, split it") from the combined home office and under-stair
+   * page of 6 Nov 2026 (site PR #24), whose keys were homeOffice1 to 6.
+   * Named keys, not numbers. Old to new: homeOffice1 is underStairsFit,
+   * homeOffice6 is underStairsAccess, homeOffice3 (price) is underStairsPrice,
+   * homeOffice4 (photographs) is underStairsPhotos, and homeOffice5 (the
+   * illustrations) is folded into underStairsCheck, the one read-through key
+   * the 14 Nov topic pages also use. homeOffice2 (what we fit in a home
+   * office) stays with the home office page on PR #24.
+   * underStairsFit and underStairsAccess render through a <Value> in
+   * service-copy.ts; the other three only hold the page.
+   */
+  underStairsFit: {
+    // Answered by a founder for Kaspar, 6 Nov 2026: "yes he does, everything" (homeOffice1).
+    value: "We design and fit cupboards, pull-out drawers, and coat and shoe storage under the stairs.",
+    blocking: true,
+    provisional: "We design and fit cupboards, pull-out drawers, and coat and shoe storage under the stairs.",
+    about: "Do you still take under-stairs storage jobs, and what do you fit there? We have drafted: cupboards, pull-out drawers, and coat and shoe storage cut to the stair. Please correct it.",
+  },
+  underStairsAccess: {
+    // Answered by a founder for Kaspar, 6 Nov 2026: "yes" (homeOffice6); he fits around meters and boilers (site commit 5baac34).
+    value: "We check what is under the stairs at the survey, then design around anything that has to stay reachable.",
+    provisional: "We check what is under the stairs at the survey, then design around anything that has to stay reachable.",
+    about: "When the space under the stairs holds a meter, boiler or fuse box, do you fit around it, and what do you do about access? We have drafted: we check at the survey and design around anything that has to stay reachable.",
+  },
+  underStairsPrice: {
+    value: null,
+    blocking: true,
+    about: "What price should the under-stairs page show: a starting price, a range, or no figure? Without a figure the page keeps 'Priced per project, projects generally from £2,000'.",
+  },
+  underStairsPhotos: {
+    // Answered by a founder for Kaspar, 6 Nov 2026: "whatever photos we have in the drive" (homeOffice4).
+    value: "The Drive holds no under-stair photographs (6 Nov 2026), so the page shows two illustrations until he sends some.",
+    about: "Do you have photographs of a finished under-stairs job? If you do, send them and they replace the illustrations. If not, say so.",
+  },
+  underStairsCheck: {
+    value: null,
+    blocking: true,
+    about: "Kaspar has read the under-stairs storage page (/under-stairs-storage/) on a review link, is happy with its two illustrations, shown without labels and with one line near the end saying the images are illustrations, and his changes are in",
+  },
 
   /**
    * Area page: /carpenter-hampstead/. NOT QUESTIONNAIRE NUMBERS: area keys take

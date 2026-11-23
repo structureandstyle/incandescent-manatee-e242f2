@@ -1,0 +1,89 @@
+---
+/**
+ * One extra section of a service page's copy (service-copy.ts `sections`).
+ *
+ * Paragraphs go through CopyText, so `{{q:KEY}}` markers become open questions
+ * until answered. Figures sit above the body or after a numbered paragraph.
+ * A real photograph is a plain Plate. An illustration (`ai` in service-copy.ts)
+ * is a journal <Render>, captioned with what it shows, like a photograph; two
+ * in one group sit side by side in <Renders>, as in the journal guides.
+ *
+ * No label or notice on the pictures since 23 Nov 2026, when this page was
+ * brought under the founders' 19 Nov rule (site PRs #66, #67 and #74: "remove
+ * the AI-GENERATED EXAMPLE from all the photos", "please do not add any AI
+ * generated stuff anywhere even in alt text"). Until then each caption began
+ * with a label and a notice sat above the first one. The page carries the
+ * illustrations line near its end instead ([slug].astro, IllustrationNote),
+ * and scripts/verify-build.mjs (verifyAiLabels) checks it is there.
+ */
+import Wrap from "./ds/Wrap.astro";
+import SectionHead from "./ds/SectionHead.astro";
+import Plate from "./ds/Plate.astro";
+import Render from "./journal/Render.astro";
+import Renders from "./journal/Renders.astro";
+import CopyText from "./CopyText.astro";
+import type { ServiceCopy } from "../data/service-copy";
+
+interface Props {
+  sec: ServiceCopy["sections"][number];
+}
+
+const { sec } = Astro.props;
+
+const groups = sec.figures ?? [];
+const above = groups.filter((g) => g.afterParagraph === undefined);
+const below = (i: number) => groups.filter((g) => g.afterParagraph === i);
+
+/* A figure below a paragraph is drawn by <Render>, which marks its picture as
+   an illustration (data-illustration). A real photograph there would be
+   marked wrongly, so it is refused rather than drawn. */
+for (const g of groups) {
+  if (g.afterParagraph === undefined) continue;
+  for (const f of g.items) {
+    if (!f.ai) throw new Error(`${sec.heading}: ${f.src} is a photograph placed after a paragraph; put it above the body, where photographs go`);
+  }
+}
+---
+
+<Wrap style="padding-bottom:var(--section-y)">
+  <SectionHead meta={sec.meta} level={4}>{sec.heading}</SectionHead>
+
+  {above.map((g) => (
+    <div style="max-width:var(--measure)">
+      {g.items.map((f) => (
+        <Plate
+          photo={f.src}
+          alt={f.alt}
+          width={f.width}
+          height={f.height}
+          ratio={`${f.width} / ${f.height}`}
+          subject={f.caption}
+          ai={Boolean(f.ai)}
+          sizes="(max-width: 700px) 92vw, 420px"
+          style="max-width:420px;margin-bottom:var(--space-10)"
+        />
+      ))}
+    </div>
+  ))}
+
+  {sec.body.map((p, i) => (
+    <>
+      <div style="max-width:var(--measure)">
+        <p style={i ? "margin-top:var(--space-10)" : undefined}><CopyText text={p} /></p>
+      </div>
+      {below(i).map((g) => (
+        g.items.length > 1 ? (
+          <Renders>
+            {g.items.map((f) => (
+              <Render src={f.src} alt={f.alt} width={f.width} height={f.height} pair caption={f.caption} />
+            ))}
+          </Renders>
+        ) : (
+          g.items.map((f) => (
+            <Render src={f.src} alt={f.alt} width={f.width} height={f.height} caption={f.caption} />
+          ))
+        )
+      ))}
+    </>
+  ))}
+</Wrap>

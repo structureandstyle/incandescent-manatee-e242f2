@@ -74,7 +74,7 @@ const STYLE = [
 ];
 
 /** Hand-typed placeholders, the convention the document kit already greps for. */
-const RAW_PLACEHOLDER = /\[[A-Z][A-Z _/]{3,}\]|\bTBC\b|\bTODO\b|\bXXX\b|\bLorem\b/g;
+const RAW_PLACEHOLDER = /\[[A-Z][A-Z _/]{3,}\]|\{\{q:[^}]*\}\}|\bTBC\b|\bTODO\b|\bXXX\b|\bLorem\b/g;
 const SITE_URL = "https://structureandstyle.co.uk";
 const BUSINESS_ID = `${SITE_URL}/#business`;
 const SERVICE_PATHS = new Set([
@@ -83,6 +83,7 @@ const SERVICE_PATHS = new Set([
   "/alcove-units/",
   "/media-walls/",
   "/bespoke-kitchens/",
+  "/under-stairs-storage/",
 ]);
 /* The area pages (src/data/areas.ts). Read from that file's slugs since
    14 November 2026, when nine more were added at once: a hand-kept list here

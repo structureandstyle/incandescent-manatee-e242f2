@@ -26,6 +26,33 @@
  * version of the shared template.
  */
 
+/**
+ * One image placed inside a section (home office and under-stair page, 6 Nov
+ * 2026). `ai` marks an illustration (a render, not his work): the page
+ * template refuses to build if the flag disagrees with the `illustration` flag
+ * in public/images/_selection.json, the picture is marked data-illustration,
+ * and the page carries the illustrations line near its end. Since 23 Nov 2026
+ * nothing on the page says the picture is generated, in the caption, the alt
+ * text or the file name (the founders' 19 Nov rule, site PRs #66, #67, #74).
+ * An illustration is never his work and never goes on the Google Business
+ * Profile.
+ */
+export type Figure = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** What it shows, in a few words, as for a photograph. */
+  caption: string;
+  ai?: true;
+};
+
+/**
+ * Strings in a ServiceCopy (intro, section bodies, FAQ answers) may hold
+ * `{{q:KEY}}`. Each is rendered through <Value q="KEY" />, so the sentence
+ * shows our provisional wording inside an Ask until the answer lands in
+ * answers.ts. CopyText.astro fails the build on a key that does not exist.
+ */
 export type ServiceCopy = {
   /** Body paragraphs rendered after the photography, before the spec sections. */
   intro: string[];
@@ -38,7 +65,15 @@ export type ServiceCopy = {
    */
   leads?: Record<string, string>;
   /** Extra sections. Set `after` to place one after a named shared section. */
-  sections: { meta: string; heading: string; body: string[]; after?: string }[];
+  sections: {
+    meta: string;
+    heading: string;
+    body: string[];
+    /** A shared section id, or "intro" to sit straight after the intro. */
+    after?: string;
+    /** Images in this section. No `afterParagraph` means above the body. */
+    figures?: { afterParagraph?: number; items: Figure[] }[];
+  }[];
   /**
    * Guide-price tables, rendered directly after the cost section. Source:
    * the client's pricing document, 31 Aug 2026 (ops repo,
@@ -466,6 +501,96 @@ export const SERVICE_COPY: Partial<Record<string, ServiceCopy>> = {
            value-to-a-house research; this page carried an older draft of the
            same answer until 8 Sep. One question, one answer, both pages. */
         a: "They can, when they are planned properly. Fitted storage that makes the most of the space and is built to last is one of the things buyers notice at a viewing, and storage is high on the list of what they ask about. That helps a home sell and supports the asking price. What nobody can honestly do is put a figure on it, so we won't make one up.",
+      },
+    ],
+  },
+  /* Under-stairs storage, 23 Nov 2026: split from the combined home office and
+     under-stair draft of 6 Nov (site PR #24) on a founder's "Yes, split it".
+     Written by a separate copy agent against the S&S protocol, checked three
+     ways (truth and claims, house rules, search fit), revised, and verified on
+     the hard rules; one FAQ answer was then merged into one sentence so it
+     answers both halves of its question first. Every sentence about what we
+     fit comes from underStairsFit and underStairsAccess (answers.ts); the rest
+     is about the space itself. Search evidence: ops research/semrush-2026-11-23
+     and the split research of 23 Nov (London volumes, rival pages). Kas reads
+     the whole page on a review link before it can lift (underStairsCheck). */
+  "under-stairs-storage": {
+    intro: [
+      "We design and fit under-stairs storage for north London homes, planned around the slope of the stair and what you keep in the hall. In most halls that means coats and shoes, with cupboard space for bags and the vacuum cleaner.",
+      "The space under a stair runs a long way back and drops low at one end. We plan the layout around both before we fit anything.",
+    ],
+    leads: {
+      cost: "No two stairs leave the same space, so we price bespoke under-stairs storage to the stair in your hall.",
+      "how-long": "Time on site depends on the length of the stair, the materials and the finish.",
+      "made-from": "Hall storage takes knocks from bags and boots. We choose the board and finish for everyday use as well as looks.",
+      fitting: "A stair is rarely square to the walls beside it, so we fit each unit to both as they actually are.",
+      after: "The doors and drawers under the stairs get used most days, and the terms below say who covers each part.",
+    },
+    sections: [
+      {
+        meta: "What fits",
+        heading: "Under-stairs storage ideas that follow the stair",
+        after: "intro",
+        body: [
+          "{{q:underStairsFit}} The stair sets the height, so the layout starts at the tall end and follows the slope down.",
+          "Coats need the most height, so coat storage goes where the stair is highest. Shoes and boots need far less, and fit the lower part of the space.",
+          "The back of a plain understairs cupboard is where things go to be forgotten. Pull-out drawers bring what is stored there out into the hall.",
+        ],
+        figures: [
+          {
+            afterParagraph: 1,
+            items: [
+              {
+                src: "/images/journal/under-stairs-drawers.webp",
+                alt: "Matt sage green cupboards and drawers under a straight staircase: two drawers at the low end and two doors whose tops follow the slope. Each front has a long brass-coloured bar handle, with white turned spindles above and a herringbone floor below.",
+                width: 1400,
+                height: 906,
+                caption: "Cupboards and drawers under a straight stair",
+                ai: true,
+              },
+              {
+                src: "/images/journal/under-stairs-bench-shoe-shelf.webp",
+                alt: "Warm off-white cupboards fitted under a straight staircase, with three doors carrying long brass-coloured bar handles and an open recess at the low end. In the recess, a wood-topped bench sits over a drawer, with a shelf of shoes above it and white turned spindles overhead.",
+                width: 1400,
+                height: 933,
+                caption: "Cupboards, with a drawer and shoe storage at the low end",
+                ai: true,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        meta: "Stair shapes",
+        heading: "Storage under straight, turning and winder stairs",
+        after: "intro",
+        body: [
+          "A straight stair drops at one steady angle, so the storage under it follows a single sloping line. A stair that turns changes height in two directions. Winders, the wedge-shaped steps at a turn, leave an irregular space beneath them.",
+          "We measure the stair, the walls beside it and the floor at the survey. We then design the layout to those measurements, following each change in height under a turning stair.",
+        ],
+      },
+      {
+        meta: "Access",
+        heading: "Meters, fuse boxes and boilers under the stairs",
+        after: "intro",
+        body: [
+          "The space under a stair often holds the gas or electricity meter and the fuse box, and in some houses the boiler. We fit storage around all three.",
+          "{{q:underStairsAccess}}",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Do I need to arrive with a layout?",
+        a: "A rough idea is enough: we ask the right questions at the consultation and survey. Drawings, where needed, include up to two rounds of revisions.",
+      },
+      {
+        q: "Can the cupboard doors match the woodwork in the hall, and can lighting be built in?",
+        a: "Door and drawer fronts can complement or closely match the joinery in the hall, and lighting can be built in, with Häfele fittings.",
+      },
+      {
+        q: "What do you need from us before fitting?",
+        a: "Clear your belongings out of the space under the stairs and make sure we can reach it. Anything specific to your project is agreed before installation.",
       },
     ],
   },
