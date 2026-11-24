@@ -142,12 +142,13 @@ export const AREAS: Area[] = [
          meets the single infill (protocol section 4); four faint marks on the open doors and two on
          the oak went. Checked by an independent pass against the protocol's section 5. */
       {
-        file: "/images/journal/camden-ai-blue-grey-open-wardrobes.webp",
+        file: "/images/journal/camden-blue-grey-open-wardrobes.webp",
         type: "Blue-grey wardrobes with an oak-effect interior",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Six flat wardrobe doors in deep blue-grey run wall to wall in three pairs, with slim brushed-nickel bar handles where each closed pair meets. The centre pair stands open on an oak-effect interior: a top shelf, a hanging rail with shirts and jackets, and three drawers. Slim infills meet the flat ceiling and run to the floor at each end, with a recessed plinth beneath the doors. Daylight comes from a sash window on the left, and a panelled door stands to the right.",
+        /* 24 Nov 2026: cut to the joinery (Kaspar's voice note on this text; ops rules K20). */
+        alt: "Six flat wardrobe doors in deep blue-grey run wall to wall, with slim brushed-nickel bar handles, an oak-effect interior with drawers and a recessed plinth.",
       },
       /* 19 Nov 2026, Denis: a framed picture on the wall ran into the door frame; it was painted
          out of the render (plain wall, filled from the wall above and below it). */
@@ -156,12 +157,13 @@ export const AREAS: Area[] = [
            x 146 of the 1536 x 1024 render, 1335 x 890, still 3:2) so the plant by the window on the left
            and the flowers on the chest of drawers on the right are out of frame, rather than painted
            out over the window and radiator or made again. */
-        file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
+        file: "/images/journal/camden-grey-shaker-wardrobes.webp",
         type: "Grey Shaker-style wardrobes",
         ai: true,
         width: 1335,
         height: 890,
-        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in three pairs, painted warm mid-grey, with slim aged-brass bar handles where each pair meets. The room's cornice runs across the top above a slim infill, slim side infills reach the floor and a recessed plinth runs beneath. The edge of a white window surround is at the left, with the foot of a bed and a wooden chest of drawers in front.",
+        /* 24 Nov 2026: cut to the joinery (ops rules K20). */
+        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in warm mid-grey, slim aged-brass bar handles and the room's cornice running across the top.",
       },
     ],
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",

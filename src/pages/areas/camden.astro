@@ -159,6 +159,26 @@
  *     the grey render lost a framed picture that ran into the door frame; ssp-029
  *     gave way to a new render (areas.ts).
  *
+ * 24 NOV 2026, KASPAR'S 18 COMMENTS (23 Nov, nine rewrites) MADE, at a founder's
+ * "Yes, do Camden". His words throughout, word for word, as one paragraph where he
+ * wrote one: the lede, every body section and its heading, all three FAQ answers.
+ * WHOSE WORDS: Kaspar's, except the links (ours, on his words) and four changes:
+ * "We make and fit" -> "We design and fit" and "Every wardrobe we build" -> "Every
+ * wardrobe we fit" (verify-build refuses "we make" / "we build"); "warranty" ->
+ * "guarantee" (the site's word for his own cover, as in the price section below);
+ * "ten" -> "10" (protocol section 4). Straight apostrophes. The facts he cut
+ * (dates, George Bassett, the appraisal, Grade II, Tudor Lodge, front gardens,
+ * Camden Square's steps, "sections ready to assemble") stay out: cut on purpose.
+ * His "design, build and install/fit", "we start making" and "We often make" pass
+ * the build and stay as his words, pending one question of fact to him (ops rules
+ * D1). Sentence length and the "whether you're near" sweep are his, logged in
+ * protocol section 16 (24 Nov).
+ * NEW FACTS, HIS (23 Nov): fitted wardrobes last "well beyond 10 years"; floating
+ * alcove shelves "around 40 mm"; a pair of wardrobes with a window seat between them
+ * at a dormer (closes the card); where to unload and park agreed before fitting day.
+ * PICTURES: no visible description under the plates (AreaPage.astro, 24 Nov); the
+ * two renders renamed without "ai" and their alt text cut to the joinery.
+ *
  * OPEN FOR A FOUNDER: the kicker. Main says "Bespoke joinery in Camden";
  * Arthur's comment branch (flowtoform/areas-comments-2026-11-14, never merged)
  * says "Bespoke carpentry in Camden". Main's wording stays until a founder
@@ -220,78 +240,57 @@ const EXT = { target: "_blank", rel: "noopener" };
 <AreaPage area={area}>
   <Fragment slot="lede">
     <p>
-      Based in Camden Town, we take on bespoke carpentry for the houses around us: <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving.
-    </p>
-    <p style={P2}>
-      Many of those houses are early and mid 19th century terraces, like those on the planned grid west of the High Street. Walls, floors and ceilings are rarely straight, so each piece of bespoke joinery is fitted to the room as it is.
+      We design, build and fit <Link href="/fitted-wardrobes/">bespoke wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link> and shelving for homes in Camden Town, many of them 19th-century terraces. If you have a chimney breast, alcoves of different sizes or existing cornicing, we'll measure the room and design the joinery to fit around those features.
     </p>
   </Fragment>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Terraces" level={4}>Fitted wardrobes in the terraces west of Camden High Street</SectionHead>
+    <SectionHead meta="Terraces" level={4}>Fitted wardrobes and alcove units west of Camden High Street</SectionHead>
     <AreaSide drawing="balcony-terrace">
       <p>
-        West of Camden High Street, Albert Street, Arlington Road and Mornington Terrace were laid out on a planned grid between 1820 and 1850. Camden Council's appraisal of the Camden Town Conservation Area describes yellow stock-brick terraces, typically three storeys over a basement. Most have painted timber sash windows, and cast-iron railings are a feature.
-      </p>
-      <p style={P2}>
-        Mornington Terrace, built in the 1840s, is taller and grander than the streets to its east, with continuous cast-iron balconies. Albert Street was built mostly by George Bassett between 1844 and 1848, and many of its houses are still single family homes.
-      </p>
-      <p style={P2}>
-        In a family house, note what ends up on a chair or in another room before the wardrobes are drawn. Those things show what the new layout needs to solve. A drawer section needs a door opening that gives access to its full width, so the inside and the doors are worked out together.
+        We design and fit wardrobes and alcove units for homes west of the High Street, including Albert Street, Arlington Road and Mornington Terrace. For a wardrobe, we start with <Link href="/journal/built-in-wardrobe-ideas/">what you need to store</Link>, from long coats to spare bedding. If you want drawers behind hinged doors, we plan the door sizes and hinge positions so they can open fully. For the alcoves either side of a chimney breast, we can combine open shelves for books with cupboards below to tuck away things like cables and board games.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Mansard rooms" level={4}>Wardrobes under the mansards of Mornington Crescent and Albert Street</SectionHead>
+    <SectionHead meta="Loft rooms" level={4}>Fitted wardrobes for loft rooms in Camden</SectionHead>
     <AreaSide drawing="dormer-wardrobes">
       <p>
-        Mornington Crescent is three curved terraces of four storeys over basements. Their mansard roofs have a steep lower slope, with dormers: windows built out from the slope of the roof. In Albert Street, Nos 22 to 46 are the only terrace that keeps its original mansard attic.
-      </p>
-      <p style={P2}>
-        In rooms like these, wardrobes can stand either side of a dormer, with a window seat between them.
+        In loft rooms around Mornington Crescent and Albert Street, a sloping ceiling can make it tricky to fit a full-height wardrobe. We can use the tallest part of the room for hanging space and fit low cupboards where the ceiling drops. If there's enough room either side of a dormer window, we can build in a pair of wardrobes with a window seat between them.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Alcoves" level={4}>Alcove units in Camden Town's front and back rooms</SectionHead>
+    <SectionHead meta="Alcoves" level={4}>Alcove units for front and back rooms in Camden Town</SectionHead>
     <AreaSide drawing="front-back-alcoves">
       <p>
-        Where a room has a chimney breast, an alcove unit fills the recess on either side. A floor with a breast in each room can take two pairs of units, each drawn for its own alcove.
-      </p>
-      <p style={P2}>
-        The houses on the west side of Arlington Road date from the 1820s to about 1840. The appraisal calls their roof form very distinct, with large rear chimney stacks and long stair windows.
+        If your home on Arlington Road or nearby has alcoves beside the chimney breast in both the front and back rooms, we can match the door style and finish across both spaces. The front room might need a cabinet sized for media equipment, while the back room could use deeper cupboards for tableware. We measure each recess separately so the units fit their own alcoves, even when the widths differ.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Listed homes" level={4}>Checking whether a Camden Town house is listed</SectionHead>
+    <SectionHead meta="Listed homes" level={4}>Fitted joinery in listed Camden Town homes</SectionHead>
     <div style={TEXT}>
       <p>
-        Jeffreys Street's north terrace, built around 1816 to 1825, is listed at Grade II. Tudor Lodge in Albert Street, of 1843, is listed too: the appraisal calls it reputedly London's earliest surviving purpose-built artist's studio. Camden's <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>listed buildings page</Link> has a map that shows whether your house is on the list.
+        If you live on Jeffreys Street, Albert Street or nearby, you can find out whether your home is listed on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council's listed buildings page</Link>. If it is, ask the council whether your proposed work needs listed building consent before work starts.
       </p>
       <p style={P2}>
-        Camden's protection of a listed house covers its interior, so significant work inside can need listed building consent.
-      </p>
-      <p style={P2}>
-        A heritage report on Camden's planning file records one Jeffreys Street house's original staircase and plaster cornice, with historic doors and skirting in places. Where a room keeps details like these, a wardrobe can finish neatly below the cornice, the moulding where the wall meets the ceiling.
+        We can design a fitted wardrobe to finish below an original cornice, leaving the moulding visible. We'll look at the room's original features when we measure up and discuss how the joinery could fit around them.
       </p>
     </div>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Access" level={4}>Parking and deliveries in Camden Town</SectionHead>
+    <SectionHead meta="Access" level={4}>Parking and access for fitting in Camden Town</SectionHead>
     <AreaSide drawing="stair-protection">
       <p>
-        South of Delancey Street, Albert Street's houses sit behind front gardens up to 5 metres deep. In Camden Square, steep steps climb to front doors above semi-basements. Before installation we agree with you where the van stops and how each piece comes in.
+        Before fitting day, we'll agree with you where we can stop to unload, where we can park during the installation and how we'll bring materials into your home, whether you're near Delancey Street, Camden Square or elsewhere in Camden Town.
       </p>
       <p style={P2}>
-        Camden sells <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permits</Link> to tradespeople working for a resident, valid in resident bays and on certain yellow lines, with no space promised. Its <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zone page</Link> has a search by street or postcode.
-      </p>
-      <p style={P2}>
-        Where the stairs are tight, large pieces come in as sections ready to assemble. Stair protection goes down on every day material comes in.
+        If parking is restricted, we'll find out whether a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>Camden trade permit</Link> is suitable for your address. On fitting day, we protect the floors and stairs along the delivery route before bringing materials in.
       </p>
     </AreaSide>
   </Wrap>
@@ -325,13 +324,13 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
       <Faq q="What are bespoke fitted wardrobes?">
-        They are wardrobes designed for one room rather than bought in standard sizes. Where a design needs drawings, they show the inside layout and the materials and finishes before work starts. The drawings stay on file, so a matching piece later starts from that record.
+        We design, build and install wardrobes made to measure for your room. We can fit them into alcoves, under sloping ceilings or wall to wall. You can choose the door style and finish, and we'll plan the hanging space, shelves and drawers around what you need to store. For projects that need drawings, we'll agree the layout and finishes with you before we start making the wardrobes.
       </Faq>
       <Faq q="How long do fitted wardrobes last?">
-        The materials are chosen for long-term stability: engineered boards are more stable than solid timber, which rarely makes sense for fitted furniture. Natural veneers develop subtly with age and light, while painted and decorative finishes stay more consistent. Care advice for each finish comes with the finished piece.
+        We expect our fitted wardrobes to last well beyond 10 years with normal use and care. Every wardrobe we fit comes with a 10-year structural guarantee.
       </Faq>
       <Faq q="How thick should alcove shelves be?">
-        Shelf thickness depends on how far the shelf spans between supports and what it holds: books ask more of it than a light display. Material, thickness, reinforcement and fixings are considered together, and a wider shelf may need concealed reinforcement or a supporting division. A thick appearance alone does not show how much a shelf can carry.
+        We often make floating alcove shelves around 40 mm thick. The right thickness and support depend on the width of the alcove and what you'll keep on the shelves. If you're planning to fill them with books, we'll design the shelves and fixings to suit.
       </Faq>
     </div>
   </Wrap>
