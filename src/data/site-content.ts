@@ -71,8 +71,16 @@ import QUOTE_BANK_JSON from "./quote-bank.json";
  */
 export const PROCESS_LINK = { label: "Process", href: "/process/" } as const;
 
+/**
+ * Materials left the header on 25 Nov 2026 (a founder: "remove the materials
+ * from the nav bar, I think it is unnecessary"; GA4 11 Oct to 8 Nov: 6 views,
+ * as Process, against Work 21 and About 12; no Search Console impressions).
+ * The page stays: every service page and About link to it, and the footer
+ * lists it by name (Footer.astro), as it does Process.
+ */
+export const MATERIALS_LINK = { label: "Materials", href: "/materials/" } as const;
+
 export const NAV = [
-  { label: "Materials", href: "/materials/" },
   { label: "Work", href: "/work/" },
   /* Was Maker. The client's Part 6 direction change, 30 Aug 2026: company
      presentation, no personal profile. */
