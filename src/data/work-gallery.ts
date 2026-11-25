@@ -253,6 +253,29 @@
  * "Built-in TV units", never "media wall": protocol section 5 allows the
  * search phrase on its own page and nowhere else, and this is nowhere else.
  */
+/**
+ * FOUR ISLINGTON FRAMES, 25 November 2026 (draft, for Kaspar's yes in a preview).
+ * Kaspar's own phone photographs of a new-build flat in Islington, shot
+ * 2 September 2026 and dropped in Drive on 25 November: a walnut-finish and
+ * matt dark grey kitchen, shown twice (an L-shaped run and a straight run),
+ * and a four-door white fluted wardrobe, closed and open. Straightened, cropped
+ * and exposure-corrected only; no generated or removed content. Records, the
+ * 17 photographs sorted and the other 11 kept or held back: structure-and-style-ops
+ * docs/photo-intake-2026-11-25-islington.md (ids ssp-158, 161, 164, 165).
+ *
+ * THE ALT TEXT NAMES ISLINGTON AND COLOURS, on a founder's instruction of
+ * 25 November, for screen readers and search. This is the one exception to the
+ * rule below that no district is named: a founder stated the job was in
+ * Islington; Kaspar has not yet confirmed it on a preview. "Walnut-finish" and
+ * "handleless" are also unconfirmed. Still no printed description under any
+ * frame (founder and Kaspar, 24 November).
+ *
+ * BATHROOM FRAME TAKEN OFF, 25 November 2026, on a founder's instruction ("remove the
+ * picture with the bathroom"). bathroom-01 was added on 29 September 2026 by Denis,
+ * knowing it was not a service of Kaspar's. The photograph and its file stay in the
+ * library; only its place in this gallery goes. Like the four additions, this changes
+ * his live page, so it waits for his yes in the preview.
+ */
 export type WorkShot = {
   /** Must match a `file` in public/images/_selection.json. */
   file: string;
@@ -334,6 +357,11 @@ export const WORK_GALLERY: WorkShot[] = [
     alt: "Walk-in wardrobe in a dark wood-grain finish, with hanging rails on two walls, open compartments above and low shelves below",
   },
   {
+    file: "/images/bespoke-kitchens/bespoke-kitchens-11.webp",
+    type: "Bespoke kitchens",
+    alt: "Fitted kitchen in Islington with walnut-finish wall units and open shelves, matt dark grey handleless base units and a tall dark grey housing, a pale grey-blue vertical finger-tile splashback, a dark worktop and a light oak floor",
+  },
+  {
     file: "/images/home-office/home-office-01.webp",
     type: "Home office",
     alt: "Built-in home office: a wood-grain desk under the window with drawers, a tall white cupboard and full-height shelving for files",
@@ -342,6 +370,11 @@ export const WORK_GALLERY: WorkShot[] = [
     file: "/images/media-walls/media-walls-02.webp",
     type: "Built-in TV units",
     alt: "Built-in TV unit across a whole wall: the TV set into a grey panel, framed by lit white shelving with cupboards below",
+  },
+  {
+    file: "/images/fitted-wardrobes/fitted-wardrobes-11.webp",
+    type: "Fitted wardrobes",
+    alt: "Fitted wardrobe in Islington with four matt white doors, each with a fluted lower panel and a full-height recessed pull handle, set into a white wall above a dark wood floor",
   },
   {
     file: "/images/bespoke-kitchens/bespoke-kitchens-10.webp",
@@ -394,6 +427,11 @@ export const WORK_GALLERY: WorkShot[] = [
     alt: "Alcove units either side of a fireplace: open shelves above white Shaker-style cupboards with brass knobs",
   },
   {
+    file: "/images/bespoke-kitchens/bespoke-kitchens-12.webp",
+    type: "Bespoke kitchens",
+    alt: "Islington fitted kitchen along one wall: walnut-finish wall units and open shelves in a walnut-finish recess, a pale grey-blue finger-tile splashback, a dark worktop and matt dark grey handleless base units with a small wine cooler, beside a tall dark grey housing",
+  },
+  {
     file: "/images/doors-panelling/doors-panelling-01.webp",
     type: "Panelling and doors",
     alt: "Hallway joinery: a built-in bench with drawers, white panelled cupboard doors and a lit recess, beside a green front door",
@@ -414,9 +452,9 @@ export const WORK_GALLERY: WorkShot[] = [
     alt: "Alcove units: a full-height bookcase in the alcove beside a panelled window seat",
   },
   {
-    file: "/images/bathroom/bathroom-01.webp",
-    type: "Bathroom",
-    alt: "Bathroom with a cream wall-hung vanity unit, mirrored cabinet, brass towel radiator and a bath with a shower screen",
+    file: "/images/fitted-wardrobes/fitted-wardrobes-12.webp",
+    type: "Fitted wardrobes",
+    alt: "Fitted wardrobe in Islington with its four matt white doors open: a hanging rail under a shelf in the left bay and a tall bay of shelves on the right, lined in grey fabric-effect panels and softly lit from inside",
   },
   {
     file: "/images/fitted-wardrobes/fitted-wardrobes-04.webp",

@@ -98,6 +98,22 @@
       "date": "20250522",
       "quality": "4",
       "bytes": 95566
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-11.webp",
+      "w": 1144,
+      "h": 1600,
+      "date": "20260902",
+      "quality": "5",
+      "bytes": 43984
+    },
+    {
+      "file": "/images/fitted-wardrobes/fitted-wardrobes-12.webp",
+      "w": 1079,
+      "h": 1600,
+      "date": "20260902",
+      "quality": "5",
+      "bytes": 60420
     }
   ],
   "walk-in-wardrobes": [
@@ -317,6 +333,22 @@
       "date": "20260929",
       "quality": "5",
       "bytes": 82388
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-11.webp",
+      "w": 1600,
+      "h": 1245,
+      "date": "20260902",
+      "quality": "5",
+      "bytes": 114680
+    },
+    {
+      "file": "/images/bespoke-kitchens/bespoke-kitchens-12.webp",
+      "w": 1600,
+      "h": 1250,
+      "date": "20260902",
+      "quality": "5",
+      "bytes": 152648
     }
   ],
   "doors-panelling": [
