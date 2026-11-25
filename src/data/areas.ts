@@ -118,21 +118,22 @@ export const AREAS: Area[] = [
        recorded job in Camden; the alt text is the register's. ssp-017 and ssp-018, also allocated
        here, are interiors that would make a fourth and fifth plate; the frame shows three. */
     plates: [
+      /* 25 Nov 2026, Kaspar's voice note on the live page: "put the better image, the first image where
+         the light is on, because that's not the best picture" (the bookcase photograph, now last, lit
+         by two wall lights), and, of this render, "remove the shirt and the basket that's inside ... it
+         straight away looks like it's AI" and "add another two hinges for the doors, or at least four".
+         The render was made again in Figma (file d0AWnKDiTyYDbBrrCsE4NS, node 60:2,
+         gpt-image-2.5-sunburst) to the ops AI render protocol: the open bay is bare (empty rail, no
+         clothes, no basket) and each open door carries five hinges. It now leads the page, and the
+         bookcase photograph, the only real photograph the register still allows here, moves to the
+         end. No other photograph is free for Camden: the register keeps ssp-028 and ssp-030 back as
+         the same view as a live frame on another page. Waits for Kaspar's yes on a preview.
+         The earlier render (node 39:2, camden-blue-grey-open-wardrobes.webp) stays in the folder.
+         19 Nov 2026, Denis on the review link: "replace this image with a generated one" (it was
+         ssp-029, the white handleless wardrobe with one door open); the earlier render was made to
+         the same protocol and checked against its section 5. */
       {
-        file: "/images/library/ssp-027.webp",
-        type: "Bookcases",
-        alt: "White built-in bookcase in three bays with open shelves above six handleless cupboard doors, lit by two wall lights",
-      },
-      /* 19 Nov 2026, Denis on the review link: "replace this image with a generated one" (it was
-         ssp-029, the white handleless wardrobe with one door open). Made in Figma the same day (file
-         d0AWnKDiTyYDbBrrCsE4NS, node 39:2, gpt-image-2.5-sunburst) to the ops AI render protocol;
-         small retouches, told to Kaspar on the card: a second handle on each closed door beside the
-         open pair was painted out (every door now has one handle, at its pair's centre); a blue-grey
-         strip under the top infill over the open bay became the oak top panel's edge, so the panel
-         meets the single infill (protocol section 4); four faint marks on the open doors and two on
-         the oak went. Checked by an independent pass against the protocol's section 5. */
-      {
-        file: "/images/journal/camden-blue-grey-open-wardrobes.webp",
+        file: "/images/journal/camden-blue-grey-open-wardrobes-2.webp",
         type: "Blue-grey wardrobes with an oak-effect interior",
         ai: true,
         width: 1536,
@@ -154,6 +155,11 @@ export const AREAS: Area[] = [
         height: 890,
         /* 24 Nov 2026: cut to the joinery (ops rules K20). */
         alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in warm mid-grey, slim aged-brass bar handles and the room's cornice running across the top.",
+      },
+      {
+        file: "/images/library/ssp-027.webp",
+        type: "Bookcases",
+        alt: "White built-in bookcase in three bays with open shelves above six handleless cupboard doors, lit by two wall lights",
       },
     ],
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",
