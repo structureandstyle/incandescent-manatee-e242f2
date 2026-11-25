@@ -12,11 +12,14 @@ export const CANONICAL_HOST = "structureandstyle.co.uk";
 
 /**
  * Permanent redirects, checked before anything else. Returns the target URL
- * or null. www goes to the apex in one direction; the two retired addresses
+ * or null. www goes to the apex in one direction; the retired addresses
  * forward to their pages (netlify.toml says why each exists).
  */
 const PATH_REDIRECTS = [
-  { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/carpenter-hampstead/" },
+  /* Hampstead moved to /areas/hampstead/ on 25 Nov 2026 (a founder: one address
+     pattern for every area). Both old addresses go straight there in one hop. */
+  { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/areas/hampstead/" },
+  { from: /^\/carpenter-hampstead(?:\/.*)?$/, to: "/areas/hampstead/" },
   { from: /^\/carpenter-camden(?:\/.*)?$/, to: "/areas/camden/" },
   /* 19 Nov 2026: every picture named "...-ai-..." was renamed without it (a
      founder: "please do not add any AI generated stuff anywhere even in alt

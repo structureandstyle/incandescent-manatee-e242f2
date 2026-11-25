@@ -2,6 +2,8 @@
 /**
  * Hampstead, the merged area page, 9 November 2026. Built hidden; released
  * 12 November 2026 once Kaspar had rewritten the new copy (see THE GATE).
+ * Moved from /carpenter-hampstead/ to /areas/hampstead/ on 25 Nov 2026 (a
+ * founder: one address pattern for every area); nothing on the page changed.
  *
  * WHY MERGED. Two versions went to Kaspar: this page on 6 Nov and a design-led
  * copy at /carpenter-hampstead-design/ on 7 Nov. Five independent reviews and
@@ -51,20 +53,20 @@
  * captioned with what it shows. Since 19 Nov 2026 (a founder) neither the
  * pictures nor the page say they are AI-generated examples.
  */
-import AreaPage from "../components/AreaPage.astro";
-import Wrap from "../components/ds/Wrap.astro";
-import SectionHead from "../components/ds/SectionHead.astro";
-import Reviews from "../components/ds/Reviews.astro";
-import Faq from "../components/ds/Faq.astro";
-import Link from "../components/ds/Link.astro";
-import Render from "../components/journal/Render.astro";
-import Renders from "../components/journal/Renders.astro";
+import AreaPage from "../../components/AreaPage.astro";
+import Wrap from "../../components/ds/Wrap.astro";
+import SectionHead from "../../components/ds/SectionHead.astro";
+import Reviews from "../../components/ds/Reviews.astro";
+import Faq from "../../components/ds/Faq.astro";
+import Link from "../../components/ds/Link.astro";
+import Render from "../../components/journal/Render.astro";
+import Renders from "../../components/journal/Renders.astro";
 
-import { AREAS } from "../data/areas";
-import { QUOTE_BANK, REVIEWS } from "../data/site-content";
-import { ANSWERS, answered } from "../data/answers";
+import { AREAS } from "../../data/areas";
+import { QUOTE_BANK, REVIEWS } from "../../data/site-content";
+import { ANSWERS, answered } from "../../data/answers";
 
-const area = AREAS.find((a) => a.slug === "carpenter-hampstead")!;
+const area = AREAS.find((a) => a.slug === "areas/hampstead")!;
 
 /* The reviews: every bank entry tagged with this district, in bank order,
    whole. A gated entry takes its byline from its key once answered. */

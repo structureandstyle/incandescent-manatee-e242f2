@@ -5,8 +5,10 @@
  *
  * The slug carries the page's primary keyword (the ops architecture rule:
  * "URL slugs are hyphenated with the page's primary keyword"), so the page
- * lives at /carpenter-hampstead/ while everything visible says "Hampstead"
- * (Denis, 3 Oct 2026).
+ * lived at /carpenter-hampstead/ while everything visible says "Hampstead"
+ * (Denis, 3 Oct 2026). Since 14 Nov 2026 area pages live at /areas/<area>/
+ * (a founder), and Hampstead moved there on 25 Nov 2026 (a founder: one
+ * address pattern for every area; the old address forwards with a 301).
  *
  * Each page's copy lives in its own file under src/pages, in the order the
  * approved copy sets; `AreaPage` is only the frame. Its client-dependent
@@ -65,7 +67,9 @@ export type Area = {
 
 export const AREAS: Area[] = [
   {
-    slug: "carpenter-hampstead",
+    /* /areas/hampstead/ since 25 Nov 2026 (until then /carpenter-hampstead/, which forwards here). Only the
+       address changed: title, heading and words are the ones Kaspar approved on 10 Nov. */
+    slug: "areas/hampstead",
     name: "Hampstead",
     titleProp: "Hampstead carpenter, bespoke wardrobes",
     h1: "Fitted wardrobes and bespoke carpentry in Hampstead",
