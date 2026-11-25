@@ -269,6 +269,12 @@
  * Islington; Kaspar has not yet confirmed it on a preview. "Walnut-finish" and
  * "handleless" are also unconfirmed. Still no printed description under any
  * frame (founder and Kaspar, 24 November).
+ *
+ * BATHROOM FRAME TAKEN OFF, 25 November 2026, on a founder's instruction ("remove the
+ * picture with the bathroom"). bathroom-01 was added on 29 September 2026 by Denis,
+ * knowing it was not a service of Kaspar's. The photograph and its file stay in the
+ * library; only its place in this gallery goes. Like the four additions, this changes
+ * his live page, so it waits for his yes in the preview.
  */
 export type WorkShot = {
   /** Must match a `file` in public/images/_selection.json. */
@@ -449,11 +455,6 @@ export const WORK_GALLERY: WorkShot[] = [
     file: "/images/fitted-wardrobes/fitted-wardrobes-12.webp",
     type: "Fitted wardrobes",
     alt: "Fitted wardrobe in Islington with its four matt white doors open: a hanging rail under a shelf in the left bay and a tall bay of shelves on the right, lined in grey fabric-effect panels and softly lit from inside",
-  },
-  {
-    file: "/images/bathroom/bathroom-01.webp",
-    type: "Bathroom",
-    alt: "Bathroom with a cream wall-hung vanity unit, mirrored cabinet, brass towel radiator and a bath with a shower screen",
   },
   {
     file: "/images/fitted-wardrobes/fitted-wardrobes-04.webp",
