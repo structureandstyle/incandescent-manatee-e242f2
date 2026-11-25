@@ -124,7 +124,9 @@ export const AREAS: Area[] = [
          straight away looks like it's AI" and "add another two hinges for the doors, or at least four".
          The render was made again in Figma (file d0AWnKDiTyYDbBrrCsE4NS, node 60:2,
          gpt-image-2.5-sunburst) to the ops AI render protocol: the open bay is bare (empty rail, no
-         clothes, no basket) and each open door carries five hinges. It now leads the page, and the
+         clothes, no basket) and each open door carries five hinges. One small retouch, after an
+         independent check: a stray mark on the oak top panel was painted out (a 286-pixel patch of
+         matching grain, edges feathered). It now leads the page, and the
          bookcase photograph, the only real photograph the register still allows here, moves to the
          end. No other photograph is free for Camden: the register keeps ssp-028 and ssp-030 back as
          the same view as a live frame on another page. Waits for Kaspar's yes on a preview.
