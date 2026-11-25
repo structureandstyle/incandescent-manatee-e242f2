@@ -119,21 +119,27 @@ export const AREAS: Area[] = [
        here, are interiors that would make a fourth and fifth plate; the frame shows three. */
     plates: [
       /* 25 Nov 2026, Kaspar's voice note on the live page: "put the better image, the first image where
-         the light is on, because that's not the best picture" (the bookcase photograph, now last, lit
-         by two wall lights), and, of this render, "remove the shirt and the basket that's inside ... it
-         straight away looks like it's AI" and "add another two hinges for the doors, or at least four".
-         The render was made again in Figma (file d0AWnKDiTyYDbBrrCsE4NS, node 60:2,
+         the light is on, because that's not the best picture" (ssp-027, the white bookcase photograph lit
+         by two wall lights, which led here until then). A founder chose its replacement the same evening:
+         "use 5 alcove units the white one, and add alt text", then "include camden in the alt text",
+         having ruled that it "doesnt neeed to be unused": a professional photograph already used on
+         other pages is fine (it is in the work gallery and on the Primrose Hill draft). "Camden" is in
+         the alt text as the homes it is for, not as where the job was: the job is not recorded. */
+      {
+        file: "/images/alcove-units/alcove-units-05.webp",
+        type: "Alcove units",
+        alt: "Bespoke alcove units for Camden homes: white built-in shelving around a TV, glass shelves either side and Shaker-style cupboards with round knobs below",
+      },
+      /* 25 Nov 2026, the same voice note, of this render: "remove the shirt and the basket that's
+         inside ... it straight away looks like it's AI" and "add another two hinges for the doors, or
+         at least four". Made again in Figma (file d0AWnKDiTyYDbBrrCsE4NS, node 60:2,
          gpt-image-2.5-sunburst) to the ops AI render protocol: the open bay is bare (empty rail, no
          clothes, no basket) and each open door carries five hinges. One small retouch, after an
          independent check: a stray mark on the oak top panel was painted out (a 286-pixel patch of
-         matching grain, edges feathered). It now leads the page, and the
-         bookcase photograph, the only real photograph the register still allows here, moves to the
-         end. No other photograph is free for Camden: the register keeps ssp-028 and ssp-030 back as
-         the same view as a live frame on another page. Waits for Kaspar's yes on a preview.
-         The earlier render (node 39:2, camden-blue-grey-open-wardrobes.webp) stays in the folder.
-         19 Nov 2026, Denis on the review link: "replace this image with a generated one" (it was
-         ssp-029, the white handleless wardrobe with one door open); the earlier render was made to
-         the same protocol and checked against its section 5. */
+         matching grain, edges feathered). It stays in the middle, where he named it. Waits for
+         Kaspar's yes on a preview. The earlier render (node 39:2, camden-blue-grey-open-wardrobes.webp)
+         stays in the folder. 19 Nov 2026, Denis on the review link: "replace this image with a
+         generated one" (it was ssp-029, the white handleless wardrobe with one door open). */
       {
         file: "/images/journal/camden-blue-grey-open-wardrobes-2.webp",
         type: "Blue-grey wardrobes with an oak-effect interior",
@@ -157,11 +163,6 @@ export const AREAS: Area[] = [
         height: 890,
         /* 24 Nov 2026: cut to the joinery (ops rules K20). */
         alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in warm mid-grey, slim aged-brass bar handles and the room's cornice running across the top.",
-      },
-      {
-        file: "/images/library/ssp-027.webp",
-        type: "Bookcases",
-        alt: "White built-in bookcase in three bays with open shelves above six handleless cupboard doors, lit by two wall lights",
       },
     ],
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",
