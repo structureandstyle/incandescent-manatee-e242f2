@@ -277,7 +277,10 @@ export const ANSWERS = {
    * the page's question card, not given a key of its own, so the questions to him
    * stay few (a founder, 7 Nov 2026: use what we have).
    */
-  areaCamdenCheck: { value: null, about: "Kaspar has read the Camden page (/carpenter-camden/) on the review link and his changes are in" },
+  areaCamdenCheck: {
+    value: "Answered 25 Nov 2026: Kaspar read the page on the review link and sent 18 comments (23 Nov); all are in, word for word or with the changes named in our replies (24 Nov). Released on its own at a founder's go, 25 Nov.",
+    about: "Kaspar has read the Camden page (/areas/camden/) on the review link and his changes are in",
+  },
   areaPrimroseHillCheck: { value: null, about: "Kaspar has read the Primrose Hill page (/carpenter-primrose-hill/) on the review link and his changes are in" },
   areaIslingtonCheck: { value: null, about: "Kaspar has read the Islington page (/carpenter-islington/) on the review link and his changes are in" },
   areaBelsizeParkCheck: { value: null, about: "Kaspar has read the Belsize Park page (/carpenter-belsize-park/) on the review link and his changes are in" },
