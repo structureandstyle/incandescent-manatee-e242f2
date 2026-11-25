@@ -18,7 +18,7 @@
 import SiteFooter from "./ds/SiteFooter.astro";
 import { AGENCY_CREDIT, BUSINESS, SERVICES, hoursLines, servicePath, serviceLabel } from "../data/site";
 import { indexable, AREAS_HUB, areasHubLive } from "../data/page-gates";
-import { NAV, PROCESS_LINK, ENQUIRE_HREF } from "../data/site-content";
+import { NAV, PROCESS_LINK, MATERIALS_LINK, ENQUIRE_HREF } from "../data/site-content";
 import { getCollection } from "astro:content";
 import { isLive, SHOW_DRAFTS } from "../data/journal";
 import { AREAS, areaPath } from "../data/areas";
@@ -84,9 +84,10 @@ const areaLinks = [
 ];
 
 /* Process is listed here by name, 14 Nov 2026: it left NAV when the header's
-   Areas menu took its place (site-content.ts), and it stays in the footer. */
+   Areas menu took its place (site-content.ts), and it stays in the footer.
+   Materials the same way since 25 Nov 2026, in its old place after Process. */
 const pageLinks = [
-  ...[PROCESS_LINK, ...NAV].filter((item) => indexable(item.href)),
+  ...[PROCESS_LINK, MATERIALS_LINK, ...NAV].filter((item) => indexable(item.href)),
   ...(articles.length > 0 ? [{ label: "Journal", href: "/journal/" }] : []),
 ];
 
