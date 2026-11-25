@@ -45,15 +45,30 @@
 # The design-led copy of the Hampstead page (7 Nov 2026) was merged into
 # /carpenter-hampstead/ and deleted on 12 Nov 2026. It was live but noindexed
 # and unlinked; its address was on Kaspar's preview link, so it forwards here.
+# Since 25 Nov 2026 the page itself is at /areas/hampstead/, so both go there.
+# (The live site runs on Cloudflare since 16 Nov: worker/site-rules.mjs is what
+# serves these. Kept in step here in case Netlify is ever used again.)
 [[redirects]]
   from = "/carpenter-hampstead-design/*"
-  to = "/carpenter-hampstead/"
+  to = "/areas/hampstead/"
   status = 301
   force = true
 
 [[redirects]]
   from = "/carpenter-hampstead-design"
-  to = "/carpenter-hampstead/"
+  to = "/areas/hampstead/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-hampstead/*"
+  to = "/areas/hampstead/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-hampstead"
+  to = "/areas/hampstead/"
   status = 301
   force = true
 
