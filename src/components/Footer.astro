@@ -17,7 +17,7 @@
  */
 import SiteFooter from "./ds/SiteFooter.astro";
 import { AGENCY_CREDIT, BUSINESS, SERVICES, hoursLines, servicePath, serviceLabel } from "../data/site";
-import { indexable, AREAS_HUB, areasHubLive } from "../data/page-gates";
+import { indexable } from "../data/page-gates";
 import { NAV, PROCESS_LINK, MATERIALS_LINK, ENQUIRE_HREF } from "../data/site-content";
 import { getCollection } from "astro:content";
 import { isLive, SHOW_DRAFTS } from "../data/journal";
@@ -73,11 +73,12 @@ const guideLinks = [
 /* The area pages, by the same rule: only those whose gate has cleared. The
    group is left out entirely while it has none, because SiteFooter renders
    every group it is given, heading included, even when empty (3 Oct 2026).
-   14 Nov 2026: in name order, led by "All areas" once the /areas/ hub is live;
-   on a preview build (SHOW_DRAFTS) every area page and the hub are listed, as
-   in the header's Areas menu. */
+   14 Nov 2026: in name order; on a preview build (SHOW_DRAFTS) every area page
+   is listed. 26 Nov 2026: no "All areas" link here any more (a founder: "just
+   remove it from the footer. leave it on the nav bar"): with the areas listed
+   one by one below it, it only repeated them. The header's Areas menu keeps it,
+   and every area page's breadcrumb still links to the /areas/ hub. */
 const areaLinks = [
-  ...(SHOW_DRAFTS || areasHubLive() ? [{ label: "All areas", href: AREAS_HUB }] : []),
   ...AREAS.filter((a) => SHOW_DRAFTS || indexable(areaPath(a.slug)))
     .sort((a, b) => a.name.localeCompare(b.name, "en"))
     .map((a) => ({ label: a.name, href: areaPath(a.slug) })),
