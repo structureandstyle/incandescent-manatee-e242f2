@@ -188,22 +188,75 @@ export const AREAS: Area[] = [
     summary: "Italianate stucco villas and mid-Victorian terraces, with many listed houses.",
   },
   {
-    slug: "carpenter-islington",
+    slug: "areas/islington",
     name: "Islington",
-    titleProp: "Islington carpenter, bespoke wardrobes",
-    h1: "Carpenter in Islington for bespoke wardrobes and fitted furniture",
-    kicker: "Carpenter in Islington",
+    /* Product-led, 15 Nov 2026: the third page, on the Primrose Hill model (Denis, 15 Nov: "use the
+       same design and structure for the next articles"). Arthur's comment of 14 Nov (site branch
+       flowtoform/areas-comments-2026-11-14) put "Bespoke carpentry" in the heading and kicker; the
+       model leads the heading with the product search and keeps the kicker "Bespoke joinery" (Denis,
+       15 Nov: "leave joinery for now"), so "bespoke carpentry" now sits in the opening. */
+    titleProp: "Bespoke wardrobes in Islington",
+    /* 26 Nov 2026: Kaspar's heading, word for word (his comment on the review link, saved 24 Nov).
+       The title above keeps "Bespoke wardrobes", the page's main search. */
+    h1: "Fitted wardrobes and bespoke furniture in Islington",
+    kicker: "Bespoke joinery in Islington",
     description:
-      "Carpenter in Islington: bespoke wardrobes, alcove units and shelving for Georgian and Victorian houses and flats, measured in the room and cut to fit.",
-    /* carpenter islington cluster (carpenter islington, carpenters islington, islington
-       carpenter) 40 a month, peak 70 (Keyword Planner, London, 14 Nov 2026): the largest
-       area figure. Search Console: bespoke wardrobes islington 36, carpentry islington 24,
-       bespoke furniture islington 22 impressions, 11 Oct to 8 Nov. */
-    primary: "carpenter islington",
+      "Bespoke wardrobes, alcove units and shelving for Islington homes: Georgian and Victorian houses and flats, measured in the room and cut to fit.",
+    /* bespoke wardrobes islington is the area's largest product search: Search Console 36
+       impressions, 11 Oct to 8 Nov (then carpentry islington 24, bespoke furniture islington 22,
+       bespoke joinery islington 14); Keyword Planner 10 (London, 14 Nov 2026). The carpenter
+       cluster (carpenter islington, carpenters islington, islington carpenter: 40, peak 70) is
+       larger, but it is not a product search. Keyword Planner could not be asked again on 15 Nov
+       (DataForSEO answered 402). */
+    primary: "bespoke wardrobes islington",
+    /* 15 Nov 2026: the register's allocation (ops PR #49): ssp-048, its lead (an open wardrobe
+       with an oak interior), cropped to 3:2 from the top shelf to the first drawer, leaving out
+       the masking-tape scrap at the right edge and the rug, as the register asks; ssp-051, the
+       cleanest of the grey kitchen frames, cropped to 3:2 (ssp-050 is the same kitchen and was
+       held back, the register's own suggestion; ssp-053, 054 and 055 are alternates). Plus the
+       register's second AI gap for Islington, alcove units with glazed upper cupboards and lit
+       shelving in a Georgian living room (Figma node 32:2). Its first gap, closed white
+       handleless wardrobes, has no plate: the frame shows three. None is a recorded job in
+       Islington.
+       26 Nov 2026: ssp-048 OFF the page. Kaspar's only comment on it was "wtf bro :D" (saved
+       24 Nov, the night before his voice note asked Camden for a better first picture), and a
+       founder's rule of 25 Nov is that a picture he dislikes comes off the page. The lead is now
+       fitted-wardrobes-09, the professional frame of white panelled wardrobes up to the cornice
+       in a period bedroom with shutters, which matches his Georgian-houses section. It is on
+       /work/ and on no area page; a founder ruled on 25 Nov that a used professional photograph
+       may lead ("doesnt neeed to be unused"). No unused Islington-job wardrobe frame is left:
+       ssp-158 and ssp-161 are on /work/, ssp-159 and ssp-157 are their near-duplicates or soft.
+       Alt text cut to the joinery (K20 in the ops SS_KASPAR_REVIEW_RULES.md). */
     plates: [
-      { file: "/images/doors-panelling/doors-panelling-02.webp", type: "Doors and panelling" },
-      { file: "/images/alcove-units/alcove-units-10.webp", type: "Alcove units" },
-      { file: "/images/bespoke-kitchens/bespoke-kitchens-01.webp", type: "Bespoke kitchens" },
+      {
+        file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp",
+        type: "Fitted wardrobes",
+        alt: "Fitted wardrobes for Islington homes: white panelled doors with small round knobs and cupboards above, running up to the cornice.",
+      },
+      {
+        file: "/images/library/ssp-051.webp",
+        type: "Bespoke kitchens",
+        alt: "Matt charcoal L-shaped handleless kitchen with an island, a tall fridge housing and a white metro tile splashback.",
+      },
+      {
+        /* 19 Nov 2026, Denis on the review link: "remove the leds here". Made again without lighting
+           (Figma node 41:8). Then, the same day, Denis: "remove the plants from inside the alcove units":
+           made again with nothing but books, bowls and jugs on the shelves (node 43:9, picked over 43:8 by
+           an independent check against the render protocol: 43:8 stopped short of the cornice and had slab
+           base doors). Then Denis asked for handles on the glazed doors and for the bowl on the coffee
+           table to go: made again (node 45:11: a knob on every door, no coffee table; picked over 45:10,
+           which had an unexplained strip on the left wall). The four glazed-door knobs came out lumpy,
+           so each was replaced with a copy of the base knob below it. Original PNGs in S&S ops
+           deliverables/ai-renders-2026-11-14/.
+           26 Nov 2026: "ai" out of the file name (no AI anywhere, K23) and the alt text cut to the
+           joinery (K20), as on Camden on 24 Nov. */
+        file: "/images/journal/islington-glazed-alcove-units.webp",
+        type: "Glazed alcove cupboards",
+        ai: true,
+        width: 1536,
+        height: 1024,
+        alt: "Sage green alcove units either side of a fireplace: panelled base cupboards and glazed upper cupboards with shelves and small brass knobs, running up to the cornice.",
+      },
     ],
     summary: "Late Georgian squares and terraces, Victorian villas and flats in converted houses.",
   },  {

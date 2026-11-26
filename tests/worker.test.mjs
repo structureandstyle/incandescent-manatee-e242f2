@@ -26,6 +26,9 @@ test("www goes to the apex, and the retired addresses forward", () => {
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design/"), "https://structureandstyle.co.uk/areas/hampstead/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead-design"), "https://structureandstyle.co.uk/areas/hampstead/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-camden/x"), "https://structureandstyle.co.uk/areas/camden/");
+  // Islington's old address, 26 Nov 2026: one hop, with or without the slash.
+  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-islington/"), "https://structureandstyle.co.uk/areas/islington/");
+  assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-islington"), "https://structureandstyle.co.uk/areas/islington/");
   // Hampstead's own old address, 25 Nov 2026: one hop, any path under it, query kept as the others are.
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead/"), "https://structureandstyle.co.uk/areas/hampstead/");
   assert.equal(redirectFor("https://structureandstyle.co.uk/carpenter-hampstead"), "https://structureandstyle.co.uk/areas/hampstead/");
