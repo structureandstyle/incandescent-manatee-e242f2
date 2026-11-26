@@ -23,15 +23,22 @@
  * "have a few sketches to describe the copy"): pass a list,
  * drawing={["bp-mews-section", "bp-mews-tv-unit"]}, one per piece the words
  * describe, in the order the words name them. They stack in the side column.
+ *
+ * Under the words (26 Nov 2026, the same founder: the sketches "need to be
+ * underneath the text, and then ... the sketches side by side"): pass `below`
+ * and the drawings sit under the words in a row of two, each half the section's
+ * width; one drawing takes one half. Below 700px they stack, full width.
  */
 import MonoLabel from "./ds/MonoLabel.astro";
 import { AREA_DRAWINGS } from "../data/area-drawings";
 
 interface Props {
   drawing?: string | string[];
+  /** Drawings under the words, side by side, instead of in a column beside them. */
+  below?: boolean;
 }
 
-const { drawing } = Astro.props;
+const { drawing, below = false } = Astro.props;
 const ids = drawing === undefined ? [] : Array.isArray(drawing) ? drawing : [drawing];
 const drawings = ids.map((id) => {
   const d = AREA_DRAWINGS[id];
@@ -41,7 +48,7 @@ const drawings = ids.map((id) => {
 const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class="ad-$1"');
 ---
 
-<div class="area-side">
+<div class:list={["area-side", { "area-side--below": below && drawings.length > 0 }]}>
   <div class="area-side-text">
     <slot />
   </div>
@@ -96,6 +103,27 @@ const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class=
     }
     .area-side-aside {
       max-width: 480px;
+    }
+  }
+  /* Drawings under the words, two to a row. */
+  .area-side--below {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .area-side--below .area-side-text {
+    max-width: var(--measure);
+  }
+  .area-side--below .area-side-aside {
+    max-width: none;
+  }
+  .area-side--below .area-drawings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-lg);
+    align-items: start;
+  }
+  @media (max-width: 700px) {
+    .area-side--below .area-drawings {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-8);
     }
   }
 </style>
