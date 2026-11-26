@@ -22,7 +22,7 @@ import { BUSINESS } from "../data/site";
    which is a UK GDPR Article 13(1)(e) disclosure. A revision date is itself a
    factual claim and this one was checkable against the file's own history.
    Bump it with any edit to this page, as cookies.astro already does. */
-const updated = "6 November 2026";
+const updated = "9 November 2026";
 ---
 
 <Base
@@ -101,36 +101,30 @@ const updated = "6 November 2026";
 
       <section>
         <SectionHead level={5}>Who else sees your information</SectionHead>
-        {/* The named Flow to Form sentence came out on 5 Sep 2026, on Denis's
-            instruction. It read: "Flowtoform Limited, trading as Flow to Form,
-            maintains this website for us and may see enquiry data in the course
-            of that work, under a written agreement."
+        {/* The agency sentence. A named version came out on 5 Sep 2026, on
+            Denis's instruction, because no data agreement existed yet. It
+            read: "Flowtoform Limited, trading as Flow to Form, maintains this
+            website for us and may see enquiry data in the course of that
+            work, under a written agreement." It came back without the name in
+            PR #20 (3 Nov 2026). The notice is the client's document, not a
+            place for a supplier credit, and UK GDPR Article 13(1)(e) asks for
+            the recipients or their categories, so the role is enough.
 
-            Two reasons it was right to go, beyond the instruction. It named the
-            agency on the client's own privacy notice, which is the client's
-            document and not a place for a supplier credit. And it asserted a
-            written agreement that does not exist: the DPA is still unwritten,
-            so on launch day that clause would have been untrue.
-
-            WHAT THIS COSTS, stated so nobody has to rediscover it. UK GDPR
-            Article 13(1)(e) requires the recipients or categories of recipients
-            of personal data. Netlify and Google are still named below, so the
-            notice is not silent, but the agency that can see enquiry data is no
-            longer disclosed at all. The compliant middle is one nameless
-            clause, "the agency that maintains this website for us can see
-            enquiry data in the course of that work", and it should go back in
-            the day the DPA is signed, when it will also be true.
-
-            Back in, nameless, Nov 2026 with the trade emails. Merge this only
-            once the data agreement is signed. */}
+            The data agreement was signed by both companies on 5 Nov 2026, so
+            "under a written agreement" is true. Reworded 9 Nov 2026 to match
+            what it covers: "looking after your website, Business Profile and
+            enquiry records", for "people who send you enquiries". The agency
+            receives a copy of every enquiry, so the old wording, "can see
+            enquiry data in the course of that work", understated it. */}
         <p style="margin-top:var(--space-8)">
           Our website is hosted by Netlify, and enquiries submitted through the form are processed by
           them on our behalf. Cloudflare stores files attached to enquiries and checks file uploads
           for automated misuse. Analytics data is processed by Google. If you choose to message us on
           WhatsApp, that conversation runs through WhatsApp, which is operated by Meta under its own
-          terms and privacy policy. The agency that maintains this website for us can see enquiry
-          data in the course of that work, under a written agreement. We do not sell your information
-          to anyone and we do not add people who send us an enquiry to marketing lists.
+          terms and privacy policy. The agency that looks after this website and our enquiry records
+          receives a copy of each enquiry and handles it for us under a written agreement. We do not
+          sell your information to anyone and we do not add people who send us an enquiry to marketing
+          lists.
         </p>
       </section>
 
