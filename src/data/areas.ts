@@ -330,7 +330,10 @@ export const AREAS: Area[] = [
        on 25 Nov for open joinery in pictures to be bare (K21). Its place goes to a real job, the navy
        loft cupboards (fitted-wardrobes-03, on /work/ and on no area page), which also leads: the first
        picture is the best we have and a real photo comes first (K22). ssp-008, a dim phone photo, moves
-       to second. Alt text is one sentence about the joinery (K20); captions name the service only. */
+       to second. Alt text is one sentence about the joinery (K20); captions name the service only.
+       Later 26 Nov (a founder: "replace the 2 photos that look bad, add some nicer ones"): ssp-008 is off; in its
+       place the professional photograph of the white TV and alcove unit (alcove-units-04, on /work/ and on no
+       area page), which matches the mews section's built-in TV unit and the villas' alcove units. */
     plates: [
       {
         file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp",
@@ -338,9 +341,9 @@ export const AREAS: Area[] = [
         alt: "Fitted wardrobes under a sloping attic ceiling, with navy panelled doors and lit open shelves at the end of the run.",
       },
       {
-        file: "/images/library/ssp-008.webp",
-        type: "Walk-in wardrobes",
-        alt: "Oak-effect walk-in wardrobe with four open cubbies above a chrome hanging rail, and a second run turning the corner on the left.",
+        file: "/images/alcove-units/alcove-units-04.webp",
+        type: "Alcove units",
+        alt: "Alcove units built around a TV: white open shelving with glass shelves either side and Shaker cupboards along the bottom.",
       },
       {
         file: "/images/journal/belsize-green-wardrobes-bay.webp",
@@ -428,7 +431,11 @@ export const AREAS: Area[] = [
        open shelves hold plates, bowls, cups and jars, and on 25 Nov he asked for open joinery in
        pictures to be bare because things on show make a picture "look like it's AI" (K21). Its file
        stays in public/images/journal in case a founder wants it back. Alt text is one sentence about
-       the joinery (K20); captions name the service only. */
+       the joinery (K20); captions name the service only.
+       Later 26 Nov (a founder: "replace the 2 photos that look bad, add some nicer ones"): ssp-152 is off; in its
+       place ssp-153, a 3:2 crop of alcove-units-10 (the old site's portfolio photograph of a panelled window
+       seat beside an alcove bookcase, on /work/ and on no area page), which also shows what the bay window
+       section offers. */
     plates: [
       {
         file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp",
@@ -436,9 +443,9 @@ export const AREAS: Area[] = [
         alt: "Bespoke kitchen with grey-green handleless cupboards on three walls, tall units with built-in ovens and wall cupboards running up to the ceiling.",
       },
       {
-        file: "/images/library/ssp-152.webp",
-        type: "Bespoke kitchens",
-        alt: "Sage-green Shaker bespoke kitchen along two walls, with framed doors, long steel bar handles, an oak block worktop and strip lights under the wall units.",
+        file: "/images/library/ssp-153.webp",
+        type: "Alcove units",
+        alt: "Alcove units with a panelled window seat: a full-height open bookcase in the alcove beside a seat with a fitted cushion.",
       },
       {
         file: "/images/journal/kentish-white-handleless-wardrobes.webp",
