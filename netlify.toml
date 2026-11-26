@@ -87,6 +87,20 @@
   status = 301
   force = true
 
+# Islington's old address, /carpenter-islington/, was live but noindexed until the
+# page was released at /areas/islington/ on 26 Nov 2026 (the same rule as worker/site-rules.mjs).
+[[redirects]]
+  from = "/carpenter-islington/*"
+  to = "/areas/islington/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/carpenter-islington"
+  to = "/areas/islington/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

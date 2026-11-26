@@ -21,6 +21,9 @@ const PATH_REDIRECTS = [
   { from: /^\/carpenter-hampstead-design(?:\/.*)?$/, to: "/areas/hampstead/" },
   { from: /^\/carpenter-hampstead(?:\/.*)?$/, to: "/areas/hampstead/" },
   { from: /^\/carpenter-camden(?:\/.*)?$/, to: "/areas/camden/" },
+  /* Islington moved to /areas/islington/ when it was released on 26 Nov 2026. Its
+     old address was live but noindexed, so nothing ranked there; it forwards anyway. */
+  { from: /^\/carpenter-islington(?:\/.*)?$/, to: "/areas/islington/" },
   /* 19 Nov 2026: every picture named "...-ai-..." was renamed without it (a
      founder: "please do not add any AI generated stuff anywhere even in alt
      text"). The old addresses, which Google may have seen, forward to the new

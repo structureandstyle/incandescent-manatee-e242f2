@@ -282,7 +282,10 @@ export const ANSWERS = {
     about: "Kaspar has read the Camden page (/areas/camden/) on the review link and his changes are in",
   },
   areaPrimroseHillCheck: { value: null, about: "Kaspar has read the Primrose Hill page (/carpenter-primrose-hill/) on the review link and his changes are in" },
-  areaIslingtonCheck: { value: null, about: "Kaspar has read the Islington page (/carpenter-islington/) on the review link and his changes are in" },
+  areaIslingtonCheck: {
+    value: "Answered 26 Nov 2026: Kaspar read the page on the review link and sent 22 comments (saved 24 Nov); 21 are in word for word (26 Nov), and the 22nd, on the illustrations line, he answered to a founder: keep it. Released on its own at a founder's go, 26 Nov.",
+    about: "Kaspar has read the Islington page (/areas/islington/) on the review link and his changes are in",
+  },
   areaBelsizeParkCheck: { value: null, about: "Kaspar has read the Belsize Park page (/carpenter-belsize-park/) on the review link and his changes are in" },
   areaKentishTownCheck: { value: null, about: "Kaspar has read the Kentish Town page (/carpenter-kentish-town/) on the review link and his changes are in" },
   areaSwissCottageCheck: { value: null, about: "Kaspar has read the Swiss Cottage page (/carpenter-swiss-cottage/) on the review link and his changes are in" },
