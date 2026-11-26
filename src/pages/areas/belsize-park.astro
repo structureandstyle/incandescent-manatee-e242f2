@@ -1,5 +1,10 @@
 ---
 /**
+ * SKETCHES, 26 Nov 2026, later (a founder: "verify please all the copy and their sketch and see if
+ * the copy aligns with the sketch"): the house-front drawings matched the old copy, not these words, so
+ * every section now has sketches of the joinery its words describe (src/data/area-drawings.ts, the
+ * 26 Nov block; AreaSide takes a list where the words name two pieces): alcove wardrobes and alcove shelves; attic walk-in; wall-to-wall Shaker wardrobe and hall coat cupboard; mews cut-through and TV unit; wardrobe below the cornice; a wardrobe section up a protected stair.
+ *
  * REWRITTEN TO SS_WRITING_FOR_KASPAR.md, 26 Nov 2026 (a founder: the remaining
  * area pages rewritten to what Kaspar comments on). Every body line is new, in
  * his register: no council or history narration and no source in a sentence
@@ -222,7 +227,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Villas" level={4}>Bespoke wardrobes and alcove units in Belsize Park's Victorian villas</SectionHead>
-    <AreaSide drawing="villa-pair">
+    <AreaSide drawing={["bp-alcove-wardrobes", "bp-alcove-shelves"]}>
       <p>
         Belsize Park Gardens, Buckland Crescent and Belsize Square are lined with large semi-detached Victorian villas. If your bedroom has alcoves either side of the chimney breast, we can fit a wardrobe sized to each one. Downstairs, the living-room alcoves can take <Link href="/journal/alcove-units-guide/">low cupboards with open shelves above</Link> for books and records.
       </p>
@@ -231,7 +236,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Attic rooms" level={4}>Walk-in wardrobes for attic rooms in Belsize Park</SectionHead>
-    <AreaSide drawing="walk-in-open">
+    <AreaSide drawing="bp-attic-walk-in">
       <p>
         Some villas have an attic room, which can work well as a <Link href="/walk-in-wardrobes/">walk-in wardrobe</Link>. We plan hanging space, drawers, shoe storage and shelving together, with rails where the ceiling is highest and drawers under the slope. Rail heights come from what you hang, and drawer and shelf sizes from what you fold.
       </p>
@@ -240,7 +245,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Mansion flats" level={4}>Fitted wardrobes for mansion flats in Belsize Park</SectionHead>
-    <AreaSide drawing="thirties-flats">
+    <AreaSide drawing={["bp-flat-wardrobe-wall", "bp-hall-coat-cupboard"]}>
       <p>
         Belsize Park's flats include mansion blocks like Manor Mansions, and later blocks such as Hillfield Court and Tudor Close. In a flat, we can fit a wardrobe wall to wall in the bedroom, or a coat cupboard into a hall recess. You can choose Shaker doors or plain handleless ones, painted or in oak veneer.
       </p>
@@ -249,7 +254,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Mews houses" level={4}>Fitted wardrobes and shelving for mews houses in Belsize Village</SectionHead>
-    <AreaSide drawing="mews-row">
+    <AreaSide drawing={["bp-mews-section", "bp-mews-tv-unit"]}>
       <p>
         North of Belsize Lane, mews houses on streets such as Daleham Mews have two storeys and windows on one side only. With no windows at the back, we can run a wardrobe across the full width and height of the back wall. Downstairs, the same wall can take a <Link href="/media-walls/">built-in TV unit</Link> with cupboards and shelves around it.
       </p>
@@ -258,7 +263,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Listed homes" level={4}>Wardrobes and shelving for listed homes in Belsize Park</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="bp-cornice-finish">
       <p>
         Some homes on Belsize Grove and Belsize Lane are listed, and you can check yours on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council's listed buildings page</Link>.
       </p>
@@ -268,12 +273,12 @@ const EXT = { target: "_blank", rel: "noopener" };
       <p style={P2}>
         Where a room still has its original cornice, we can finish the wardrobes just below it so the moulding stays visible.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
     <SectionHead meta="Access" level={4}>Parking, lifts and access on fitting days in Belsize Park</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="bp-stair-sections">
       <p>
         We'll plan unloading, parking and the route into your home with you before fitting day. You can find your parking zone and its hours by searching your street or postcode on Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zone map</Link>. Where a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> is needed, we'll agree with you who applies for it.
       </p>
@@ -283,7 +288,7 @@ const EXT = { target: "_blank", rel: "noopener" };
       <p style={P2}>
         For front steps or narrow stairs, we can bring a wardrobe in sections and assemble it in the room. Before any materials come in, we protect the floors and stairs along the route.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>

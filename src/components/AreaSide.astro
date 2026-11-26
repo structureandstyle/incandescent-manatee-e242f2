@@ -18,17 +18,26 @@
  * Below 900px the side drops under the words, so a phone reads the section
  * first and then sees the drawing. Each drawing is an <svg role="img"> with
  * its own description (its label in area-drawings.ts) and a caption.
+ *
+ * Several drawings (26 Nov 2026, a founder on the Belsize Park mews section:
+ * "have a few sketches to describe the copy"): pass a list,
+ * drawing={["bp-mews-section", "bp-mews-tv-unit"]}, one per piece the words
+ * describe, in the order the words name them. They stack in the side column.
  */
 import MonoLabel from "./ds/MonoLabel.astro";
 import { AREA_DRAWINGS } from "../data/area-drawings";
 
 interface Props {
-  drawing?: string;
+  drawing?: string | string[];
 }
 
 const { drawing } = Astro.props;
-const d = drawing ? AREA_DRAWINGS[drawing] : undefined;
-if (drawing && !d) throw new Error(`There is no area drawing called "${drawing}" in src/data/area-drawings.ts.`);
+const ids = drawing === undefined ? [] : Array.isArray(drawing) ? drawing : [drawing];
+const drawings = ids.map((id) => {
+  const d = AREA_DRAWINGS[id];
+  if (!d) throw new Error(`There is no area drawing called "${id}" in src/data/area-drawings.ts.`);
+  return d;
+});
 const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class="ad-$1"');
 ---
 
@@ -37,13 +46,17 @@ const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class=
     <slot />
   </div>
   <div class="area-side-aside">
-    {d ? (
-      <figure class="area-drawing">
-        <svg viewBox="0 0 320 240" role="img" aria-label={d.label} set:html={prefixed(d.markup)} />
-        <figcaption>
-          <MonoLabel tone="soft">{d.caption}</MonoLabel>
-        </figcaption>
-      </figure>
+    {drawings.length ? (
+      <div class="area-drawings">
+        {drawings.map((d) => (
+          <figure class="area-drawing">
+            <svg viewBox="0 0 320 240" role="img" aria-label={d.label} set:html={prefixed(d.markup)} />
+            <figcaption>
+              <MonoLabel tone="soft">{d.caption}</MonoLabel>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
     ) : (
       <slot name="side" />
     )}
@@ -56,6 +69,10 @@ const prefixed = (markup: string) => markup.replace(/class="([a-z]+)"/g, 'class=
     grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
     gap: var(--space-10) var(--gap-lg);
     align-items: start;
+  }
+  .area-drawings {
+    display: grid;
+    gap: var(--space-8);
   }
   .area-drawing {
     margin: 0;

@@ -1,5 +1,10 @@
 ---
 /**
+ * SKETCHES, 26 Nov 2026, later (a founder: "verify please all the copy and their sketch and see if
+ * the copy aligns with the sketch"): the house-front drawings matched the old copy, not these words, so
+ * every section now has sketches of the joinery its words describe (src/data/area-drawings.ts, the
+ * 26 Nov block; AreaSide takes a list where the words name two pieces): top cupboards and sliding doors; each alcove measured; narrow kitchen plan and appliance run; the bay seat (kept); skirting kept behind a cupboard; the van and the protected way in.
+ *
  * REWRITTEN TO SS_WRITING_FOR_KASPAR.md, 26 Nov 2026 (a founder: rewrite the
  * remaining area pages to the writing style he comments on; ops rulings D3 and
  * D7). Every sentence above the prices is new, in "we" and "you", about rooms
@@ -248,7 +253,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Small bedrooms" level={4}>Fitted wardrobes for small bedrooms in Kentish Town</SectionHead>
-    <AreaSide drawing="kelly-street">
+    <AreaSide drawing={["kt-wardrobe-top-cupboards", "kt-sliding-doors-plan"]}>
       <p>
         In the narrow houses on Kelly Street and Castlehaven Road, bedrooms can be small. We can run a wardrobe across the full width of the wall, with separate top cupboards for spare bedding and luggage. If there's little room for the doors to swing, we can use <Link href="/journal/built-in-wardrobe-ideas/">sliding doors</Link> instead.
       </p>
@@ -257,7 +262,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Leighton Road" level={4}>Alcove units for period houses around Leighton Road</SectionHead>
-    <AreaSide drawing="leighton-mix">
+    <AreaSide drawing="kt-alcoves-measured">
       <p>
         On Leighton Road, Georgian and Victorian houses stand side by side, so next-door houses can have quite different rooms. If you have <Link href="/journal/alcove-units-guide/">alcoves beside a chimney breast</Link>, we'll measure each side on its own, as they aren't always the same size. We can fit wardrobes into bedroom alcoves, or shelves over low cupboards in a living room.
       </p>
@@ -266,7 +271,7 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Kitchens" level={4}>Bespoke kitchens for narrow rooms in Kentish Town</SectionHead>
-    <AreaSide drawing="kitchen-plan">
+    <AreaSide drawing={["kt-narrow-kitchen-plan", "kt-appliance-run"]}>
       <p>
         The terraced houses around Lady Margaret Road and Dunolie Road are narrow. If your kitchen is narrow too, we'll plan the cabinets around its doorways, windows and the way you walk through it. We'll also confirm your appliance models and sizes before the final design, so the cabinets around them line up.
       </p>
@@ -284,19 +289,19 @@ const EXT = { target: "_blank", rel: "noopener" };
 
   <Wrap style={SECTION}>
     <SectionHead meta="Listed homes" level={4}>Fitted joinery for listed homes in Kentish Town</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="kt-skirting-kept">
       <p>
         Some homes on Leighton Road, Leverton Street and Kelly Street are listed, and <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council's listed buildings page</Link> shows whether yours is one. If your home is listed, the council can tell you whether the joinery you're planning needs listed building consent. Ask before work starts, particularly if original skirting or panelling would come off or change.
       </p>
       <p style={P2}>
         When we survey the room, we'll note its original features and plan the joinery around them.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
     <SectionHead meta="Access" level={4}>Parking and access on fitting day in Kentish Town</SectionHead>
-    <div style={TEXT}>
+    <AreaSide drawing="kt-van-route">
       <p>
         We'll agree with you before fitting day where the van can unload and where it can park. That matters most on a narrow cul-de-sac like Kelly Street, or on the unmade private lane at Torriano Cottages.
       </p>
@@ -306,7 +311,7 @@ const EXT = { target: "_blank", rel: "noopener" };
       <p style={P2}>
         Before anything is carried in on fitting day, we protect the floors and stairs it will pass.
       </p>
-    </div>
+    </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
