@@ -202,7 +202,7 @@ export const AREAS: Area[] = [
         alt: "White walk-in wardrobe with hanging rails in three lit bays, open cubbies above and lit shelving on the left",
       },
       {
-        file: "/images/journal/primrose-ai-offwhite-wardrobes.webp",
+        file: "/images/journal/primrose-offwhite-wardrobes.webp",
         type: "Off-white wardrobes below a cornice",
         ai: true,
         width: 1536,
@@ -290,12 +290,15 @@ export const AREAS: Area[] = [
     /* Product-led, 15 Nov 2026: the fifth page on the Primrose Hill model (a founder's go; Denis,
        15 Nov: "use the same design and structure for the next articles"). No "carpenter" in the
        title, heading or description; the kicker stays "Bespoke joinery" (Denis, 15 Nov: "leave
-       joinery for now") and "bespoke carpentry" sits in the opening. */
+       joinery for now") and "bespoke carpentry" sits in the opening.
+       26 Nov 2026, rewritten to ops SS_WRITING_FOR_KASPAR.md (a founder: "only fix Belsize Park and
+       Kentish Town"): no "carpentry" in the opening (ruling D3); the H1 on his Islington shape, the
+       product, then the wider offer, then the place; the description without the method phrase. */
     titleProp: "Bespoke wardrobes in Belsize Park",
-    h1: "Bespoke wardrobes and walk-in wardrobes for Belsize Park's Victorian villas",
+    h1: "Bespoke wardrobes and fitted furniture in Belsize Park",
     kicker: "Bespoke joinery in Belsize Park",
     description:
-      "Bespoke wardrobes, walk-in wardrobes and alcove units for Belsize Park's Victorian villas, mansion flats and mews houses, each designed for its room.",
+      "Bespoke wardrobes, walk-in wardrobes and alcove units designed and fitted for Belsize Park's Victorian villas, mansion flats and mews houses.",
     /* bespoke wardrobes belsize park is the area's one product search in Search Console: 49
        impressions at position 11.4, 18 Aug to 25 Sep (ops research/hampstead-2026-10-03/
        evidence.md), and 39 at position 11.5, 11 Sep to 8 Oct (ops briefs/case-study-2026-11.md,
@@ -321,31 +324,34 @@ export const AREAS: Area[] = [
        ceiling, painted putty rather than oak-effect (Figma node 56:3, file d0AWnKDiTyYDbBrrCsE4NS),
        made and checked to the render protocol (sections 5 and 8). The register has no walk-in
        wardrobe from another job: its other walk-in, the June 2025 white one, is on Primrose Hill and
-       West Hampstead. */
+       West Hampstead.
+       26 Nov 2026 (SS_WRITING_FOR_KASPAR.md, picture rules K20 to K23): the attic walk-in illustration is
+       off the page, because it shows clothes on the rails and folded knitwear on the shelves, and he asked
+       on 25 Nov for open joinery in pictures to be bare (K21). Its place goes to a real job, the navy
+       loft cupboards (fitted-wardrobes-03, on /work/ and on no area page), which also leads: the first
+       picture is the best we have and a real photo comes first (K22). ssp-008, a dim phone photo, moves
+       to second. Alt text is one sentence about the joinery (K20); captions name the service only. */
     plates: [
+      {
+        file: "/images/fitted-wardrobes/fitted-wardrobes-03.webp",
+        type: "Fitted wardrobes",
+        alt: "Fitted wardrobes under a sloping attic ceiling, with navy panelled doors and lit open shelves at the end of the run.",
+      },
       {
         file: "/images/library/ssp-008.webp",
         type: "Walk-in wardrobes",
-        alt: "Dark oak-effect walk-in wardrobe with four open cubbies along the top, a chrome hanging rail beneath them and its side run turning the corner on the left.",
+        alt: "Oak-effect walk-in wardrobe with four open cubbies above a chrome hanging rail, and a second run turning the corner on the left.",
       },
       {
-        file: "/images/journal/belsize-walk-in-attic.webp",
-        type: "Walk-in wardrobe",
+        file: "/images/journal/belsize-green-wardrobes-bay.webp",
+        type: "Fitted wardrobes",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Walk-in wardrobe in an attic room: open joinery painted soft putty along the tall wall, with two hanging bays on aged-brass rails, open shelves above them holding folded knitwear, and a stack of five drawers with small round brass knobs between the bays. Under the sloping ceiling opposite, a low run of six drawers with the same knobs, and a sash window at the far end.",
-      },
-      {
-        file: "/images/journal/belsize-ai-green-wardrobes-bay.webp",
-        type: "Painted wardrobes by a bay window",
-        ai: true,
-        width: 1536,
-        height: 1024,
-        alt: "Sage green full-height wardrobes with four pairs of flat doors and slim brass bar handles fill one bedroom wall, with slim matching infills under the cornice and a recessed plinth. A bay window with white sashes and a cream curtain is to the right, with a low bench beside it.",
+        alt: "Sage green fitted wardrobes with eight flat doors and slim brass bar handles, running up to the cornice over a recessed plinth.",
       },
     ],
-    summary: "Large Victorian villas, mansion flats and mews houses in Camden's Belsize conservation area.",
+    summary: "Victorian villas, mansion flats and mews houses around Belsize Square and Belsize Village.",
   },
   {
     slug: "areas/kentish-town",
@@ -355,12 +361,15 @@ export const AREAS: Area[] = [
        next articles"). No "carpenter" in the title, heading or description; the kicker stays
        "Bespoke joinery" (Denis, 15 Nov: "leave joinery for now") and "bespoke carpentry" sits in
        the opening. The title drops "bespoke" before kitchens so the full title stays near 65
-       characters with the business name. */
+       characters with the business name.
+       26 Nov 2026, rewritten to ops SS_WRITING_FOR_KASPAR.md (a founder: "only fix Belsize Park and
+       Kentish Town"): no "carpentry" in the opening (ruling D3); the H1 on his Islington shape, the
+       products, then the place. */
     titleProp: "Fitted wardrobes and kitchens in Kentish Town",
-    h1: "Fitted wardrobes and bespoke kitchens for Kentish Town's terraced houses",
+    h1: "Fitted wardrobes and bespoke kitchens in Kentish Town",
     kicker: "Bespoke joinery in Kentish Town",
     description:
-      "Fitted wardrobes, bespoke kitchens and alcove units for Kentish Town's Georgian and Victorian terraces, some narrow, each planned for its own room.",
+      "Fitted wardrobes, bespoke kitchens and alcove units designed and installed for terraced houses in Kentish Town, planned room by room, with guide prices.",
     /* No measured product search exists for Kentish Town. Keyword Planner returned nothing for any
        of 22 Kentish Town phrases (London, 14 Nov 2026), and the only Kentish Town query in Search
        Console is carpenter kentish town (16 impressions at position 1.9, 11 Oct to 8 Nov 2026; one
@@ -411,31 +420,36 @@ export const AREAS: Area[] = [
        and not used: the same job's sink close-up (bare boxing above the sink), Kas's old portfolio
        kitchen (live on /work/ as bespoke-kitchens-09; ssp-151 is the same kitchen), the white Shaker
        kitchen in Projects by Space / Kitchen (the unsourced screenshot work-gallery.ts holds back
-       until Kas confirms it is his) and the grey-gloss flat's other frames (staging, no joinery). */
+       until Kas confirms it is his) and the grey-gloss flat's other frames (staging, no joinery).
+       26 Nov 2026 (SS_WRITING_FOR_KASPAR.md, picture rules K20 to K23): the page now opens with the
+       professional photograph of the grey-green handleless kitchen (bespoke-kitchens-07, the home
+       page's first frame), as a professional photograph already used elsewhere may lead (a founder,
+       25 Nov) and a real photo comes first (K22). The olive Shaker illustration is off the page: its
+       open shelves hold plates, bowls, cups and jars, and on 25 Nov he asked for open joinery in
+       pictures to be bare because things on show make a picture "look like it's AI" (K21). Its file
+       stays in public/images/journal in case a founder wants it back. Alt text is one sentence about
+       the joinery (K20); captions name the service only. */
     plates: [
       {
-        file: "/images/journal/kentish-shaker-kitchen.webp",
+        file: "/images/bespoke-kitchens/bespoke-kitchens-07.webp",
         type: "Bespoke kitchens",
-        ai: true,
-        width: 1536,
-        height: 1024,
-        alt: "Painted Shaker kitchen in an L along two walls of a period room: deep olive-green doors with small round brass knobs, a bank of drawers with brass cup handles, an oak worktop with a chopping board, and a white butler sink with a brass bridge tap under the sash window. Above the white tiles, an open shelving unit in the same green runs up to the cornice, its oak shelves holding white plates and bowls, two grey cups, a cream jug and two glass jars. A white fireplace with a black cast-iron insert stands on the left.",
+        alt: "Bespoke kitchen with grey-green handleless cupboards on three walls, tall units with built-in ovens and wall cupboards running up to the ceiling.",
       },
       {
         file: "/images/library/ssp-152.webp",
-        type: "Sage Shaker kitchen",
-        alt: "Sage-green Shaker kitchen in an L along two walls: framed doors with long steel bar handles, an oak block worktop, and a white ceramic sink with a brushed steel mixer tap. A gas hob sits under a steel chimney hood, with a built-in oven below and three drawers beside it. White bevelled metro tiles are laid in a basketweave pattern and lit by strip lights under the wall units, with a white dishwasher at the left end.",
+        type: "Bespoke kitchens",
+        alt: "Sage-green Shaker bespoke kitchen along two walls, with framed doors, long steel bar handles, an oak block worktop and strip lights under the wall units.",
       },
       {
-        file: "/images/journal/kentish-ai-white-handleless-wardrobes.webp",
-        type: "White handleless wardrobes",
+        file: "/images/journal/kentish-white-handleless-wardrobes.webp",
+        type: "Fitted wardrobes",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Six matt white flat doors with no handles run along one bedroom wall under the ceiling moulding, above a recessed base. Light falls from a sash window with a white roller blind on the left, over a pale oak floor and the corner of a bed.",
+        alt: "Fitted wardrobes with six matt white handleless doors along one wall, finished under the ceiling moulding above a recessed plinth.",
       },
     ],
-    summary: "Georgian and Victorian terraces, many of them listed, around Leighton Road and Kelly Street.",
+    summary: "Georgian and Victorian terraced houses around Leighton Road and Kelly Street.",
   },
   {
     slug: "areas/swiss-cottage",
@@ -477,7 +491,7 @@ export const AREAS: Area[] = [
         alt: "Oak-effect wardrobe drawer pulled open to show its oak-effect interior and slim bar handle, below a closed drawer.",
       },
       {
-        file: "/images/journal/swiss-ai-grey-sliding-wardrobe.webp",
+        file: "/images/journal/swiss-grey-sliding-wardrobe.webp",
         type: "Grey sliding-door wardrobe",
         ai: true,
         width: 1536,
@@ -526,7 +540,7 @@ export const AREAS: Area[] = [
         alt: "Floating taupe two-drawer vanity unit with a white top and brass taps against marble-effect tiles, beside a toilet and bath.",
       },
       {
-        file: "/images/journal/highgate-ai-arched-alcove-units.webp",
+        file: "/images/journal/highgate-arched-alcove-units.webp",
         type: "Arched alcove shelving",
         ai: true,
         width: 1536,
@@ -575,7 +589,7 @@ export const AREAS: Area[] = [
         alt: "White walk-in wardrobe with hanging rails at the left and LED-lit shelves above black-handled drawers at the right.",
       },
       {
-        file: "/images/journal/westhampstead-ai-shaker-alcove-wardrobes.webp",
+        file: "/images/journal/westhampstead-shaker-alcove-wardrobes.webp",
         type: "Shaker alcove wardrobes",
         ai: true,
         width: 1536,
@@ -633,7 +647,7 @@ export const AREAS: Area[] = [
         alt: "Built-in shelving around a doorway in a hall: open shelves painted warm stone rise on both sides of a white door frame and bridge over the top of it, holding books and plain white jugs, with a pair of flat cupboard doors with small round brass knobs at the foot of each side. Dark oak floorboards, with an open doorway to a room on the left and a white panelled door on the right.",
       },
       {
-        file: "/images/journal/maidavale-ai-panelled-wardrobes.webp",
+        file: "/images/journal/maidavale-panelled-wardrobes.webp",
         type: "Panelled fitted wardrobes",
         ai: true,
         width: 1536,
