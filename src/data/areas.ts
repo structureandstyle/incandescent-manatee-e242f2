@@ -221,7 +221,9 @@ export const AREAS: Area[] = [
        model leads the heading with the product search and keeps the kicker "Bespoke joinery" (Denis,
        15 Nov: "leave joinery for now"), so "bespoke carpentry" now sits in the opening. */
     titleProp: "Bespoke wardrobes in Islington",
-    h1: "Bespoke wardrobes and fitted furniture in Islington, made to measure",
+    /* 26 Nov 2026: Kaspar's heading, word for word (his comment on the review link, saved 24 Nov).
+       The title above keeps "Bespoke wardrobes", the page's main search. */
+    h1: "Fitted wardrobes and bespoke furniture in Islington",
     kicker: "Bespoke joinery in Islington",
     description:
       "Bespoke wardrobes, alcove units and shelving for Islington homes: Georgian and Victorian houses and flats, measured in the room and cut to fit.",
@@ -240,17 +242,26 @@ export const AREAS: Area[] = [
        register's second AI gap for Islington, alcove units with glazed upper cupboards and lit
        shelving in a Georgian living room (Figma node 32:2). Its first gap, closed white
        handleless wardrobes, has no plate: the frame shows three. None is a recorded job in
-       Islington. */
+       Islington.
+       26 Nov 2026: ssp-048 OFF the page. Kaspar's only comment on it was "wtf bro :D" (saved
+       24 Nov, the night before his voice note asked Camden for a better first picture), and a
+       founder's rule of 25 Nov is that a picture he dislikes comes off the page. The lead is now
+       fitted-wardrobes-09, the professional frame of white panelled wardrobes up to the cornice
+       in a period bedroom with shutters, which matches his Georgian-houses section. It is on
+       /work/ and on no area page; a founder ruled on 25 Nov that a used professional photograph
+       may lead ("doesnt neeed to be unused"). No unused Islington-job wardrobe frame is left:
+       ssp-158 and ssp-161 are on /work/, ssp-159 and ssp-157 are their near-duplicates or soft.
+       Alt text cut to the joinery (K20 in the ops SS_KASPAR_REVIEW_RULES.md). */
     plates: [
       {
-        file: "/images/library/ssp-048.webp",
+        file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp",
         type: "Fitted wardrobes",
-        alt: "Open wardrobe with an oak-toned interior: a top shelf, a chrome rail with black hangers, a lower shelf and the first of its drawers, with hinges on both doors.",
+        alt: "Fitted wardrobes for Islington homes: white panelled doors with small round knobs and cupboards above, running up to the cornice.",
       },
       {
         file: "/images/library/ssp-051.webp",
         type: "Bespoke kitchens",
-        alt: "Matt charcoal L-shaped handleless kitchen with an island, two white stools, a tall fridge housing, a black extractor and a white metro tile splashback.",
+        alt: "Matt charcoal L-shaped handleless kitchen with an island, a tall fridge housing and a white metro tile splashback.",
       },
       {
         /* 19 Nov 2026, Denis on the review link: "remove the leds here". Made again without lighting
@@ -261,13 +272,15 @@ export const AREAS: Area[] = [
            table to go: made again (node 45:11: a knob on every door, no coffee table; picked over 45:10,
            which had an unexplained strip on the left wall). The four glazed-door knobs came out lumpy,
            so each was replaced with a copy of the base knob below it. Original PNGs in S&S ops
-           deliverables/ai-renders-2026-11-14/. */
-        file: "/images/journal/islington-ai-glazed-alcove-units.webp",
+           deliverables/ai-renders-2026-11-14/.
+           26 Nov 2026: "ai" out of the file name (no AI anywhere, K23) and the alt text cut to the
+           joinery (K20), as on Camden on 24 Nov. */
+        file: "/images/journal/islington-glazed-alcove-units.webp",
         type: "Glazed alcove cupboards",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Two fitted alcove units painted soft sage green either side of a white fireplace with a black cast-iron insert. Each has a two-door panelled base cupboard and a two-door glazed upper cupboard with shelves holding books, bowls and jugs, all with small brass knobs, running up to the room's cornice. A tall sash window with shutters is to the right.",
+        alt: "Sage green alcove units either side of a fireplace: panelled base cupboards and glazed upper cupboards with shelves and small brass knobs, running up to the cornice.",
       },
     ],
     summary: "Late Georgian squares and terraces, Victorian villas and flats in converted houses.",
