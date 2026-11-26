@@ -202,7 +202,7 @@ export const AREAS: Area[] = [
         alt: "White walk-in wardrobe with hanging rails in three lit bays, open cubbies above and lit shelving on the left",
       },
       {
-        file: "/images/journal/primrose-ai-offwhite-wardrobes.webp",
+        file: "/images/journal/primrose-offwhite-wardrobes.webp",
         type: "Off-white wardrobes below a cornice",
         ai: true,
         width: 1536,
@@ -337,7 +337,7 @@ export const AREAS: Area[] = [
         alt: "Walk-in wardrobe in an attic room: open joinery painted soft putty along the tall wall, with two hanging bays on aged-brass rails, open shelves above them holding folded knitwear, and a stack of five drawers with small round brass knobs between the bays. Under the sloping ceiling opposite, a low run of six drawers with the same knobs, and a sash window at the far end.",
       },
       {
-        file: "/images/journal/belsize-ai-green-wardrobes-bay.webp",
+        file: "/images/journal/belsize-green-wardrobes-bay.webp",
         type: "Painted wardrobes by a bay window",
         ai: true,
         width: 1536,
@@ -427,7 +427,7 @@ export const AREAS: Area[] = [
         alt: "Sage-green Shaker kitchen in an L along two walls: framed doors with long steel bar handles, an oak block worktop, and a white ceramic sink with a brushed steel mixer tap. A gas hob sits under a steel chimney hood, with a built-in oven below and three drawers beside it. White bevelled metro tiles are laid in a basketweave pattern and lit by strip lights under the wall units, with a white dishwasher at the left end.",
       },
       {
-        file: "/images/journal/kentish-ai-white-handleless-wardrobes.webp",
+        file: "/images/journal/kentish-white-handleless-wardrobes.webp",
         type: "White handleless wardrobes",
         ai: true,
         width: 1536,
@@ -477,7 +477,7 @@ export const AREAS: Area[] = [
         alt: "Oak-effect wardrobe drawer pulled open to show its oak-effect interior and slim bar handle, below a closed drawer.",
       },
       {
-        file: "/images/journal/swiss-ai-grey-sliding-wardrobe.webp",
+        file: "/images/journal/swiss-grey-sliding-wardrobe.webp",
         type: "Grey sliding-door wardrobe",
         ai: true,
         width: 1536,
@@ -526,7 +526,7 @@ export const AREAS: Area[] = [
         alt: "Floating taupe two-drawer vanity unit with a white top and brass taps against marble-effect tiles, beside a toilet and bath.",
       },
       {
-        file: "/images/journal/highgate-ai-arched-alcove-units.webp",
+        file: "/images/journal/highgate-arched-alcove-units.webp",
         type: "Arched alcove shelving",
         ai: true,
         width: 1536,
@@ -575,7 +575,7 @@ export const AREAS: Area[] = [
         alt: "White walk-in wardrobe with hanging rails at the left and LED-lit shelves above black-handled drawers at the right.",
       },
       {
-        file: "/images/journal/westhampstead-ai-shaker-alcove-wardrobes.webp",
+        file: "/images/journal/westhampstead-shaker-alcove-wardrobes.webp",
         type: "Shaker alcove wardrobes",
         ai: true,
         width: 1536,
@@ -633,7 +633,7 @@ export const AREAS: Area[] = [
         alt: "Built-in shelving around a doorway in a hall: open shelves painted warm stone rise on both sides of a white door frame and bridge over the top of it, holding books and plain white jugs, with a pair of flat cupboard doors with small round brass knobs at the foot of each side. Dark oak floorboards, with an open doorway to a room on the left and a white panelled door on the right.",
       },
       {
-        file: "/images/journal/maidavale-ai-panelled-wardrobes.webp",
+        file: "/images/journal/maidavale-panelled-wardrobes.webp",
         type: "Panelled fitted wardrobes",
         ai: true,
         width: 1536,

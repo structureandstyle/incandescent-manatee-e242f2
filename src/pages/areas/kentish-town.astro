@@ -1,5 +1,66 @@
 ---
 /**
+ * REWRITTEN TO SS_WRITING_FOR_KASPAR.md, 26 Nov 2026 (a founder: rewrite the
+ * remaining area pages to the writing style he comments on; ops rulings D3 and
+ * D7). Every sentence above the prices is new, in "we" and "you", about rooms
+ * these houses have: no council or history narration, no source, date, listing
+ * grade or house number in a sentence, no "carpentry", no definitions of house
+ * words. Opening: one paragraph, two sentences. Four room sections (small
+ * bedrooms, Leighton Road's alcoves, narrow kitchens, bay windows), then listed
+ * homes and access on the guide's templates (K18, K19). PRICES, the price
+ * section and the FAQ questions unchanged; the FAQ answers rewritten. One Ask
+ * bracket, kentish-town-bay-seat: he has not confirmed window seats in bays (the
+ * review link's card asks him). Drawings unchanged: each still fits its words.
+ * FACT LIST (claim: source).
+ *   Opening: the three products (service pages); Leighton Road and Kelly Street
+ *     as street names (facts file K1, K2); a wardrobe up to the ceiling (his facts
+ *     table, Islington 26 Nov); a kitchen planned around the route through the
+ *     room (bespoke kitchens page, planning section, approved).
+ *   Small bedrooms: narrow houses on Kelly Street and Castlehaven Road (facts
+ *     file K2 and Group 2, "houses are narrow on narrow plots"); bedrooms "can
+ *     be" small (the facts file's own inference, so "can"); a wardrobe across
+ *     the full width of the wall (facts table, "wall to wall", Camden 23 Nov); separate top cupboards for bedding and
+ *     luggage, sliding doors where swing space is limited (built-in wardrobe
+ *     guide, approved 24 Oct).
+ *   Leighton Road: late Georgian brick houses, stucco villas and Victorian
+ *     terraces in one road (facts file K1); next-door houses differ (plot-by-plot
+ *     building, K1, as the 19 Nov page put it); each alcove measured on its own,
+ *     the sides can differ (facts table, Islington 26 Nov); wardrobes in alcoves
+ *     (facts table, Camden 23 Nov); shelves over low cupboards (alcove price
+ *     card, "base cupboards with shelving over").
+ *   Kitchens: terraced houses around Lady Margaret Road and Dunolie Road narrow
+ *     (facts file K1, "on narrow plots"); cabinets planned around doorways,
+ *     windows and the route through the room, appliances confirmed before the
+ *     final design so the cabinets line up (bespoke kitchens page, planning
+ *     section). No kitchen job is claimed in the area.
+ *   Bay windows: ground-floor bays on Falkland Road and Ascham Street (facts file
+ *     K1 and Group 2, "common in the northern streets", so "many"); the seat is
+ *     the Ask bracket; alcove units in the seat's finish (facts table, one finish
+ *     across front and back room units, Camden 23 Nov; his portfolio's window
+ *     seat beside alcove shelving, work-gallery.ts alcove-units-10).
+ *   Listed homes: some homes on Leighton Road, Leverton Street and Kelly Street
+ *     listed (facts file K1, K2); Camden's listed buildings page (K8); ask before
+ *     work starts, skirting and panelling (facts table, Islington 26 Nov); the
+ *     original features noted at the survey (his Camden text, 23 Nov). No cornice
+ *     line: the facts file confirms none here, and three other area pages carry it.
+ *   Access: unloading and parking agreed before fitting day (facts table); Kelly
+ *     Street a narrow cul-de-sac (K2); Torriano Cottages on an unmade private
+ *     lane (K1); the zones page's postcode search (K10); agreeing who arranges a
+ *     permit (facts table, Islington 26 Nov), Camden's trade and other parking
+ *     permits page (K12); floors and stairs protected (facts table).
+ *   FAQ answers: the route around the bed and the view from the doorway
+ *     (built-in wardrobe guide); recessed finger grips, push-to-open, agreeing
+ *     how they open before the design is finished (wardrobe and alcove guides);
+ *     a kitchen "made to measure, designed around the space" (K10, his result
+ *     words), storage planned around what is used and where (bespoke kitchens
+ *     page, planning section), Shaker or handleless doors (K11; both are his
+ *     kitchens). The small-bedroom answer no longer carries sliding doors: the
+ *     section above does.
+ * Links checked 26 Nov 2026: the site pages answer 200 on the live site; the
+ * three Camden pages answer plain curl with a Cloudflare challenge (403) and 200
+ * with a browser's headers, their titles confirmed.
+ * The notes below describe the 17 and 19 Nov text, which this replaces.
+ *
  * Kentish Town, 17 November 2026. A draft for Kaspar to read on the review
  * link (F2F ops clients/structure-and-style/areas-review); held noindex by
  * areaKentishTownCheck until he has read it and his changes are in. Nothing
@@ -143,6 +204,7 @@ import Faq from "../../components/ds/Faq.astro";
 import Link from "../../components/ds/Link.astro";
 import AreaSide from "../../components/AreaSide.astro";
 import PriceCards from "../../components/PriceCards.astro";
+import Ask from "../../components/Ask.astro";
 
 import { AREAS } from "../../data/areas";
 
@@ -180,90 +242,69 @@ const EXT = { target: "_blank", rel: "noopener" };
 <AreaPage area={area}>
   <Fragment slot="lede">
     <p>
-      <Link href="/fitted-wardrobes/">Fitted wardrobes</Link>, <Link href="/bespoke-kitchens/">bespoke kitchens</Link> and <Link href="/alcove-units/">alcove units</Link>: that is the bespoke carpentry we take on in Kentish Town's terraces, some of them narrow.
-    </p>
-    <p style={P2}>
-      On Leighton Road, Georgian houses, stucco villas and Victorian terraces stand side by side, so each room gets bespoke joinery of its own.
+      We design and install <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/bespoke-kitchens/">bespoke kitchens</Link> and <Link href="/alcove-units/">alcove units</Link> for homes in Kentish Town, on streets like Leighton Road and Kelly Street. In a narrow terraced house, we can take a wardrobe up to the ceiling and plan a kitchen around the route through the room.
     </p>
   </Fragment>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Leighton Road" level={4}>Fitted wardrobes for Leighton Road's mixed terraces</SectionHead>
-    <AreaSide drawing="leighton-mix">
-      <p>
-        Camden's Kentish Town appraisal describes Leighton Road as lined with two and three storey terraces of the early 19th century. Most have stucco fronts, a painted render. Some are brick.
-      </p>
-      <p style={P2}>
-        Camden's appraisal says the road grew plot by plot after its landowner sold off small plots. Late Georgian brick houses, 1830s stucco villas and mid-Victorian terraces now share one street.
-      </p>
-      <p style={P2}>
-        The appraisal says the sash windows' pane patterns change with the date. Leighton Road keeps small panes from before the mid 19th century, and Leverton Street has the larger panes that came later. Building went plot by plot, so neighbouring houses can differ, and each <Link href="/fitted-wardrobes/">fitted wardrobe</Link> is drawn for its own room.
-      </p>
-    </AreaSide>
-  </Wrap>
-
-  <Wrap style={SECTION}>
-    <SectionHead meta="Kelly Street" level={4}>Kelly Street's coloured fronts and Castlehaven Road's two-window terraces</SectionHead>
+    <SectionHead meta="Small bedrooms" level={4}>Fitted wardrobes for small bedrooms in Kentish Town</SectionHead>
     <AreaSide drawing="kelly-street">
       <p>
-        Camden's Kelly Street appraisal describes a narrow cul-de-sac of small two storey houses with brightly coloured stucco fronts and black cast-iron railings. Castlehaven Road, beside it, has three storey terraces two windows wide.
-      </p>
-      <p style={P2}>
-        In a house two windows wide, a fitted wardrobe that runs to the ceiling uses height a shorter one leaves empty. Separate top cupboards can give bedding and luggage their own space.
+        In the narrow houses on Kelly Street and Castlehaven Road, bedrooms can be small. We can run a wardrobe across the full width of the wall, with separate top cupboards for spare bedding and luggage. If there's little room for the doors to swing, we can use <Link href="/journal/built-in-wardrobe-ideas/">sliding doors</Link> instead.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Kitchens" level={4}>Bespoke kitchens on the narrow plots of the northern streets</SectionHead>
+    <SectionHead meta="Leighton Road" level={4}>Alcove units for period houses around Leighton Road</SectionHead>
+    <AreaSide drawing="leighton-mix">
+      <p>
+        Leighton Road mixes late Georgian brick houses, stucco villas and Victorian terraces, so next-door houses can have quite different rooms. If you have <Link href="/journal/alcove-units-guide/">alcoves beside a chimney breast</Link>, we'll measure each side on its own, as they aren't always the same size. We can fit wardrobes into bedroom alcoves, or shelves over low cupboards in a living room.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Kitchens" level={4}>Bespoke kitchens for narrow rooms in Kentish Town</SectionHead>
     <AreaSide drawing="kitchen-plan">
       <p>
-        Camden describes the northern streets as terraces on narrow plots with longer rear gardens, and Castlehaven Road's houses as having small rear courtyards.
-      </p>
-      <p style={P2}>
-        On a plot that narrow, the shape of the room matters first in a <Link href="/bespoke-kitchens/">bespoke kitchen</Link>. Doorways, windows and routes through the room, together with the positions of sinks and appliances, affect where cabinet runs, tall units and islands can sit.
+        The terraced houses around Lady Margaret Road and Dunolie Road are narrow. If your kitchen is narrow too, we'll plan the cabinets around its doorways, windows and the way you walk through it. We'll also confirm your appliance models and sizes before the final design, so the cabinets around them line up.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Bay windows" level={4}>Window seats in the bays of the northern streets</SectionHead>
+    <SectionHead meta="Bay windows" level={4}>Window seats for bay windows in Kentish Town</SectionHead>
     <AreaSide drawing="bay-seat">
       <p>
-        Camden's appraisal groups Falkland Road, Ascham Street and Lady Margaret Road as the northern streets, mostly three storey brick and stucco terraces. Many of their ground floors have canted bays, which are bays with angled sides.
-      </p>
-      <p style={P2}>
-        A canted bay can take a fitted window seat with storage below, and its front can follow the angled sides. In the same room, <Link href="/alcove-units/">alcove units</Link> can match the seat.
+        Many houses on Falkland Road and Ascham Street have a bay window on the ground floor. If your front room has one, we can fit <Ask q="kentish-town-bay-seat">a window seat that follows the bay's angled sides, with drawers underneath</Ask>. <Link href="/alcove-units/">Alcove units</Link> in the same room can share the seat's finish.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Listed buildings" level={4}>Listed houses on Leighton Road, Leverton Street and Kelly Street</SectionHead>
+    <SectionHead meta="Listed homes" level={4}>Fitted joinery for listed homes in Kentish Town</SectionHead>
     <div style={TEXT}>
       <p>
-        Camden's 2011 appraisals name listed houses, all Grade II, a national listing grade, on three Kentish Town streets. On Leighton Road they include Nos 20 to 28 and Nos 64 to 70, and on Kelly Street every building and its railings. On Leverton Street the stuccoed terraces of about 1845, Nos 2 to 26 and 5 to 23, are listed.
+        Some homes on Leighton Road, Leverton Street and Kelly Street are listed, and <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council's listed buildings page</Link> shows whether yours is one. If your home is listed, the council can tell you whether the joinery you're planning needs listed building consent. Ask before work starts, particularly if original skirting or panelling would come off or change.
       </p>
       <p style={P2}>
-        Camden protects a listed house inside as well as out. It says work without consent is a criminal offence, even when an owner did not know of the listing.
-      </p>
-      <p style={P2}>
-        The Planning Portal says significant work inside a listed building can need listed building consent, so check the house on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden's listed buildings page</Link> first.
+        When we survey the room, we'll note its original features and plan the joinery around them.
       </p>
     </div>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Access" level={4}>Parking permits and narrow streets in Kentish Town</SectionHead>
+    <SectionHead meta="Access" level={4}>Parking and access on fitting day in Kentish Town</SectionHead>
     <div style={TEXT}>
       <p>
-        Kelly Street is a narrow cul-de-sac, and Camden's appraisal places Torriano Cottages on a winding, unmade private lane. Parking and deliveries are agreed with you before installation.
+        We'll agree with you before fitting day where the van can unload and where it can park. That matters most on a narrow cul-de-sac like Kelly Street, or on the unmade private lane at Torriano Cottages.
       </p>
       <p style={P2}>
-        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zones page</Link> has a postcode search for its parking zones. A resident can buy a <Link href="https://www.camden.gov.uk/visitor-parking-permits" {...EXT}>visitor permit</Link>, though all-day permits are not offered in every zone.
+        Camden Council's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zones page</Link> has a postcode search, so you can check which zone your street is in. If the van needs a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>parking permit</Link>, we'll agree with you which of us arranges it.
       </p>
       <p style={P2}>
-        A <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> is another option, and it does not guarantee a space.
+        Before anything is carried in on fitting day, we protect the floors and stairs it will pass.
       </p>
     </div>
   </Wrap>
@@ -283,13 +324,13 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
       <Faq q="Where should a wardrobe go in a small bedroom?">
-        On the wall that keeps the route around the bed clear and leaves space to open its doors and drawers. Place the bed and bedside tables first, then look at the room from the doorway. Sliding doors suit a room where swing space is limited.
+        Put it where the route around the bed stays clear and there's room to open its doors and drawers. Decide where the bed and bedside tables go first, then look at the room from the doorway.
       </Faq>
       <Faq q="How do handleless drawers work?">
-        A handleless drawer opens by a recessed finger grip or a push-to-open fitting, so the front stays clear. How each drawer and door will open is agreed before the design is finished.
+        A handleless drawer opens with a recessed finger grip or a push-to-open fitting, so nothing sticks out from the front. We'll agree with you how each drawer and door opens before we finish the design.
       </Faq>
       <Faq q="What is a bespoke kitchen?">
-        It is a kitchen designed for one room, and it has to work as fitted furniture and as part of that room. Appliance models, sizes and service needs are confirmed before the final design, so the cabinets around them line up.
+        A bespoke kitchen is made to measure and designed around the space in your room. You can choose the door style, such as Shaker or handleless, and the balance of drawers, shelves and cupboards. We plan the storage around what you use every day and where you need it.
       </Faq>
     </div>
   </Wrap>

@@ -1,5 +1,74 @@
 ---
 /**
+ * REWRITTEN TO SS_WRITING_FOR_KASPAR.md, 26 Nov 2026 (a founder: the remaining
+ * area pages rewritten to the style Kaspar comments on; ops rulings D3 and D7).
+ * Changed: the opening is one paragraph of two sentences, with no "bespoke
+ * carpentry"; each section is headed fitting, room, place, opens with at most
+ * one plain line on the kind of homes and then says what we do in that room;
+ * the appraisal narration is gone (dates, BAM, the Key flats and leaseholds,
+ * listing grades, the Greek Streets' capitals, the Planning Portal rule);
+ * the listed homes and parking sections follow K18 and K19; a loft room
+ * section added for Lyncroft Gardens; the three FAQ questions kept, answers
+ * rewritten to K16. One Ask: the smallest room for a walk-in. Drawings: the
+ * three West Hampstead ones stay beside the sections whose first line names
+ * their house type; the loft, listed and access sections are plain text, as
+ * no West Hampstead drawing shows a loft room. Prices section untouched.
+ * FACT LIST (each claim: its source).
+ *   - Opening: "design and install" (K10); West End Lane and Fortune Green,
+ *     mansion flats and red-brick houses (facts file section 1 and
+ *     Distinctive 2: "side streets of red brick houses and mansion blocks");
+ *     loft rooms (facts file section 1, Lyncroft Gardens' attic storeys);
+ *     planning around alcoves beside a chimney breast, as a condition, not a
+ *     claim (his Camden opening, K15).
+ *   - Mansion flats above the shops on West End Lane and around Cannon Hill
+ *     and Mill Lane: facts file section 1 (S1 5.1 and zone 6).
+ *   - A hinged wardrobe often around 600 to 650 mm deep: his wardrobe guide's
+ *     starting sizes (built-in-wardrobe-ideas, his 20 Oct text). Brought
+ *     forward of the chimney breast in a shallow alcove, exposed sides
+ *     finished to match: the same guide ("Wardrobes either side of a chimney
+ *     breast"); K21 (alcove wardrobes standing proud of the breast).
+ *   - Shaker or handleless doors: facts table, door style and finish are the
+ *     customer's choice (23 Nov); his Hampstead mansion flats line (8 Nov).
+ *   - Lymington Road, Fawley Road and Crediton Hill, large semi-detached and
+ *     detached Edwardian houses: facts file section 1 (S1 zone 5).
+ *   - A walk-in designed around the room, box rooms, hanging space, drawers,
+ *     shoe storage and shelves planned together: his walk-in page opening
+ *     (6 Sep). Finishes to go with flooring and furniture: his walk-in answer
+ *     (7 Sep). The smallest room: an Ask, no figure from him.
+ *   - Inglewood Road and Agamemnon Road, terraced houses west of the Lane:
+ *     facts file section 1 (S1 zones 3 and 4; the Fortune Green streets).
+ *   - Shelf gaps of around 250 to 350 mm for books, 350 to 450 mm or more for
+ *     larger display pieces: facts table (14 Oct, his alcove guide rewrite).
+ *   - Lyncroft Gardens' north side, rooms in the roof: facts file section 1
+ *     (S1 zone 4). Hanging space where the ceiling is highest, drawers or
+ *     cupboards under the low side: facts table (26 Nov Islington, 23 Nov
+ *     Camden). Doors sized to open fully: facts table (drawers behind doors,
+ *     23 Nov) and his wardrobe guide ("Check how every door opens beneath the
+ *     slope").
+ *   - Listed homes: the owner checks, then asks the council about consent,
+ *     skirting and panelling: facts table (26 Nov Islington), K18. Camden's
+ *     listed buildings page: facts file S4, open in a browser 26 Nov 2026
+ *     (200; it links the listed buildings map). A wardrobe below an original
+ *     cornice: facts table (10 Nov Hampstead, 23 Nov Camden).
+ *   - Parking: where to unload and park agreed before fitting day; zone by
+ *     street or postcode; who applies for a permit: facts table (8 and 10 Nov
+ *     Hampstead, 23 Nov Camden), K19. Camden's controlled parking zones page
+ *     ("Enter a street or postcode") and trade permits page ("Anyone can
+ *     apply"): facts file S5, both open in a browser 26 Nov 2026 (200). curl
+ *     gets 403 from camden.gov.uk, a bot block, not a dead page.
+ *   - Lift, stairs and delivery rules; the managing agent; insurance and
+ *     safety documents; normally 8am to 5pm on weekdays, adjusted: facts
+ *     table (8 Nov Hampstead). Furniture in sections, assembled in the room:
+ *     facts table (10 Nov Hampstead; questionnaire stage 04). Floors and
+ *     stairs protected: facts table (23 Nov Camden; conduct fact 6).
+ *   - FAQ lighting: his wardrobe guide, "Plan lighting with the joinery".
+ *     FAQ alcove: his alcove guide, "Cupboards with shelving above" and its
+ *     line on a drawing of both alcoves and the fireplace; drawings where a
+ *     project needs detailed design (facts table, 10 Nov Hampstead). FAQ
+ *     cost: his wardrobe guide's freestanding answer; "well beyond 10 years
+ *     with normal use and care" (facts table, 23 Nov Camden).
+ * The notes below describe the 17 Nov text, which this replaces.
+ *
  * West Hampstead, 17 November 2026. A draft for Kaspar to read on the review
  * link (F2F ops clients/structure-and-style/areas-review); held noindex by
  * areaWestHampsteadCheck until he has read it and his changes are in. Nothing
@@ -102,6 +171,7 @@ import Faq from "../../components/ds/Faq.astro";
 import Link from "../../components/ds/Link.astro";
 import AreaSide from "../../components/AreaSide.astro";
 import PriceCards from "../../components/PriceCards.astro";
+import Ask from "../../components/Ask.astro";
 
 import { AREAS } from "../../data/areas";
 
@@ -139,78 +209,69 @@ const EXT = { target: "_blank", rel: "noopener" };
 <AreaPage area={area}>
   <Fragment slot="lede">
     <p>
-      We take on bespoke carpentry in West Hampstead: <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link> for its mansion flats and Edwardian houses.
-    </p>
-    <p style={P2}>
-      Mansion blocks are a mark of the area, so each piece of bespoke joinery is planned for its building as well as its room.
+      We design and install <Link href="/fitted-wardrobes/">fitted wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link> for homes in West Hampstead, around West End Lane and Fortune Green. If your mansion flat or red-brick house has alcoves beside a chimney breast or a loft room, we'll plan the storage around them.
     </p>
   </Fragment>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Mansion blocks" level={4}>Fitted wardrobes in West Hampstead's mansion blocks</SectionHead>
+    <SectionHead meta="Mansion flats" level={4}>Fitted wardrobes for mansion flats in West Hampstead</SectionHead>
     <AreaSide drawing="gabled-mansion-block">
       <p>
-        Camden's appraisal of the West End Green conservation area, a district it protects for its character, calls mansion blocks a characteristic of the area. These are large buildings divided into flats, and five-storey mansion flats over shops frame West End Lane.
-      </p>
-      <p style={P2}>
-        Around Cannon Hill stand Buckingham, Avenue and Marlborough Mansions, tall red brick blocks of the turn of the 20th century, known locally as BAM. Cholmley Gardens, an inter-war development, wraps Hillfield Road, Aldred Road and Mill Lane.
-      </p>
-      <p style={P2}>
-        Where a bedroom has alcoves, they are a natural place for storage, though the recess may not be deep enough for clothes on hangers. A hanging <Link href="/fitted-wardrobes/">wardrobe</Link> will often need to project beyond the chimney breast into the room. That projection should be shown in the design, with the exposed sides finished to match the fronts or complement the room.
+        Mansion flats stand above the shops on West End Lane and around Cannon Hill and Mill Lane. A hinged <Link href="/fitted-wardrobes/">wardrobe</Link> is often around 600 to 650 mm deep, so in a shallow alcove we'll bring it forward of the chimney breast. We finish its exposed sides to match the doors, which you can have in Shaker or handleless style.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Edwardian houses" level={4}>Walk-in wardrobes for the Edwardian houses east of West End Lane</SectionHead>
+    <SectionHead meta="Edwardian houses" level={4}>Walk-in wardrobes for Edwardian houses in West Hampstead</SectionHead>
     <AreaSide drawing="edwardian-balcony-house">
       <p>
-        On Lymington Road, Fawley Road, Honeybourne Road and Crediton Hill, Camden describes large semi-detached and detached "homes for Edwardian professionals". The houses are red brick, with timber and stone balconies and details in smooth plaster and terracotta.
-      </p>
-      <p style={P2}>
-        Crediton Hill has stained-glass oval windows, and at its top a run of two-storey Arts and Crafts houses with plastered walls.
-      </p>
-      <p style={P2}>
-        Where a house has a spare room, a <Link href="/walk-in-wardrobes/">walk-in wardrobe</Link> can be planned around it. Materials, colours and finishes can be chosen to complement the existing furniture, flooring and other finishes in the home.
+        East of West End Lane, Lymington Road, Fawley Road and Crediton Hill have large semi-detached and detached Edwardian houses. If you have a box room or spare room of at least <Ask q="west-hampstead-walk-in-size">smallest room size, to confirm</Ask>, we'll design a <Link href="/walk-in-wardrobes/">walk-in wardrobe</Link> around it. We plan the hanging space, drawers, shoe storage and shelves together, in finishes that go with your flooring and furniture.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Victorian streets" level={4}>Alcove units in the Greek Streets and west of West End Lane</SectionHead>
+    <SectionHead meta="Terraced houses" level={4}>Alcove units for living rooms in West Hampstead's terraced houses</SectionHead>
     <AreaSide drawing="greek-street-bays">
       <p>
-        Near Fortune Green lie the Greek Streets: Ajax, Agamemnon, Ulysses and Achilles Roads. They include two-storey terraces with carved faces on the tops of the columns in their bay windows. Camden's appraisal names them as a possible conservation area of their own.
-      </p>
-      <p style={P2}>
-        West of the Lane, Inglewood Road of 1883 to 1884 is laid out on a curve. On the north side of Lyncroft Gardens, two-storey late Victorian houses are raised on basements with attic storeys.
-      </p>
-      <p style={P2}>
-        Where a front room has a fireplace, <Link href="/alcove-units/">alcove units</Link> are best considered as part of the whole wall. The fireplace, mantel, ceiling height, nearby windows and furniture all affect how the joinery will look.
+        West of West End Lane, streets such as Inglewood Road and Agamemnon Road are lined with terraced houses. For books in your living room <Link href="/alcove-units/">alcoves</Link>, we'll start with gaps of around 250 to 350 mm between shelves. Taller display pieces need around 350 to 450 mm or more.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Leaseholds and listing" level={4}>Key flats, leaseholds and listed landmarks</SectionHead>
+    <SectionHead meta="Loft rooms" level={4}>Fitted wardrobes under sloping ceilings in West Hampstead</SectionHead>
     <div style={TEXT}>
       <p>
-        On Honeybourne Road, Yale and Harvard Courts were built as private rented "Key" flats. Camden's 2011 appraisal noted that their leaseholds, where an owner holds a flat for a set term, were increasingly being bought by individuals.
-      </p>
-      <p style={P2}>
-        Nearly all the houses and blocks here are unlisted. The listed buildings, which the law protects inside and out, include Hampstead Synagogue on Dennington Park Road. The 1901 fire station and firemen's cottages on West End Lane are listed too.
-      </p>
-      <p style={P2}>
-        For most homes here, the <Link href="https://www.planningportal.co.uk/info/200130/common_projects/33/internal_walls" {...EXT}>Planning Portal</Link> rule applies instead: internal alterations do not generally need planning permission. In a leasehold flat, check the lease first, as it may set its own rules on alterations.
+        Houses on the north side of Lyncroft Gardens have rooms in the roof. In a loft room, we'll put the hanging space at the tallest point and drawers or cupboards under the low side. We'll size each door so it opens fully under the slope.
       </p>
     </div>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Access" level={4}>Flats over the shops and parking for the fitting days</SectionHead>
+    <SectionHead meta="Listed homes" level={4}>Fitted furniture for listed West Hampstead homes</SectionHead>
     <div style={TEXT}>
       <p>
-        Parking, deliveries and access are agreed with you before installation. Camden's <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> is open to anyone and is valid in resident permit bays in its zone, but it does not guarantee a space.
+        Before you plan fitted wardrobes or shelving, you can check whether your home is listed on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council's listed buildings page</Link>. If it is, ask the council before work starts whether the joinery needs listed building consent. It matters most if fitting the joinery means removing or changing original skirting or wall panelling.
+      </p>
+      <p style={P2}>
+        If the room has an original cornice, we can stop a wardrobe below it so the moulding stays in view.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Parking, lifts and access on fitting days in West Hampstead</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Before fitting day, we'll agree with you where we can unload and park. You can find your parking zone by street or postcode on <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>Camden Council's controlled parking zones page</Link>. If a permit is needed, we'll decide together who applies for a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>Camden trade permit</Link>.
+      </p>
+      <p style={P2}>
+        In a mansion block, we'll ask you about the lift, the stairs and any rules on deliveries. Where the building needs it, we can work with the managing agent and send our insurance and safety documents. If the lift or stairs are narrow, the furniture can come in sections and be assembled in the room.
+      </p>
+      <p style={P2}>
+        We normally work between 8am and 5pm on weekdays, and we can adjust the hours to suit you and the building. On fitting day, we protect the floors and stairs on the way in before any materials arrive.
       </p>
     </div>
   </Wrap>
@@ -230,13 +291,13 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
       <Faq q="How do you light a walk-in wardrobe?">
-        Vertical strips near the front of compartments can light hanging garments, while lighting beneath shelves can serve folded storage. Interior lighting helps you see clothes and tell colours apart. Agree the light colour using samples alongside the interior finish.
+        We can fit vertical light strips near the front of each hanging section and lights under the shelves for folded clothes. We position them so the clothes and shelves don't block the light. Before fitting, we'll agree the light colour with you, using samples beside the interior finish.
       </Faq>
       <Faq q="What looks good in an alcove?">
-        Base cupboards with open shelves above give a combination of enclosed storage and display space. The cupboards hold what you prefer to keep out of sight, while the shelves take books, framed artwork and decorative pieces.
+        Low cupboards with open shelves above give you hidden storage and space for books and framed pictures. A taller cupboard hides more, while a lower one leaves more room for shelves. For a detailed design, we can draw both alcoves and the fireplace together so you see the whole wall.
       </Faq>
       <Faq q="Does a built-in wardrobe cost more than a freestanding one?">
-        A freestanding or flat-pack wardrobe usually costs less to buy. A built-in wardrobe is priced to the room, using the full height and width of the wall, alcoves and sloping ceilings included. Which is better value depends on how much storage the room needs and how long the furniture is expected to stay.
+        A built-in wardrobe usually costs more to buy than a freestanding or flat-pack one. It's designed for your room, so it can use the full height and width of the wall, alcoves and sloping ceilings included. With normal use and care, we expect ours to last well beyond 10 years.
       </Faq>
     </div>
   </Wrap>

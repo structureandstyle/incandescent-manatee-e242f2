@@ -1,5 +1,71 @@
 ---
 /**
+ * REWRITTEN TO SS_WRITING_FOR_KASPAR.md, 26 Nov 2026 (a founder: the remaining
+ * area pages rewritten "based on the new knowledge" of what Kaspar comments on;
+ * ops rulings D3 and D7). Gone: the tavern, the name, the appraisal lines, the
+ * listing count, Article 4 and every source named in a sentence (D7), and
+ * "bespoke carpentry" (D3). Now: a two-sentence opening; six sections, each
+ * headed with the fitting, the room and the place (mansion flats, large
+ * upper-floor windows, loft rooms, alcoves, listed homes on K18, access in
+ * mansion blocks on K19); FAQ answers in "we" and "you" from his own text. The
+ * chalet drawing is off (its caption narrated the 1804 tavern); studio-mansion
+ * and gabled-semis stay beside the sections they show; the other four sections
+ * are plain text, as every other drawing belongs to another area page. The
+ * price cards and the price section's words are unchanged. No Ask brackets:
+ * every figure on the page is his.
+ * FACT LIST (claim: source).
+ *   - Mansion-block flats on Canfield Gardens and east of Fairhazel Gardens:
+ *     facts file, S1 5.5.
+ *   - Very large upper-floor windows on Compayne Gardens: facts file, S1 5.12.
+ *   - Large houses in South Hampstead with loft rooms: S1 5.8 ("often again
+ *     with attics"); large late Victorian houses: S1 3.1.
+ *   - Belsize Road: S1 5.6 (terraces with basements); no feature claimed, the
+ *     sentence is "if your home ... has a chimney breast".
+ *   - Maresfield Gardens and Netherhall Gardens chosen for the listed step:
+ *     S2 draft 1.3 ("numerous listed buildings"), against one listed building
+ *     in South Hampstead (S1 6.3). Used to pick the streets only.
+ *   - Camden's listed buildings page links a map of listed buildings; its
+ *     controlled parking zones page searches by street or postcode; trade
+ *     permits are for people working for a resident: all three pages read
+ *     26 Nov 2026 (200).
+ *   - Wardrobes wall to wall; door style and finish the customer's choice:
+ *     facts table, 23 Nov Camden. Shaker or handleless doors in mansion flats:
+ *     his Hampstead text (8 and 10 Nov, live).
+ *   - A wardrobe run to the ceiling: facts table, 26 Nov Islington.
+ *   - Storage on a side wall keeps the window clear: facts table, 26 Nov
+ *     Islington (lower-ground row). The low space beneath a window put to use:
+ *     his Islington opening, 26 Nov.
+ *   - Hanging where the ceiling is highest, low drawers or cupboards under the
+ *     slope: facts table, 23 Nov Camden and 26 Nov Islington. Every door
+ *     checked beneath the slope: his built-in wardrobe guide (24 Oct),
+ *     "Wardrobes under a sloping ceiling".
+ *   - Alcove units as low cupboards under open shelves or full-height
+ *     cupboards: his Islington FAQ, 26 Nov. Shelf openings of around 250 to
+ *     350 mm for books, more for larger pieces: facts table, his alcove guide
+ *     (14 Oct).
+ *   - Ask the council before work starts, especially where skirting or
+ *     panelling changes: facts table, 26 Nov Islington. A wardrobe finished
+ *     below the cornice, the moulding left visible: facts table, 10 Nov
+ *     Hampstead and 23 Nov Camden.
+ *   - Where to unload and park and how materials come in, agreed before
+ *     fitting day; who arranges a permit, agreed: facts table, 8 and 10 Nov
+ *     Hampstead, 23 Nov Camden, 26 Nov Islington.
+ *   - Lift and building access details asked of the customer; insurance and
+ *     safety documents to the managing agent: facts table, 8 Nov Hampstead.
+ *   - Furniture in sections, assembled in the room, where access is tight:
+ *     facts table, 10 Nov Hampstead.
+ *   - Normally 8am to 5pm on weekdays, adjusted to the building: facts table,
+ *     8 Nov Hampstead.
+ *   - Floors and stairs protected along the delivery route: facts table,
+ *     23 Nov Camden.
+ *   - FAQs (questions kept): drawers behind the doors or as their own section
+ *     beneath them, hinged doors planned around the drawers (his wardrobe
+ *     guide; facts table, 23 Nov Camden); hinged against sliding doors (his
+ *     wardrobe guide, "Choose hinged or sliding doors"); double hanging and a
+ *     full-length section sized from the longest garment on its hanger (his
+ *     wardrobe guide, "Storage").
+ * The older notes below describe the 17 Nov draft. Most of its text is gone.
+ *
  * Swiss Cottage, 17 November 2026. A draft for Kaspar to read on the review
  * link (F2F ops clients/structure-and-style/areas-review); held noindex by
  * areaSwissCottageCheck until he has read it and his changes are in. Nothing
@@ -145,81 +211,69 @@ const EXT = { target: "_blank", rel: "noopener" };
 <AreaPage area={area}>
   <Fragment slot="lede">
     <p>
-      We take on bespoke carpentry around Swiss Cottage: <Link href="/fitted-wardrobes/">wardrobes</Link> for its mansion blocks and late Victorian houses, with fitted drawers and <Link href="/alcove-units/">alcove units</Link>.
-    </p>
-    <p style={P2}>
-      Each piece of bespoke joinery is drawn for one room, so a flat in a mansion block and an attic room get different designs.
+      We design and fit <Link href="/fitted-wardrobes/">bespoke wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link> for homes around Swiss Cottage, including South Hampstead and the streets off Finchley Road. In mansion flats and large Victorian houses, we can plan the storage around a sloping loft ceiling or a very large upper-floor window.
     </p>
   </Fragment>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="The name" level={4}>The tavern, the name and the conservation areas around it</SectionHead>
-    <AreaSide drawing="swiss-chalet">
-      <p>
-        Camden Council's South Hampstead appraisal places Swiss Cottage on the east side of Finchley Road, around the library and the former Swiss Tavern. The tavern was built in 1804 in the style of a Swiss chalet, on the site of a tollgate keeper's cottage.
-      </p>
-      <p style={P2}>
-        Until February 2011 the council called the South Hampstead conservation area the Swiss Cottage conservation area. It reaches Canfield Gardens at the corner of Finchley Road.
-      </p>
-      <p style={P2}>
-        Homes nearby also sit in the Belsize and Fitzjohns/Netherhall conservation areas, where the council controls changes to how buildings look.
-      </p>
-    </AreaSide>
-  </Wrap>
-
-  <Wrap style={SECTION}>
-    <SectionHead meta="Mansion blocks" level={4}>Bespoke wardrobes in the mansion blocks east of Fairhazel Gardens</SectionHead>
-    <AreaSide drawing="studio-mansion">
-      <p>
-        East of Fairhazel Gardens, the appraisal describes terraces that form imposing mansion blocks, large buildings divided into flats, of three and four storeys. On Canfield Gardens they rise to five.
-      </p>
-      <p style={P2}>
-        Many houses there and on Compayne Gardens have very large windows on their upper floors. The appraisal says these suggest they were designed as studios.
-      </p>
-      <p style={P2}>
-        A <Link href="/fitted-wardrobes/">bespoke wardrobe</Link> can run full height on the solid wall beside a window that size, and stay low beneath the glass.
-      </p>
-    </AreaSide>
-  </Wrap>
-
-  <Wrap style={SECTION}>
-    <SectionHead meta="Large houses" level={4}>Wardrobes for South Hampstead's gabled semis and attic rooms</SectionHead>
-    <AreaSide drawing="gabled-semis">
-      <p>
-        The appraisal describes the area's late Victorian houses as red brick or gault brick, a pale cream brick, with turrets, gables and tall chimneys. In the middle of the area they are large semi-detached houses of three and four storeys.
-      </p>
-      <p style={P2}>
-        Further west the houses are detached, often with attics and some with raised basements. Eton Avenue, Fellows Road and Lancaster Gardens joined the Belsize conservation area in 1985. Its statement says the aim was to protect groups of large detached houses and some terraces.
-      </p>
-      <p style={P2}>
-        Under a sloping ceiling, use the taller part of the room for hanging clothes and the lower areas for shelves, drawers or cupboards. The position of the wardrobe front matters: a slope can reduce usable depth as well as height.
-      </p>
-    </AreaSide>
-  </Wrap>
-
-  <Wrap style={SECTION}>
-    <SectionHead meta="Listed buildings" level={4}>Listed buildings in South Hampstead and Fitzjohns/Netherhall</SectionHead>
+    <SectionHead meta="Mansion flats" level={4}>Bespoke wardrobes for mansion flats in Swiss Cottage</SectionHead>
     <div style={TEXT}>
       <p>
-        The 2011 appraisal records one listed building in the whole South Hampstead conservation area, the Grade II Church of St James on Sherriff Road. Most homes there are not listed.
-      </p>
-      <p style={P2}>
-        The council's draft appraisal of 2021 says Fitzjohns/Netherhall contains numerous listed buildings, among them the Freud Museum at 20 Maresfield Gardens. If a house is in those streets, check it on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden's listed buildings page</Link> before work starts.
-      </p>
-      <p style={P2}>
-        Camden adopted <Link href="https://www.camden.gov.uk/article-4-directions-heritage-and-conservation" {...EXT}>Article 4 Directions</Link> for South Hampstead, Belsize and Fitzjohns/Netherhall on 9 June 2026. They remove some changes owners could make without applying, and the council's page sets out which.
+        On Canfield Gardens and the streets east of Fairhazel Gardens, many homes are flats in mansion blocks. If you live in one, we can fit a bedroom wardrobe wall to wall, with Shaker or handleless doors in the finish you choose. We can run it to the ceiling, so spare bedding and suitcases can go up high, out of the way.
       </p>
     </div>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Access" level={4}>Mansion blocks, managing agents and parking near Finchley Road</SectionHead>
+    <SectionHead meta="Large windows" level={4}>Fitted storage around large upper-floor windows in Swiss Cottage</SectionHead>
+    <AreaSide drawing="studio-mansion">
+      <p>
+        Some homes on Compayne Gardens have very large windows on their upper floors. If your room has one, we can fit a full-height wardrobe along a side wall and keep the window clear. Below the window, low drawers or a cupboard can use the space without covering the glass.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Loft rooms" level={4}>Fitted wardrobes for loft rooms in South Hampstead</SectionHead>
+    <AreaSide drawing="gabled-semis">
+      <p>
+        Many of the larger houses in South Hampstead have loft rooms with sloping ceilings. Coats and dresses can hang where the room is tallest, with low drawers or cupboards fitted under the slope. We'll plan every door so it opens fully beneath the sloping ceiling.
+      </p>
+    </AreaSide>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Alcoves" level={4}>Alcove units for living rooms in Swiss Cottage's Victorian houses</SectionHead>
     <div style={TEXT}>
       <p>
-        Parking, deliveries and access are agreed with you before installation. In a mansion block with a managing agent, insurance and the safety paperwork go to the agent before the start date. The building's sign-off is in place before anything begins.
+        If your home on Belsize Road or nearby has a chimney breast, we can fit <Link href="/alcove-units/">alcove units</Link> on both sides. Each side can have low cupboards under open shelves, or a full-height cupboard with doors to the top. We'll <Link href="/journal/alcove-units-guide/">space the shelves</Link> for what you keep on them, with openings of around 250 to 350 mm for books and more for larger pieces.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Listed homes" level={4}>Fitted joinery in listed homes around Swiss Cottage</SectionHead>
+    <div style={TEXT}>
+      <p>
+        For a home on Maresfield Gardens, Netherhall Gardens or nearby, you can see if it's listed on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council's listed buildings page</Link>. If it is, ask the council before work starts whether the joinery you're planning needs listed building consent. This matters most if fitting it means removing or changing original skirting or wall panelling.
       </p>
       <p style={P2}>
-        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>controlled parking zones page</Link> shows whether a street around Finchley Road is controlled. The council sells <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permits</Link> to people working at a property. One covers resident bays and yellow lines in its zone, but does not promise a space.
+        Where a room keeps its original cornice, we can finish a wardrobe just below it, so the moulding stays in view.
+      </p>
+    </div>
+  </Wrap>
+
+  <Wrap style={SECTION}>
+    <SectionHead meta="Access" level={4}>Lifts, managing agents and parking on fitting days in Swiss Cottage</SectionHead>
+    <div style={TEXT}>
+      <p>
+        Before fitting day, we'll agree with you where to unload and park, and how the furniture comes into your home. You can find your street's parking zone on <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>Camden Council's controlled parking zones page</Link>. If we need a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link>, we'll agree with you who applies for it.
+      </p>
+      <p style={P2}>
+        In a mansion block, we may ask you for details of the lift and building access. We can send our insurance and safety documents to the managing agent before fitting day. If the lift or stairs are tight, we can plan the furniture in sections and assemble it in the room.
+      </p>
+      <p style={P2}>
+        We normally work 8am to 5pm on weekdays, and we can keep to different hours if your building sets them. Before any materials come in on fitting day, we protect the floors and stairs along the delivery route.
       </p>
     </div>
   </Wrap>
@@ -239,13 +293,13 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
       <Faq q="Can you put a chest of drawers inside a wardrobe?">
-        A bespoke wardrobe does not need one: its drawers can sit behind the doors, or form a separate section beneath them with their own fronts. A separate section lets you open a drawer without opening a door first.
+        We can fit drawers inside the wardrobe, behind its doors, so you won't need a separate chest. They can also sit in their own section beneath the doors, which lets you open a drawer without opening a door first. With hinged doors, we size the doors and place the hinges so every drawer has room to open.
       </Faq>
       <Faq q="Which is better for a wardrobe, sliding or hinged doors?">
-        It depends on the space in front of the wardrobe. Hinged doors suit many bespoke layouts and offer a wide choice of styles, where there is room for them to swing. Sliding doors are useful where there is not, though part of the wardrobe stays covered as another part opens.
+        It depends on the space in front of the wardrobe. Hinged doors suit many layouts and come in a wide choice of styles, as long as there's room for them to swing open. Sliding doors need no swing space, but part of the wardrobe stays covered while another part is open.
       </Faq>
       <Faq q="What storage suits the inside of a wardrobe?">
-        It depends on what you own. Double hanging, two rails one above the other, suits shirts, jackets and folded trousers. Long dresses and coats need a section where they hang full length, and shelves suit knitwear, bags and boxes.
+        We plan the inside around the clothes you own. Double hanging, with two rails one above the other, suits shirts, jackets and folded trousers. Long dresses and coats need a full-length section, sized from your longest one on its hanger so the hem hangs clear.
       </Faq>
     </div>
   </Wrap>

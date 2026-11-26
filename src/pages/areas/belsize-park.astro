@@ -1,5 +1,61 @@
 ---
 /**
+ * REWRITTEN TO SS_WRITING_FOR_KASPAR.md, 26 Nov 2026 (a founder: the remaining
+ * area pages rewritten to what Kaspar comments on). Every body line is new, in
+ * his register: no council or history narration and no source in a sentence
+ * (D7), no "bespoke carpentry" (D3), headings name the fitting, the room and
+ * the place (K17), listed homes and access on the guide's templates (K18, K19).
+ * Gone: Tidey, every date, Camden's statement, Grade II, the Article 4
+ * paragraph, the lift-booking line (protocol conduct fact 6, not his), and the
+ * FAQ "Do you need planning permission for a walk-in wardrobe?" (it spoke for
+ * the council, which he cut on Islington, and repeated the listed section). Its
+ * place goes to "Should you have a door on a walk-in wardrobe?" (Google People
+ * also ask, walk in wardrobe, UK, built-in browser, 26 Nov 2026), with one Ask.
+ * Prices section untouched (no comment from him yet: silence, not approval).
+ * FACT LIST (each claim, then its source):
+ *   - Products and links: the service pages. Belsize Square, Belsize Village:
+ *     facts file section 1 (S1 core villa streets; sub area two).
+ *   - Villas on Belsize Park Gardens, Buckland Crescent, Belsize Square, in
+ *     pairs: facts file section 1 (S1, villa type). Alcoves beside a chimney
+ *     breast are the facts file's inference, so the page says "If".
+ *   - A wardrobe in each alcove, each sized to its own recess: his facts table
+ *     (front and back alcove units, each recess measured separately, 23 Nov
+ *     Camden; alcoves differ in width or depth, 26 Nov Islington).
+ *   - Low cupboards with open shelves above: his alcove cabinets answer
+ *     (26 Nov, Islington FAQ).
+ *   - Some villas have an attic: facts file section 1 ("sometimes an attic").
+ *     Attic rooms work well for a walk-in; hanging space, drawers, shoe storage
+ *     and shelving planned together: his walk-in wardrobe opening (6 Sep 2026,
+ *     service-copy.ts). Rails where the ceiling is highest, low drawers under
+ *     the slope: facts table (loft rooms, 23 Nov Camden, 26 Nov Islington).
+ *     Rail heights and drawer and shelf splits: the walk-in wardrobe page.
+ *   - Manor Mansions, Antrim Mansions, Hillfield Court, Tudor Close: facts
+ *     file section 1 (mansion flats). Wall to wall: facts table (23 Nov
+ *     Camden). A cupboard made to fit a recess: his alcove cabinets answer.
+ *     Shaker or handleless: his Hampstead mansion flats line (8 Nov; K11).
+ *     Painted or oak veneer: the finishes on the price cards and service pages.
+ *   - Mews north of Belsize Lane, Daleham Mews, two storeys, windows on one
+ *     side only: facts file section 1 (S1 sub area two). Built-in TV unit: his
+ *     6 Sep price review, the service page.
+ *   - Homes on Belsize Grove and Belsize Lane are listed: facts file section 1
+ *     (26 to 38 Belsize Grove, 73 to 93 Belsize Lane). Camden's listed
+ *     buildings page has a map to check (read 26 Nov 2026). Ask the council
+ *     about consent, skirting and panelling: facts table (26 Nov Islington).
+ *     Finish below a cornice: facts table (10 Nov Hampstead, 23 Nov Camden).
+ *   - Unloading, parking and the route agreed before fitting day; a trade
+ *     permit where needed; the customer asked for lift and access details;
+ *     the managing agent, insurance and safety documents; sections assembled
+ *     in the room for steps and narrow stairs; floors and stairs protected:
+ *     facts table (8 and 10 Nov Hampstead, 23 Nov Camden). Who arranges the
+ *     permit: 26 Nov Islington (K19). Zone and hours by street or postcode:
+ *     Camden's parking zones page (read 26 Nov 2026). Steps up to the front
+ *     door: facts file section 1 (villa type, porticos).
+ *   - FAQs: dressing room, the cost guide; mirrors, glass, metal details and
+ *     specialist handles, the walk-in page; a larger project, time depends on
+ *     the room and specification, and the inside on show, the walk-in page's
+ *     own leads (6 Sep). Floor space and the door trade-offs: ours, plain
+ *     reasoning, no claim about what we do. Which doors he fits: Ask.
+ *
  * Belsize Park, 14 November 2026. A draft for Kaspar to read on the review
  * link (F2F ops clients/structure-and-style/areas-review); held noindex by
  * areaBelsizeParkCheck until he has read it and his changes are in.
@@ -122,6 +178,7 @@ import Faq from "../../components/ds/Faq.astro";
 import Link from "../../components/ds/Link.astro";
 import AreaSide from "../../components/AreaSide.astro";
 import PriceCards from "../../components/PriceCards.astro";
+import Ask from "../../components/Ask.astro";
 
 import { AREAS } from "../../data/areas";
 
@@ -159,96 +216,72 @@ const EXT = { target: "_blank", rel: "noopener" };
 <AreaPage area={area}>
   <Fragment slot="lede">
     <p>
-      For Belsize Park's villas, mansion flats and mews houses, our bespoke carpentry means <Link href="/fitted-wardrobes/">bespoke wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link>.
-    </p>
-    <p style={P2}>
-      Camden's statement says the core of paired Victorian villas, built by Daniel Tidey from 1856, is locally called Tidey Town. Where a villa has alcoves or an attic room, they suit bespoke joinery: wardrobes beside a chimney breast, a walk-in under the roof.
+      We design and fit <Link href="/fitted-wardrobes/">bespoke wardrobes</Link>, <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link> and <Link href="/alcove-units/">alcove units</Link> for homes across Belsize Park, including Belsize Square and Belsize Village. In the villas, we can turn an attic room into a walk-in wardrobe or fit alcove units beside a chimney breast.
     </p>
   </Fragment>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Tidey's villas" level={4}>Bespoke wardrobes for the villas of Tidey Town</SectionHead>
+    <SectionHead meta="Villas" level={4}>Bespoke wardrobes and alcove units in Belsize Park's Victorian villas</SectionHead>
     <AreaSide drawing="villa-pair">
       <p>
-        Camden's conservation area statement describes the core of Belsize Park as large, imposing, semi-detached Victorian villas. Developer Daniel Tidey built Buckland Crescent from 1856, and Belsize Square and Belsize Park Gardens in the early 1860s.
-      </p>
-      <p style={P2}>
-        Camden describes pairs of houses set symmetrically either side of a broad, flat chimney stack. Most have three storeys over a lower ground floor, and some an attic. Their ground floors typically have a bay window in three sections, with angled sides.
-      </p>
-      <p style={P2}>
-        Where a chimney breast stands in a main room, the alcoves beside it suit cupboards and shelving. In a bedroom, the same alcoves can take a pair of bespoke wardrobes, one either side of the breast.
+        Belsize Park Gardens, Buckland Crescent and Belsize Square are lined with large semi-detached Victorian villas. If your bedroom has alcoves either side of the chimney breast, we can fit a wardrobe sized to each one. Downstairs, the living-room alcoves can take <Link href="/journal/alcove-units-guide/">low cupboards with open shelves above</Link> for books and records.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Walk-in wardrobes" level={4}>Walk-in wardrobes in Belsize Park's attics and box rooms</SectionHead>
+    <SectionHead meta="Attic rooms" level={4}>Walk-in wardrobes for attic rooms in Belsize Park</SectionHead>
     <AreaSide drawing="walk-in-open">
       <p>
-        Camden's statement says the villas were built with attic and basement space for servants. A top-floor room, or a box room on the floor below, can now hold a <Link href="/walk-in-wardrobes/">walk-in wardrobe</Link>.
-      </p>
-      <p style={P2}>
-        Hanging space, drawers, shoe storage and shelving are planned together to make the best use of the available space. Rail heights come from what hangs, and drawer and shelf splits from what folds. Sloping ceilings and awkward angles are incorporated into the design rather than simply boxed off.
+        Some villas have an attic room, which can work well as a <Link href="/walk-in-wardrobes/">walk-in wardrobe</Link>. We plan hanging space, drawers, shoe storage and shelving together, with rails where the ceiling is highest and drawers under the slope. Rail heights come from what you hang, and drawer and shelf sizes from what you fold.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Mansion flats" level={4}>Manor Mansions and the purpose-built flats of Belsize Park</SectionHead>
+    <SectionHead meta="Mansion flats" level={4}>Fitted wardrobes for mansion flats in Belsize Park</SectionHead>
     <AreaSide drawing="thirties-flats">
       <p>
-        Camden's statement calls Manor Mansions, built in 1884 on Belsize Park Gardens, one of the pioneers of purpose-built flats in London. Antrim Mansions followed in 1897.
-      </p>
-      <p style={P2}>
-        Hillfield Court and Tudor Close date from the late 1930s, and Camden describes them as largely unaltered. In a flat, each wardrobe or alcove unit is cut to the room's walls as they are.
-      </p>
-      <p style={P2}>
-        A managed block can set its own rules for lifts, deliveries and working hours, so ask the managing agent before a date is fixed. The lift is booked and protected before any delivery.
+        Belsize Park's flats include mansion blocks like Manor Mansions, and later blocks such as Hillfield Court and Tudor Close. In a flat, we can fit a wardrobe wall to wall in the bedroom, or a coat cupboard into a hall recess. You can choose Shaker doors or plain handleless ones, painted or in oak veneer.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Belsize Village" level={4}>Mews houses and terraces around Belsize Lane</SectionHead>
+    <SectionHead meta="Mews houses" level={4}>Fitted wardrobes and shelving for mews houses in Belsize Village</SectionHead>
     <AreaSide drawing="mews-row">
       <p>
-        Camden's statement dates Belsize Village's terraces between the 1850s and the 1880s, in yellow London stock brick. North of Belsize Lane, it describes two-storey mews houses with windows on one side only, on narrow streets such as Daleham Mews.
-      </p>
-      <p style={P2}>
-        Their upper windows are small vertical sashes, and the ground floors have large openings that were once garages.
-      </p>
-      <p style={P2}>
-        In a compact room, storage built to the exact wall makes good use of the floor space. A bedroom wardrobe can run the full width of a wall. A <Link href="/media-walls/">built-in TV unit</Link> or shelving can fill the side wall of a living room.
+        North of Belsize Lane, mews houses on streets such as Daleham Mews have two storeys and windows on one side only. With no windows at the back, we can run a wardrobe across the full width and height of the back wall. Downstairs, the same wall can take a <Link href="/media-walls/">built-in TV unit</Link> with cupboards and shelves around it.
       </p>
     </AreaSide>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Listed buildings" level={4}>Listed houses and the new Article 4 Direction in Belsize</SectionHead>
+    <SectionHead meta="Listed homes" level={4}>Wardrobes and shelving for listed homes in Belsize Park</SectionHead>
     <div style={TEXT}>
       <p>
-        Camden says the interior of a listed house is protected as well as its outside, and working on one without consent is a criminal offence.
+        Some homes on Belsize Grove and Belsize Lane are listed, and you can check yours on <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council's listed buildings page</Link>.
       </p>
       <p style={P2}>
-        Camden's statement names the terrace at 26 to 38 Belsize Grove, built in 1825, as a Grade II listed building. It also lists the rendered terrace at 73 to 93 Belsize Lane at Grade II. In either terrace, or any other listed house, the first call before work starts is to <Link href="https://www.camden.gov.uk/listed-buildings" {...EXT}>Camden Council</Link>.
+        If it's listed, ask the council before work starts whether the joinery needs listed building consent. That matters most if fitting it means removing or altering original skirting or panelling.
       </p>
       <p style={P2}>
-        Camden adopted a new Belsize planning control, an <Link href="https://www.camden.gov.uk/article-4-directions-heritage-and-conservation" {...EXT}>Article 4 Direction</Link>, on 9 June 2026. It is aimed at outside work, so check Camden's page before changing windows, doors or roofs.
+        Where a room still has its original cornice, we can finish the wardrobes just below it so the moulding stays visible.
       </p>
     </div>
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Access" level={4}>Porticos, narrow mews and parking in Belsize Park</SectionHead>
+    <SectionHead meta="Access" level={4}>Parking, lifts and access on fitting days in Belsize Park</SectionHead>
     <div style={TEXT}>
       <p>
-        Many Belsize Park villas have steps up to a portico, and Camden's statement describes the mews as fronting narrow streets. Both can affect how a finished piece comes in.
+        We'll plan unloading, parking and the route into your home with you before fitting day. You can find your parking zone and its hours by searching your street or postcode on Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zone map</Link>. Where a <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link> is needed, we'll agree with you who applies for it.
       </p>
       <p style={P2}>
-        Parking and deliveries are agreed with you before installation.
+        In a mansion block, we'll ask you for the lift and access details and any rules the building sets for deliveries. We can also coordinate with the managing agent and provide the insurance and safety documents they ask for.
       </p>
       <p style={P2}>
-        Camden's <Link href="https://www.camden.gov.uk/controlled-parking-zones" {...EXT}>parking zone map</Link> shows the zone for your street. Tradespeople park on a Camden <Link href="https://www.camden.gov.uk/trade-permits" {...EXT}>trade permit</Link>, valid in resident bays within the zone but not a guaranteed space.
+        For front steps or narrow stairs, we can bring a wardrobe in sections and assemble it in the room. Before any materials come in, we protect the floors and stairs along the route.
       </p>
     </div>
   </Wrap>
@@ -268,13 +301,13 @@ const EXT = { target: "_blank", rel: "noopener" };
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
       <Faq q="What is a walk-in wardrobe called?">
-        It is also called a dressing room, and ours can be fitted out like one. Mirrors, glass, metal details and specialist handles can be worked into the design.
+        A walk-in wardrobe is also called a dressing room. We can design yours with mirrors, glass, metal details and specialist handles.
       </Faq>
-      <Faq q="Do you need planning permission for a walk-in wardrobe?">
-        The Planning Portal says internal alterations do not generally need planning permission, and a walk-in fitted inside an existing room is internal work. A listed house can also need listed building consent.
+      <Faq q="Should you have a door on a walk-in wardrobe?">
+        You don't need one, as an open walk-in wardrobe keeps everything in view and easy to reach. Doors keep dust off and hide what's inside, but hinged doors need room to swing open. We can leave yours open or fit <Ask q="belsize-park-walk-in-doors">doors: which kinds you fit on a walk-in</Ask>.
       </Faq>
       <Faq q="What are the disadvantages of a walk-in wardrobe?">
-        It takes floor space that a wardrobe along one wall does not. Walk-in wardrobes are also larger projects, so installation time depends on the size of the room and the specification. With the inside on show, interior finishes matter as much as the fronts.
+        A walk-in wardrobe takes floor space that a wardrobe along one wall doesn't, because you need room to stand inside it. It's also a larger project, so the fitting time depends on the size of the room and the specification. With the inside on show, the interior finishes matter as much as the fronts.
       </Faq>
     </div>
   </Wrap>

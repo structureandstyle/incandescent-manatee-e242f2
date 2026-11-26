@@ -1,5 +1,39 @@
 ---
 /**
+ * OUR COPY REWRITTEN TO SS_WRITING_FOR_KASPAR.md, 26 Nov 2026 (a founder: the
+ * remaining area pages rewritten to the writing Kaspar comments on; ops rulings
+ * D3, no "carpentry" in our copy, and D7). Only our words changed. No word of
+ * Kaspar's changed: his 6 Sep lede sentence, his 10 Nov lede sentences, his four
+ * 8 Nov sections and his 10 Nov rewrites read as he wrote them, apart from the
+ * two changes already named to him ("seamless" to "neat", 12 Nov; "Absolutely."
+ * cut, Denis, 21 Nov). Our lines that changed:
+ *   - Lede, first sentence: our "and other bespoke carpentry" (15 Nov) is out
+ *     (D3), so it reads as his 6 Sep sentence again.
+ *   - Lede, second paragraph: our "Every piece of bespoke joinery" (15 Nov) is
+ *     back to his "Every project". The review card that asked him about both
+ *     changes is obsolete.
+ *   - Section labels: "Fit" is now "Period homes and mansion flats", and
+ *     "Listing and consent" is now "Listed homes", following his headings as on
+ *     Camden and Islington.
+ *   - Our headings (K17): "What does fitted furniture cost?" is now "Guide prices
+ *     for fitted furniture in Hampstead"; "What guarantee comes with the work?"
+ *     is now "What guarantee comes with our fitted furniture?".
+ *   - The three renders: no description printed under them (K20; a founder,
+ *     24 Nov); each alt text cut to one sentence about the joinery; the caption
+ *     prop no longer reads "AI-generated example" (it never printed; the short
+ *     name shows as before).
+ *   - The three FAQ answers, rewritten in his register from his facts only: the
+ *     material range and "how the furniture will be used" (his materials page,
+ *     6 Sep), the measured survey before design (his process stages), Blum and
+ *     Häfele (Q28), soft-close hinges as standard (his 31 Aug starting
+ *     specification), doors and drawers that run properly and adjust (his
+ *     materials page), kitchens from £10,000 (his 8 Nov card). The questions
+ *     themselves are unchanged.
+ * Left as they were: the price cards and their lines, the two lines above them,
+ * the guarantee paragraph (its wording is open for a founder across the area
+ * pages), the line to the two guides, the labels "Design", "In your building",
+ * "Access", "Guide prices", "Guarantee" and "Questions".
+ *
  * Hampstead, the merged area page, 9 November 2026. Built hidden; released
  * 12 November 2026 once Kaspar had rewritten the new copy (see THE GATE).
  *
@@ -115,10 +149,14 @@ const area = AREAS.find((a) => a.slug === "areas/hampstead")!;
    21 Nov 2026, Denis on the review link: the cornice pair (one wall, one view, only the top changed, lit
    shelves) broke the rule that compared pictures come from different rooms, and "remove the leds". The
    pair is now the alcove guide's two new renders, each a different room with no lighting (site PR #73,
-   protocol section 8), with the guide's descriptions less its closing area sentence. */
-const R_BELOW_CORNICE = photoText("Alcove units", "Alcove units stopping below the cornice: open shelving framed by side panels and a back panel, above cupboards with two flat doors in each alcove. Painted warm mushroom grey, with small black knobs. Each unit has its own flat top, finished with a small moulding, leaving a band of wall and the original cornice untouched above. The cornice runs unbroken around the room.");
-const R_CORNICE_ACROSS = photoText("Alcove units", "Alcove unit with the cornice running across: open shelving framed by side panels and a back panel, above a two-door cupboard with aged-brass cup handles. Painted a muted blue-grey against white walls. The unit runs up to the ceiling: a slim infill meets the room's white cornice, which carries on across the top of the unit and along the chimney breast. The joinery reads as part of the room.");
-const R_HANDLELESS = photoText("Fitted wardrobes", "A wall-to-wall wardrobe with six full-height flat doors in a smooth sage finish, with no visible handles and thin, even gaps between them. A slim top infill meets the flat ceiling, slim side infills run down to the floor, and one continuous recessed plinth gives the base a shadow line.", area.name);
+   protocol section 8), with the guide's descriptions less its closing area sentence.
+   26 Nov 2026: no description printed under the renders (K20; a founder, 24 Nov: "keep the photos but
+   delete the description"), and each alt text cut to one sentence about the joinery (writing guide
+   section 6). The longer descriptions were ours, not Kaspar's: the alcove pair's from 21 Nov, the sage
+   wardrobe's rewritten "in his style" on 22 Oct (site e9836a4; his five renders were others). */
+const R_BELOW_CORNICE = photoText("Alcove units", "Alcove units in warm mushroom grey: open shelving over flat-door cupboards with small black knobs, each stopping below the cornice so it stays visible.");
+const R_CORNICE_ACROSS = photoText("Alcove units", "Alcove unit in muted blue-grey: open shelving over a two-door cupboard with aged-brass cup handles, and the cornice carried across its top.");
+const R_HANDLELESS = photoText("Fitted wardrobes", "A wall-to-wall wardrobe with six full-height handleless flat doors in smooth sage, a slim infill up to the flat ceiling and a recessed plinth.", area.name);
 
 /* The reviews: every bank entry tagged with this district, in bank order,
    whole. A gated entry takes its byline from its key once answered. */
@@ -175,23 +213,25 @@ const SECTION = "padding-bottom:var(--section-y)";
   <Fragment slot="lede">
     <p>
       {/* Not held since 9 Nov 2026: a founder ruled not to ask Kaspar about Hampstead jobs.
-          This is his approved sentence, live on every service page. */}
-      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> and other bespoke carpentry across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
+          This is his approved sentence, live on every service page. 26 Nov 2026: our "and other
+          bespoke carpentry" (15 Nov) is out (ops D3), so it reads as he wrote it. */}
+      We design and fit <Link href="/fitted-wardrobes/">wardrobes</Link> across north London, with much of our work in Hampstead, Belsize Park, Kentish Town, Camden and surrounding areas of north London.
     </p>
     <p style={P2}>
       {/* Kaspar's words, 10 Nov 2026 (his comment on the preview); the links are ours. One word changed:
           he wrote "a seamless finish", and "seamless" is a hard-banned word (tone protocol v1.4 section 5)
           that scripts/verify-build.mjs refuses in a production build. "Neat" is his own word for the same
           thing in his 8 Nov section below ("a neat, well-integrated finish"). 15 Nov 2026, the Primrose
-          Hill model: his "Every project" is now "Every piece of bespoke joinery". */}
-      We also design and install <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>. Every piece of bespoke joinery is made to measure, designed around the available space and carefully fitted to achieve a neat finish.
+          Hill model: his "Every project" is now "Every piece of bespoke joinery". 26 Nov 2026: back to
+          his "Every project" (ops D3 retires the carpentry-and-joinery opening rule). */}
+      We also design and install <Link href="/walk-in-wardrobes/">walk-in wardrobes</Link>, <Link href="/alcove-units/">alcove units</Link>, <Link href="/media-walls/">built-in TV units</Link> and <Link href="/bespoke-kitchens/">bespoke kitchens</Link>. Every project is made to measure, designed around the available space and carefully fitted to achieve a neat finish.
     </p>
   </Fragment>
 
   {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead1 card). Denis, 21 Nov 2026: "Absolutely."
      at the start of the answer deleted (and no answer opens with a yes). */}
   <Wrap style={SECTION}>
-    <SectionHead meta="Fit" level={4}>Can bespoke fitted furniture be installed in Hampstead period homes and mansion flats?</SectionHead>
+    <SectionHead meta="Period homes and mansion flats" level={4}>Can bespoke fitted furniture be installed in Hampstead period homes and mansion flats?</SectionHead>
     <AreaSide drawing="mansion-block">
       <p>
         Bespoke fitted furniture is particularly well suited to period properties, where walls, floors and ceilings are not always perfectly level or square. Each installation is carefully measured and designed to make the most of the available space while complementing the character of the property.
@@ -233,8 +273,8 @@ const SECTION = "padding-bottom:var(--section-y)";
       </p>
     </div>
     <Renders>
-      <Render src="/images/journal/alcove-guide-below-cornice.webp" width={1536} height={1024} caption="AI-generated example" short="Stopping below the cornice" pair alt={R_BELOW_CORNICE} description={R_BELOW_CORNICE} />
-      <Render src="/images/journal/alcove-guide-cornice-across.webp" width={1536} height={1024} caption="AI-generated example" short="Cornice across the top" pair alt={R_CORNICE_ACROSS} description={R_CORNICE_ACROSS} />
+      <Render src="/images/journal/alcove-guide-below-cornice.webp" width={1536} height={1024} caption="Stopping below the cornice" short="Stopping below the cornice" pair alt={R_BELOW_CORNICE} />
+      <Render src="/images/journal/alcove-guide-cornice-across.webp" width={1536} height={1024} caption="Cornice across the top" short="Cornice across the top" pair alt={R_CORNICE_ACROSS} />
     </Renders>
     <AreaSide drawing="wardrobe-sections">
       <p style={P2}>
@@ -247,7 +287,7 @@ const SECTION = "padding-bottom:var(--section-y)";
       </p>
     </div>
     <div style={TEXT}>
-      <Render src="/images/journal/built-in-wardrobes-ai-handleless.webp" width={1536} height={1024} caption="AI-generated example" short="Handleless flat doors" alt={R_HANDLELESS} description={R_HANDLELESS} />
+      <Render src="/images/journal/hampstead-sage-handleless-wardrobes.webp" width={1536} height={1024} caption="Handleless flat doors" short="Handleless flat doors" alt={R_HANDLELESS} />
     </div>
     <div style={TEXT}>
       <p style={P2}>
@@ -274,7 +314,7 @@ const SECTION = "padding-bottom:var(--section-y)";
 
   {/* Kaspar's words, 8 Nov 2026 (his answer on the areaHampstead2 card). */}
   <Wrap style={SECTION}>
-    <SectionHead meta="Listing and consent" level={4}>Do conservation areas and listed buildings affect fitted furniture?</SectionHead>
+    <SectionHead meta="Listed homes" level={4}>Do conservation areas and listed buildings affect fitted furniture?</SectionHead>
     <div style={TEXT}>
       <p>
         Many properties in Hampstead are located within conservation areas, including those around Church Row, Keats Grove and Downshire Hill. Being in a conservation area does not normally prevent homeowners from installing bespoke fitted furniture. Internal installations, such as fitted wardrobes, alcove units and shelving, generally do not require planning permission simply because a property is in a conservation area.
@@ -309,7 +349,7 @@ const SECTION = "padding-bottom:var(--section-y)";
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Guide prices" level={4}>What does fitted furniture cost?</SectionHead>
+    <SectionHead meta="Guide prices" level={4}>Guide prices for fitted furniture in Hampstead</SectionHead>
     <AreaSide>
       <p>Every figure here is a starting price, and a larger or more detailed project costs more.</p>
       <p style={P2}>
@@ -339,7 +379,7 @@ const SECTION = "padding-bottom:var(--section-y)";
   </Wrap>
 
   <Wrap style={SECTION}>
-    <SectionHead meta="Guarantee" level={4}>What guarantee comes with the work?</SectionHead>
+    <SectionHead meta="Guarantee" level={4}>What guarantee comes with our fitted furniture?</SectionHead>
     <div style={TEXT}>
       <p>
         The guarantee covers installation and workmanship for 2 years and the structural integrity of the joinery for 10 years. Hinges, runners and other hardware carry their manufacturer's warranty. If doors, drawers or other moving parts require adjustment during the 2-year aftercare period, we will return and adjust them.
@@ -350,14 +390,16 @@ const SECTION = "padding-bottom:var(--section-y)";
   <Wrap style={SECTION}>
     <SectionHead meta="Questions" scribe>Asked before enquiring</SectionHead>
     <div style="margin-top:var(--space-12);max-width:var(--measure);border-bottom:var(--rule-hair)">
+      {/* 26 Nov 2026: the three answers rewritten to SS_WRITING_FOR_KASPAR.md (see the header note);
+          the questions are unchanged. */}
       <Faq q="What does bespoke joinery mean?">
-        It means joinery made to measure, with the materials chosen for the piece. Moisture-resistant MDF, natural wood veneer, melamine and decorative boards can be combined within a project to balance appearance, durability and cost.
+        Bespoke joinery is fitted furniture made to measure for one room, such as wardrobes, alcove units, shelving or a kitchen. It can combine materials, for example moisture-resistant MDF, natural wood veneer and melamine, to balance looks, durability and cost. We design it with you after the measured survey, then fit it in your home.
       </Faq>
       <Faq q="What is high-end joinery?">
-        It is joinery where the parts you use every day are chosen to last. We specify hardware from manufacturers such as Blum and Häfele, and soft-close hinges come as standard, so doors close smoothly and drawers run properly.
+        High-end joinery is fitted furniture where the materials and hardware are chosen to last as well as to look right. We specify hardware from Blum and Häfele, and soft-close hinges come as standard. That means doors close smoothly, drawers run properly and the hinges can be adjusted so the doors stay in line.
       </Faq>
       <Faq q="Are bespoke kitchens worth it?">
-        What you gain is a layout planned for your room. Cabinet runs, tall housings, islands and internal storage are resolved together, so the proportions hold across the whole room. Storage is planned around what you use and where, alongside clear worktop space, rather than added once the layout is settled.
+        A bespoke kitchen is worth it if you want the layout and storage planned around your room and what you keep in it. We design the cabinets, any tall cupboards or island, and the drawers and shelves inside them together, so they suit the room's proportions. Our bespoke kitchens typically start from £10,000.
       </Faq>
     </div>
   </Wrap>
