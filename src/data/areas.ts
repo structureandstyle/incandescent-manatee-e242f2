@@ -111,9 +111,13 @@ export const AREAS: Area[] = [
        remain the page's scope, not the borough (brief section 14, option a). */
     titleProp: "Bespoke fitted wardrobes in Camden",
     h1: "Bespoke fitted wardrobes and alcove units in Camden",
-    kicker: "Bespoke joinery in Camden",
+    /* "Bespoke carpentry", Arthur's comment on the review link, 14 Nov 2026; the footer tagline's words.
+       Kept when the page moved onto the Primrose Hill model: a founder's choice, 18 Nov 2026. The other
+       area pages say "Bespoke joinery in <Area>". */
+    kicker: "Bespoke carpentry in Camden",
+    /* 18 Nov 2026: "and flats" came out (the facts file gives no source for it) and "and shelving" went in (camden.astro). */
     description:
-      "Bespoke fitted wardrobes and alcove units for Camden homes: terraced houses and flats, measured in the room and cut to walls that are rarely straight.",
+      "Bespoke fitted wardrobes, alcove units and shelving for Camden Town's terraced houses, measured in the room and cut to walls that are rarely straight.",
     /* Search Console, 11 Oct to 8 Nov: fitted wardrobes camden 20 and bespoke wardrobes camden 20
        impressions, the area's two largest product searches. Keyword Planner (London, 14 Nov 2026):
        built in wardrobes camden 10, exact phrase; no data for fitted or bespoke wardrobes camden. */
@@ -129,18 +133,37 @@ export const AREAS: Area[] = [
         type: "Bookcases",
         alt: "White built-in bookcase in three bays with open shelves above six handleless cupboard doors, lit by two wall lights",
       },
+      /* 19 Nov 2026, Denis on the review link: "replace this image with a generated one" (it was
+         ssp-029, the white handleless wardrobe with one door open). Made in Figma the same day (file
+         d0AWnKDiTyYDbBrrCsE4NS, node 39:2, gpt-image-2.5-sunburst) to the ops AI render protocol;
+         small retouches, told to Kaspar on the card: a second handle on each closed door beside the
+         open pair was painted out (every door now has one handle, at its pair's centre); a blue-grey
+         strip under the top infill over the open bay became the oak top panel's edge, so the panel
+         meets the single infill (protocol section 4); four faint marks on the open doors and two on
+         the oak went. Checked by an independent pass against the protocol's section 5. */
       {
-        file: "/images/library/ssp-029.webp",
-        type: "Fitted wardrobes",
-        alt: "White handleless fitted wardrobe with one door open showing oak interior, chrome hanging rail, top shelf and lower shelves",
-      },
-      {
-        file: "/images/journal/camden-ai-grey-shaker-wardrobes.webp",
-        type: "Grey Shaker-style wardrobes",
+        file: "/images/journal/camden-blue-grey-open-wardrobes.webp",
+        type: "Blue-grey wardrobes with an oak-effect interior",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in three pairs, painted warm mid-grey, with slim aged-brass bar handles where each pair meets. The room's cornice runs across the top above a slim infill, slim side infills reach the floor and a recessed plinth runs beneath. A sash window and a bed sit either side.",
+        /* 24 Nov 2026: cut to the joinery (Kaspar's voice note on this text; ops rules K20). */
+        alt: "Six flat wardrobe doors in deep blue-grey run wall to wall, with slim brushed-nickel bar handles, an oak-effect interior with drawers and a recessed plinth.",
+      },
+      /* 19 Nov 2026, Denis: a framed picture on the wall ran into the door frame; it was painted
+         out of the render (plain wall, filled from the wall above and below it). */
+      {
+        /* 21 Nov 2026, Denis on the review link: "remove the plan[t] from this picture". Cropped (from
+           x 146 of the 1536 x 1024 render, 1335 x 890, still 3:2) so the plant by the window on the left
+           and the flowers on the chest of drawers on the right are out of frame, rather than painted
+           out over the window and radiator or made again. */
+        file: "/images/journal/camden-grey-shaker-wardrobes.webp",
+        type: "Grey Shaker-style wardrobes",
+        ai: true,
+        width: 1335,
+        height: 890,
+        /* 24 Nov 2026: cut to the joinery (ops rules K20). */
+        alt: "A wall-to-wall wardrobe with six full-height Shaker-style doors in warm mid-grey, slim aged-brass bar handles and the room's cornice running across the top.",
       },
     ],
     summary: "Stock-brick terraces of the 1820s to 1850s over basements, with mansard rooms and mews.",
@@ -198,7 +221,9 @@ export const AREAS: Area[] = [
        model leads the heading with the product search and keeps the kicker "Bespoke joinery" (Denis,
        15 Nov: "leave joinery for now"), so "bespoke carpentry" now sits in the opening. */
     titleProp: "Bespoke wardrobes in Islington",
-    h1: "Bespoke wardrobes and fitted furniture in Islington, made to measure",
+    /* 26 Nov 2026: Kaspar's heading, word for word (his comment on the review link, saved 24 Nov).
+       The title above keeps "Bespoke wardrobes", the page's main search. */
+    h1: "Fitted wardrobes and bespoke furniture in Islington",
     kicker: "Bespoke joinery in Islington",
     description:
       "Bespoke wardrobes, alcove units and shelving for Islington homes: Georgian and Victorian houses and flats, measured in the room and cut to fit.",
@@ -217,17 +242,26 @@ export const AREAS: Area[] = [
        register's second AI gap for Islington, alcove units with glazed upper cupboards and lit
        shelving in a Georgian living room (Figma node 32:2). Its first gap, closed white
        handleless wardrobes, has no plate: the frame shows three. None is a recorded job in
-       Islington. */
+       Islington.
+       26 Nov 2026: ssp-048 OFF the page. Kaspar's only comment on it was "wtf bro :D" (saved
+       24 Nov, the night before his voice note asked Camden for a better first picture), and a
+       founder's rule of 25 Nov is that a picture he dislikes comes off the page. The lead is now
+       fitted-wardrobes-09, the professional frame of white panelled wardrobes up to the cornice
+       in a period bedroom with shutters, which matches his Georgian-houses section. It is on
+       /work/ and on no area page; a founder ruled on 25 Nov that a used professional photograph
+       may lead ("doesnt neeed to be unused"). No unused Islington-job wardrobe frame is left:
+       ssp-158 and ssp-161 are on /work/, ssp-159 and ssp-157 are their near-duplicates or soft.
+       Alt text cut to the joinery (K20 in the ops SS_KASPAR_REVIEW_RULES.md). */
     plates: [
       {
-        file: "/images/library/ssp-048.webp",
+        file: "/images/fitted-wardrobes/fitted-wardrobes-09.webp",
         type: "Fitted wardrobes",
-        alt: "Open wardrobe with an oak-toned interior: a top shelf, a chrome rail with black hangers, a lower shelf and the first of its drawers, with hinges on both doors.",
+        alt: "Fitted wardrobes for Islington homes: white panelled doors with small round knobs and cupboards above, running up to the cornice.",
       },
       {
         file: "/images/library/ssp-051.webp",
         type: "Bespoke kitchens",
-        alt: "Matt charcoal L-shaped handleless kitchen with an island, two white stools, a tall fridge housing, a black extractor and a white metro tile splashback.",
+        alt: "Matt charcoal L-shaped handleless kitchen with an island, a tall fridge housing and a white metro tile splashback.",
       },
       {
         /* 19 Nov 2026, Denis on the review link: "remove the leds here". Made again without lighting
@@ -238,13 +272,15 @@ export const AREAS: Area[] = [
            table to go: made again (node 45:11: a knob on every door, no coffee table; picked over 45:10,
            which had an unexplained strip on the left wall). The four glazed-door knobs came out lumpy,
            so each was replaced with a copy of the base knob below it. Original PNGs in S&S ops
-           deliverables/ai-renders-2026-11-14/. */
-        file: "/images/journal/islington-ai-glazed-alcove-units.webp",
+           deliverables/ai-renders-2026-11-14/.
+           26 Nov 2026: "ai" out of the file name (no AI anywhere, K23) and the alt text cut to the
+           joinery (K20), as on Camden on 24 Nov. */
+        file: "/images/journal/islington-glazed-alcove-units.webp",
         type: "Glazed alcove cupboards",
         ai: true,
         width: 1536,
         height: 1024,
-        alt: "Two fitted alcove units painted soft sage green either side of a white fireplace with a black cast-iron insert. Each has a two-door panelled base cupboard and a two-door glazed upper cupboard with shelves holding books, bowls and jugs, all with small brass knobs, running up to the room's cornice. A tall sash window with shutters is to the right.",
+        alt: "Sage green alcove units either side of a fireplace: panelled base cupboards and glazed upper cupboards with shelves and small brass knobs, running up to the cornice.",
       },
     ],
     summary: "Late Georgian squares and terraces, Victorian villas and flats in converted houses.",
